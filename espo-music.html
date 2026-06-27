@@ -185,7 +185,7 @@
   var steps=[
     { label:'Warm up', sub:'Your tricky two — fumbles are part of it.', render:renderWarm },
     { label:'Get smooth', sub:'Slow is fine — reps, not speed.', render:renderSmooth },
-    { label:'Play', sub:'The fun part — a song you can already play.', render:renderPlay }
+    { label:'Play', sub:'On The Highway — a song you already know.', render:renderPlay }
   ];
 
   function intro(){
@@ -232,9 +232,10 @@
     var cur=0, fill=$('fill'), cue=$('cue'), chips=[$('ch0'),$('ch1')], chords=['Em','Am'];
     if(window._cueTimer) clearInterval(window._cueTimer);
     var t=0;
+    // slow, unhurried switch — about 4 seconds per chord
     window._cueTimer=setInterval(function(){
-      t+=0.04; var pct=Math.min(100,(t%2)/2*100); fill.style.width=pct+'%';
-      if(pct>97){
+      t+=0.02; var pct=Math.min(100,(t%2)/2*100); fill.style.width=pct+'%';
+      if(pct>=99.5){
         cur=1-cur; chips[cur].classList.add('on'); chips[1-cur].classList.remove('on');
         cue.textContent='Switch → '+chords[cur]; strum(chords[cur]); t=0;
       }
@@ -245,18 +246,24 @@
     if(window._cueTimer) clearInterval(window._cueTimer);
     scr.className='screen fade';
     scr.innerHTML=
-      '<div class="kick">Now the fun part</div>'+
+      '<div class="kick">The Highway</div>'+
       '<div class="lane" id="lane"><div class="laneline"></div></div>'+
       '<div class="songname">Power Rock</div><div class="songsub">G &middot; C &middot; D</div>'+
-      '<div class="sub" style="margin-top:12px;">A song you can <b>already play</b>. No pressure — just enjoy it.</div>';
+      '<div class="sub" style="margin-top:12px;">Chords roll down <b>The&nbsp;Highway</b> &mdash; you play each one as it lands. A song you already know, no rush.</div>';
     var lane=$('lane'), names=['G','C','D','G'], k=0;
     if(window._laneTimer) clearInterval(window._laneTimer);
-    window._laneTimer=setInterval(function(){
-      var t=document.createElement('div'); t.className='tile'; t.textContent=names[k%4]; k++;
-      t.style.top='-44px'; lane.appendChild(t);
-      var y=-44, id=setInterval(function(){ y+=4; t.style.top=y+'px'; if(y>150){clearInterval(id); t.remove();} },16);
-      if(k%4===0) strum('G');
-    },520);
+    function drop(){
+      var label=names[k%4]; k++;
+      var tile=document.createElement('div'); tile.className='tile'; tile.textContent=label; tile.style.top='-44px'; lane.appendChild(tile);
+      var y=-44, hit=false;
+      var id=setInterval(function(){
+        y+=1.4; tile.style.top=y+'px';                       // gentle, slow drift
+        if(!hit && y>=84){ hit=true; strum(label); }         // one calm strum as it lands on the line
+        if(y>162){ clearInterval(id); tile.remove(); }
+      },16);
+    }
+    drop();
+    window._laneTimer=setInterval(drop, 2000);               // a new chord every 2 seconds
   }
 
   function finish(){
