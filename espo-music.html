@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ESPO Music — your 5 minutes today</title>
+<meta name="description" content="An interactive taste of the ESPO Music daily routine. It's never too late to play.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#15100a; --bg2:#211810; --card:#1d160d; --line:#3a2c1c;
+    --amber:#eaa83a; --amber2:#c8702a; --deep:#1a1207;
+    --text:#f3e7d4; --muted:#a8927a; --glowrgb:234,168,58;
+    --serif:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    background:radial-gradient(130% 90% at 50% -10%, #2a1d09, var(--bg) 60%);
+    color:var(--text); font-family:var(--sans); display:flex; align-items:center; justify-content:center;
+    padding:18px; min-height:100%;
+  }
+  .demo{
+    width:100%; max-width:430px; background:linear-gradient(180deg, #1a130b, var(--bg));
+    border:1px solid var(--line); border-radius:26px; overflow:hidden;
+    box-shadow:0 30px 80px rgba(0,0,0,.55); position:relative; display:flex; flex-direction:column;
+    min-height:600px;
+  }
+  .top{padding:18px 22px 6px; text-align:center;}
+  .wm{font-family:var(--serif); font-weight:700; font-size:23px; letter-spacing:.2px;}
+  .wm .a{color:var(--text);} .wm .b{color:var(--amber);}
+  .tag{color:var(--muted); font-size:12.5px; letter-spacing:.4px; margin-top:1px; font-style:italic;}
+  .rule{height:3px;width:46px;background:var(--amber);border-radius:2px;margin:12px auto 0;opacity:.85;}
+
+  .screen{flex:1; padding:20px 22px 16px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; min-height:430px;}
+  .kick{font-size:12px; font-weight:800; letter-spacing:.7px; text-transform:uppercase; color:var(--amber); opacity:.9;}
+  .big{font-family:var(--serif); font-weight:700; font-size:30px; line-height:1.12; margin-top:6px;}
+  .sub{color:var(--muted); font-size:15px; line-height:1.5; margin-top:12px; max-width:330px;}
+  .pill{display:inline-flex; align-items:center; gap:8px; background:rgba(var(--glowrgb),.14); border:1px solid var(--line); color:var(--text); font-weight:600; font-size:13px; padding:7px 14px; border-radius:999px; margin-top:16px;}
+
+  .cta-go{margin-top:24px; background:var(--amber); color:var(--deep); border:none; font-family:var(--sans); font-weight:800; font-size:16px; padding:15px 30px; border-radius:999px; cursor:pointer; box-shadow:0 10px 26px rgba(var(--glowrgb),.30); transition:transform .08s, filter .15s;}
+  .cta-go:hover{filter:brightness(1.05);} .cta-go:active{transform:scale(.97);}
+
+  .diagram{margin:6px auto 2px;}
+  .cname{font-family:var(--serif); font-weight:700; font-size:34px; margin-top:2px;}
+  .cfull{color:var(--muted); font-size:13px; margin-top:-2px;}
+  .hearbtn{margin-top:14px; background:transparent; color:var(--amber); border:1px solid var(--amber); font-family:var(--sans); font-weight:700; font-size:14px; padding:10px 20px; border-radius:999px; cursor:pointer; transition:background .15s,color .15s;}
+  .hearbtn:hover{background:var(--amber); color:var(--deep);}
+  .hearbtn.playing{background:var(--amber); color:var(--deep);}
+
+  .chips{display:flex; gap:10px; justify-content:center; margin:4px 0 2px;}
+  .chip{width:74px; height:74px; border-radius:16px; border:1px solid var(--line); background:var(--card); display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-weight:700; font-size:24px; color:var(--text); position:relative; transition:all .2s;}
+  .chip.on{background:var(--amber); color:var(--deep); border-color:var(--amber); transform:translateY(-3px); box-shadow:0 10px 24px rgba(var(--glowrgb),.30);}
+  .cuebar{margin-top:16px; height:6px; width:200px; background:var(--line); border-radius:3px; overflow:hidden; position:relative;}
+  .cuefill{position:absolute; left:0; top:0; bottom:0; width:0; background:var(--amber); border-radius:3px;}
+  .cueword{margin-top:10px; font-weight:700; font-size:15px; color:var(--text); min-height:20px;}
+
+  .lane{position:relative; width:150px; height:150px; margin:4px auto 0; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:linear-gradient(180deg,#241a0e,#160f08);}
+  .laneline{position:absolute; left:8px; right:8px; bottom:34px; height:3px; background:var(--amber); border-radius:2px; box-shadow:0 0 12px 1px rgba(var(--glowrgb),.6);}
+  .tile{position:absolute; left:50%; transform:translateX(-50%); width:62px; height:40px; border-radius:10px; background:var(--amber); color:var(--deep); font-family:var(--serif); font-weight:700; font-size:19px; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 16px rgba(var(--glowrgb),.4);}
+  .songname{font-family:var(--serif); font-weight:700; font-size:22px; margin-top:14px;}
+  .songsub{color:var(--muted); font-size:13px; margin-top:2px; letter-spacing:1px;}
+
+  .bar{border-top:1px solid var(--line); background:var(--card); padding:13px 16px calc(13px + env(safe-area-inset-bottom)); display:flex; align-items:center; gap:12px; min-height:64px;}
+  .bar.hide{display:none;}
+  .info{flex:1; min-width:0; text-align:left;}
+  .dots{display:flex; gap:5px; margin-bottom:6px;}
+  .dots i{width:22px; height:4px; border-radius:2px; background:var(--line); transition:background .25s;}
+  .dots i.on{background:var(--amber);}
+  .step{font-size:13.5px; font-weight:700; color:var(--text);}
+  .ssub{font-size:12.5px; color:var(--muted); margin-top:1px; line-height:1.3;}
+  .next{flex:0 0 auto; background:var(--amber); color:var(--deep); border:none; font-family:var(--sans); font-weight:800; font-size:15px; padding:11px 22px; border-radius:999px; cursor:pointer;}
+  .next:active{transform:scale(.97);}
+
+  .fin .emoji{font-size:46px;}
+  .credit{margin-top:8px; color:var(--muted); font-size:12px;}
+  .badge-live{display:inline-flex;align-items:center;gap:7px;background:rgba(15,138,95,.16);border:1px solid rgba(15,138,95,.5);color:#5fd0a6;font-weight:700;font-size:12px;letter-spacing:.5px;text-transform:uppercase;padding:5px 12px;border-radius:999px;}
+  .badge-live .d{width:7px;height:7px;border-radius:50%;background:#36c98e;box-shadow:0 0 8px #36c98e;}
+
+  .conf{position:absolute;top:-16px;width:9px;height:14px;border-radius:2px;pointer-events:none;z-index:50;animation:fall linear forwards;}
+  @keyframes fall{to{transform:translateY(640px) rotate(540deg);opacity:.2;}}
+  .fade{animation:fadein .35s ease;}
+  @keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  @media (max-width:380px){ .big{font-size:26px;} .demo{min-height:560px;} }
+</style>
+</head>
+<body>
+<div class="demo" id="demo">
+  <div class="top">
+    <div class="wm"><span class="a">ESPO</span><span class="b">Music</span></div>
+    <div class="tag">It's never too late to play.</div>
+    <div class="rule"></div>
+  </div>
+  <div class="screen" id="scr"></div>
+  <div class="bar hide" id="bar">
+    <div class="info">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <div class="step" id="bStep">Step 1 of 3</div>
+      <div class="ssub" id="bSub"></div>
+    </div>
+    <button class="next" id="bNext">Next</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  var scr=$('scr'), bar=$('bar'), bStep=$('bStep'), bSub=$('bSub'), bNext=$('bNext');
+  var ESPO='https://espomusic.com';
+
+  /* ---------- chord diagrams (guitar) ---------- */
+  // pattern string low->high E A D G B e ; digit=fret, x=mute, 0=open
+  var SHAPES={ Em:'022000', Am:'x02210', C:'x32010', G:'320003', D:'xx0232' };
+  var FULL={ Em:'E minor', Am:'A minor', C:'C major', G:'G major', D:'D major' };
+  function diagram(name){
+    var p=SHAPES[name]||'xxxxxx', W=132,H=150, L=22,R=W-22, T=34,B=H-22, n=5;
+    var sx=(R-L)/5, fy=(B-T)/4, svg='';
+    svg+='<svg class="diagram" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
+    svg+='<rect x="'+L+'" y="'+T+'" width="'+(R-L)+'" height="'+(B-T)+'" rx="3" fill="none" stroke="#5a4427" stroke-width="1.5"/>';
+    svg+='<rect x="'+(L-1)+'" y="'+(T-4)+'" width="'+(R-L+2)+'" height="4" fill="#9c7a44"/>'; // nut
+    for(var f=1;f<4;f++){var y=T+fy*f;svg+='<line x1="'+L+'" y1="'+y+'" x2="'+R+'" y2="'+y+'" stroke="#3a2c1c" stroke-width="1"/>';}
+    for(var s=0;s<6;s++){var x=L+sx*s;svg+='<line x1="'+x+'" y1="'+T+'" x2="'+x+'" y2="'+B+'" stroke="#5a4427" stroke-width="1"/>';}
+    for(var s2=0;s2<6;s2++){
+      var c=p[s2], x2=L+sx*s2;
+      if(c==='x'){ svg+='<text x="'+x2+'" y="'+(T-9)+'" fill="#a8927a" font-size="12" text-anchor="middle" font-family="Inter">×</text>'; }
+      else if(c==='0'){ svg+='<circle cx="'+x2+'" cy="'+(T-13)+'" r="4.5" fill="none" stroke="#d6b06a" stroke-width="1.5"/>'; }
+      else { var fr=parseInt(c,10), cy=T+fy*(fr-0.5); svg+='<circle cx="'+x2+'" cy="'+cy+'" r="8.5" fill="#eaa83a"/>'; svg+='<text x="'+x2+'" y="'+(cy+4)+'" fill="#1a1207" font-size="11" font-weight="700" text-anchor="middle" font-family="Inter">'+fr+'</text>'; }
+    }
+    svg+='</svg>'; return svg;
+  }
+
+  /* ---------- audio (gentle strum) ---------- */
+  var AC=null;
+  var FREQ={ // approx string frequencies per shape (low->high), null=mute
+    Em:[82.41,123.47,164.81,196.00,246.94,329.63],
+    Am:[null,110.00,164.81,220.00,261.63,329.63],
+    G:[98.00,123.47,146.83,196.00,246.94,392.00],
+    C:[null,130.81,164.81,196.00,261.63,329.63],
+    D:[null,null,146.83,220.00,293.66,369.99]
+  };
+  function strum(name){
+    try{
+      AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+      if(AC.state==='suspended') AC.resume();
+      var fr=FREQ[name]||FREQ.Em, t0=AC.currentTime;
+      fr.forEach(function(f,i){
+        if(!f) return;
+        var o=AC.createOscillator(), g=AC.createGain(), st=t0+i*0.055;
+        o.type='triangle'; o.frequency.value=f;
+        g.gain.setValueAtTime(0,st); g.gain.linearRampToValueAtTime(0.13,st+0.012);
+        g.gain.exponentialRampToValueAtTime(0.0008,st+1.5);
+        o.connect(g); g.connect(AC.destination); o.start(st); o.stop(st+1.6);
+      });
+    }catch(e){}
+  }
+
+  /* ---------- confetti ---------- */
+  function confetti(){
+    var demo=$('demo'), cols=['#eaa83a','#c8702a','#f3e7d4','#5fd0a6'];
+    for(var i=0;i<70;i++){(function(){
+      var c=document.createElement('div'); c.className='conf';
+      c.style.left=(Math.random()*100)+'%';
+      c.style.background=cols[i%cols.length];
+      c.style.animationDuration=(1.6+Math.random()*1.4)+'s';
+      c.style.animationDelay=(Math.random()*0.5)+'s';
+      c.style.transform='rotate('+(Math.random()*360)+'deg)';
+      demo.appendChild(c); setTimeout(function(){c.remove();},3600);
+    })();}
+  }
+
+  /* ---------- step machine ---------- */
+  var idx=-1;
+  var steps=[
+    { label:'Warm up', sub:'Your tricky two — fumbles are part of it.', render:renderWarm },
+    { label:'Get smooth', sub:'Slow is fine — reps, not speed.', render:renderSmooth },
+    { label:'Play', sub:'The fun part — a song you can already play.', render:renderPlay }
+  ];
+
+  function intro(){
+    bar.classList.add('hide');
+    scr.className='screen fade';
+    scr.innerHTML=
+      '<div class="badge-live"><span class="d"></span> Now live</div>'+
+      '<div class="big" style="margin-top:16px;">Your 5 minutes<br>today</div>'+
+      '<div class="sub">A tiny daily routine that actually sticks: warm up your tricky chords, get smooth, then play a song you already know.</div>'+
+      '<div class="pill">Warm up &middot; Get smooth &middot; Play</div>'+
+      '<button class="cta-go" id="startBtn">Start my 5 minutes ▶</button>'+
+      '<div class="credit">An interactive taste of ESPO&nbsp;Music</div>';
+    $('startBtn').onclick=function(){ try{strum('Em');}catch(e){} idx=0; go(); };
+  }
+
+  function go(){
+    var s=steps[idx];
+    bar.classList.remove('hide');
+    bStep.textContent='Step '+(idx+1)+' of 3 · '+s.label;
+    bSub.textContent=s.sub;
+    var dots=bar.querySelectorAll('.dots i'); for(var i=0;i<dots.length;i++) dots[i].classList.toggle('on', i<=idx);
+    bNext.textContent=(idx===steps.length-1)?'Finish':'Next';
+    s.render();
+  }
+
+  function renderWarm(){
+    scr.className='screen fade';
+    scr.innerHTML=
+      diagram('Em')+
+      '<div class="cname">Em</div><div class="cfull">'+FULL.Em+'</div>'+
+      '<div class="sub" style="margin-top:10px;">Hear <b>Em</b> &amp; <b>Am</b>, then check one. These are your tricky two today — fumbling is part of it.</div>'+
+      '<button class="hearbtn" id="hear">▶&nbsp; Hear it</button>';
+    $('hear').onclick=function(){ var b=$('hear'); b.classList.add('playing'); strum('Em'); setTimeout(function(){b.classList.remove('playing');},1400); };
+  }
+
+  function renderSmooth(){
+    scr.className='screen fade';
+    scr.innerHTML=
+      '<div class="kick">Get smooth</div>'+
+      '<div class="chips"><div class="chip on" id="ch0">Em</div><div class="chip" id="ch1">Am</div></div>'+
+      '<div class="cueword" id="cue">Play Em…</div>'+
+      '<div class="cuebar"><div class="cuefill" id="fill"></div></div>'+
+      '<div class="sub" style="margin-top:14px;">Switch when the band tells you. <b>Slow is fine</b> — smooth comes from reps, not speed.</div>';
+    var cur=0, fill=$('fill'), cue=$('cue'), chips=[$('ch0'),$('ch1')], chords=['Em','Am'];
+    if(window._cueTimer) clearInterval(window._cueTimer);
+    var t=0;
+    window._cueTimer=setInterval(function(){
+      t+=0.04; var pct=Math.min(100,(t%2)/2*100); fill.style.width=pct+'%';
+      if(pct>97){
+        cur=1-cur; chips[cur].classList.add('on'); chips[1-cur].classList.remove('on');
+        cue.textContent='Switch → '+chords[cur]; strum(chords[cur]); t=0;
+      }
+    },40);
+  }
+
+  function renderPlay(){
+    if(window._cueTimer) clearInterval(window._cueTimer);
+    scr.className='screen fade';
+    scr.innerHTML=
+      '<div class="kick">Now the fun part</div>'+
+      '<div class="lane" id="lane"><div class="laneline"></div></div>'+
+      '<div class="songname">Power Rock</div><div class="songsub">G &middot; C &middot; D</div>'+
+      '<div class="sub" style="margin-top:12px;">A song you can <b>already play</b>. No pressure — just enjoy it.</div>';
+    var lane=$('lane'), names=['G','C','D','G'], k=0;
+    if(window._laneTimer) clearInterval(window._laneTimer);
+    window._laneTimer=setInterval(function(){
+      var t=document.createElement('div'); t.className='tile'; t.textContent=names[k%4]; k++;
+      t.style.top='-44px'; lane.appendChild(t);
+      var y=-44, id=setInterval(function(){ y+=4; t.style.top=y+'px'; if(y>150){clearInterval(id); t.remove();} },16);
+      if(k%4===0) strum('G');
+    },520);
+  }
+
+  function finish(){
+    if(window._cueTimer) clearInterval(window._cueTimer);
+    if(window._laneTimer) clearInterval(window._laneTimer);
+    bar.classList.add('hide');
+    scr.className='screen fade fin';
+    scr.innerHTML=
+      '<div class="emoji">🎉</div>'+
+      '<div class="big" style="margin-top:8px;">That\'s your<br>5 minutes!</div>'+
+      '<div class="sub">That\'s the real daily routine inside ESPO Music — guitar, piano, harmonica &amp; ukulele. It keeps your streak going and meets you where you are.</div>'+
+      '<a class="cta-go" href="'+ESPO+'" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block;">Play free at espomusic.com →</a>'+
+      '<button class="hearbtn" id="again" style="margin-top:14px;">↻ Run it again</button>';
+    confetti(); strum('G');
+    $('again').onclick=intro;
+  }
+
+  bNext.onclick=function(){
+    if(idx>=steps.length-1){ finish(); return; }
+    idx++; go();
+  };
+
+  intro();
+})();
+</script>
+</body>
+</html>
