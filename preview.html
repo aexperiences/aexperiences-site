@@ -331,13 +331,13 @@
 <script>
   (function(){
     var els=[].slice.call(document.querySelectorAll('.reveal'));
-    if(!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches){
-      els.forEach(function(e){e.classList.add('in');}); return;
-    }
+    function showAll(){ els.forEach(function(e){ e.classList.add('in'); }); }
+    if(!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches){ showAll(); return; }
     var io=new IntersectionObserver(function(entries){
       entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
-    },{threshold:.12, rootMargin:'0px 0px -8% 0px'});
+    },{threshold:.08, rootMargin:'0px 0px -5% 0px'});
     els.forEach(function(e){ io.observe(e); });
+    setTimeout(showAll, 1500);   /* safety net: content is never left hidden if the observer misses */
   })();
 </script>
 </body>
