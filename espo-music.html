@@ -140,19 +140,29 @@
     C:[null,130.81,164.81,196.00,261.63,329.63],
     D:[null,null,146.83,220.00,293.66,369.99]
   };
+  // Karplus-Strong plucked string — real guitar tone, no samples.
+  function ksPluck(freq, t, gain){
+    var sr=AC.sampleRate, N=Math.max(2,Math.round(sr/freq));
+    var dur=2.2, len=(sr*dur)|0, buf=AC.createBuffer(1,len,sr), d=buf.getChannelData(0);
+    var ring=new Float32Array(N), lp0=0;
+    for(var i=0;i<N;i++){ lp0=((Math.random()*2-1)+lp0)*0.5; ring[i]=lp0; }
+    var pos=0, decay=0.9961;
+    for(var s=0;s<len;s++){ var cur=ring[pos]; d[s]=cur; ring[pos]=(cur+ring[(pos+1)%N])*0.5*decay; pos=(pos+1)%N; }
+    var atk=(sr*0.003)|0; for(var a=0;a<atk;a++){ d[a]*=a/atk; }
+    var rel=(sr*0.15)|0; for(var r=0;r<rel;r++){ d[len-1-r]*=r/rel; }
+    var src=AC.createBufferSource(); src.buffer=buf;
+    var g=AC.createGain(); g.gain.value=gain;
+    var hp=AC.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=75;
+    var lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=4200; lp.Q.value=0.5;
+    src.connect(g); g.connect(hp); hp.connect(lp); lp.connect(AC.destination);
+    src.start(t); src.stop(t+dur);
+  }
   function strum(name){
     try{
       AC=AC||new (window.AudioContext||window.webkitAudioContext)();
       if(AC.state==='suspended') AC.resume();
-      var fr=FREQ[name]||FREQ.Em, t0=AC.currentTime;
-      fr.forEach(function(f,i){
-        if(!f) return;
-        var o=AC.createOscillator(), g=AC.createGain(), st=t0+i*0.055;
-        o.type='triangle'; o.frequency.value=f;
-        g.gain.setValueAtTime(0,st); g.gain.linearRampToValueAtTime(0.13,st+0.012);
-        g.gain.exponentialRampToValueAtTime(0.0008,st+1.5);
-        o.connect(g); g.connect(AC.destination); o.start(st); o.stop(st+1.6);
-      });
+      var fr=FREQ[name]||FREQ.Em, t0=AC.currentTime+0.02, k=0;
+      fr.forEach(function(f){ if(!f) return; ksPluck(f, t0+k*0.05, 0.16); k++; });
     }catch(e){}
   }
 
