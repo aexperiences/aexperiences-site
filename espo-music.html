@@ -290,10 +290,10 @@
     scr.innerHTML=
       '<div class="badge-live"><span class="d"></span> Now live</div>'+
       '<div class="big" style="margin-top:16px;">Your 5 minutes<br>today</div>'+
-      '<div class="sub">Warm up, then ride <b>The Highway</b> — the rhythm lane that turns practice into play.</div>'+
+      '<div class="sub">Warm up, then ride <b>The Highway</b> — it coaches you while <b>you</b> play your own real '+C.sub+'.</div>'+
       '<div class="pill">'+C.label+' &middot; '+C.sub+'</div>'+
       '<button class="cta-go" id="startBtn">Start my 5 minutes ▶</button>'+
-      '<div class="credit">An interactive taste of ESPO&nbsp;Music</div>';
+      '<div class="credit">A taste of the guide — you play your own '+C.sub+'</div>';
     $('startBtn').onclick=function(){ try{play(C.warm[0]);}catch(e){} idx=0; go(); };
   }
 
@@ -312,7 +312,7 @@
       '<div id="wDia">'+diagram(sel)+'</div>'+
       '<div class="cname" id="wName">'+bigName(sel)+'</div><div class="cfull" id="wFull">'+fullName(sel)+'</div>'+
       '<div class="ccards" id="wCards"></div>'+
-      '<div class="sub" style="margin-top:12px;">Tap each one to hear it — real '+C.sub+' tone. The same moves you\'ll nail on The Highway.</div>';
+      '<div class="sub" style="margin-top:12px;">Tap to hear the real '+C.sub+' tone — then play it on <b>your own '+C.sub+'</b>, matching the app.</div>';
     var wrap=$('wCards');
     C.warm.forEach(function(c){
       var b=document.createElement('button'); b.className='ccard'+(c===sel?' on':''); b.textContent=c;
@@ -332,7 +332,7 @@
         '<div class="hitline"></div><div class="combo" id="combo"></div>'+
         '<div class="perfect" id="pf">Perfect!</div><div class="countin" id="ci">3</div></div>'+
       '<div class="songname">'+C.song+'</div><div class="songsub">'+C.songsub+'</div>'+
-      '<div class="sub" style="margin-top:10px;">'+(C.kind==='harp'?'Holes':'Chords')+' fly down <b>The Highway</b> — hit each one the moment it lands. Watch the combo climb.</div>';
+      '<div class="sub" style="margin-top:10px;">'+(C.kind==='harp'?'Holes':'Chords')+' fly down <b>The Highway</b> — play each one on <b>your real '+C.sub+'</b> as it lands. The app keeps time; you make the music.</div>';
     var hwy=$('hwy'), comboEl=$('combo'), pf=$('pf'), ci=$('ci');
     var prog=C.hwy, k=0, combo=0, HITY=226, BURST_Y=250;
     var cn=['3','2','1','GO'], ciIdx=0; ci.textContent=cn[0];
