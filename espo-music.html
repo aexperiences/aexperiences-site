@@ -13,17 +13,18 @@
     --bg:#15100a; --bg2:#211810; --card:#1d160d; --line:#3a2c1c;
     --amber:#eaa83a; --amber2:#c8702a; --deep:#1a1207;
     --text:#f3e7d4; --muted:#a8927a; --glowrgb:234,168,58;
+    --bgglow:#2a1d09; --demotop:#1a130b; --lane1:#241a0d; --lane2:#150e07; --lane3:#0d0804; --hot:#ffe6b0;
     --serif:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
   html,body{height:100%;}
   body{
-    background:radial-gradient(130% 90% at 50% -10%, #2a1d09, var(--bg) 60%);
+    background:radial-gradient(130% 90% at 50% -10%, var(--bgglow), var(--bg) 60%);
     color:var(--text); font-family:var(--sans); display:flex; align-items:center; justify-content:center;
     padding:18px; min-height:100%;
   }
   .demo{
-    width:100%; max-width:430px; background:linear-gradient(180deg, #1a130b, var(--bg));
+    width:100%; max-width:430px; background:linear-gradient(180deg, var(--demotop), var(--bg));
     border:1px solid var(--line); border-radius:26px; overflow:hidden;
     box-shadow:0 30px 80px rgba(0,0,0,.55); position:relative; display:flex; flex-direction:column;
     min-height:600px;
@@ -54,7 +55,7 @@
 
   /* ===== THE HIGHWAY ===== */
   .hwy{position:relative; width:250px; height:300px; margin:4px auto 0; border-radius:18px; overflow:hidden;
-       background:radial-gradient(120% 60% at 50% 100%, rgba(var(--glowrgb),.20), transparent 62%), linear-gradient(180deg,#241a0d 0%, #150e07 56%, #0d0804 100%);
+       background:radial-gradient(120% 60% at 50% 100%, rgba(var(--glowrgb),.20), transparent 62%), linear-gradient(180deg,var(--lane1) 0%, var(--lane2) 56%, var(--lane3) 100%);
        border:1px solid #4a3920; box-shadow:inset 0 0 44px rgba(0,0,0,.62), 0 16px 44px rgba(0,0,0,.5);}
   .hwy .edge{position:absolute; top:0; bottom:0; width:2px; background:linear-gradient(180deg,transparent, rgba(var(--glowrgb),.55)); box-shadow:0 0 10px rgba(var(--glowrgb),.5);}
   .hwy .edge.l{left:40px; transform:skewX(9deg); transform-origin:bottom;}
@@ -64,7 +65,7 @@
   @keyframes hlpulse{0%,100%{opacity:.85;} 50%{opacity:1;}}
   .htile{position:absolute; left:50%; top:-50px; transform:translateX(-50%); min-width:64px; height:48px; padding:0 12px; border-radius:13px;
          display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-weight:700; font-size:22px;
-         color:#2a1c08; background:linear-gradient(180deg,#ffdc92,var(--amber));
+         color:#2a1c08; background:linear-gradient(180deg,var(--hot),var(--amber));
          box-shadow:0 0 22px 2px rgba(var(--glowrgb),.55), inset 0 1px 0 rgba(255,255,255,.55); will-change:top;}
   .htile::after{content:""; position:absolute; left:7px; right:7px; top:-50px; height:50px; border-radius:13px;
                 background:linear-gradient(180deg,transparent, rgba(var(--glowrgb),.22));}
@@ -73,16 +74,16 @@
   .burst{position:absolute; transform:translate(-50%,-50%) scale(.2); width:130px; height:130px; border-radius:50%; pointer-events:none;
          background:radial-gradient(circle, rgba(255,238,196,.95), rgba(var(--glowrgb),.5) 38%, transparent 70%); animation:burst .5s ease-out forwards;}
   @keyframes burst{to{transform:translate(-50%,-50%) scale(1.55); opacity:0;}}
-  .spark{position:absolute; width:6px; height:6px; border-radius:50%; background:#ffe6b0; box-shadow:0 0 8px rgba(var(--glowrgb),.95); pointer-events:none;}
+  .spark{position:absolute; width:6px; height:6px; border-radius:50%; background:var(--hot); box-shadow:0 0 8px rgba(var(--glowrgb),.95); pointer-events:none;}
   .ember{position:absolute; bottom:-8px; width:4px; height:4px; border-radius:50%; background:rgba(var(--glowrgb),.7); box-shadow:0 0 6px rgba(var(--glowrgb),.7); pointer-events:none; animation:rise linear forwards;}
   @keyframes rise{to{transform:translateY(-310px); opacity:0;}}
-  .combo{position:absolute; top:8px; left:0; right:0; text-align:center; font-family:var(--serif); font-weight:700; color:#ffe6b0; text-shadow:0 0 16px rgba(var(--glowrgb),.85); opacity:0; transition:opacity .2s, transform .12s;}
+  .combo{position:absolute; top:8px; left:0; right:0; text-align:center; font-family:var(--serif); font-weight:700; color:var(--hot); text-shadow:0 0 16px rgba(var(--glowrgb),.85); opacity:0; transition:opacity .2s, transform .12s;}
   .combo.show{opacity:1;} .combo .x{font-size:15px; opacity:.8;}
   .combo.bump{transform:scale(1.18);}
   .perfect{position:absolute; left:0; right:0; bottom:12px; text-align:center; font-weight:800; font-size:13.5px; letter-spacing:1px; color:#fff; text-shadow:0 0 12px rgba(var(--glowrgb),.9); opacity:0;}
   .perfect.show{animation:pf .62s ease;}
   @keyframes pf{0%{opacity:0; transform:translateY(8px);} 30%{opacity:1; transform:none;} 100%{opacity:0;}}
-  .countin{position:absolute; left:0; right:0; top:40%; text-align:center; font-family:var(--serif); font-weight:700; font-size:62px; color:#ffe6b0; text-shadow:0 0 26px rgba(var(--glowrgb),.85); pointer-events:none;}
+  .countin{position:absolute; left:0; right:0; top:40%; text-align:center; font-family:var(--serif); font-weight:700; font-size:62px; color:var(--hot); text-shadow:0 0 26px rgba(var(--glowrgb),.85); pointer-events:none;}
   .countin.go{font-size:46px;}
   .songname{font-family:var(--serif); font-weight:700; font-size:20px; margin-top:12px;}
   .songsub{color:var(--muted); font-size:13px; margin-top:2px; letter-spacing:1.5px;}
@@ -146,6 +147,15 @@
   var C=CFG[INST]||CFG.fret;
   $('tag').textContent=C.label+' · '+C.sub;
 
+  /* ---------- per-instrument color scheme (matches the real apps) ---------- */
+  var THEMES={
+    fret:  {bg:'#15100a',bg2:'#211810',card:'#1d160d',line:'#3a2c1c',amber:'#eaa83a',amber2:'#c8702a',deep:'#1a1207',text:'#f3e7d4',muted:'#a8927a',glowrgb:'234,168,58',bgglow:'#2a1d09',demotop:'#1a130b',lane1:'#241a0d',lane2:'#150e07',lane3:'#0d0804',hot:'#ffe6b0'},
+    grand: {bg:'#0c0c0f',bg2:'#15151b',card:'#191920',line:'#2d2d38',amber:'#d4a64a',amber2:'#a87d31',deep:'#08080b',text:'#f4f1ea',muted:'#a3a2ad',glowrgb:'212,166,74',bgglow:'#1c160b',demotop:'#15151b',lane1:'#20202a',lane2:'#15151b',lane3:'#0a0a0e',hot:'#f3eee2'},
+    harp:  {bg:'#0e1420',bg2:'#161e2e',card:'#18212f',line:'#2a3850',amber:'#8fb3d9',amber2:'#5f86b0',deep:'#090d16',text:'#eef2f8',muted:'#9aa8be',glowrgb:'143,179,217',bgglow:'#16263f',demotop:'#161e2e',lane1:'#16263f',lane2:'#0f1a2c',lane3:'#080d16',hot:'#dbeeff'},
+    uke:   {bg:'#0a1613',bg2:'#102420',card:'#122a23',line:'#1f3d35',amber:'#54c7a4',amber2:'#2f9e80',deep:'#06100d',text:'#eaf5f0',muted:'#9fc0b5',glowrgb:'84,199,164',bgglow:'#103a2e',demotop:'#102420',lane1:'#123d31',lane2:'#0c2a22',lane3:'#061310',hot:'#c9f5e6'}
+  };
+  (function(){ var th=THEMES[CFG[INST]?INST:'fret']||THEMES.fret, rs=document.documentElement.style; for(var k in th){ rs.setProperty('--'+k, th[k]); } })();
+
   /* ---------- chord data ---------- */
   var GSHAPES={Em:'022000',Am:'x02210',C:'x32010',G:'320003',D:'xx0232'};
   var GFULL={Em:'E minor',Am:'A minor',C:'C major',G:'G major',D:'D major'};
@@ -171,7 +181,7 @@
       var c=p[s2]||'x', x2=L+sx*s2;
       if(c==='x'){ svg+='<text x="'+x2+'" y="'+(T-9)+'" fill="#a8927a" font-size="12" text-anchor="middle" font-family="Inter">×</text>'; }
       else if(c==='0'){ svg+='<circle cx="'+x2+'" cy="'+(T-13)+'" r="4.5" fill="none" stroke="#d6b06a" stroke-width="1.5"/>'; }
-      else { var fr=parseInt(c,10), cy=T+fy*(fr-0.5); svg+='<circle cx="'+x2+'" cy="'+cy+'" r="8.5" fill="#eaa83a"/>'; svg+='<text x="'+x2+'" y="'+(cy+4)+'" fill="#1a1207" font-size="11" font-weight="700" text-anchor="middle" font-family="Inter">'+fr+'</text>'; }
+      else { var fr=parseInt(c,10), cy=T+fy*(fr-0.5); svg+='<circle cx="'+x2+'" cy="'+cy+'" r="8.5" fill="var(--amber)"/>'; svg+='<text x="'+x2+'" y="'+(cy+4)+'" fill="#1a1207" font-size="11" font-weight="700" text-anchor="middle" font-family="Inter">'+fr+'</text>'; }
     }
     svg+='</svg>'; return svg;
   }
@@ -180,7 +190,7 @@
     svg+='<svg class="diagram" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
     for(var i=0;i<wn;i++){
       var lit=keys.indexOf(i)>=0;
-      svg+='<rect x="'+(i*kw+1)+'" y="2" width="'+(kw-2)+'" height="'+(H-4)+'" rx="3" fill="'+(lit?'#eaa83a':'#efe2cb')+'" stroke="#5a4427" stroke-width="1"/>';
+      svg+='<rect x="'+(i*kw+1)+'" y="2" width="'+(kw-2)+'" height="'+(H-4)+'" rx="3" fill="'+(lit?'var(--amber)':'#efe2cb')+'" stroke="#5a4427" stroke-width="1"/>';
     }
     // black keys after white indices 0,1,3,4,5,7,8 (skip E-F and B-C gaps): pattern C D _ F G A _ C D
     var blk=[0,1,3,4,5,7,8];
@@ -193,9 +203,9 @@
     svg+='<rect x="1" y="18" width="'+(W-2)+'" height="'+(H-24)+'" rx="8" fill="#241a0e" stroke="#5a4427" stroke-width="1.5"/>';
     for(var i=0;i<cells;i++){
       var lit=(i+1)===h.n;
-      svg+='<rect x="'+(i*cw+3)+'" y="22" width="'+(cw-6)+'" height="'+(H-32)+'" rx="4" fill="'+(lit?'#eaa83a':'#1a1207')+'" stroke="#5a4427" stroke-width="1"/>';
+      svg+='<rect x="'+(i*cw+3)+'" y="22" width="'+(cw-6)+'" height="'+(H-32)+'" rx="4" fill="'+(lit?'var(--amber)':'#1a1207')+'" stroke="#5a4427" stroke-width="1"/>';
       svg+='<text x="'+(i*cw+cw/2)+'" y="'+(H/2+8)+'" fill="'+(lit?'#1a1207':'#a8927a')+'" font-size="12" font-weight="700" text-anchor="middle" font-family="Inter">'+(i+1)+'</text>';
-      if(lit){ svg+='<text x="'+(i*cw+cw/2)+'" y="12" fill="#eaa83a" font-size="12" text-anchor="middle" font-family="Inter">▲</text>'; }
+      if(lit){ svg+='<text x="'+(i*cw+cw/2)+'" y="12" fill="var(--amber)" font-size="12" text-anchor="middle" font-family="Inter">▲</text>'; }
     }
     svg+='</svg>'; return svg;
   }
@@ -232,6 +242,7 @@
     src.start(t); src.stop(t+dur);
   }
   function pianoNote(freq, t, gain){
+    t=Math.max(t, AC.currentTime+0.005);
     var g=AC.createGain();
     g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(gain,t+0.006); g.gain.exponentialRampToValueAtTime(0.0006,t+1.7);
     var lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=3400;
@@ -242,6 +253,7 @@
     });
   }
   function harpNote(freq, t, gain){
+    t=Math.max(t, AC.currentTime+0.005);
     var g=AC.createGain();
     g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(gain,t+0.05); g.gain.setValueAtTime(gain,t+0.45); g.gain.exponentialRampToValueAtTime(0.001,t+0.95);
     var bp=AC.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=freq*1.6; bp.Q.value=3.5;
@@ -256,12 +268,19 @@
   function play(name){
     try{
       AC=AC||new (window.AudioContext||window.webkitAudioContext)();
-      if(AC.state==='suspended') AC.resume();
-      var t0=AC.currentTime+0.02;
-      if(C.kind==='guitar'){ var fr=GFREQ[name]||GFREQ.Em,k=0; fr.forEach(function(f){ if(f){ ksPluck(f,t0+k*0.05,0.15,'guitar'); k++; } }); }
-      else if(C.kind==='uke'){ var u=UFREQ[name]||UFREQ.C,k2=0; u.forEach(function(f){ if(f){ ksPluck(f,t0+k2*0.035,0.16,'uke'); k2++; } }); }
-      else if(C.kind==='piano'){ var pf=PFREQ[name]||PFREQ.C; pf.forEach(function(f){ pianoNote(f,t0,0.16); }); }
-      else { var h=HHOLE[name]||{f:523.25}; harpNote(h.f,t0,0.2); }
+      var fire=function(){
+        try{
+          var t0=AC.currentTime+0.04;
+          if(C.kind==='guitar'){ var fr=GFREQ[name]||GFREQ.Em,k=0; fr.forEach(function(f){ if(f){ ksPluck(f,t0+k*0.05,0.15,'guitar'); k++; } }); }
+          else if(C.kind==='uke'){ var u=UFREQ[name]||UFREQ.C,k2=0; u.forEach(function(f){ if(f){ ksPluck(f,t0+k2*0.035,0.16,'uke'); k2++; } }); }
+          else if(C.kind==='piano'){ var pf=PFREQ[name]||PFREQ.C; pf.forEach(function(f){ pianoNote(f,t0,0.17); }); }
+          else { var h=HHOLE[name]||{f:523.25}; harpNote(h.f,t0,0.2); }
+        }catch(e){}
+      };
+      // iOS/Safari: AudioContext starts suspended — resume FIRST, then schedule,
+      // or envelope-based voices (piano/harp) get muted by a stale start time.
+      if(AC.state!=='running' && AC.resume){ AC.resume().then(fire,fire); }
+      else fire();
     }catch(e){}
   }
 
