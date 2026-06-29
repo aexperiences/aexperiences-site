@@ -67,10 +67,10 @@
 
   /* header */
   header.bar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.86);backdrop-filter:saturate(150%) blur(12px);border-bottom:1px solid var(--line);}
-  .bar .wrap{display:flex;align-items:center;justify-content:space-between;height:68px;}
+  .bar .wrap{display:flex;align-items:center;justify-content:space-between;min-height:68px;gap:12px;padding-top:8px;padding-bottom:8px;}
   .bar .logo{display:flex;align-items:center;height:44px;}
   .bar .logo img{height:42px;width:auto;}
-  .bar nav{display:flex;align-items:center;gap:26px;}
+  .bar nav{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:flex-end;}
   .bar nav a.navlink{font-weight:500;font-size:15px;color:var(--navy);opacity:.78;transition:opacity .15s;}
   .bar nav a.navlink:hover{opacity:1;}
   @media(max-width:820px){ .bar nav a.navlink{display:none;} }
@@ -202,6 +202,9 @@
       <a class="navlink" href="#work">How we work</a>
       <a class="navlink" href="#aehub">AEHub</a>
       <a class="navlink" href="#products">Products</a>
+      <a class="navlink" href="https://espomusic.com" target="_blank" rel="noopener">ESPO Music</a>
+      <a class="navlink" href="https://espodrama.com" target="_blank" rel="noopener">ESPO Drama</a>
+      <a class="navlink" href="https://espogenius.com" target="_blank" rel="noopener">ESPO Genius</a>
       <a class="navlink" href="#services">Services</a>
       <a class="btn btn-primary" href="mailto:anthonye@aexperiences.studio?subject=Project%20inquiry">Start a project</a>
     </nav>
@@ -379,6 +382,8 @@
       <a href="#aehub">AEHub</a>
       <a href="#products">Products</a>
       <a href="https://espomusic.com" target="_blank" rel="noopener">ESPO Music</a>
+      <a href="https://espodrama.com" target="_blank" rel="noopener">ESPO Drama</a>
+      <a href="https://espogenius.com" target="_blank" rel="noopener">ESPO Genius</a>
       <a href="#services">Services</a>
       <a href="mailto:anthonye@aexperiences.studio">Contact</a>
     </nav>
