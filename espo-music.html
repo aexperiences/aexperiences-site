@@ -456,7 +456,7 @@
       ciIdx++;
       if(ciIdx>=cn.length){ clearInterval(ciT); ci.style.display='none'; startFall(); }
       else { ci.textContent=cn[ciIdx]; ci.classList.toggle('go', cn[ciIdx]==='GO'); ci.style.animation='none'; void ci.offsetWidth; ci.style.animation='pf .5s ease'; try{ if(cn[ciIdx]==='GO') bKick(AC.currentTime+0.02); else bHat(AC.currentTime+0.02); }catch(e){} }
-    },560);
+    },750);
     window._hwyTimers.push(ciT);
     var embT=setInterval(function(){
       if(!document.body.contains(hwy)){ clearInterval(embT); return; }
@@ -492,7 +492,7 @@
       if(!document.body.contains(hwy)){ return; }
       var name=prog[k%prog.length]; k++;
       var tile=document.createElement('div'); tile.className='htile'; tile.innerHTML='<div class="tdia">'+miniDia(name)+'</div><div class="tn">'+name+'</div>'; hwy.appendChild(tile);
-      var start=performance.now(), dur=1520, fromY=-120, hit=false;
+      var start=performance.now(), dur=3000, fromY=-120, hit=false;
       function frame(now){
         if(!document.body.contains(hwy)){ return; }
         var p=Math.min(1,(now-start)/dur);
@@ -508,7 +508,7 @@
       }
       requestAnimationFrame(frame);
     }
-    function startFall(){ var STEP=760; spawnTile(); var ft=setInterval(spawnTile, STEP); window._hwyTimers.push(ft);
+    function startFall(){ var STEP=1500; spawnTile(); var ft=setInterval(spawnTile, STEP); window._hwyTimers.push(ft);
       var beat=function(){ if(!document.body.contains(hwy)) return; try{ var t=AC.currentTime+0.02; bKick(t); bHat(t+STEP/2000); }catch(e){} };
       beat(); var bt=setInterval(beat, STEP); window._hwyTimers.push(bt);
     }
