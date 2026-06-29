@@ -63,12 +63,12 @@
   .hitline{position:absolute; left:10px; right:10px; bottom:48px; height:4px; border-radius:3px; background:var(--amber);
            box-shadow:0 0 16px 3px rgba(var(--glowrgb),.85), 0 0 42px 9px rgba(var(--glowrgb),.32); animation:hlpulse 1.1s ease-in-out infinite;}
   @keyframes hlpulse{0%,100%{opacity:.85;} 50%{opacity:1;}}
-  .htile{position:absolute; left:50%; top:-50px; transform:translateX(-50%); min-width:64px; height:48px; padding:0 12px; border-radius:13px;
-         display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-weight:700; font-size:22px;
-         color:#2a1c08; background:linear-gradient(180deg,var(--hot),var(--amber));
+  .htile{position:absolute; left:50%; top:-110px; transform:translateX(-50%); padding:5px 6px 4px; border-radius:13px;
+         background:linear-gradient(180deg,var(--hot),var(--amber));
          box-shadow:0 0 22px 2px rgba(var(--glowrgb),.55), inset 0 1px 0 rgba(255,255,255,.55); will-change:top;}
-  .htile::after{content:""; position:absolute; left:7px; right:7px; top:-50px; height:50px; border-radius:13px;
-                background:linear-gradient(180deg,transparent, rgba(var(--glowrgb),.22));}
+  .htile .tdia{background:#f4ece0; border-radius:7px; padding:3px 3px 2px;}
+  .htile .tdia svg{display:block; margin:0 auto;}
+  .htile .tn{font-family:var(--serif); font-weight:700; font-size:15px; line-height:1; color:#2a1c08; text-align:center; margin-top:2px;}
   .htile.pop{animation:tpop .2s ease;}
   @keyframes tpop{0%{transform:translateX(-50%) scale(1);} 42%{transform:translateX(-50%) scale(1.2); filter:brightness(1.6);} 100%{transform:translateX(-50%) scale(1);}}
   .burst{position:absolute; transform:translate(-50%,-50%) scale(.2); width:130px; height:130px; border-radius:50%; pointer-events:none;
@@ -87,6 +87,10 @@
   .countin.go{font-size:46px;}
   .songname{font-family:var(--serif); font-weight:700; font-size:20px; margin-top:12px;}
   .songsub{color:var(--muted); font-size:13px; margin-top:2px; letter-spacing:1.5px;}
+  .help{display:inline-block; margin-top:12px; background:rgba(var(--glowrgb),.12); border:1px solid var(--line); color:var(--text); font-size:12.5px; font-weight:600; padding:6px 13px; border-radius:999px;}
+  .coach{margin:10px auto 0; display:flex; gap:8px; align-items:flex-start; max-width:320px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:8px 12px; text-align:left;}
+  .coach b{color:var(--amber); font-family:var(--sans); font-weight:800; font-size:12.5px; flex:0 0 auto;}
+  .coach span{color:var(--text); font-size:12.5px; line-height:1.34;}
 
   .bar{border-top:1px solid var(--line); background:var(--card); padding:13px 16px calc(13px + env(safe-area-inset-bottom)); display:flex; align-items:center; gap:12px; min-height:64px;}
   .bar.hide{display:none;}
@@ -159,6 +163,13 @@
     uke:   {bg:'#0a1613',bg2:'#102420',card:'#122a23',line:'#1f3d35',amber:'#54c7a4',amber2:'#2f9e80',deep:'#06100d',text:'#eaf5f0',muted:'#9fc0b5',glowrgb:'84,199,164',bgglow:'#103a2e',demotop:'#102420',lane1:'#123d31',lane2:'#0c2a22',lane3:'#061310',hot:'#c9f5e6'}
   };
   (function(){ var th=THEMES[CFG[INST]?INST:'fret']||THEMES.fret, rs=document.documentElement.style; for(var k in th){ rs.setProperty('--'+k, th[k]); } rs.setProperty('--accent',th.amber); rs.setProperty('--accent2',th.amber2); })();
+  var HELP={guitar:'where to put your fingers',uke:'where to put your fingers',piano:'which keys to press',harp:'which hole to play'};
+  var COACH={
+    guitar:['Press just behind the fret so every string rings.','Anchor one finger and pivot to the next chord.',"You're landing right on the beat \u2014 lovely."],
+    uke:['Light touch \u2014 let all four strings sing.','Keep your strumming hand loose and even.','Right on time \u2014 keep that groove going.'],
+    piano:['Curve your fingers, press from the knuckle.',"Find the shape, then trust it \u2014 you've got this.",'Nice steady tempo \u2014 that is the secret.'],
+    harp:['Pucker small and aim for the one hole.','Breathe from your belly, not your throat.','Smooth and steady \u2014 feel the groove.']
+  };
 
   /* ---------- chord data ---------- */
   var GSHAPES={Em:'022000',Am:'x02210',C:'x32010',G:'320003',D:'xx0232'};
@@ -218,6 +229,47 @@
     if(C.kind==='uke')    return fretDia(name, USHAPES, 4);
     if(C.kind==='piano')  return pianoDia(name);
     return harpDia(name);
+  }
+  function fretDiaMini(name, shapes, strings){
+    var p=shapes[name]||'', W=strings===4?60:80, H=62, L=10, R=W-10, T=15, B=H-9, n=strings-1;
+    var sx=(R-L)/n, fy=(B-T)/4, svg='';
+    svg+='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
+    svg+='<rect x="'+L+'" y="'+T+'" width="'+(R-L)+'" height="'+(B-T)+'" rx="2" fill="none" stroke="#5a4427" stroke-width="1.2"/>';
+    svg+='<rect x="'+(L-1)+'" y="'+(T-3)+'" width="'+(R-L+2)+'" height="3" fill="#9c7a44"/>';
+    for(var fr1=1;fr1<4;fr1++){var y=T+fy*fr1;svg+='<line x1="'+L+'" y1="'+y+'" x2="'+R+'" y2="'+y+'" stroke="#7a5a3a" stroke-width="0.8"/>';}
+    for(var sg=0;sg<strings;sg++){var x=L+sx*sg;svg+='<line x1="'+x+'" y1="'+T+'" x2="'+x+'" y2="'+B+'" stroke="#5a4427" stroke-width="0.8"/>';}
+    for(var s2=0;s2<strings;s2++){
+      var c=p[s2]||'x', x2=L+sx*s2;
+      if(c==='x'){ svg+='<text x="'+x2+'" y="'+(T-4)+'" fill="#8a6a4a" font-size="9" text-anchor="middle" font-family="Inter">\u00d7</text>'; }
+      else if(c==='0'){ svg+='<circle cx="'+x2+'" cy="'+(T-6)+'" r="2.7" fill="none" stroke="#8a6a4a" stroke-width="1.1"/>'; }
+      else { var fr=parseInt(c,10), cy=T+fy*(fr-0.5); svg+='<circle cx="'+x2+'" cy="'+cy+'" r="5.6" fill="var(--amber2)"/>'; svg+='<text x="'+x2+'" y="'+(cy+3.2)+'" fill="#f7efe2" font-size="9" font-weight="700" text-anchor="middle" font-family="Inter">'+fr+'</text>'; }
+    }
+    svg+='</svg>'; return svg;
+  }
+  function pianoDiaMini(name){
+    var keys=PKEYS[name]||[], W=86, H=56, wn=10, kw=W/wn, svg='';
+    svg+='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
+    for(var i=0;i<wn;i++){ var lit=keys.indexOf(i)>=0;
+      svg+='<rect x="'+(i*kw+0.6)+'" y="1" width="'+(kw-1.2)+'" height="'+(H-2)+'" rx="2" fill="'+(lit?'var(--amber)':'#efe2cb')+'" stroke="#5a4427" stroke-width="0.8"/>'; }
+    var blk=[0,1,3,4,5,7,8]; blk.forEach(function(i){ svg+='<rect x="'+(i*kw+kw-4)+'" y="1" width="8" height="'+(H*0.58)+'" rx="1.4" fill="#241a0e"/>'; });
+    svg+='</svg>'; return svg;
+  }
+  function harpDiaMini(name){
+    var h=HHOLE[name]||{n:4}, W=96, H=48, cells=10, cw=W/cells, svg='';
+    svg+='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
+    svg+='<rect x="0.6" y="11" width="'+(W-1.2)+'" height="'+(H-17)+'" rx="4" fill="#241a0e" stroke="#5a4427" stroke-width="1"/>';
+    for(var i=0;i<cells;i++){ var lit=(i+1)===h.n;
+      svg+='<rect x="'+(i*cw+1.6)+'" y="14" width="'+(cw-3.2)+'" height="'+(H-23)+'" rx="2" fill="'+(lit?'var(--amber)':'#1a1207')+'" stroke="#5a4427" stroke-width="0.7"/>';
+      svg+='<text x="'+(i*cw+cw/2)+'" y="'+(H/2+6)+'" fill="'+(lit?'#1a1207':'#8a7a5a')+'" font-size="8.5" font-weight="700" text-anchor="middle" font-family="Inter">'+(i+1)+'</text>';
+      if(lit){ svg+='<text x="'+(i*cw+cw/2)+'" y="9" fill="var(--amber)" font-size="8.5" text-anchor="middle">\u25b2</text>'; }
+    }
+    svg+='</svg>'; return svg;
+  }
+  function miniDia(name){
+    if(C.kind==='guitar') return fretDiaMini(name, GSHAPES, 6);
+    if(C.kind==='uke')    return fretDiaMini(name, USHAPES, 4);
+    if(C.kind==='piano')  return pianoDiaMini(name);
+    return harpDiaMini(name);
   }
   function fullName(name){
     if(C.kind==='guitar') return GFULL[name]||'';
@@ -338,7 +390,8 @@
       '<div id="wDia">'+diagram(sel)+'</div>'+
       '<div class="cname" id="wName">'+bigName(sel)+'</div><div class="cfull" id="wFull">'+fullName(sel)+'</div>'+
       '<div class="ccards" id="wCards"></div>'+
-      '<div class="sub" style="margin-top:12px;">Tap to hear the real '+C.sub+' tone — then play it on <b>your own '+C.sub+'</b>, matching the app.</div>';
+      '<div class="sub" style="margin-top:12px;">Tap to hear the real '+C.sub+' tone — then play it on <b>your own '+C.sub+'</b>, matching the app.</div>'+
+      '<div class="help">\u270b ESPO shows you exactly '+(HELP[C.kind]||'what to play')+'.</div>';
     var wrap=$('wCards');
     C.warm.forEach(function(c){
       var b=document.createElement('button'); b.className='ccard'+(c===sel?' on':''); b.textContent=c;
@@ -358,9 +411,10 @@
         '<div class="hitline"></div><div class="combo" id="combo"></div>'+
         '<div class="perfect" id="pf">Perfect!</div><div class="countin" id="ci">3</div></div>'+
       '<div class="songname">'+C.song+'</div><div class="songsub">'+C.songsub+'</div>'+
-      '<div class="sub" style="margin-top:10px;">'+(C.kind==='harp'?'Holes':'Chords')+' fly down <b>The Highway</b> — play each one on <b>your real '+C.sub+'</b> as it lands. The app keeps time; you make the music.</div>';
-    var hwy=$('hwy'), comboEl=$('combo'), pf=$('pf'), ci=$('ci');
-    var prog=C.hwy, k=0, combo=0, HITY=226, BURST_Y=250;
+      '<div class="sub" style="margin-top:8px;">Each '+(C.kind==='harp'?'hole':'chord')+' shows the shape as it lands — play it on <b>your real '+C.sub+'</b>.</div>'+
+      '<div class="coach"><b>Brian</b><span id="coachT">Watch the shape, then play it as it lands — I\'ll keep you on time.</span></div>';
+    var hwy=$('hwy'), comboEl=$('combo'), pf=$('pf'), ci=$('ci'); window._coachT=document.getElementById('coachT');
+    var prog=C.hwy, k=0, combo=0, HITY=198, BURST_Y=236;
     var cn=['3','2','1','GO'], ciIdx=0; ci.textContent=cn[0];
     var ciT=setInterval(function(){
       ciIdx++;
@@ -381,6 +435,7 @@
       comboEl.style.fontSize=(24+Math.min(combo,10))+'px'; setTimeout(function(){comboEl.classList.remove('bump');},130);
       pf.textContent = combo>=6 ? ('PERFECT ×'+combo) : 'Perfect!';
       pf.classList.remove('show'); void pf.offsetWidth; pf.classList.add('show');
+      if(window._coachT){ var _cl=COACH[C.kind]||COACH.guitar; window._coachT.textContent=_cl[(combo-1)%_cl.length]; }
       var bx=hwy.clientWidth/2;
       var b=document.createElement('div'); b.className='burst'; b.style.left=bx+'px'; b.style.top=BURST_Y+'px'; hwy.appendChild(b); setTimeout(function(){b.remove();},520);
       for(var i=0;i<9;i++){(function(i){
@@ -394,8 +449,8 @@
     function spawnTile(){
       if(!document.body.contains(hwy)){ return; }
       var name=prog[k%prog.length]; k++;
-      var tile=document.createElement('div'); tile.className='htile'; tile.textContent=name; hwy.appendChild(tile);
-      var start=performance.now(), dur=1150, fromY=-50, hit=false;
+      var tile=document.createElement('div'); tile.className='htile'; tile.innerHTML='<div class="tdia">'+miniDia(name)+'</div><div class="tn">'+name+'</div>'; hwy.appendChild(tile);
+      var start=performance.now(), dur=1150, fromY=-110, hit=false;
       function frame(now){
         if(!document.body.contains(hwy)){ return; }
         var p=Math.min(1,(now-start)/dur), y=fromY+(HITY-fromY)*p; tile.style.top=y+'px';
