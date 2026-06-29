@@ -110,7 +110,9 @@
   .fade{animation:fadein .35s ease;}
   @keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
   @media (max-width:380px){ .big{font-size:26px;} .demo{min-height:560px;} }
-</style>
+.illu{height:108px;margin:0 auto 2px;display:flex;justify-content:center;}
+  .illu svg{height:100%;width:auto;display:block;filter:drop-shadow(0 0 13px rgba(var(--glowrgb),.45));}
+  </style>
 </head>
 <body>
 <div class="demo" id="demo">
@@ -138,6 +140,8 @@
 
   /* ---------- which instrument? ---------- */
   var INST=(new URLSearchParams(location.search).get('inst')||'fret').toLowerCase();
+  var _QP=new URLSearchParams(location.search), APP=(_QP.get('app')||'').replace(/[^a-z]/gi,''), EMBED=_QP.get('embed')==='1';
+  if(EMBED){ try{ document.documentElement.style.background='transparent'; document.body.style.background='transparent'; document.body.style.padding='2px'; }catch(e){} }
   var CFG={
     fret:  {label:'Fret', sub:'guitar', kind:'guitar', warm:['Em','Am','C'], hwy:['G','C','D','Em','G','C','D','G'], song:'Campfire classic', songsub:'G · C · D · Em'},
     uke:   {label:'The Uke', sub:'ukulele', kind:'uke', warm:['C','Am','F'], hwy:['C','G','Am','F','C','G','F','C'], song:'Island strum', songsub:'C · G · Am · F'},
@@ -154,7 +158,7 @@
     harp:  {bg:'#0e1420',bg2:'#161e2e',card:'#18212f',line:'#2a3850',amber:'#8fb3d9',amber2:'#5f86b0',deep:'#090d16',text:'#eef2f8',muted:'#9aa8be',glowrgb:'143,179,217',bgglow:'#16263f',demotop:'#161e2e',lane1:'#16263f',lane2:'#0f1a2c',lane3:'#080d16',hot:'#dbeeff'},
     uke:   {bg:'#0a1613',bg2:'#102420',card:'#122a23',line:'#1f3d35',amber:'#54c7a4',amber2:'#2f9e80',deep:'#06100d',text:'#eaf5f0',muted:'#9fc0b5',glowrgb:'84,199,164',bgglow:'#103a2e',demotop:'#102420',lane1:'#123d31',lane2:'#0c2a22',lane3:'#061310',hot:'#c9f5e6'}
   };
-  (function(){ var th=THEMES[CFG[INST]?INST:'fret']||THEMES.fret, rs=document.documentElement.style; for(var k in th){ rs.setProperty('--'+k, th[k]); } })();
+  (function(){ var th=THEMES[CFG[INST]?INST:'fret']||THEMES.fret, rs=document.documentElement.style; for(var k in th){ rs.setProperty('--'+k, th[k]); } rs.setProperty('--accent',th.amber); rs.setProperty('--accent2',th.amber2); })();
 
   /* ---------- chord data ---------- */
   var GSHAPES={Em:'022000',Am:'x02210',C:'x32010',G:'320003',D:'xx0232'};
@@ -304,11 +308,14 @@
     { label:'The Highway', sub:'Nail each one as it lands.', render:renderHighway }
   ];
 
+  var ILLU={fret:"<svg viewBox=\"0 0 200 270\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-label=\"Guitar\"><rect x=\"88\" y=\"40\" width=\"24\" height=\"120\" rx=\"6\" fill=\"#1d160d\" stroke=\"#c8702a\" stroke-width=\"2\"/><g stroke=\"#a8927a\" stroke-width=\"1.5\"><line x1=\"88\" y1=\"64\" x2=\"112\" y2=\"64\"/><line x1=\"88\" y1=\"86\" x2=\"112\" y2=\"86\"/><line x1=\"88\" y1=\"108\" x2=\"112\" y2=\"108\"/><line x1=\"88\" y1=\"130\" x2=\"112\" y2=\"130\"/></g><path d=\"M88 40 L86 12 Q86 6 92 6 L108 6 Q114 6 114 12 L112 40 Z\" fill=\"#1d160d\" stroke=\"#c8702a\" stroke-width=\"2\"/><g fill=\"#eaa83a\"><circle cx=\"82\" cy=\"16\" r=\"3\"/><circle cx=\"82\" cy=\"24\" r=\"3\"/><circle cx=\"82\" cy=\"32\" r=\"3\"/><circle cx=\"118\" cy=\"16\" r=\"3\"/><circle cx=\"118\" cy=\"24\" r=\"3\"/><circle cx=\"118\" cy=\"32\" r=\"3\"/></g><line x1=\"86\" y1=\"41\" x2=\"114\" y2=\"41\" stroke=\"#eaa83a\" stroke-width=\"3\"/><path d=\"M100 140 C138 140 152 168 152 182 C152 196 140 202 134 210 C128 218 154 226 160 244 C165 258 134 263 100 263 C66 263 35 258 40 244 C46 226 72 218 66 210 C60 202 48 196 48 182 C48 168 62 140 100 140 Z\" fill=\"#1d160d\" stroke=\"#eaa83a\" stroke-width=\"2.5\"/><circle cx=\"100\" cy=\"198\" r=\"24\" fill=\"#120c06\" stroke=\"#c8702a\" stroke-width=\"3\"/><rect x=\"86\" y=\"230\" width=\"28\" height=\"9\" rx=\"3\" fill=\"#1d160d\" stroke=\"#c8702a\" stroke-width=\"2\"/><g stroke=\"#cdb79c\" stroke-width=\"0.8\" opacity=\"0.5\"><line x1=\"91\" y1=\"41\" x2=\"89\" y2=\"230\"/><line x1=\"95\" y1=\"41\" x2=\"94\" y2=\"230\"/><line x1=\"98\" y1=\"41\" x2=\"98\" y2=\"230\"/><line x1=\"102\" y1=\"41\" x2=\"102\" y2=\"230\"/><line x1=\"105\" y1=\"41\" x2=\"106\" y2=\"230\"/><line x1=\"109\" y1=\"41\" x2=\"111\" y2=\"230\"/></g></svg>",grand:"<svg viewBox=\"0 0 200 270\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-label=\"Piano keyboard\"><rect x=\"22\" y=\"34\" width=\"156\" height=\"206\" rx=\"10\" fill=\"#1c1710\" stroke=\"#33291c\" stroke-width=\"2\"/><rect x=\"30\" y=\"44\" width=\"140\" height=\"12\" rx=\"4\" fill=\"var(--accent)\"/><g stroke=\"#33291c\" stroke-width=\"1.5\"><rect x=\"30\" y=\"66\" width=\"28\" height=\"160\" rx=\"4\" fill=\"#efe7d6\"/><rect x=\"58\" y=\"66\" width=\"28\" height=\"160\" rx=\"4\" fill=\"#efe7d6\"/><rect x=\"86\" y=\"66\" width=\"28\" height=\"160\" rx=\"4\" fill=\"#efe7d6\"/><rect x=\"114\" y=\"66\" width=\"28\" height=\"160\" rx=\"4\" fill=\"#efe7d6\"/><rect x=\"142\" y=\"66\" width=\"28\" height=\"160\" rx=\"4\" fill=\"#efe7d6\"/></g><g fill=\"#15120e\" stroke=\"#33291c\" stroke-width=\"1\"><rect x=\"50\" y=\"66\" width=\"16\" height=\"100\" rx=\"3\"/><rect x=\"78\" y=\"66\" width=\"16\" height=\"100\" rx=\"3\"/><rect x=\"134\" y=\"66\" width=\"16\" height=\"100\" rx=\"3\"/></g></svg>",harp:"<svg viewBox=\"0 0 200 270\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-label=\"Harmonica\"><g stroke=\"var(--accent)\" stroke-width=\"2.5\" fill=\"none\" opacity=\"0.4\"><path d=\"M176 112 q20 23 0 46\"/><path d=\"M188 100 q30 35 0 70\"/></g><rect x=\"18\" y=\"103\" width=\"150\" height=\"64\" rx=\"15\" fill=\"var(--card)\" stroke=\"var(--accent2)\" stroke-width=\"2.5\"/><rect x=\"18\" y=\"103\" width=\"150\" height=\"21\" rx=\"13\" fill=\"var(--accent)\"/><g fill=\"var(--deep)\" stroke=\"var(--accent2)\" stroke-width=\"1.2\"><rect x=\"28\" y=\"133\" width=\"9\" height=\"24\" rx=\"2\"/><rect x=\"41.4\" y=\"133\" width=\"9\" height=\"24\" rx=\"2\"/><rect x=\"54.8\" y=\"133\" width=\"9\" height=\"24\" rx=\"2\"/><rect x=\"68.2\" y=\"133\" width=\"9\" height=\"24\" rx=\"2\"/><rect x=\"81.6\" y=\"133\" width=\"9\" height=\"24\" rx=\"2\"/><rect x=\"95\" y=\"133\" width=\"9\" height=\"24\" rx=\"2\"/><rect x=\"108.4\" y=\"133\" width=\"9\" height=\"24\" rx=\"2\"/><rect x=\"121.8\" y=\"133\" width=\"9\" height=\"24\" rx=\"2\"/><rect x=\"135.2\" y=\"133\" width=\"9\" height=\"24\" rx=\"2\"/><rect x=\"148.6\" y=\"133\" width=\"9\" height=\"24\" rx=\"2\"/></g></svg>",uke:"<svg viewBox=\"0 0 200 270\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-label=\"Ukulele\"><rect x=\"90\" y=\"70\" width=\"20\" height=\"96\" rx=\"5\" fill=\"var(--card)\" stroke=\"var(--accent2)\" stroke-width=\"2\"/><g stroke=\"var(--accent2)\" stroke-width=\"1.2\" opacity=\"0.55\"><line x1=\"90\" y1=\"92\" x2=\"110\" y2=\"92\"/><line x1=\"90\" y1=\"114\" x2=\"110\" y2=\"114\"/><line x1=\"90\" y1=\"136\" x2=\"110\" y2=\"136\"/></g><path d=\"M90 70 L87 40 Q87 33 94 33 L106 33 Q113 33 113 40 L110 70 Z\" fill=\"var(--card)\" stroke=\"var(--accent2)\" stroke-width=\"2\"/><g fill=\"var(--accent)\"><circle cx=\"84\" cy=\"44\" r=\"3.2\"/><circle cx=\"84\" cy=\"54\" r=\"3.2\"/><circle cx=\"116\" cy=\"44\" r=\"3.2\"/><circle cx=\"116\" cy=\"54\" r=\"3.2\"/></g><line x1=\"89\" y1=\"71\" x2=\"111\" y2=\"71\" stroke=\"var(--accent)\" stroke-width=\"3\"/><path d=\"M100 150 C140 150 156 178 156 198 C156 216 146 224 142 234 C150 250 128 258 100 258 C72 258 50 250 58 234 C54 224 44 216 44 198 C44 178 60 150 100 150 Z\" fill=\"var(--card)\" stroke=\"var(--accent)\" stroke-width=\"2.5\"/><circle cx=\"100\" cy=\"206\" r=\"20\" fill=\"var(--deep)\" stroke=\"var(--accent2)\" stroke-width=\"2.5\"/><rect x=\"88\" y=\"236\" width=\"24\" height=\"8\" rx=\"2.5\" fill=\"var(--card)\" stroke=\"var(--accent2)\" stroke-width=\"1.6\"/><g stroke=\"var(--muted)\" stroke-width=\"0.9\" opacity=\"0.7\"><line x1=\"94\" y1=\"71\" x2=\"93\" y2=\"236\"/><line x1=\"98\" y1=\"71\" x2=\"97.5\" y2=\"236\"/><line x1=\"102\" y1=\"71\" x2=\"102.5\" y2=\"236\"/><line x1=\"106\" y1=\"71\" x2=\"107\" y2=\"236\"/></g></svg>"};
+
   function intro(){
     clearHwy(); bar.classList.add('hide'); scr.className='screen fade';
     scr.innerHTML=
+      '<div class="illu">'+(ILLU[INST]||ILLU.fret)+'</div>'+
       '<div class="badge-live"><span class="d"></span> Now live</div>'+
-      '<div class="big" style="margin-top:16px;">Your 5 minutes<br>today</div>'+
+      '<div class="big" style="margin-top:6px;">Your 5 minutes<br>today</div>'+
       '<div class="sub">Warm up, then ride <b>The Highway</b> — it coaches you while <b>you</b> play your own real '+C.sub+'.</div>'+
       '<div class="pill">'+C.label+' &middot; '+C.sub+'</div>'+
       '<button class="cta-go" id="startBtn">Start my 5 minutes ▶</button>'+
@@ -407,7 +414,7 @@
       '<div class="big" style="margin-top:8px;">Nice run!</div>'+
       '<div class="sub">That\'s The Highway inside ESPO Music — '+C.label+' is one of four: guitar, piano, harmonica &amp; ukulele. Five minutes a day, a streak that keeps you coming back, and real songs waiting.</div>'+
       '<div class="streak">🔥 Day 1 streak started</div>'+
-      '<a class="cta-go" href="'+ESPO+'" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block;">Play free at espomusic.com →</a>'+
+      '<a class="cta-go" href="'+(APP?('/'+APP):ESPO)+'" target="'+(APP?'_top':'_blank')+'" rel="noopener" style="text-decoration:none;display:inline-block;">'+(APP?('Open ESPO '+C.label+' →'):'Play free at espomusic.com →')+'</a>'+
       '<button class="cta-go" id="again" style="background:transparent;color:var(--amber);border:1px solid var(--amber);box-shadow:none;margin-top:12px;">↻ Run it again</button>';
     confetti(); play(C.hwy[0]);
     $('again').onclick=intro;
