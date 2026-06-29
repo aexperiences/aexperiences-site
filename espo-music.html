@@ -146,6 +146,7 @@
   @keyframes ringout{to{transform:translate(-50%,-50%) scale(1.8); opacity:0;}}
   .hitline.hit{animation:hlflash .42s ease;}
   @keyframes hlflash{0%{filter:brightness(2.4);} 100%{filter:brightness(1);}}
+  @media (min-width:1000px){ body:not(.embedded){ zoom:1.25; } }
   </style>
 </head>
 <body>
@@ -175,7 +176,7 @@
   /* ---------- which instrument? ---------- */
   var INST=(new URLSearchParams(location.search).get('inst')||'fret').toLowerCase();
   var _QP=new URLSearchParams(location.search), APP=(_QP.get('app')||'').replace(/[^a-z]/gi,''), EMBED=_QP.get('embed')==='1';
-  if(EMBED){ try{ document.documentElement.style.background='transparent'; document.body.style.background='transparent'; document.body.style.padding='2px'; }catch(e){} }
+  if(EMBED){ try{ document.body.classList.add('embedded'); document.documentElement.style.background='transparent'; document.body.style.background='transparent'; document.body.style.padding='2px'; }catch(e){} }
   var CFG={
     fret:  {label:'Fret', sub:'guitar', kind:'guitar', warm:['Em','Am','C'], hwy:['G','C','D','Em','G','C','D','G'], song:'Campfire classic', songsub:'G · C · D · Em'},
     uke:   {label:'The Uke', sub:'ukulele', kind:'uke', warm:['C','Am','F'], hwy:['C','G','Am','F','C','G','F','C'], song:'Island strum', songsub:'C · G · Am · F'},
