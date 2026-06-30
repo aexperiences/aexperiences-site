@@ -96,6 +96,9 @@
   .demo-frame::before{content:"";position:absolute;inset:-14% -10%;background:radial-gradient(58% 48% at 50% 42%,rgba(234,168,58,.24),transparent 70%);filter:blur(10px);z-index:0;pointer-events:none;}
   .demo-frame iframe{position:relative;z-index:1;display:block;width:100%;height:690px;border:0;border-radius:26px;background:#15100a;box-shadow:0 36px 90px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.07);}
   @media(max-width:480px){ .demo-frame iframe{height:646px;} }
+  /* MarketNarc (ESPO Genius) demo — teal "Signal" glow to distinguish it from the amber Music demo */
+  .demo-frame.signal::before{background:radial-gradient(58% 48% at 50% 42%,rgba(56,178,172,.26),transparent 70%);}
+  .mn-note{display:inline-block;margin-left:6px;font-size:13.5px;color:#9fb4d6;font-weight:600;}
 
   /* demo instrument tabs */
   .demo-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;}
@@ -339,6 +342,23 @@
   <script>
   (function(){var t=document.getElementById('demoTabs'),f=document.getElementById('demoFrame'),o=document.getElementById('demoOpen');if(!t)return;t.addEventListener('click',function(e){var b=e.target.closest('.dtab');if(!b)return;t.querySelectorAll('.dtab').forEach(function(x){x.classList.remove('on');});b.classList.add('on');var i=b.getAttribute('data-inst');f.src='espo-music.html?inst='+i;o.href='espo-music.html?inst='+i;});})();
   </script>
+</section>
+
+<section id="marketnarc-demo" class="navy demoband">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow on-navy">Also in the family &middot; ESPO&nbsp;Genius</div>
+      <h2>Try the MarketNarc demo.</h2>
+      <p class="lede">Plain&#8209;English market intelligence. Pick a stock and <b>Bart</b> gives you the call &mdash; buy, sell, hold, or watch &mdash; with the <i>why</i> behind it. Built for beginners. <b>Have a play below.</b><span class="mn-note">In production &middot; not financial advice.</span></p>
+      <div class="cta">
+        <a class="btn btn-light" href="https://espogenius.com/marketnarc" target="_blank" rel="noopener">Open MarketNarc &#8599;</a>
+        <a class="btn btn-ghost on-navy" href="https://espogenius.com" target="_blank" rel="noopener">See ESPO&nbsp;Genius &rarr;</a>
+      </div>
+    </div>
+    <div class="demo-frame signal reveal">
+      <iframe src="https://espogenius.com/demo" title="MarketNarc &mdash; a taste of plain-English market intelligence" loading="lazy"></iframe>
+    </div>
+  </div>
 </section>
 
 <section id="services" class="navy">
