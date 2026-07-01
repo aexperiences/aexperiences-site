@@ -181,7 +181,8 @@
     fret:  {label:'Fret', sub:'guitar', kind:'guitar', warm:['Em','Am','C'], hwy:['G','C','D','Em','G','C','D','G'], song:'Campfire classic', songsub:'G · C · D · Em'},
     uke:   {label:'The Uke', sub:'ukulele', kind:'uke', warm:['C','Am','F'], hwy:['C','G','Am','F','C','G','F','C'], song:'Island strum', songsub:'C · G · Am · F'},
     grand: {label:'Grand', sub:'piano', kind:'piano', warm:['C','G','Am'], hwy:['C','G','Am','F','C','G','F','C'], song:'Parlor tune', songsub:'C · G · Am · F'},
-    harp:  {label:'Harp', sub:'harmonica', kind:'harp', warm:['4','5','6'], hwy:['4','5','6','5','4','5','6','4'], song:'Blues riff', songsub:'holes 4 · 5 · 6'}
+    harp:  {label:'Harp', sub:'harmonica', kind:'harp', warm:['4','5','6'], hwy:['4','5','6','5','4','5','6','4'], song:'Blues riff', songsub:'holes 4 · 5 · 6'},
+    bass:  {label:'Bass', sub:'bass guitar', kind:'bass', warm:['E','A','C'], hwy:['E','A','E','B','E','A','B','E'], song:'Blues bassline', songsub:'roots E · A · B'}
   };
   var C=CFG[INST]||CFG.fret;
   $('tag').textContent=C.label+' · '+C.sub;
@@ -191,15 +192,17 @@
     fret:  {bg:'#15100a',bg2:'#211810',card:'#1d160d',line:'#3a2c1c',amber:'#eaa83a',amber2:'#c8702a',deep:'#1a1207',text:'#f3e7d4',muted:'#a8927a',glowrgb:'234,168,58',bgglow:'#2a1d09',demotop:'#1a130b',lane1:'#241a0d',lane2:'#150e07',lane3:'#0d0804',hot:'#ffe6b0'},
     grand: {bg:'#0c0c0f',bg2:'#15151b',card:'#191920',line:'#2d2d38',amber:'#d4a64a',amber2:'#a87d31',deep:'#08080b',text:'#f4f1ea',muted:'#a3a2ad',glowrgb:'212,166,74',bgglow:'#1c160b',demotop:'#15151b',lane1:'#20202a',lane2:'#15151b',lane3:'#0a0a0e',hot:'#f3eee2'},
     harp:  {bg:'#0e1420',bg2:'#161e2e',card:'#18212f',line:'#2a3850',amber:'#8fb3d9',amber2:'#5f86b0',deep:'#090d16',text:'#eef2f8',muted:'#9aa8be',glowrgb:'143,179,217',bgglow:'#16263f',demotop:'#161e2e',lane1:'#16263f',lane2:'#0f1a2c',lane3:'#080d16',hot:'#dbeeff'},
-    uke:   {bg:'#0a1613',bg2:'#102420',card:'#122a23',line:'#1f3d35',amber:'#54c7a4',amber2:'#2f9e80',deep:'#06100d',text:'#eaf5f0',muted:'#9fc0b5',glowrgb:'84,199,164',bgglow:'#103a2e',demotop:'#102420',lane1:'#123d31',lane2:'#0c2a22',lane3:'#061310',hot:'#c9f5e6'}
+    uke:   {bg:'#0a1613',bg2:'#102420',card:'#122a23',line:'#1f3d35',amber:'#54c7a4',amber2:'#2f9e80',deep:'#06100d',text:'#eaf5f0',muted:'#9fc0b5',glowrgb:'84,199,164',bgglow:'#103a2e',demotop:'#102420',lane1:'#123d31',lane2:'#0c2a22',lane3:'#061310',hot:'#c9f5e6'},
+    bass:  {bg:'#0e0a1a',bg2:'#171029',card:'#1b1433',line:'#2c2350',amber:'#9b8cff',amber2:'#6c5ce7',deep:'#080512',text:'#efeaff',muted:'#b3a8d6',glowrgb:'155,140,255',bgglow:'#2a1f52',demotop:'#171029',lane1:'#251d4a',lane2:'#181035',lane3:'#0b0720',hot:'#d8ccff'}
   };
   (function(){ var th=THEMES[CFG[INST]?INST:'fret']||THEMES.fret, rs=document.documentElement.style; for(var k in th){ rs.setProperty('--'+k, th[k]); } rs.setProperty('--accent',th.amber); rs.setProperty('--accent2',th.amber2); })();
-  var HELP={guitar:'where to put your fingers',uke:'where to put your fingers',piano:'which keys to press',harp:'which hole to play'};
+  var HELP={guitar:'where to put your fingers',uke:'where to put your fingers',piano:'which keys to press',harp:'which hole to play',bass:'which note to play'};
   var COACH={
     guitar:['Press just behind the fret so every string rings.','Anchor one finger and pivot to the next chord.',"You're landing right on the beat \u2014 lovely."],
     uke:['Light touch \u2014 let all four strings sing.','Keep your strumming hand loose and even.','Right on time \u2014 keep that groove going.'],
     piano:['Curve your fingers, press from the knuckle.',"Find the shape, then trust it \u2014 you've got this.",'Nice steady tempo \u2014 that is the secret.'],
-    harp:['Pucker small and aim for the one hole.','Breathe from your belly, not your throat.','Smooth and steady \u2014 feel the groove.']
+    harp:['Pucker small and aim for the one hole.','Breathe from your belly, not your throat.','Smooth and steady \u2014 feel the groove.'],
+    bass:['Let each note ring long and full.','Land your root right on the beat.','Locked with the kick \u2014 that is the groove.']
   };
 
   /* ---------- chord data ---------- */
@@ -213,6 +216,9 @@
   var PFREQ={C:[261.63,329.63,392.00],G:[196,246.94,293.66],Am:[220,261.63,329.63],F:[174.61,220,261.63]};
   var PKEYS={C:[0,2,4],G:[4,6,8],Am:[5,7,9],F:[3,5,7]}; // white-key indices on a 10-key strip C..E'
   var HHOLE={'4':{n:4,f:523.25},'5':{n:5,f:659.25},'6':{n:6,f:783.99}};
+  var BSHAPES={E:'0xxx',A:'x0xx',C:'x3xx',B:'x2xx'};
+  var BFULL={E:'E — open',A:'A — open',C:'C — 3rd fret',B:'B — 2nd fret'};
+  var BFREQ={E:[82.41],A:[110.00],C:[130.81],B:[123.47]}; // one octave up so it carries on phone speakers
 
   /* ---------- diagrams ---------- */
   function fretDia(name, shapes, strings){
@@ -258,6 +264,7 @@
   function diagram(name){
     if(C.kind==='guitar') return fretDia(name, GSHAPES, 6);
     if(C.kind==='uke')    return fretDia(name, USHAPES, 4);
+    if(C.kind==='bass')   return fretDia(name, BSHAPES, 4);
     if(C.kind==='piano')  return pianoDia(name);
     return harpDia(name);
   }
@@ -299,12 +306,14 @@
   function miniDia(name){
     if(C.kind==='guitar') return fretDiaMini(name, GSHAPES, 6);
     if(C.kind==='uke')    return fretDiaMini(name, USHAPES, 4);
+    if(C.kind==='bass')   return fretDiaMini(name, BSHAPES, 4);
     if(C.kind==='piano')  return pianoDiaMini(name);
     return harpDiaMini(name);
   }
   function fullName(name){
     if(C.kind==='guitar') return GFULL[name]||'';
     if(C.kind==='uke')    return UFULL[name]||'';
+    if(C.kind==='bass')   return BFULL[name]||'';
     if(C.kind==='piano')  return PFULL[name]||'';
     return 'blow';
   }
@@ -314,17 +323,17 @@
   var AC=null;
   function ksPluck(freq, t, gain, voice){
     var sr=AC.sampleRate, N=Math.max(2,Math.round(sr/freq));
-    var dur=voice==='uke'?1.6:2.2, len=(sr*dur)|0, buf=AC.createBuffer(1,len,sr), d=buf.getChannelData(0);
+    var dur=voice==='uke'?1.6:(voice==='bass'?2.6:2.2), len=(sr*dur)|0, buf=AC.createBuffer(1,len,sr), d=buf.getChannelData(0);
     var ring=new Float32Array(N), lp0=0;
     for(var i=0;i<N;i++){ lp0=((Math.random()*2-1)+lp0)*0.5; ring[i]=lp0; }
-    var pos=0, decay=voice==='uke'?0.9945:0.9961;
+    var pos=0, decay=voice==='uke'?0.9945:(voice==='bass'?0.9972:0.9961);
     for(var s=0;s<len;s++){ var cur=ring[pos]; d[s]=cur; ring[pos]=(cur+ring[(pos+1)%N])*0.5*decay; pos=(pos+1)%N; }
     var atk=(sr*0.003)|0; for(var a=0;a<atk;a++){ d[a]*=a/atk; }
     var rel=(sr*0.15)|0; for(var r=0;r<rel;r++){ d[len-1-r]*=r/rel; }
     var src=AC.createBufferSource(); src.buffer=buf;
     var g=AC.createGain(); g.gain.value=gain;
-    var hp=AC.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=voice==='uke'?110:75;
-    var lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=voice==='uke'?5200:4200; lp.Q.value=0.5;
+    var hp=AC.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=voice==='uke'?110:(voice==='bass'?38:75);
+    var lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=voice==='uke'?5200:(voice==='bass'?2400:4200); lp.Q.value=0.5;
     src.connect(g); g.connect(hp); hp.connect(lp); lp.connect(AC.destination);
     src.start(t); src.stop(t+dur);
   }
@@ -360,6 +369,7 @@
           var t0=AC.currentTime+0.04;
           if(C.kind==='guitar'){ var fr=GFREQ[name]||GFREQ.Em,k=0; fr.forEach(function(f){ if(f){ ksPluck(f,t0+k*0.05,0.15,'guitar'); k++; } }); }
           else if(C.kind==='uke'){ var u=UFREQ[name]||UFREQ.C,k2=0; u.forEach(function(f){ if(f){ ksPluck(f,t0+k2*0.035,0.16,'uke'); k2++; } }); }
+          else if(C.kind==='bass'){ var bf=BFREQ[name]||BFREQ.E; ksPluck(bf[0],t0,0.22,'bass'); }
           else if(C.kind==='piano'){ var pf=PFREQ[name]||PFREQ.C; pf.forEach(function(f){ pianoNote(f,t0,0.17); }); }
           else { var h=HHOLE[name]||{f:523.25}; harpNote(h.f,t0,0.2); }
         }catch(e){}
