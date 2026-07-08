@@ -74,7 +74,8 @@
       accent: "#D98A4E", bg: "#241610", line: "#4A3325", ink: "#F5E9DD", dim: "#CBA98C",
       logo: badge("#241610", "#D98A4E", "&#9673;"), ownedKey: "espo_owned_drama",
       apps: [
-        { k: "studio", name: "The Studio", url: "/studio" }
+        { k: "studio", name: "ESPO Studios", url: "/studio" },
+        { k: "stage", name: "ESPO Stage", url: "/stage" }
       ]
     },
     edu: {
@@ -97,6 +98,12 @@
         { k: "paw", name: "PawNarc", url: "/pawnarc-app" }
       ]
     },
+    nd: {
+      hostRe: /neurodivulge\.com$/i, home: "https://neurodivulge.com/",
+      brand: "Neuro", accentWord: " Divulge",
+      accent: "#B65A33", bg: "#26201A", line: "#4A3B2E", ink: "#F8F2E6", dim: "#C9B39C",
+      logo: badge("#26201A", "#B65A33", "&#9678;"), ownedKey: "ae_owned_nd", apps: []
+    },
     hub: {
       hostRe: /aexperiences\.studio$/i, home: "https://aexperiences.studio/",
       brand: "AE", accentWord: " Hub",
@@ -114,6 +121,7 @@
     { key: "drama", name: "ESPO Drama", tag: "Act & create", url: "https://espodrama.com/" },
     { key: "edu", name: "ESPO Curriculum", tag: "Homeschool K-12", url: "https://espoedu.com/" },
     { key: "narc", name: "The Narcs", tag: "See through it", url: "https://marketnarc.com/" },
+    { key: "nd", name: "Neuro Divulge", tag: "Regulation tools", url: "https://neurodivulge.com/" },
     { key: "hub", name: "AE Hub", tag: "Operations", url: "https://aexperiences.studio/" }
   ];
 
