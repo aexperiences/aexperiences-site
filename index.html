@@ -148,6 +148,7 @@
   .pcard .ti{flex:1;display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;}
   .plogo{width:58px;height:58px;border-radius:15px;flex:0 0 auto;overflow:hidden;box-shadow:0 6px 16px rgba(15,31,61,.16);background:#0f1f3d;}
   .plogo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .plogo.ph{display:flex;align-items:center;justify-content:center;color:#8ec5ff;font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:.04em;}
   .pcard .name{font-family:var(--sans);font-weight:800;font-size:22px;letter-spacing:-.01em;}
   .pcard .name .espo{color:var(--blue);}
   .tag{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 11px;border-radius:999px;white-space:nowrap;}
@@ -192,9 +193,14 @@
   footer nav a{color:var(--slate);font-size:14px;}
   footer nav a:hover{color:var(--blue);}
 
-  /* crisp vector logo */
-  .ae-mark{height:42px;width:auto;display:block;}
-  @media(max-width:520px){ .ae-mark{height:36px;} }
+  /* logo lockup — real æ disc mark + wordmark */
+  .bar .logo{gap:11px;}
+  .ae-disc-mark{height:42px;width:42px;border-radius:11px;display:block;box-shadow:0 5px 14px rgba(15,31,61,.20);flex:0 0 auto;}
+  .ae-word{display:flex;flex-direction:column;line-height:1.02;}
+  .ae-word b{font-family:var(--sans);font-weight:800;font-size:17px;letter-spacing:-.4px;color:var(--navy);}
+  .ae-word b.blue{color:var(--blue);}
+  .ae-word small{font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.16em;color:var(--slate);margin-top:3px;}
+  @media(max-width:520px){ .ae-disc-mark{height:36px;width:36px;} .ae-word b{font-size:15px;} }
 
   /* hero two-column + product constellation */
   .hero .wrap.split{display:grid;grid-template-columns:1.08fr .92fr;gap:52px;align-items:center;}
@@ -261,18 +267,12 @@
 <header class="bar">
   <div class="wrap">
     <a class="logo" href="#top" aria-label="Accelerated Experiences LLC — home">
-      <svg class="ae-mark" viewBox="0 0 322 60" role="img" aria-label="Accelerated Experiences LLC">
-        <defs><linearGradient id="aeg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b9dff"/><stop offset="1" stop-color="#1f6feb"/></linearGradient></defs>
-        <circle cx="30" cy="30" r="27" fill="url(#aeg)"/>
-        <text x="30" y="42" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-style="italic" font-weight="700" font-size="32" fill="#fff">æ</text>
-        <text x="70" y="26" font-family="Outfit,system-ui,sans-serif" font-weight="800" font-size="20" letter-spacing="-.5" fill="#0f1f3d">accelerated</text>
-        <text x="70" y="49" font-family="Outfit,system-ui,sans-serif" font-weight="800" font-size="20" letter-spacing="-.5" fill="#1f6feb">experiences <tspan font-size="10.5" font-weight="700" fill="#5b6b86" dx="2">LLC</tspan></text>
-      </svg>
+      <img class="ae-disc-mark" src="ae-disc.png" alt="Accelerated Experiences">
+      <span class="ae-word"><b>accelerated</b><b class="blue">experiences</b><small>LLC</small></span>
     </a>
     <nav>
       <a class="navlink" href="#work">How we work</a>
       <a class="navlink" href="#products">Products</a>
-      <a class="navlink" href="#demo">Try a demo</a>
       <a class="navlink" href="#aehub">AEHub</a>
       <a class="navlink" href="#services">Services</a>
       <a class="btn btn-primary" href="#start">Start a project</a>
@@ -305,7 +305,6 @@
         <div class="pmark live"><img src="brand/logo-nd.png" alt=""></div>
         <div class="pmark"><img src="brand/logo-learning.png" alt=""></div>
         <div class="pmark"><img src="brand/logo-genius.png" alt=""></div>
-        <div class="pmark"><img src="brand/logo-curriculum.png" alt=""></div>
       </div>
     </div>
   </div>
@@ -420,55 +419,11 @@
       </div>
 
       <div class="pcard reveal">
-        <div class="toprow"><div class="plogo"><img src="brand/logo-curriculum.png" alt="ESPO Curriculum logo" loading="lazy"></div><div class="ti"><div class="name"><span class="espo">ESPO</span> Curriculum</div><span class="tag soon">In development</span></div></div>
+        <div class="toprow"><div class="plogo ph">espo</div><div class="ti"><div class="name"><span class="espo">ESPO</span> Curriculum</div><span class="tag soon">In development</span></div></div>
         <p class="desc">A taught homeschool curriculum we're building for our own kids — starting with History &amp; Social Studies and Science, K–12, with a patient built-in teacher and a reader that highlights as it reads.</p>
         <div class="apps"><span>History · K–12</span><span>Science · K–12</span></div>
       </div>
 
-    </div>
-  </div>
-</section>
-
-<section id="demo" class="navy demoband">
-  <div class="wrap">
-    <div class="reveal">
-      <div class="eyebrow on-navy">See what we build</div>
-      <h2>Try the ESPO&nbsp;Music demos.</h2>
-      <p class="lede">Pick an instrument, then <b>tap in time</b> as each chord reaches the line — you’ll hear it play. It’s a taste of the Highway: in the full app you play along on your <b>own real instrument</b>. No sign‑up, no install.</p>
-      <div class="demo-tabs" id="demoTabs">
-        <button class="dtab on" data-inst="fret">Fret <span>guitar</span></button>
-        <button class="dtab" data-inst="grand">Grand <span>piano</span></button>
-        <button class="dtab" data-inst="harp">Harp <span>harmonica</span></button>
-        <button class="dtab" data-inst="uke">The Uke <span>ukulele</span></button>
-        <button class="dtab" data-inst="bass">Bass <span>bass guitar</span></button>
-      </div>
-      <div class="cta">
-        <a class="btn btn-light" id="demoOpen" href="espo-music.html?inst=fret" target="_blank" rel="noopener">Open full demo ↗</a>
-        <a class="btn btn-ghost on-navy" href="https://espomusic.com" target="_blank" rel="noopener">Play free at espomusic.com</a>
-      </div>
-    </div>
-    <div class="demo-frame reveal">
-      <iframe id="demoFrame" src="espo-music.html?inst=fret" title="ESPO Music — interactive instrument demo" loading="lazy"></iframe>
-    </div>
-  </div>
-  <script>
-  (function(){var t=document.getElementById('demoTabs'),f=document.getElementById('demoFrame'),o=document.getElementById('demoOpen');if(!t)return;t.addEventListener('click',function(e){var b=e.target.closest('.dtab');if(!b)return;t.querySelectorAll('.dtab').forEach(function(x){x.classList.remove('on');});b.classList.add('on');var i=b.getAttribute('data-inst');f.src='espo-music.html?inst='+i;o.href='espo-music.html?inst='+i;});})();
-  </script>
-</section>
-
-<section id="marketnarc-demo" class="navy demoband">
-  <div class="wrap">
-    <div class="reveal">
-      <div class="eyebrow on-navy">Also in the family &middot; The&nbsp;Narcs</div>
-      <h2>Try the MarketNarc demo.</h2>
-      <p class="lede">Plain&#8209;English market intelligence. Pick a stock and <b>Nate</b> gives you the call &mdash; buy, sell, hold, or watch &mdash; with the <i>why</i> behind it. Built for beginners. <b>Have a play below.</b><span class="mn-note">Live &middot; not financial advice.</span></p>
-      <div class="cta">
-        <a class="btn btn-light" href="https://marketnarc.com" target="_blank" rel="noopener">Open MarketNarc &#8599;</a>
-        <a class="btn btn-ghost on-navy" href="https://marketnarc.com" target="_blank" rel="noopener">See The&nbsp;Narcs &rarr;</a>
-      </div>
-    </div>
-    <div class="demo-frame signal reveal">
-      <iframe src="https://marketnarc.com/demo" title="MarketNarc &mdash; a taste of plain-English market intelligence" loading="lazy"></iframe>
     </div>
   </div>
 </section>
@@ -595,13 +550,8 @@
 <footer>
   <div class="wrap">
     <div class="left">
-      <svg class="ae-mark" viewBox="0 0 322 60" role="img" aria-label="Accelerated Experiences LLC" style="height:36px">
-        <defs><linearGradient id="aegf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b9dff"/><stop offset="1" stop-color="#1f6feb"/></linearGradient></defs>
-        <circle cx="30" cy="30" r="27" fill="url(#aegf)"/>
-        <text x="30" y="42" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-style="italic" font-weight="700" font-size="32" fill="#fff">æ</text>
-        <text x="70" y="26" font-family="Outfit,system-ui,sans-serif" font-weight="800" font-size="20" letter-spacing="-.5" fill="#0f1f3d">accelerated</text>
-        <text x="70" y="49" font-family="Outfit,system-ui,sans-serif" font-weight="800" font-size="20" letter-spacing="-.5" fill="#1f6feb">experiences <tspan font-size="10.5" font-weight="700" fill="#5b6b86" dx="2">LLC</tspan></text>
-      </svg>
+      <img class="ae-disc-mark" src="ae-disc.png" alt="Accelerated Experiences" style="height:34px;width:34px">
+      <span class="ae-word"><b>accelerated</b><b class="blue">experiences</b><small>LLC</small></span>
       <span class="meta">© 2026 · Post Falls, Idaho</span>
     </div>
     <nav>
@@ -648,13 +598,22 @@
       var d={name:val('f-name'),email:val('f-email'),company:val('f-company'),projectType:val('f-type'),budget:val('f-budget'),timeline:val('f-timeline'),details:val('f-details')};
       if(!d.name || !/.+@.+\..+/.test(d.email)){ alert('Please add your name and a valid email so we can reply.'); return; }
       btn.disabled=true; btn.textContent='Sending…';
-      var delivered=false;
+      var sent=false;
       try{
-        var r=await fetch('/api/inquiry',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(d)});
-        if(r.ok){ var j=await r.json().catch(function(){return {};}); delivered=!!j.delivered; }
+        // No account, no API key: FormSubmit relays the inquiry straight to Anthony's inbox.
+        var r=await fetch('https://formsubmit.co/ajax/anthonye@aexperiences.studio',{
+          method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
+          body:JSON.stringify({
+            Name:d.name, Email:d.email, Company:d.company||'—',
+            'Project type':d.projectType||'—', Budget:d.budget||'—', Timeline:d.timeline||'—',
+            Details:d.details||'—', _subject:'Project inquiry — '+d.name, _template:'table', _captcha:'false'
+          })
+        });
+        var j=await r.json().catch(function(){return {};});
+        sent = r.ok && (j.success===true || j.success==='true');
       }catch(_){}
-      // If the server didn't confirm delivery (no email key set yet), guarantee it via the user's mail client.
-      if(!delivered){ mailtoFallback(d); }
+      // Belt and suspenders: if the relay is unreachable, hand off to the visitor's mail app so nothing is ever lost.
+      if(!sent){ mailtoFallback(d); }
       done();
     });
   })();
