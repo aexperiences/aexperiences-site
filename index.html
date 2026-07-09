@@ -192,6 +192,64 @@
   footer nav a{color:var(--slate);font-size:14px;}
   footer nav a:hover{color:var(--blue);}
 
+  /* crisp vector logo */
+  .ae-mark{height:42px;width:auto;display:block;}
+  @media(max-width:520px){ .ae-mark{height:36px;} }
+
+  /* hero two-column + product constellation */
+  .hero .wrap.split{display:grid;grid-template-columns:1.08fr .92fr;gap:52px;align-items:center;}
+  @media(max-width:940px){ .hero .wrap.split{grid-template-columns:1fr;gap:40px;} .hero-visual{order:2;} }
+  .hero-visual{position:relative;}
+  .constellation{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .pmark{aspect-ratio:1;border-radius:18px;overflow:hidden;background:rgba(255,255,255,.04);border:1px solid rgba(120,170,255,.22);box-shadow:0 18px 40px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .2s,border-color .2s;animation:floaty 6s ease-in-out infinite;}
+  .pmark:nth-child(2){animation-delay:.6s;} .pmark:nth-child(3){animation-delay:1.2s;} .pmark:nth-child(4){animation-delay:1.8s;}
+  .pmark:nth-child(5){animation-delay:2.4s;} .pmark:nth-child(6){animation-delay:3s;} .pmark:nth-child(7){animation-delay:3.6s;}
+  .pmark img{width:100%;height:100%;object-fit:cover;}
+  .pmark:hover{transform:translateY(-4px);border-color:rgba(120,170,255,.55);}
+  .pmark.live::after{content:"● live";position:absolute;margin:0;font-family:var(--mono);font-size:9px;font-weight:700;color:#7ee0a8;background:rgba(6,20,15,.72);padding:2px 6px;border-radius:6px;bottom:6px;right:6px;letter-spacing:.04em;}
+  .pmark{position:relative;}
+  @keyframes floaty{50%{transform:translateY(-7px);}}
+  @media(prefers-reduced-motion:reduce){ .pmark{animation:none;} }
+
+  /* two-sides band */
+  .twoside .wrap{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  @media(max-width:760px){ .twoside .wrap{grid-template-columns:1fr;} }
+  .side{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow);position:relative;overflow:hidden;}
+  .side .k{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);}
+  .side h3{margin-top:10px;font-size:24px;} .side p{margin-top:10px;color:var(--slate);font-size:15.5px;}
+  .side .go{margin-top:16px;display:inline-flex;gap:6px;align-items:center;font-weight:600;color:var(--blue);font-size:14.5px;}
+  .side.own{border-color:#cfe0fb;background:linear-gradient(180deg,#fbfdff,#fff);}
+
+  /* packages */
+  .pkgs{margin-top:34px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  @media(max-width:820px){ .pkgs{grid-template-columns:1fr;} }
+  .pkg{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);border-radius:14px;padding:22px;}
+  .pkg .pk{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#9fb4d6;}
+  .pkg .pt{font-weight:700;color:#fff;font-size:19px;margin-top:8px;}
+  .pkg .pd{color:#c4d3ee;font-size:14px;margin-top:8px;line-height:1.55;}
+  .pkg ul{margin-top:12px;list-style:none;display:flex;flex-direction:column;gap:6px;}
+  .pkg ul li{color:#c4d3ee;font-size:13.5px;display:flex;gap:8px;} .pkg ul li::before{content:"✓";color:var(--blue-bright);font-weight:700;}
+
+  /* intake form */
+  .start .wrap{display:grid;grid-template-columns:.92fr 1.08fr;gap:48px;align-items:start;}
+  @media(max-width:900px){ .start .wrap{grid-template-columns:1fr;gap:32px;} }
+  .startform{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:var(--shadow);}
+  .frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+  @media(max-width:520px){ .frow{grid-template-columns:1fr;} }
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field.full{grid-column:1 / -1;}
+  .field label{font-size:12.5px;font-weight:600;color:var(--navy);}
+  .field input,.field select,.field textarea{font-family:var(--sans);font-size:15px;color:var(--navy);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 13px;width:100%;}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);background:#fff;}
+  .field textarea{resize:vertical;min-height:96px;}
+  .startform .btn{width:100%;justify-content:center;margin-top:4px;}
+  .startform .fine{margin-top:12px;font-size:12.5px;color:var(--slate);text-align:center;}
+  .formok{display:none;background:rgba(15,138,95,.08);border:1px solid rgba(15,138,95,.3);color:#0c6b4a;border-radius:12px;padding:20px;font-size:15px;text-align:center;}
+  .start .steps{margin-top:22px;display:flex;flex-direction:column;gap:14px;}
+  .start .steps li{list-style:none;display:flex;gap:13px;align-items:flex-start;color:var(--slate);font-size:15px;}
+  .start .steps .num{flex:0 0 auto;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--blue-deep));color:#fff;font-family:var(--mono);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;}
+  .start .steps b{color:var(--navy);}
+
   /* reveal */
   .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease;}
   .reveal.in{opacity:1;transform:none;}
@@ -202,8 +260,14 @@
 
 <header class="bar">
   <div class="wrap">
-    <a class="logo" href="#top" aria-label="Accelerated Experiences — home">
-      <img src="https://raw.githubusercontent.com/aexperiences/aexperiences.com/main/public/wordmark.png" alt="Accelerated Experiences LLC">
+    <a class="logo" href="#top" aria-label="Accelerated Experiences LLC — home">
+      <svg class="ae-mark" viewBox="0 0 322 60" role="img" aria-label="Accelerated Experiences LLC">
+        <defs><linearGradient id="aeg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b9dff"/><stop offset="1" stop-color="#1f6feb"/></linearGradient></defs>
+        <circle cx="30" cy="30" r="27" fill="url(#aeg)"/>
+        <text x="30" y="42" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-style="italic" font-weight="700" font-size="32" fill="#fff">æ</text>
+        <text x="70" y="26" font-family="Outfit,system-ui,sans-serif" font-weight="800" font-size="20" letter-spacing="-.5" fill="#0f1f3d">accelerated</text>
+        <text x="70" y="49" font-family="Outfit,system-ui,sans-serif" font-weight="800" font-size="20" letter-spacing="-.5" fill="#1f6feb">experiences <tspan font-size="10.5" font-weight="700" fill="#5b6b86" dx="2">LLC</tspan></text>
+      </svg>
     </a>
     <nav>
       <a class="navlink" href="#work">How we work</a>
@@ -211,25 +275,55 @@
       <a class="navlink" href="#demo">Try a demo</a>
       <a class="navlink" href="#aehub">AEHub</a>
       <a class="navlink" href="#services">Services</a>
-      <a class="btn btn-primary" href="mailto:anthonye@aexperiences.studio?subject=Project%20inquiry">Start a project</a>
+      <a class="btn btn-primary" href="#start">Start a project</a>
     </nav>
   </div>
 </header>
 
 <a id="top"></a>
 <section class="navy hero">
-  <div class="wrap reveal">
-    <div class="eyebrow on-navy">Studio &amp; product company · Post Falls, Idaho</div>
-    <h1 style="margin-top:18px;">Custom software, apps &amp; brands — <span class="grad-text">built from scratch, made to last.</span></h1>
-    <p class="lede">Two sides to what we do: products we build and own, and custom work for businesses — websites, apps, and brands. Every project is built from the ground up for the client. Never templated.</p>
-    <div class="cta">
-      <a class="btn btn-light" href="mailto:anthonye@aexperiences.studio?subject=Project%20inquiry">Start a project</a>
-      <a class="btn btn-ghost on-navy" href="#demo">See what we build ↓</a>
+  <div class="wrap split">
+    <div class="reveal">
+      <div class="eyebrow on-navy">Studio &amp; product company · Post Falls, Idaho</div>
+      <h1 style="margin-top:18px;">We build our own products — <span class="grad-text">and we build for you.</span></h1>
+      <p class="lede">Accelerated Experiences is two things at once: a product studio behind the <b style="color:#fff;font-weight:600">ESPO family</b> of apps, and a done-for-you shop that builds websites, apps, and brands for businesses. Everything from scratch. Nothing templated.</p>
+      <div class="cta">
+        <a class="btn btn-light" href="#start">Start a project</a>
+        <a class="btn btn-ghost on-navy" href="#products">See what we build ↓</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="n">7</div><div class="k">product families</div></div>
+        <div class="stat"><div class="n">4</div><div class="k">live &amp; in people's hands</div></div>
+        <div class="stat"><div class="n">100%</div><div class="k">custom — never templated</div></div>
+      </div>
     </div>
-    <div class="stats">
-      <div class="stat"><div class="n">7</div><div class="k">product families</div></div>
-      <div class="stat"><div class="n">100%</div><div class="k">custom — never templated</div></div>
-      <div class="stat"><div class="n">Family</div><div class="k">where every product started</div></div>
+    <div class="hero-visual reveal" aria-hidden="true">
+      <div class="constellation">
+        <div class="pmark live"><img src="brand/logo-music.png" alt=""></div>
+        <div class="pmark live"><img src="brand/logo-drama.png" alt=""></div>
+        <div class="pmark live"><img src="brand/logo-narcs.png" alt=""></div>
+        <div class="pmark live"><img src="brand/logo-nd.png" alt=""></div>
+        <div class="pmark"><img src="brand/logo-learning.png" alt=""></div>
+        <div class="pmark"><img src="brand/logo-genius.png" alt=""></div>
+        <div class="pmark"><img src="brand/logo-curriculum.png" alt=""></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="twoside" style="padding-top:64px;padding-bottom:0;">
+  <div class="wrap">
+    <div class="side own reveal">
+      <div class="k">Our products</div>
+      <h3>The ESPO family</h3>
+      <p>Apps we build and own — most started as something we needed for our own family, then grew into something others could use. Four are live right now.</p>
+      <a class="go" href="#products">Meet the family →</a>
+    </div>
+    <div class="side reveal">
+      <div class="k">For businesses</div>
+      <h3>Done-for-you work</h3>
+      <p>Websites, apps, brands, video, podcast, and copy — built from the ground up for each client, and never handed to an outside shop.</p>
+      <a class="go" href="#services">See services →</a>
     </div>
   </div>
 </section>
@@ -394,8 +488,96 @@
       <div class="svc reveal"><div class="h">Copy &amp; proposals</div><div class="s">Words that convert</div></div>
       <div class="svc reveal"><div class="h">Market research</div><div class="s">Audience &amp; market sizing</div></div>
     </div>
-    <div class="region reveal">Working with clients worldwide.</div>
-    <div class="cta reveal" style="margin-top:26px;"><a class="btn btn-light" href="mailto:anthonye@aexperiences.studio?subject=Project%20inquiry">Start a conversation</a></div>
+    <div class="pkgs">
+      <div class="pkg reveal">
+        <div class="pk">Sprint</div>
+        <div class="pt">One focused build</div>
+        <div class="pd">A site, a landing page, a brand refresh, or a single app feature — scoped tight and shipped.</div>
+        <ul><li>Fixed scope, clear timeline</li><li>Built from scratch for you</li><li>You own everything</li></ul>
+      </div>
+      <div class="pkg reveal">
+        <div class="pk">Build</div>
+        <div class="pt">A product, end to end</div>
+        <div class="pd">A full website or app — design, build, and launch — plus the brand and copy to carry it.</div>
+        <ul><li>Design + build + launch</li><li>Brand, copy, and assets</li><li>Honest status the whole way</li></ul>
+      </div>
+      <div class="pkg reveal">
+        <div class="pk">Ongoing</div>
+        <div class="pt">A studio on call</div>
+        <div class="pd">Websites, video, podcast, thumbnails, research — a steady hand for the work that keeps coming.</div>
+        <ul><li>Rolling priorities</li><li>Video / podcast / YouTube</li><li>Market &amp; audience research</li></ul>
+      </div>
+    </div>
+    <div class="region reveal">Working with clients worldwide — remote, founder-led.</div>
+    <div class="cta reveal" style="margin-top:26px;"><a class="btn btn-light" href="#start">Start a conversation</a></div>
+  </div>
+</section>
+
+<section id="start" class="start">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow">Start a project</div>
+      <h2>Tell us what you're building.</h2>
+      <p class="lede" style="margin-top:14px;">A few details and we'll get back to you — usually within a day. No obligation, no hard sell. You'll talk to Anthony, not a sales desk.</p>
+      <ul class="steps">
+        <li><span class="num">1</span><span><b>You send the details.</b> The more you share, the sharper our first reply.</span></li>
+        <li><span class="num">2</span><span><b>We talk it through.</b> Scope, timeline, and a fair, honest quote — no surprises.</span></li>
+        <li><span class="num">3</span><span><b>We build it from scratch.</b> Custom for you, with plain status the whole way.</span></li>
+      </ul>
+    </div>
+
+    <div class="reveal">
+      <form class="startform" id="inquiryForm" novalidate>
+        <div class="frow">
+          <div class="field"><label for="f-name">Your name</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
+          <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
+        </div>
+        <div class="frow">
+          <div class="field"><label for="f-company">Company <span style="color:var(--slate);font-weight:400">(optional)</span></label><input id="f-company" name="company" type="text" autocomplete="organization"></div>
+          <div class="field"><label for="f-type">Project type</label>
+            <select id="f-type" name="projectType">
+              <option value="">Choose one…</option>
+              <option>Website</option>
+              <option>Web or mobile app</option>
+              <option>Brand &amp; identity</option>
+              <option>Video / YouTube</option>
+              <option>Podcast production</option>
+              <option>Copy &amp; proposals</option>
+              <option>Market research</option>
+              <option>Something else</option>
+            </select>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="field"><label for="f-budget">Budget range</label>
+            <select id="f-budget" name="budget">
+              <option value="">Prefer not to say</option>
+              <option>Under $2k</option>
+              <option>$2k–$5k</option>
+              <option>$5k–$15k</option>
+              <option>$15k+</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+          <div class="field"><label for="f-timeline">Timeline</label>
+            <select id="f-timeline" name="timeline">
+              <option value="">Choose one…</option>
+              <option>ASAP</option>
+              <option>2–4 weeks</option>
+              <option>1–3 months</option>
+              <option>Just exploring</option>
+            </select>
+          </div>
+        </div>
+        <div class="field full" style="margin-bottom:14px;"><label for="f-details">What are you building?</label><textarea id="f-details" name="details" placeholder="A sentence or two about the project, the goal, and anything you already have."></textarea></div>
+        <button class="btn btn-primary" type="submit" id="f-submit">Send it →</button>
+        <p class="fine">Or email <a href="mailto:anthonye@aexperiences.studio" style="color:var(--blue);font-weight:600">anthonye@aexperiences.studio</a> directly. We never share your details.</p>
+      </form>
+      <div class="formok" id="formOk">
+        <b style="font-size:17px;">Got it — thank you.</b><br>
+        Your note is on its way to Anthony. Expect a reply within a day, usually sooner.
+      </div>
+    </div>
   </div>
 </section>
 
@@ -413,7 +595,13 @@
 <footer>
   <div class="wrap">
     <div class="left">
-      <img src="https://raw.githubusercontent.com/aexperiences/aexperiences.com/main/public/wordmark.png" alt="Accelerated Experiences LLC">
+      <svg class="ae-mark" viewBox="0 0 322 60" role="img" aria-label="Accelerated Experiences LLC" style="height:36px">
+        <defs><linearGradient id="aegf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b9dff"/><stop offset="1" stop-color="#1f6feb"/></linearGradient></defs>
+        <circle cx="30" cy="30" r="27" fill="url(#aegf)"/>
+        <text x="30" y="42" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-style="italic" font-weight="700" font-size="32" fill="#fff">æ</text>
+        <text x="70" y="26" font-family="Outfit,system-ui,sans-serif" font-weight="800" font-size="20" letter-spacing="-.5" fill="#0f1f3d">accelerated</text>
+        <text x="70" y="49" font-family="Outfit,system-ui,sans-serif" font-weight="800" font-size="20" letter-spacing="-.5" fill="#1f6feb">experiences <tspan font-size="10.5" font-weight="700" fill="#5b6b86" dx="2">LLC</tspan></text>
+      </svg>
       <span class="meta">© 2026 · Post Falls, Idaho</span>
     </div>
     <nav>
@@ -443,6 +631,34 @@
     setTimeout(showAll, 1500);   /* safety net: content is never left hidden if the observer misses */
   })();
 </script>
+  <script>
+  (function(){
+    var form=document.getElementById('inquiryForm'), ok=document.getElementById('formOk'), btn=document.getElementById('f-submit');
+    if(!form) return;
+    function val(id){var e=document.getElementById(id);return e?e.value.trim():'';}
+    function mailtoFallback(d){
+      var body='Name: '+d.name+'\nEmail: '+d.email+'\nCompany: '+(d.company||'—')
+        +'\nProject type: '+(d.projectType||'—')+'\nBudget: '+(d.budget||'—')+'\nTimeline: '+(d.timeline||'—')
+        +'\n\n'+(d.details||'');
+      window.location.href='mailto:anthonye@aexperiences.studio?subject='+encodeURIComponent('Project inquiry — '+d.name)+'&body='+encodeURIComponent(body);
+    }
+    function done(){ form.style.display='none'; ok.style.display='block'; ok.scrollIntoView({behavior:'smooth',block:'center'}); }
+    form.addEventListener('submit', async function(e){
+      e.preventDefault();
+      var d={name:val('f-name'),email:val('f-email'),company:val('f-company'),projectType:val('f-type'),budget:val('f-budget'),timeline:val('f-timeline'),details:val('f-details')};
+      if(!d.name || !/.+@.+\..+/.test(d.email)){ alert('Please add your name and a valid email so we can reply.'); return; }
+      btn.disabled=true; btn.textContent='Sending…';
+      var delivered=false;
+      try{
+        var r=await fetch('/api/inquiry',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(d)});
+        if(r.ok){ var j=await r.json().catch(function(){return {};}); delivered=!!j.delivered; }
+      }catch(_){}
+      // If the server didn't confirm delivery (no email key set yet), guarantee it via the user's mail client.
+      if(!delivered){ mailtoFallback(d); }
+      done();
+    });
+  })();
+  </script>
   <script src="/family-nav.js" defer></script>
 </body>
 </html>
