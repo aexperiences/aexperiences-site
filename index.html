@@ -14,7 +14,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Accelerated Experiences — studio &amp; product company">
 <meta property="og:description" content="Custom software, apps, and brands, built from scratch. Home of the ESPO family of products.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Accelerated Experiences LLC","url":"https://aexperiences.com","location":{"@type":"Place","address":{"@type":"PostalAddress","addressLocality":"Post Falls","addressRegion":"ID","addressCountry":"US"}},"makesOffer":[{"@type":"Offer","itemOffered":{"@type":"SoftwareApplication","name":"ESPO Music","url":"https://espomusic.com"}},{"@type":"Offer","itemOffered":{"@type":"SoftwareApplication","name":"ESPO Studios","url":"https://espodrama.com"}},{"@type":"Offer","itemOffered":{"@type":"SoftwareApplication","name":"MarketNarc","url":"https://espogenius.com"}}],"sameAs":["https://espomusic.com","https://espodrama.com","https://espogenius.com"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Accelerated Experiences LLC","url":"https://aexperiences.com","location":{"@type":"Place","address":{"@type":"PostalAddress","addressLocality":"Post Falls","addressRegion":"ID","addressCountry":"US"}},"makesOffer":[{"@type":"Offer","itemOffered":{"@type":"SoftwareApplication","name":"ESPO Music","url":"https://espomusic.com"}},{"@type":"Offer","itemOffered":{"@type":"SoftwareApplication","name":"ESPO Learning","url":"https://espolearning.com"}},{"@type":"Offer","itemOffered":{"@type":"SoftwareApplication","name":"ESPO Genius","url":"https://espogenius.com"}},{"@type":"Offer","itemOffered":{"@type":"SoftwareApplication","name":"ESPO Drama","url":"https://espodrama.com"}},{"@type":"Offer","itemOffered":{"@type":"SoftwareApplication","name":"MarketNarc","url":"https://marketnarc.com"}},{"@type":"Offer","itemOffered":{"@type":"SoftwareApplication","name":"Neuro Divulge","url":"https://neurodivulge.com"}}],"sameAs":["https://espomusic.com","https://espolearning.com","https://espogenius.com","https://espodrama.com","https://marketnarc.com","https://neurodivulge.com"]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Accelerated Experiences","url":"https://aexperiences.com"}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -144,7 +144,10 @@
   @media(max-width:820px){ .fam{grid-template-columns:1fr;} }
   .pcard{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);transition:transform .15s,box-shadow .2s,border-color .2s;display:flex;flex-direction:column;}
   .pcard:hover{transform:translateY(-3px);box-shadow:0 26px 56px rgba(15,31,61,.14);border-color:#d7e0ee;}
-  .pcard .toprow{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .pcard .toprow{display:flex;align-items:center;gap:14px;}
+  .pcard .ti{flex:1;display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;}
+  .plogo{width:58px;height:58px;border-radius:15px;flex:0 0 auto;overflow:hidden;box-shadow:0 6px 16px rgba(15,31,61,.16);background:#0f1f3d;}
+  .plogo img{width:100%;height:100%;object-fit:cover;display:block;}
   .pcard .name{font-family:var(--sans);font-weight:800;font-size:22px;letter-spacing:-.01em;}
   .pcard .name .espo{color:var(--blue);}
   .tag{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 11px;border-radius:999px;white-space:nowrap;}
@@ -204,11 +207,9 @@
     </a>
     <nav>
       <a class="navlink" href="#work">How we work</a>
-      <a class="navlink" href="#aehub">AEHub</a>
       <a class="navlink" href="#products">Products</a>
-      <a class="navlink" href="https://espomusic.com" target="_blank" rel="noopener">ESPO Music</a>
-      <a class="navlink" href="https://espodrama.com" target="_blank" rel="noopener">ESPO Drama</a>
-      <a class="navlink" href="https://espogenius.com" target="_blank" rel="noopener">ESPO Genius</a>
+      <a class="navlink" href="#demo">Try a demo</a>
+      <a class="navlink" href="#aehub">AEHub</a>
       <a class="navlink" href="#services">Services</a>
       <a class="btn btn-primary" href="mailto:anthonye@aexperiences.studio?subject=Project%20inquiry">Start a project</a>
     </nav>
@@ -226,7 +227,7 @@
       <a class="btn btn-ghost on-navy" href="#demo">See what we build ↓</a>
     </div>
     <div class="stats">
-      <div class="stat"><div class="n">5</div><div class="k">ESPO product lines</div></div>
+      <div class="stat"><div class="n">7</div><div class="k">product families</div></div>
       <div class="stat"><div class="n">100%</div><div class="k">custom — never templated</div></div>
       <div class="stat"><div class="n">Family</div><div class="k">where every product started</div></div>
     </div>
@@ -283,36 +284,51 @@
     <div class="fam">
 
       <div class="pcard feature reveal">
-        <div class="toprow"><div class="name"><span class="espo">ESPO</span> Music</div><span class="tag live">● Live</span></div>
-        <p class="desc">Single-instrument learning apps for true beginners — guitar, bass, piano, harmonica, and ukulele. I started building it while I was learning guitar myself, so it's made for the person sitting exactly where I sat: day one, no experience, just wanting to play.</p>
-        <div class="apps"><span>ESPO Fret · guitar</span><span>ESPO Grand · piano</span><span>ESPO Harp · harmonica</span><span>ESPO The Uke · ukulele</span><span>ESPO Bass · bass guitar</span></div>
+        <div class="toprow"><div class="plogo"><img src="brand/logo-music.png" alt="ESPO Music logo" loading="lazy"></div><div class="ti"><div class="name"><span class="espo">ESPO</span> Music</div><span class="tag live">● Live</span></div></div>
+        <p class="desc">Single-instrument learning apps for true beginners — guitar, bass, piano, harmonica, and ukulele. I started building it while learning guitar myself, so it's made for the person sitting exactly where I sat: day one, no experience, just wanting to play.</p>
+        <div class="apps"><span>ESPO Fret · guitar</span><span>ESPO Grand · piano</span><span>ESPO Harp · harmonica</span><span>ESPO The Uke · ukulele</span><span>ESPO Bass · bass</span></div>
         <a class="more" href="https://espomusic.com" target="_blank" rel="noopener">Play free at espomusic.com →</a>
       </div>
 
       <div class="pcard reveal">
-        <div class="toprow"><div class="name"><span class="espo">ESPO</span> Drama</div><span class="tag live">● New</span></div>
-        <p class="desc">A story engine that shows its work — give it a subject, two voices argue, and a third won't ship until it clears your confidence bar. Out comes a proofed screenplay and a branching story. The working preview is live now; full generation switches on shortly.</p>
-        <div class="apps"><span>ESPO Studios · the story engine</span></div>
+        <div class="toprow"><div class="plogo"><img src="brand/logo-learning.png" alt="ESPO Learning logo" loading="lazy"></div><div class="ti"><div class="name"><span class="espo">ESPO</span> Learning</div><span class="tag prod">In production</span></div></div>
+        <p class="desc">Calm, no-shame practice apps we're building for our own kids first — and any child who learns a little differently. One family, four subjects. Privacy-first: no accounts, no data collected, and never a promise to “fix” anything.</p>
+        <div class="apps"><span>ESPO Handwriting · first</span><span>ESPO Reading</span><span>ESPO Math</span><span>ESPO Writing</span></div>
+        <a class="more" href="https://espolearning.com" target="_blank" rel="noopener">See it at espolearning.com →</a>
+      </div>
+
+      <div class="pcard reveal">
+        <div class="toprow"><div class="plogo"><img src="brand/logo-genius.png" alt="ESPO Genius logo" loading="lazy"></div><div class="ti"><div class="name"><span class="espo">ESPO</span> Genius</div><span class="tag prod">In production</span></div></div>
+        <p class="desc">Plain-English help for life's hardest paperwork — IEPs, care plans, benefits, and wills — in language a normal person can actually read. No jargon, no noise.</p>
+        <div class="apps"><span>IEPNarc</span><span>CareNarc</span><span>BillNarc</span><span>…and more</span></div>
+        <a class="more" href="https://espogenius.com" target="_blank" rel="noopener">See it at espogenius.com →</a>
+      </div>
+
+      <div class="pcard reveal">
+        <div class="toprow"><div class="plogo"><img src="brand/logo-drama.png" alt="ESPO Drama logo" loading="lazy"></div><div class="ti"><div class="name"><span class="espo">ESPO</span> Drama</div><span class="tag live">● Live</span></div></div>
+        <p class="desc">Theater &amp; the dramatic arts: a story engine that shows its work — two voices argue, a third won't ship until it clears your bar — plus <b>Stage</b>, a rehearsal app for actors to get on their feet.</p>
+        <div class="apps"><span>ESPO Studios · story engine</span><span>Stage · rehearsal</span></div>
         <a class="more" href="https://espodrama.com" target="_blank" rel="noopener">See it at espodrama.com →</a>
       </div>
 
       <div class="pcard reveal">
-        <div class="toprow"><div class="name"><span class="espo">ESPO</span> Curriculum</div><span class="tag prod">In production</span></div>
-        <p class="desc">Homeschool curriculum we built for our own kids — taught by a patient, built-in teacher, with interactive lessons and a reader that highlights along as it reads. In daily use in our home before it goes anywhere else.</p>
-        <div class="apps"><span>HistoryPro · K–6 social studies</span></div>
+        <div class="toprow"><div class="plogo"><img src="brand/logo-narcs.png" alt="The Narcs logo" loading="lazy"></div><div class="ti"><div class="name">The <span class="espo">Narcs</span></div><span class="tag live">● Live</span></div></div>
+        <p class="desc">See-through-it tools that read confusing systems honestly. <b>MarketNarc</b> reads the small-stock market — the call and the <i>why</i> — with no hype and never a trade. Built for beginners.</p>
+        <div class="apps"><span>MarketNarc · market reads</span><span>the honest-read engine</span></div>
+        <a class="more" href="https://marketnarc.com" target="_blank" rel="noopener">See it at marketnarc.com →</a>
       </div>
 
       <div class="pcard reveal">
-        <div class="toprow"><div class="name"><span class="espo">ESPO</span> Learning</div><span class="tag soon">First app coming Aug 2026</span></div>
-        <p class="desc">Calm, no-shame practice apps we're building for our own kids first — and for any child who learns a little differently. One family, four subjects: handwriting, reading, math, and writing. Privacy-first by design: no accounts, no data collected, and never a promise to “fix” anything.</p>
-        <div class="apps"><span>ESPO Handwriting · launches first</span><span>ESPO Reading</span><span>ESPO Math</span><span>ESPO Writing</span></div>
+        <div class="toprow"><div class="plogo"><img src="brand/logo-nd.png" alt="Neuro Divulge logo" loading="lazy"></div><div class="ti"><div class="name">Neuro Divulge</div><span class="tag live">● Live</span></div></div>
+        <p class="desc">Printable, screen-free regulation tools for families homeschooling neurodivergent kids — calm, practical, and made from real need. An Esposito family project.</p>
+        <div class="apps"><span>Regulation cards</span><span>Checklists &amp; guides</span></div>
+        <a class="more" href="https://neurodivulge.com" target="_blank" rel="noopener">Visit neurodivulge.com →</a>
       </div>
 
       <div class="pcard reveal">
-        <div class="toprow"><div class="name"><span class="espo">ESPO</span> Genius</div><span class="tag prod">In production</span></div>
-        <p class="desc">Plain-English intelligence apps I first built for myself — what's happening and why, without the charts, jargon, or noise. The signal, in language a normal person can read.</p>
-        <div class="apps"><span>MarketNarc · market intelligence</span></div>
-        <a class="more" href="https://espogenius.com" target="_blank" rel="noopener">See it at espogenius.com →</a>
+        <div class="toprow"><div class="plogo"><img src="brand/logo-curriculum.png" alt="ESPO Curriculum logo" loading="lazy"></div><div class="ti"><div class="name"><span class="espo">ESPO</span> Curriculum</div><span class="tag soon">In development</span></div></div>
+        <p class="desc">A taught homeschool curriculum we're building for our own kids — starting with History &amp; Social Studies and Science, K–12, with a patient built-in teacher and a reader that highlights as it reads.</p>
+        <div class="apps"><span>History · K–12</span><span>Science · K–12</span></div>
       </div>
 
     </div>
@@ -324,7 +340,7 @@
     <div class="reveal">
       <div class="eyebrow on-navy">See what we build</div>
       <h2>Try the ESPO&nbsp;Music demos.</h2>
-      <p class="lede">Pick an instrument to try the guide. It&#8217;s a taste of how ESPO&nbsp;Music coaches you — in the app you play along on your <b>own real instrument</b> while the Highway leads. No sign&#8209;up, no install.</p>
+      <p class="lede">Pick an instrument, then <b>tap in time</b> as each chord reaches the line — you’ll hear it play. It’s a taste of the Highway: in the full app you play along on your <b>own real instrument</b>. No sign‑up, no install.</p>
       <div class="demo-tabs" id="demoTabs">
         <button class="dtab on" data-inst="fret">Fret <span>guitar</span></button>
         <button class="dtab" data-inst="grand">Grand <span>piano</span></button>
@@ -349,16 +365,16 @@
 <section id="marketnarc-demo" class="navy demoband">
   <div class="wrap">
     <div class="reveal">
-      <div class="eyebrow on-navy">Also in the family &middot; ESPO&nbsp;Genius</div>
+      <div class="eyebrow on-navy">Also in the family &middot; The&nbsp;Narcs</div>
       <h2>Try the MarketNarc demo.</h2>
-      <p class="lede">Plain&#8209;English market intelligence. Pick a stock and <b>Bart</b> gives you the call &mdash; buy, sell, hold, or watch &mdash; with the <i>why</i> behind it. Built for beginners. <b>Have a play below.</b><span class="mn-note">In production &middot; not financial advice.</span></p>
+      <p class="lede">Plain&#8209;English market intelligence. Pick a stock and <b>Nate</b> gives you the call &mdash; buy, sell, hold, or watch &mdash; with the <i>why</i> behind it. Built for beginners. <b>Have a play below.</b><span class="mn-note">Live &middot; not financial advice.</span></p>
       <div class="cta">
-        <a class="btn btn-light" href="https://espogenius.com/marketnarc" target="_blank" rel="noopener">Open MarketNarc &#8599;</a>
-        <a class="btn btn-ghost on-navy" href="https://espogenius.com" target="_blank" rel="noopener">See ESPO&nbsp;Genius &rarr;</a>
+        <a class="btn btn-light" href="https://marketnarc.com" target="_blank" rel="noopener">Open MarketNarc &#8599;</a>
+        <a class="btn btn-ghost on-navy" href="https://marketnarc.com" target="_blank" rel="noopener">See The&nbsp;Narcs &rarr;</a>
       </div>
     </div>
     <div class="demo-frame signal reveal">
-      <iframe src="https://espogenius.com/demo" title="MarketNarc &mdash; a taste of plain-English market intelligence" loading="lazy"></iframe>
+      <iframe src="https://marketnarc.com/demo" title="MarketNarc &mdash; a taste of plain-English market intelligence" loading="lazy"></iframe>
     </div>
   </div>
 </section>
@@ -401,11 +417,14 @@
       <span class="meta">© 2026 · Post Falls, Idaho</span>
     </div>
     <nav>
-      <a href="#aehub">AEHub</a>
       <a href="#products">Products</a>
       <a href="https://espomusic.com" target="_blank" rel="noopener">ESPO Music</a>
-      <a href="https://espodrama.com" target="_blank" rel="noopener">ESPO Drama</a>
+      <a href="https://espolearning.com" target="_blank" rel="noopener">ESPO Learning</a>
       <a href="https://espogenius.com" target="_blank" rel="noopener">ESPO Genius</a>
+      <a href="https://espodrama.com" target="_blank" rel="noopener">ESPO Drama</a>
+      <a href="https://marketnarc.com" target="_blank" rel="noopener">The Narcs</a>
+      <a href="https://neurodivulge.com" target="_blank" rel="noopener">Neuro Divulge</a>
+      <a href="#aehub">AEHub</a>
       <a href="#services">Services</a>
       <a href="mailto:anthonye@aexperiences.studio">Contact</a>
     </nav>
