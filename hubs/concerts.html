@@ -13,6 +13,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="/hubs/hub.css" rel="stylesheet">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","serviceType":"Concerts & Comedy business hub","name":"Encore Hub","provider":{"@type":"Organization","name":"Accelerated Experiences LLC","url":"https://aexperiences.com"},"areaServed":"US","url":"https://www.aexperiences.com/hubs/concerts.html","description":"Reserved, GA, or cabaret — sold in one place.","offers":[{"@type":"Offer","priceCurrency":"USD","price":"600","name":"Club"},{"@type":"Offer","priceCurrency":"USD","price":"1,400","name":"Venue"},{"@type":"Offer","priceCurrency":"USD","price":"3,000","name":"Group / Promoter"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Do I own the hub?","acceptedAnswer":{"@type":"Answer","text":"You own your content, your data, and your brand outright, and it runs on your own domain. We build, host, and maintain the Encore Hub for a flat monthly — no lock-in, and your data is yours to export."}},{"@type":"Question","name":"Are there per-seat or per-transaction fees?","acceptedAnswer":{"@type":"Answer","text":"No per-transaction fee — you connect your own payment processor and keep 100% of your revenue. Extra seats are a flat $18 per user per month, only if you need them."}},{"@type":"Question","name":"Is it really built for concerts & comedy?","acceptedAnswer":{"@type":"Answer","text":"Yes. The Encore Hub is configured to how concerts & comedy actually works — not a generic template. We tailor it to your business before it goes live."}},{"@type":"Question","name":"How long does it take to launch?","acceptedAnswer":{"@type":"Answer","text":"Most hubs go live within a few weeks. We start with the smallest version that works on your real data, prove it, then expand — so you see something real early."}},{"@type":"Question","name":"Can I move off my current software?","acceptedAnswer":{"@type":"Answer","text":"Yes. Data migration starts at $1,500 and we bring your existing records over, so you are not starting from a blank slate."}},{"@type":"Question","name":"Do you offer non-profit pricing?","acceptedAnswer":{"@type":"Answer","text":"Yes — 30% off monthly for mission-driven organizations, plus founder (20% off for life + 50% off the build) and annual-prepay (2 months free) programs."}}]}</script>
 </head>
 <body style="--h1:#2a123f;--h2:#150823;--acc:#bd57e0">
 <header class="bar">
@@ -55,6 +57,15 @@
         <a class="btn btn-acc wide" href="#start">Start your build</a>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="hubproof">
+  <div class="wrap">
+    <span class="hp-k">Proven</span>
+    <span class="hp-i"><span class="hp-dot"></span>Built on the same system we run our own studio on</span>
+    <span class="hp-i"><span class="hp-dot"></span>A live telehealth practice runs on it today</span>
+    <span class="hp-i"><span class="hp-dot"></span>Custom-built for you — never templated</span>
   </div>
 </section>
 
@@ -164,6 +175,17 @@
   </div>
 </section>
 
+<section class="vfaq">
+  <div class="wrap">
+    <div class="eyebrow">Questions, answered straight</div>
+    <h2>What you’re probably wondering.</h2>
+    <div class="faqlist">
+      <details><summary>Do I own the hub?</summary><div class="a">You own your content, your data, and your brand outright, and it runs on your own domain. We build, host, and maintain the Encore Hub for a flat monthly — no lock-in, and your data is yours to export.</div></details><details><summary>Are there per-seat or per-transaction fees?</summary><div class="a">No per-transaction fee — you connect your own payment processor and keep 100% of your revenue. Extra seats are a flat $18 per user per month, only if you need them.</div></details><details><summary>Is it really built for concerts &amp; comedy?</summary><div class="a">Yes. The Encore Hub is configured to how concerts &amp; comedy actually works — not a generic template. We tailor it to your business before it goes live.</div></details><details><summary>How long does it take to launch?</summary><div class="a">Most hubs go live within a few weeks. We start with the smallest version that works on your real data, prove it, then expand — so you see something real early.</div></details><details><summary>Can I move off my current software?</summary><div class="a">Yes. Data migration starts at $1,500 and we bring your existing records over, so you are not starting from a blank slate.</div></details><details><summary>Do you offer non-profit pricing?</summary><div class="a">Yes — 30% off monthly for mission-driven organizations, plus founder (20% off for life + 50% off the build) and annual-prepay (2 months free) programs.</div></details>
+    </div>
+    <div class="vfaq-cta"><a class="btn btn-acc" href="#start">Book a demo →</a></div>
+  </div>
+</section>
+
 <footer>
   <div class="wrap">
     <div class="left"><img class="ae-disc-mark" src="/ae-disc.png" alt="Accelerated Experiences"><span class="ae-word"><b>accelerated</b><b class="blue">experiences</b><small>LLC</small></span><span class="meta">© 2026 · Post Falls, Idaho</span></div>
@@ -174,8 +196,17 @@
   </div>
 </footer>
 
+<div class="stickycta" id="stickyCta"><a href="#start">Book a demo →</a></div>
+
 <script>
 (function(){
+  // sticky demo CTA: appear after the hero, hide near the lead form
+  var cta=document.getElementById('stickyCta'), start=document.getElementById('start');
+  if(cta){ window.addEventListener('scroll',function(){
+    var past=window.scrollY>520, near=false;
+    if(start){ var r=start.getBoundingClientRect(); near=r.top<window.innerHeight && r.bottom>0; }
+    cta.classList.toggle('show', past && !near);
+  },{passive:true}); }
   var els=[].slice.call(document.querySelectorAll('.reveal'));
   if('IntersectionObserver' in window){var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.08});els.forEach(function(e){io.observe(e);});setTimeout(function(){els.forEach(function(e){e.classList.add('in');});},1500);}else{els.forEach(function(e){e.classList.add('in');});}
   // tier deep-pick
