@@ -59,6 +59,51 @@
   .btn-ghost.on-navy:hover{border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.05);}
   .btn-light{background:#fff;color:var(--navy);} .btn-light:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(0,0,0,.25);}
 
+  /* ===== collapsible left sidebar ===== */
+  .sidenav{position:fixed;left:0;top:0;bottom:0;width:250px;z-index:80;background:linear-gradient(180deg,var(--navy),var(--navy-2));color:#fff;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.08);transition:width .22s ease, transform .25s ease;}
+  .sidenav::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(59,157,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(59,157,255,.06) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(120% 60% at 50% 0%,#000,transparent 75%);mask-image:radial-gradient(120% 60% at 50% 0%,#000,transparent 75%);pointer-events:none;}
+  .sn-brand{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:9px;padding:24px 22px 18px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .sn-mark{width:78px;height:78px;filter:drop-shadow(0 6px 16px rgba(0,0,0,.45));transition:width .22s,height .22s;}
+  .sn-word{display:flex;flex-direction:column;line-height:1.04;}
+  .sn-word b{font-weight:800;font-size:16px;letter-spacing:-.3px;color:#fff;}
+  .sn-word b:nth-child(2){color:var(--blue-bright);}
+  .sn-word small{font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;color:#9fb4d6;margin-top:3px;}
+  .sn-nav{position:relative;flex:1;display:flex;flex-direction:column;gap:3px;padding:16px 12px;overflow-y:auto;}
+  .sn-link{display:flex;align-items:center;gap:13px;padding:11px 12px;border-radius:10px;color:#c4d3ee;font-weight:600;font-size:15px;transition:background .15s,color .15s;white-space:nowrap;}
+  .sn-link:hover{background:rgba(255,255,255,.07);color:#fff;}
+  .sn-ic{flex:0 0 22px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;color:var(--blue-bright);}
+  .sn-ic svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+  .sn-foot{position:relative;padding:14px;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:10px;}
+  .sn-cta{width:100%;justify-content:center;}
+  .sn-cta-ic{display:none;}
+  .sn-collapse{display:flex;align-items:center;justify-content:center;gap:9px;background:transparent;border:1px solid rgba(255,255,255,.16);color:#9fb4d6;border-radius:9px;padding:9px;cursor:pointer;font-family:var(--mono);font-size:13px;transition:border-color .15s,color .15s;}
+  .sn-collapse:hover{border-color:rgba(255,255,255,.42);color:#fff;}
+  .sn-ch{font-size:15px;line-height:1;}
+  body.nav-collapsed .sidenav{width:74px;}
+  body.nav-collapsed .sn-mark{width:44px;height:44px;}
+  body.nav-collapsed .sn-word,body.nav-collapsed .sn-tx{display:none;}
+  body.nav-collapsed .sn-brand{align-items:center;padding:20px 0 16px;}
+  body.nav-collapsed .sn-link{justify-content:center;padding:12px 0;}
+  body.nav-collapsed .sn-cta{padding:12px 0;} body.nav-collapsed .sn-cta-ic{display:flex;}
+  body.nav-collapsed .sn-collapse{padding:9px 0;} body.nav-collapsed .sn-ch{transform:rotate(180deg);}
+  .site{margin-left:250px;transition:margin-left .22s ease;}
+  body.nav-collapsed .site{margin-left:74px;}
+  .sn-hamburger{display:none;position:fixed;top:14px;left:14px;z-index:95;width:46px;height:46px;border-radius:11px;background:var(--navy);color:#fff;border:0;font-size:20px;cursor:pointer;box-shadow:var(--shadow);align-items:center;justify-content:center;}
+  .sn-scrim{display:none;position:fixed;inset:0;background:rgba(8,18,40,.5);z-index:79;}
+  @media(max-width:900px){
+    .sidenav{transform:translateX(-100%);width:272px;box-shadow:0 0 44px rgba(0,0,0,.55);}
+    body.nav-open .sidenav{transform:none;}
+    body.nav-open .sn-scrim{display:block;}
+    .site{margin-left:0 !important;}
+    .sn-hamburger{display:flex;}
+    .sn-collapse{display:none;}
+    body.nav-collapsed .sidenav{width:272px;}
+    body.nav-collapsed .sn-word,body.nav-collapsed .sn-tx{display:block;}
+    body.nav-collapsed .sn-mark{width:78px;height:78px;}
+    body.nav-collapsed .sn-brand{align-items:flex-start;padding:24px 22px 18px;}
+    body.nav-collapsed .sn-cta-ic{display:none;}
+  }
+
   /* navy surface w/ grid */
   .navy{position:relative;background:linear-gradient(120deg,var(--navy),var(--navy-2));color:#fff;overflow:hidden;}
   .navy::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(59,157,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(59,157,255,.08) 1px,transparent 1px);background-size:56px 56px;-webkit-mask-image:radial-gradient(120% 90% at 70% 0%,#000,transparent 72%);mask-image:radial-gradient(120% 90% at 70% 0%,#000,transparent 72%);pointer-events:none;}
@@ -253,21 +298,27 @@
 </head>
 <body>
 
-<header class="bar">
-  <div class="wrap">
-    <a class="logo" href="#top" aria-label="Accelerated Experiences LLC — home">
-      <img class="ae-disc-mark" src="ae-disc.png" alt="Accelerated Experiences">
-      <span class="ae-word"><b>accelerated</b><b class="blue">experiences</b><small>LLC</small></span>
-    </a>
-    <nav>
-      <a class="navlink" href="#aehub">Hubs</a>
-      <a class="navlink" href="#why">How it works</a>
-      <a class="navlink" href="#products">Products</a>
-      <a class="navlink" href="#services">Services</a>
-      <a class="btn btn-primary" href="#start">Book a demo</a>
-    </nav>
+<button class="sn-hamburger" id="snHam" aria-label="Open menu" aria-expanded="false">☰</button>
+<div class="sn-scrim" id="snScrim" aria-hidden="true"></div>
+<aside class="sidenav" id="sidenav" aria-label="Main navigation">
+  <a class="sn-brand" href="#top" aria-label="Accelerated Experiences LLC — home">
+    <img class="sn-mark" src="ae-mark.png" alt="Accelerated Experiences">
+    <span class="sn-word"><b>accelerated</b><b>experiences</b><small>LLC</small></span>
+  </a>
+  <nav class="sn-nav">
+    <a class="sn-link" href="#aehub"><span class="sn-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.4"/><rect x="14" y="3" width="7" height="7" rx="1.4"/><rect x="3" y="14" width="7" height="7" rx="1.4"/><rect x="14" y="14" width="7" height="7" rx="1.4"/></svg></span><span class="sn-tx">The Hubs</span></a>
+    <a class="sn-link" href="#why"><span class="sn-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.1"/><path d="M12 3v2.6M12 18.4V21M3 12h2.6M18.4 12H21M5.6 5.6l1.9 1.9M16.5 16.5l1.9 1.9M18.4 5.6l-1.9 1.9M7.5 16.5l-1.9 1.9"/></svg></span><span class="sn-tx">How it works</span></a>
+    <a class="sn-link" href="#products"><span class="sn-ic"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg></span><span class="sn-tx">Products</span></a>
+    <a class="sn-link" href="#services"><span class="sn-ic"><svg viewBox="0 0 24 24"><path d="M15 5.5a3.6 3.6 0 0 0-4.9 4.4l-5.5 5.5a1.7 1.7 0 0 0 2.4 2.4l5.5-5.5A3.6 3.6 0 0 0 16.9 7.4l-2.1 2.1-1.8-1.8 2-2.2z"/></svg></span><span class="sn-tx">Services</span></a>
+    <a class="sn-link" href="#faq"><span class="sn-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.5 2.5 0 1 1 3.4 2.3c-.8.3-1.2.9-1.2 1.7v.3"/><circle cx="12" cy="16.8" r=".7" fill="currentColor" stroke="none"/></svg></span><span class="sn-tx">FAQ</span></a>
+  </nav>
+  <div class="sn-foot">
+    <a class="btn btn-primary sn-cta" href="#start"><span class="sn-tx">Book a demo</span><span class="sn-ic sn-cta-ic"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+    <button class="sn-collapse" id="snCollapse" aria-label="Collapse menu" title="Collapse menu"><span class="sn-ch">«</span><span class="sn-tx">Collapse</span></button>
   </div>
-</header>
+</aside>
+<div class="site">
+<a id="topanchor"></a>
 
 <a id="top"></a>
 <section class="navy hero">
@@ -599,8 +650,22 @@
     </nav>
   </div>
 </footer>
+</div><!-- /.site -->
 
 <div class="stickycta" id="stickyCta"><a href="#start">Book a demo →</a></div>
+
+<script>
+  /* collapsible sidebar — desktop collapse (persists) + mobile off-canvas */
+  (function(){
+    var body=document.body, ham=document.getElementById('snHam'), scrim=document.getElementById('snScrim'), col=document.getElementById('snCollapse');
+    try{ if(localStorage.getItem('ae_nav')==='collapsed') body.classList.add('nav-collapsed'); }catch(e){}
+    if(col) col.addEventListener('click',function(){ var c=body.classList.toggle('nav-collapsed'); try{localStorage.setItem('ae_nav', c?'collapsed':'open');}catch(e){} });
+    function closeM(){ body.classList.remove('nav-open'); if(ham) ham.setAttribute('aria-expanded','false'); }
+    if(ham) ham.addEventListener('click',function(){ var o=body.classList.toggle('nav-open'); ham.setAttribute('aria-expanded', o?'true':'false'); });
+    if(scrim) scrim.addEventListener('click', closeM);
+    document.querySelectorAll('.sn-link, .sn-cta').forEach(function(a){ a.addEventListener('click', closeM); });
+  })();
+</script>
 
 <script>
   (function(){
