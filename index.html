@@ -60,7 +60,7 @@
   .btn-light{background:#fff;color:var(--navy);} .btn-light:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(0,0,0,.25);}
 
   /* ===== collapsible left sidebar ===== */
-  .sidenav{position:fixed;left:0;top:0;bottom:0;width:250px;z-index:80;background:linear-gradient(180deg,var(--navy),var(--navy-2));color:#fff;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.08);transition:width .22s ease, transform .25s ease;}
+  .sidenav{position:fixed;left:0;top:var(--navtop,50px);bottom:0;width:250px;z-index:80;background:linear-gradient(180deg,var(--navy),var(--navy-2));color:#fff;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.08);transition:width .22s ease, transform .25s ease;}
   .sidenav::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(59,157,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(59,157,255,.06) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(120% 60% at 50% 0%,#000,transparent 75%);mask-image:radial-gradient(120% 60% at 50% 0%,#000,transparent 75%);pointer-events:none;}
   .sn-brand{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:9px;padding:24px 22px 18px;border-bottom:1px solid rgba(255,255,255,.08);}
   .sn-mark{width:78px;height:78px;filter:drop-shadow(0 6px 16px rgba(0,0,0,.45));transition:width .22s,height .22s;}
@@ -88,7 +88,7 @@
   body.nav-collapsed .sn-collapse{padding:9px 0;} body.nav-collapsed .sn-ch{transform:rotate(180deg);}
   .site{margin-left:250px;transition:margin-left .22s ease;}
   body.nav-collapsed .site{margin-left:74px;}
-  .sn-hamburger{display:none;position:fixed;top:14px;left:14px;z-index:95;width:46px;height:46px;border-radius:11px;background:var(--navy);color:#fff;border:0;font-size:20px;cursor:pointer;box-shadow:var(--shadow);align-items:center;justify-content:center;}
+  .sn-hamburger{display:none;position:fixed;top:calc(var(--navtop,50px) + 9px);left:14px;z-index:95;width:46px;height:46px;border-radius:11px;background:var(--navy);color:#fff;border:0;font-size:20px;cursor:pointer;box-shadow:var(--shadow);align-items:center;justify-content:center;}
   .sn-scrim{display:none;position:fixed;inset:0;background:rgba(8,18,40,.5);z-index:79;}
   @media(max-width:900px){
     .sidenav{transform:translateX(-100%);width:272px;box-shadow:0 0 44px rgba(0,0,0,.55);}
@@ -658,6 +658,9 @@
   /* collapsible sidebar — desktop collapse (persists) + mobile off-canvas */
   (function(){
     var body=document.body, ham=document.getElementById('snHam'), scrim=document.getElementById('snScrim'), col=document.getElementById('snCollapse');
+    // start the sidebar below the AE family bar (#aenav) so the logo is never clipped
+    function setTop(){ var bar=document.getElementById('aenav'); var h=bar?Math.round(bar.getBoundingClientRect().height):0; if(!h){ var bp=parseInt(getComputedStyle(document.body).paddingTop)||0; h=bp?bp-8:0; } document.documentElement.style.setProperty('--navtop',(h||50)+'px'); }
+    setTop(); [150,500,1200].forEach(function(t){ setTimeout(setTop,t); }); window.addEventListener('resize',setTop);
     try{ if(localStorage.getItem('ae_nav')==='collapsed') body.classList.add('nav-collapsed'); }catch(e){}
     if(col) col.addEventListener('click',function(){ var c=body.classList.toggle('nav-collapsed'); try{localStorage.setItem('ae_nav', c?'collapsed':'open');}catch(e){} });
     function closeM(){ body.classList.remove('nav-open'); if(ham) ham.setAttribute('aria-expanded','false'); }
