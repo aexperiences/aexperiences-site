@@ -54,8 +54,8 @@
   /* buttons */
   .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:600;font-size:15px;padding:12px 22px;border-radius:999px;cursor:pointer;border:1px solid transparent;transition:transform .12s ease, box-shadow .2s, background .2s, border-color .2s;}
   .btn:focus-visible{outline:3px solid var(--blue);outline-offset:2px;}
-  .btn-primary{background:linear-gradient(135deg,var(--navy),var(--blue-deep));color:#fff;box-shadow:0 10px 24px rgba(29,104,224,.32);}
-  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(29,104,224,.42);}
+  .btn-primary{background:linear-gradient(135deg,var(--navy),var(--blue-deep));color:#fff;box-shadow:0 10px 24px rgba(168,95,56,.32);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(168,95,56,.42);}
   .btn-ghost{background:transparent;border-color:var(--line);color:var(--navy);}
   .btn-ghost:hover{border-color:var(--slate);}
   .btn-ghost.on-navy{color:#fff;border-color:rgba(255,255,255,.28);}
@@ -120,7 +120,7 @@
   .vals{margin-top:42px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
   @media(max-width:820px){ .vals{grid-template-columns:1fr;} }
   .tcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);transition:transform .15s,box-shadow .2s;}
-  .tcard:hover{transform:translateY(-3px);box-shadow:0 26px 56px rgba(15,31,61,.13);}
+  .tcard:hover{transform:translateY(-3px);box-shadow:0 26px 56px rgba(60,40,20,.13);}
   .tcard .ic{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#f6e9d8,#e9d9bc);display:flex;align-items:center;justify-content:center;color:var(--blue);font-family:var(--mono);font-weight:700;font-size:20px;}
   .tcard h3{margin-top:16px;} .tcard p{margin-top:8px;color:var(--slate);font-size:15px;}
 
@@ -146,14 +146,14 @@
   .fam{margin-top:42px;display:grid;grid-template-columns:repeat(2,1fr);gap:22px;}
   @media(max-width:820px){ .fam{grid-template-columns:1fr;} }
   .pcard{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);transition:transform .15s,box-shadow .2s,border-color .2s;display:flex;flex-direction:column;}
-  .pcard:hover{transform:translateY(-3px);box-shadow:0 26px 56px rgba(15,31,61,.14);border-color:#d7e0ee;}
+  .pcard:hover{transform:translateY(-3px);box-shadow:0 26px 56px rgba(60,40,20,.14);border-color:#e6dcc4;}
   .pcard .toprow{display:flex;align-items:center;justify-content:space-between;gap:12px;}
   .pcard .name{font-family:var(--sans);font-weight:800;font-size:22px;letter-spacing:-.01em;}
   .pcard .name .espo{color:var(--blue);}
   .tag{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 11px;border-radius:999px;white-space:nowrap;}
   .tag.live{color:#0c6b4a;background:rgba(15,138,95,.12);border:1px solid rgba(15,138,95,.3);}
   .tag.prod{color:#8a5a1a;background:rgba(224,168,58,.14);border:1px solid rgba(224,168,58,.35);}
-  .tag.soon{color:var(--slate);background:#eef2f8;border:1px solid var(--line);}
+  .tag.soon{color:var(--slate);background:#f4eede;border:1px solid var(--line);}
   .pcard .desc{margin-top:12px;color:var(--slate);font-size:15px;}
   .pcard .apps{margin-top:14px;display:flex;flex-wrap:wrap;gap:7px;}
   .pcard .apps span{font-family:var(--mono);font-size:12.5px;color:var(--navy);background:var(--bg);border:1px solid var(--line);padding:5px 11px;border-radius:8px;}
@@ -243,7 +243,7 @@
     <p class="lede">Two sides to what we do: products we build and own, and custom work for businesses — websites, apps, and brands. Every project is built from the ground up for the client. Never templated.</p>
     <div class="cta">
       <a class="btn btn-light" href="mailto:anthonye@aexperiences.studio?subject=Project%20inquiry">Start a project</a>
-      <a class="btn btn-ghost on-navy" href="#demo">See what we build ↓</a>
+      <a class="btn btn-ghost on-navy" href="#products">See what we build ↓</a>
     </div>
     <div class="stats">
       <div class="stat"><div class="n">5</div><div class="k">ESPO product lines</div></div>
@@ -292,14 +292,14 @@
       <p class="lede">Each hub replaces a stack of software — and, for ticketed venues, kills the per-ticket fees that bleed five figures a year. Native, fully custom, on your brand and domain. Pick your industry:</p>
     </div>
     <div class="hubgrid reveal">
-      <a class="hubtile" href="/hubs/real-estate.html" style="--acc:#2f7bef">
+      <a class="hubtile" href="/hubs/real-estate.html" style="--acc:#c8794f">
         <span class="ht-ic"><svg viewBox="0 0 48 48"><path d="M7 22 24 8l17 14"/><path d="M11 20v19h26V20"/><circle cx="24" cy="29" r="3.2"/><path d="M24 32.2V37"/></svg></span>
         <span class="ht-ind">Real Estate</span>
         <span class="ht-name">Homestead Hub</span>
         <span class="ht-tag">Every listing, client &amp; closing in one branded place.</span>
         <span class="ht-foot"><b>from $450/mo</b><i>Explore →</i></span>
       </a>
-      <a class="hubtile" href="/hubs/architecture.html" style="--acc:#3aa3dd">
+      <a class="hubtile" href="/hubs/architecture.html" style="--acc:#5c8a5f">
         <span class="ht-ic"><svg viewBox="0 0 48 48"><path d="M24 7 11 41M24 7l13 34"/><circle cx="24" cy="7" r="2.6"/><path d="M24 7v11"/><path d="M16 30h16"/></svg></span>
         <span class="ht-ind">Architecture</span>
         <span class="ht-name">Draftline Hub</span>
@@ -392,49 +392,6 @@
   </div>
 </section>
 
-<section id="demo" class="navy demoband">
-  <div class="wrap">
-    <div class="reveal">
-      <div class="eyebrow on-navy">See what we build</div>
-      <h2>Try the ESPO&nbsp;Music demos.</h2>
-      <p class="lede">Pick an instrument to try the guide. It&#8217;s a taste of how ESPO&nbsp;Music coaches you — in the app you play along on your <b>own real instrument</b> while the Highway leads. No sign&#8209;up, no install.</p>
-      <div class="demo-tabs" id="demoTabs">
-        <button class="dtab on" data-inst="fret">Fret <span>guitar</span></button>
-        <button class="dtab" data-inst="grand">Grand <span>piano</span></button>
-        <button class="dtab" data-inst="harp">Harp <span>harmonica</span></button>
-        <button class="dtab" data-inst="uke">The Uke <span>ukulele</span></button>
-        <button class="dtab" data-inst="bass">Bass <span>bass guitar</span></button>
-      </div>
-      <div class="cta">
-        <a class="btn btn-light" id="demoOpen" href="espo-music.html?inst=fret" target="_blank" rel="noopener">Open full demo ↗</a>
-        <a class="btn btn-ghost on-navy" href="https://espomusic.com" target="_blank" rel="noopener">Play free at espomusic.com</a>
-      </div>
-    </div>
-    <div class="demo-frame reveal">
-      <iframe id="demoFrame" src="espo-music.html?inst=fret" title="ESPO Music — interactive instrument demo" loading="lazy"></iframe>
-    </div>
-  </div>
-  <script>
-  (function(){var t=document.getElementById('demoTabs'),f=document.getElementById('demoFrame'),o=document.getElementById('demoOpen');if(!t)return;t.addEventListener('click',function(e){var b=e.target.closest('.dtab');if(!b)return;t.querySelectorAll('.dtab').forEach(function(x){x.classList.remove('on');});b.classList.add('on');var i=b.getAttribute('data-inst');f.src='espo-music.html?inst='+i;o.href='espo-music.html?inst='+i;});})();
-  </script>
-</section>
-
-<section id="marketnarc-demo" class="navy demoband">
-  <div class="wrap">
-    <div class="reveal">
-      <div class="eyebrow on-navy">Also in the family &middot; ESPO&nbsp;Genius</div>
-      <h2>Try the MarketNarc demo.</h2>
-      <p class="lede">Plain&#8209;English market intelligence. Pick a stock and <b>Bart</b> gives you the call &mdash; buy, sell, hold, or watch &mdash; with the <i>why</i> behind it. Built for beginners. <b>Have a play below.</b><span class="mn-note">In production &middot; not financial advice.</span></p>
-      <div class="cta">
-        <a class="btn btn-light" href="https://espogenius.com/marketnarc" target="_blank" rel="noopener">Open MarketNarc &#8599;</a>
-        <a class="btn btn-ghost on-navy" href="https://espogenius.com" target="_blank" rel="noopener">See ESPO&nbsp;Genius &rarr;</a>
-      </div>
-    </div>
-    <div class="demo-frame signal reveal">
-      <iframe src="https://espogenius.com/demo" title="MarketNarc &mdash; a taste of plain-English market intelligence" loading="lazy"></iframe>
-    </div>
-  </div>
-</section>
 
 <section id="services" class="navy">
   <div class="wrap">
