@@ -174,6 +174,11 @@
   .verticals .v{font-family:var(--mono);font-size:13px;color:#f0dcae;background:rgba(224,168,58,.1);border:1px solid rgba(224,168,58,.24);padding:7px 14px;border-radius:999px;}
   .region{color:#c9b896;font-size:14px;margin-top:14px;}
 
+  /* the 30-second spot */
+  .spot{margin:34px auto 44px;max-width:920px;}
+  .spot video{width:100%;display:block;border-radius:var(--radius);box-shadow:var(--shadow-lg);border:1px solid rgba(224,168,58,.35);background:#14100a;}
+  .spot .spot-cap{margin-top:12px;text-align:center;font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#c9b98f;}
+
   /* white-label hub showcase (the sellable AEHub section) */
   .hub-showcase .hubgrid{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
   @media(max-width:900px){ .hub-showcase .hubgrid{grid-template-columns:1fr 1fr;} }
@@ -274,6 +279,10 @@
       <div class="eyebrow on-navy">White-label business hubs · now taking clients</div>
       <h2>Your whole business, one branded hub.</h2>
       <p class="lede">Each hub replaces a stack of software — and, for ticketed venues, kills the per-ticket fees that bleed five figures a year. Native, fully custom, on your brand and domain. Pick your industry:</p>
+    </div>
+    <div class="spot reveal">
+      <video src="/ae-commercial-2026.mp4" poster="/ae-commercial-poster.jpg" controls preload="metadata" playsinline></video>
+      <div class="spot-cap">The 30-second spot — real screens, real businesses</div>
     </div>
     <div class="hubgrid reveal">
       <a class="hubtile" href="/hubs/real-estate.html" style="--acc:#c8794f">
