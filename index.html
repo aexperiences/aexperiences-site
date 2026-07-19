@@ -234,6 +234,43 @@
   .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease;}
   .reveal.in{opacity:1;transform:none;}
   @media(prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} .reveal{opacity:1;transform:none;transition:none;} .btn:hover,.tcard:hover,.pcard:hover{transform:none;} }
+
+.explore{position:relative;}
+.explore-btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-weight:700;font-size:13.5px;color:var(--navy);background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;}
+.explore-btn:hover{border-color:var(--blue-deep);}
+.explore-menu{position:absolute;top:calc(100% + 10px);right:0;width:280px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);padding:10px;display:none;z-index:70;}
+.explore-menu.open{display:block;}
+.explore-menu .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);padding:8px 10px 4px;}
+.explore-menu a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;border-radius:9px;font-size:14px;font-weight:600;color:var(--navy);text-decoration:none;}
+.explore-menu a:hover{background:var(--bg);}
+.explore-menu a span.tag{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--slate);white-space:nowrap;}
+.explore-menu a.here{background:rgba(224,168,58,.16);}
+.explore-menu hr{border:none;border-top:1px solid var(--line);margin:6px 0;}
+.brian-fab{position:fixed;right:22px;bottom:22px;z-index:200;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--blue-deep));color:#fff;border:none;cursor:pointer;box-shadow:0 12px 30px rgba(20,15,8,.35);display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-weight:800;font-size:20px;transition:transform .15s;}
+.brian-fab:hover{transform:translateY(-2px) scale(1.04);}
+.brian-fab .dot{position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:50%;background:var(--blue-bright);border:2px solid var(--bg);}
+.brian-panel{position:fixed;right:22px;bottom:92px;z-index:200;width:360px;max-width:calc(100vw - 32px);height:480px;max-height:calc(100vh - 140px);background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;font-family:var(--sans);}
+.brian-panel.open{display:flex;}
+.brian-head{background:linear-gradient(120deg,var(--navy),var(--navy-2));color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;}
+.brian-head .av{width:34px;height:34px;border-radius:50%;background:var(--blue-bright);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;}
+.brian-head b{display:block;font-size:14.5px;font-weight:800;}
+.brian-head span{display:block;font-size:11px;color:#e8dcc0;}
+.brian-head .x{margin-left:auto;background:none;border:none;color:#fff;opacity:.7;cursor:pointer;font-size:18px;line-height:1;padding:4px;}
+.brian-head .x:hover{opacity:1;}
+.brian-body{flex:1;overflow-y:auto;padding:14px 14px 6px;display:flex;flex-direction:column;gap:10px;background:var(--bg);}
+.brian-msg{max-width:86%;font-size:13.5px;line-height:1.5;padding:10px 12px;border-radius:12px;}
+.brian-msg.bot{align-self:flex-start;background:#fff;border:1px solid var(--line);color:var(--navy);border-bottom-left-radius:4px;}
+.brian-msg.user{align-self:flex-end;background:var(--navy);color:#fff;border-bottom-right-radius:4px;}
+.brian-chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 10px;}
+.brian-chip{font-family:var(--mono);font-size:11px;font-weight:600;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--blue-deep);cursor:pointer;}
+.brian-chip:hover{border-color:var(--blue-deep);}
+.brian-inputrow{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);background:#fff;}
+.brian-inputrow input{flex:1;border:1px solid var(--line);border-radius:999px;padding:9px 14px;font-family:var(--sans);font-size:13.5px;background:var(--bg);color:var(--navy);}
+.brian-inputrow input:focus{outline:none;border-color:var(--blue-deep);}
+.brian-inputrow button{background:var(--navy);color:#fff;border:none;border-radius:999px;padding:9px 16px;font-weight:700;font-size:13px;cursor:pointer;}
+.brian-inputrow button:disabled{opacity:.5;cursor:default;}
+.brian-typing{align-self:flex-start;font-size:12px;color:var(--slate);padding:0 4px;}
+@media(max-width:480px){.brian-panel{right:16px;bottom:84px;width:calc(100vw - 32px);}.brian-fab{right:16px;bottom:16px;}}
 </style>
 </head>
 <body>
@@ -251,6 +288,23 @@
       <a class="navlink" href="https://espodrama.com" target="_blank" rel="noopener">ESPO Drama</a>
       <a class="navlink" href="https://espogenius.com" target="_blank" rel="noopener">ESPO Genius</a>
       <a class="navlink" href="#services">Services</a>
+      <a class="navlink" href="/products.html">Products &amp; Pricing</a>
+      <div class="explore">
+        <button class="explore-btn" id="exploreBtn">Explore ▾</button>
+        <div class="explore-menu" id="exploreMenu">
+          <div class="lbl">The whole AE family</div>
+          <a href="https://aexperiences.com/" class="here">Accelerated Experiences <span class="tag">Studio</span></a>
+          <a href="https://espomusic.com/">ESPO Music <span class="tag">Instrument coaching</span></a>
+          <a href="https://espolearning.com/">ESPO Learning <span class="tag">Early skills</span></a>
+          <a href="https://espogenius.com/">ESPO Genius <span class="tag">Navigate the system</span></a>
+          <a href="https://espodrama.com/">ESPO Drama <span class="tag">Act &amp; create</span></a>
+          <a href="https://espoedu.com/">ESPO Curriculum <span class="tag">Homeschool K-12</span></a>
+          <a href="https://marketnarc.com/">The Narcs <span class="tag">See through it</span></a>
+          <a href="https://neurodivulge.com/">Neuro Divulge <span class="tag">Regulation tools</span></a>
+          <hr>
+          <a href="https://aexperiences.studio/">AE Hub <span class="tag">Operations</span></a>
+        </div>
+      </div>
       <a class="btn btn-primary" href="mailto:anthonye@aexperiences.studio?subject=Project%20inquiry">Start a project</a>
     </nav>
   </div>
@@ -435,6 +489,85 @@
     els.forEach(function(e){ io.observe(e); });
     setTimeout(showAll, 1500);   /* safety net: content is never left hidden if the observer misses */
   })();
+</script>
+
+<button class="brian-fab" id="brianFab" aria-label="Chat with Brian">B<span class="dot"></span></button>
+<div class="brian-panel" id="brianPanel">
+  <div class="brian-head">
+    <div class="av">B</div>
+    <div><b>Brian</b><span>AE concierge · ask me anything</span></div>
+    <button class="x" id="brianClose" aria-label="Close">×</button>
+  </div>
+  <div class="brian-body" id="brianBody">
+    <div class="brian-msg bot">Hey — I'm Brian. I know our pricing, our hubs, and everything in the AE family. Tell me what you're trying to build and I'll point you at the right fit — or get you straight to Anthony or Barry if it's not something I can quote.</div>
+  </div>
+  <div class="brian-chips" id="brianChips">
+    <button class="brian-chip" data-q="What hub is right for a real estate brokerage?">Which hub fits my business?</button>
+    <button class="brian-chip" data-q="What does ESPO Music do and cost?">ESPO Music</button>
+    <button class="brian-chip" data-q="I'd like to talk to Anthony or Barry about a project.">Talk to a human</button>
+  </div>
+  <div class="brian-inputrow">
+    <input id="brianInput" type="text" placeholder="Ask Brian anything…" maxlength="500">
+    <button id="brianSend">Send</button>
+  </div>
+</div>
+<script>
+(function(){
+  var eBtn=document.getElementById('exploreBtn'), eMenu=document.getElementById('exploreMenu');
+  if(eBtn){ eBtn.addEventListener('click', function(ev){ ev.stopPropagation(); eMenu.classList.toggle('open'); });
+  document.addEventListener('click', function(){ eMenu.classList.remove('open'); });
+  eMenu.addEventListener('click', function(ev){ ev.stopPropagation(); }); }
+})();
+(function(){
+  var fab=document.getElementById('brianFab'), panel=document.getElementById('brianPanel'),
+      closeBtn=document.getElementById('brianClose'), body=document.getElementById('brianBody'),
+      input=document.getElementById('brianInput'), send=document.getElementById('brianSend'),
+      chips=document.getElementById('brianChips');
+  var history=[];
+  function open(){panel.classList.add('open'); input.focus();}
+  function close(){panel.classList.remove('open');}
+  fab.addEventListener('click', function(){panel.classList.contains('open')?close():open();});
+  closeBtn.addEventListener('click', close);
+  function addMsg(text, who){
+    var d=document.createElement('div');
+    d.className='brian-msg '+who;
+    d.textContent=text;
+    body.appendChild(d);
+    body.scrollTop=body.scrollHeight;
+    return d;
+  }
+  function ask(q){
+    if(!q) return;
+    addMsg(q,'user');
+    history.push({role:'user', content:q});
+    input.value='';
+    send.disabled=true;
+    var typing=document.createElement('div');
+    typing.className='brian-typing';
+    typing.textContent='Brian is typing…';
+    body.appendChild(typing);
+    body.scrollTop=body.scrollHeight;
+    fetch('/api/brian',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q, history:history})})
+      .then(function(r){return r.json();})
+      .then(function(j){
+        typing.remove();
+        var reply = (j && j.reply) ? j.reply : "I'm having trouble connecting right now — email anthonye@aexperiences.studio and Anthony will get right back to you.";
+        addMsg(reply,'bot');
+        history.push({role:'assistant', content:reply});
+      })
+      .catch(function(){
+        typing.remove();
+        addMsg("I'm having trouble connecting right now — email anthonye@aexperiences.studio and Anthony will get right back to you.",'bot');
+      })
+      .finally(function(){ send.disabled=false; });
+  }
+  send.addEventListener('click', function(){ ask(input.value.trim()); });
+  input.addEventListener('keydown', function(e){ if(e.key==='Enter'){ ask(input.value.trim()); } });
+  chips.addEventListener('click', function(e){
+    var q = e.target.getAttribute('data-q');
+    if(q) ask(q);
+  });
+})();
 </script>
 </body>
 </html>
