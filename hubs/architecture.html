@@ -17,13 +17,13 @@
 <body style="--h1:#1c3d22;--h2:#122818;--acc:#5c8a5f">
 <header class="bar">
   <div class="wrap">
-    <a class="logo" href="/" aria-label="Accelerated Experiences — home"><img src="https://raw.githubusercontent.com/aexperiences/aexperiences.com/main/public/wordmark.png" alt="Accelerated Experiences LLC"></a>
+    <a class="logo" href="/" aria-label="Accelerated Experiences — home"><img src="/ae-disc.png" alt="Accelerated Experiences LLC"></a>
     <nav>
       <a class="navlink" href="/#aehub">All hubs</a>
       <a class="navlink" href="/#products">Products</a>
       <a class="navlink" href="/#services">Services</a>
       <a class="btn btn-acc" href="#start">Book a demo</a>
-    </nav>
+    <div class="explore2"><button class="explore2-btn" id="exploreBtn2">Explore ▾</button><div class="explore2-menu" id="exploreMenu2"><div class="lbl">The whole AE family</div><a href="https://aexperiences.com/">Accelerated Experiences <span class="tag">Studio</span></a><a href="https://espomusic.com/">ESPO Music <span class="tag">Instrument coaching</span></a><a href="https://espolearning.com/">ESPO Learning <span class="tag">Early skills</span></a><a href="https://espogenius.com/">ESPO Genius <span class="tag">Navigate the system</span></a><a href="https://espodrama.com/">ESPO Drama <span class="tag">Act &amp; create</span></a><a href="https://espoedu.com/">ESPO Curriculum <span class="tag">Homeschool K-12</span></a><a href="https://marketnarc.com/">The Narcs <span class="tag">See through it</span></a><a href="https://neurodivulge.com/">Neuro Divulge <span class="tag">Regulation tools</span></a><hr><a href="/products.html">AE App Shop <span class="tag">All pricing</span></a><a href="https://aexperiences.studio/">AE Hub <span class="tag">Operations</span></a></div></div></nav>
   </div>
 </header>
 
@@ -166,7 +166,7 @@
 
 <footer>
   <div class="wrap">
-    <div class="left"><img src="https://raw.githubusercontent.com/aexperiences/aexperiences.com/main/public/wordmark.png" alt="Accelerated Experiences LLC"><span class="meta">© 2026 · Post Falls, Idaho</span></div>
+    <div class="left"><img src="/ae-disc.png" alt="Accelerated Experiences LLC"><span class="meta">© 2026 · Post Falls, Idaho</span></div>
     <nav>
       <a href="/#aehub">All hubs</a><a href="/#products">Products</a><a href="/#services">Services</a>
       <a href="mailto:anthonye@aexperiences.studio">Contact</a>
@@ -198,5 +198,5 @@
   });
 })();
 </script>
-</body>
+<button class="brian-fab" id="brianFab2" aria-label="Chat with Brian"><img src="/ae-disc.png" alt=""><span class="dot"></span></button><div class="brian-panel" id="brianPanel2"><div class="brian-head"><div class="av"><img src="/ae-disc.png" alt=""></div><div><b>Brian</b><span>AE concierge · ask me anything</span></div><button class="x" id="brianClose2" aria-label="Close">×</button></div><div class="brian-body" id="brianBody2"><div class="brian-msg bot">Hey — I'm Brian. Ask me about this hub's pricing, or anything else across the AE family.</div></div><div class="brian-chips" id="brianChips2"><button class="brian-chip" data-q="What are the pricing tiers for this hub?">Pricing tiers</button><button class="brian-chip" data-q="How does the $99 custom app build work?">Build me an app</button><button class="brian-chip" data-q="I want to talk to Anthony or Barry.">Talk to a human</button></div><div class="brian-inputrow"><input id="brianInput2" type="text" placeholder="Ask Brian anything…" maxlength="500"><button id="brianSend2">Send</button></div></div><script>(function(){var eBtn=document.getElementById('exploreBtn2'),eMenu=document.getElementById('exploreMenu2');if(eBtn){eBtn.addEventListener('click',function(ev){ev.stopPropagation();eMenu.classList.toggle('open');});document.addEventListener('click',function(){eMenu.classList.remove('open');});eMenu.addEventListener('click',function(ev){ev.stopPropagation();});}})();(function(){var fab=document.getElementById('brianFab2'),panel=document.getElementById('brianPanel2'),closeBtn=document.getElementById('brianClose2'),body=document.getElementById('brianBody2'),input=document.getElementById('brianInput2'),send=document.getElementById('brianSend2'),chips=document.getElementById('brianChips2');if(!fab)return;var history=[];function open(){panel.classList.add('open');input.focus();}function close(){panel.classList.remove('open');}fab.addEventListener('click',function(){panel.classList.contains('open')?close():open();});closeBtn.addEventListener('click',close);function addMsg(t,who){var d=document.createElement('div');d.className='brian-msg '+who;d.textContent=t;body.appendChild(d);body.scrollTop=body.scrollHeight;}function ask(q){if(!q)return;addMsg(q,'user');history.push({role:'user',content:q});input.value='';send.disabled=true;var typing=document.createElement('div');typing.className='brian-typing';typing.textContent='Brian is typing…';body.appendChild(typing);body.scrollTop=body.scrollHeight;fetch('/api/brian',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,history:history})}).then(function(r){return r.json();}).then(function(j){typing.remove();var reply=(j&&j.reply)?j.reply:"Trouble connecting — email anthonye@aexperiences.studio";addMsg(reply,'bot');history.push({role:'assistant',content:reply});}).catch(function(){typing.remove();addMsg("Trouble connecting — email anthonye@aexperiences.studio",'bot');}).finally(function(){send.disabled=false;});}send.addEventListener('click',function(){ask(input.value.trim());});input.addEventListener('keydown',function(e){if(e.key==='Enter'){ask(input.value.trim());}});chips.addEventListener('click',function(e){var q=e.target.getAttribute('data-q');if(q)ask(q);});})();</script></body>
 </html>
