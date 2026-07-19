@@ -678,7 +678,8 @@ function iconHTML(p, px){
 }
 function priceCta(p){
   if(p.priceKind==='free') return {label:(p.status==='Coming soon'?'Soon':'Free'), cls:'free'};
-  return {label:'From', cls:''};
+  var m = p.priceLabel.match(/\$[\d,.]+(?:\/[a-zA-Z]+)?/);
+  return {label: m ? m[0] : 'View', cls:''};
 }
 
 // ============ RENDERERS ============
@@ -691,10 +692,11 @@ function renderRow(p){
   '</div>';
 }
 function renderTile(p){
+  var cta=priceCta(p);
   return '<div class="today-tile" data-open="'+p.id+'">'+
     iconHTML(p,132)+
     '<div class="today-tile-name">'+p.name+'</div>'+
-    '<div class="today-tile-cta">'+(p.priceKind==='free'?(p.status==='Coming soon'?'Soon':'Free'):p.priceLabel.split(' ')[0]+' '+p.priceLabel.split(' ')[1])+'</div>'+
+    '<div class="today-tile-cta">'+cta.label+'</div>'+
   '</div>';
 }
 
