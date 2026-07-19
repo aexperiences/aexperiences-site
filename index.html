@@ -246,13 +246,13 @@
 .explore-menu a span.tag{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--slate);white-space:nowrap;}
 .explore-menu a.here{background:rgba(224,168,58,.16);}
 .explore-menu hr{border:none;border-top:1px solid var(--line);margin:6px 0;}
-.brian-fab{position:fixed;right:22px;bottom:22px;z-index:200;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--blue-deep));color:#fff;border:none;cursor:pointer;box-shadow:0 12px 30px rgba(20,15,8,.35);display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-weight:800;font-size:20px;transition:transform .15s;}
+.brian-fab{position:fixed;right:22px;bottom:22px;z-index:200;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--blue-deep));border:none;cursor:pointer;box-shadow:0 12px 30px rgba(20,15,8,.35);display:flex;align-items:center;justify-content:center;padding:8px;transition:transform .15s;}.brian-fab img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
 .brian-fab:hover{transform:translateY(-2px) scale(1.04);}
 .brian-fab .dot{position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:50%;background:var(--blue-bright);border:2px solid var(--bg);}
 .brian-panel{position:fixed;right:22px;bottom:92px;z-index:200;width:360px;max-width:calc(100vw - 32px);height:480px;max-height:calc(100vh - 140px);background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;font-family:var(--sans);}
 .brian-panel.open{display:flex;}
 .brian-head{background:linear-gradient(120deg,var(--navy),var(--navy-2));color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;}
-.brian-head .av{width:34px;height:34px;border-radius:50%;background:var(--blue-bright);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;}
+.brian-head .av{width:34px;height:34px;border-radius:50%;background:var(--blue-bright);overflow:hidden;flex:none;}.brian-head .av img{width:100%;height:100%;object-fit:cover;}
 .brian-head b{display:block;font-size:14.5px;font-weight:800;}
 .brian-head span{display:block;font-size:11px;color:#e8dcc0;}
 .brian-head .x{margin-left:auto;background:none;border:none;color:#fff;opacity:.7;cursor:pointer;font-size:18px;line-height:1;padding:4px;}
@@ -288,7 +288,7 @@
       <a class="navlink" href="https://espodrama.com" target="_blank" rel="noopener">ESPO Drama</a>
       <a class="navlink" href="https://espogenius.com" target="_blank" rel="noopener">ESPO Genius</a>
       <a class="navlink" href="#services">Services</a>
-      <a class="navlink" href="/products.html">Products &amp; Pricing</a>
+      <a class="navlink" href="/products.html">AE App Shop</a>
       <div class="explore">
         <button class="explore-btn" id="exploreBtn">Explore ▾</button>
         <div class="explore-menu" id="exploreMenu">
@@ -416,11 +416,12 @@
       <div class="eyebrow">What we make</div>
       <h2>The ESPO family.</h2>
       <p class="lede">Apps my wife and I build and own. Every one started as something we needed for ourselves or our kids — then grew into something others could use too.</p>
+      <p style="margin-top:10px;"><a href="/products.html" style="font-family:var(--mono);font-weight:700;font-size:13px;color:var(--blue-deep);">Browse the full AE App Shop — hubs, apps, and pricing →</a></p>
     </div>
     <div class="constellation big reveal">
       <a class="pmark live" href="https://espomusic.com" target="_blank" rel="noopener"><span class="pimg"><img src="brand/logo-music.png" alt="ESPO Music" loading="lazy"></span><span class="pname">ESPO Music</span></a>
       <a class="pmark live" href="https://espodrama.com" target="_blank" rel="noopener"><span class="pimg"><img src="brand/logo-drama.png" alt="ESPO Drama" loading="lazy"></span><span class="pname">ESPO Drama</span></a>
-      <a class="pmark live" href="https://marketnarc.com" target="_blank" rel="noopener"><span class="pimg"><img src="brand/logo-narcs.png" alt="The Narcs" loading="lazy"></span><span class="pname">The Narcs</span></a>
+      <a class="pmark live" href="https://marketnarc.com" target="_blank" rel="noopener"><span class="pimg"><img src="brand/logo-narcs.png" alt="The Narcs + MarketNarc" loading="lazy"></span><span class="pname">The Narcs + MarketNarc</span></a>
       <a class="pmark live" href="https://neurodivulge.com" target="_blank" rel="noopener"><span class="pimg"><img src="brand/logo-nd.png" alt="Neuro Divulge" loading="lazy"></span><span class="pname">Neuro Divulge</span></a>
       <a class="pmark" href="https://espolearning.com" target="_blank" rel="noopener"><span class="pimg"><img src="brand/logo-learning.png" alt="ESPO Learning" loading="lazy"></span><span class="pname">ESPO Learning</span></a>
       <a class="pmark" href="https://espogenius.com" target="_blank" rel="noopener"><span class="pimg"><img src="brand/logo-genius.png" alt="ESPO Genius" loading="lazy"></span><span class="pname">ESPO Genius</span></a>
@@ -491,10 +492,10 @@
   })();
 </script>
 
-<button class="brian-fab" id="brianFab" aria-label="Chat with Brian">B<span class="dot"></span></button>
+<button class="brian-fab" id="brianFab" aria-label="Chat with Brian"><img src="ae-disc.png" alt=""><span class="dot"></span></button>
 <div class="brian-panel" id="brianPanel">
   <div class="brian-head">
-    <div class="av">B</div>
+    <div class="av"><img src="ae-disc.png" alt=""></div>
     <div><b>Brian</b><span>AE concierge · ask me anything</span></div>
     <button class="x" id="brianClose" aria-label="Close">×</button>
   </div>
