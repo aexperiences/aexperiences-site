@@ -18,12 +18,15 @@
   if (window.__aeBrianVoiceLoaded) return;
   window.__aeBrianVoiceLoaded = true;
 
+  // Hub pages (hubs/*.html) suffix every widget id with "2" (brianBody2, brianInput2, etc.)
+  // to avoid collisions; index.html/products.html use the plain ids. Classes are the same
+  // either way, so fall back to class/structural lookups when the plain id isn't found.
   var head = document.querySelector('.brian-head');
-  var body = document.getElementById('brianBody');
-  var input = document.getElementById('brianInput');
-  var sendBtn = document.getElementById('brianSend');
   var inputRow = document.querySelector('.brian-inputrow');
-  var closeBtn = document.getElementById('brianClose');
+  var body = document.getElementById('brianBody') || document.getElementById('brianBody2') || document.querySelector('.brian-body');
+  var input = document.getElementById('brianInput') || document.getElementById('brianInput2') || (inputRow && inputRow.querySelector('input[type="text"]'));
+  var sendBtn = document.getElementById('brianSend') || document.getElementById('brianSend2') || (inputRow && inputRow.querySelector('button'));
+  var closeBtn = document.getElementById('brianClose') || document.getElementById('brianClose2') || (head && head.querySelector('.x'));
   if (!head || !body || !input || !sendBtn || !inputRow) return; // widget not on this page
 
   var VOICE_KEY = 'ae_brian_voice';
@@ -109,7 +112,7 @@
   [micBtn, sendBtn, voiceBtn].forEach(function (el) {
     el.addEventListener('click', primeAudio, { once: false });
   });
-  var fab = document.getElementById('brianFab');
+  var fab = document.getElementById('brianFab') || document.getElementById('brianFab2') || document.querySelector('.brian-fab');
   if (fab) fab.addEventListener('click', primeAudio);
 
   // ---------- speak() ----------
