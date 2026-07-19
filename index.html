@@ -46,7 +46,7 @@
 
   .eyebrow{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);}
   .eyebrow.on-navy{color:var(--blue-bright);}
-  .hero-brand{display:flex;align-items:center;gap:14px;margin-bottom:22px;}.hero-brand img{height:56px;width:56px;display:block;border-radius:50%;}.hero-brand .word{font-family:var(--sans);line-height:1.05;}.hero-brand .word .name{display:block;font-weight:800;font-size:22px;letter-spacing:-.01em;color:#fff;text-transform:lowercase;}.hero-brand .word .llc{display:block;font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:.14em;color:var(--blue-bright);margin-top:3px;}
+  .hero-brand{display:flex;align-items:center;gap:22px;margin-bottom:36px;}.hero-brand img{height:96px;width:96px;display:block;border-radius:50%;}.hero-brand .word{font-family:var(--sans);line-height:1.05;}.hero-brand .word .name{display:block;font-weight:800;font-size:40px;letter-spacing:-.02em;color:#fff;text-transform:lowercase;}.hero-brand .word .llc{display:block;font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:.16em;color:var(--blue-bright);margin-top:5px;}@media(max-width:680px){.hero-brand{gap:14px;margin-bottom:26px;}.hero-brand img{height:64px;width:64px;}.hero-brand .word .name{font-size:26px;}.hero-brand .word .llc{font-size:12px;}}
   h1,h2,h3{font-weight:800;letter-spacing:-.02em;line-height:1.07;}
   h2{font-size:clamp(28px,4vw,42px);} h3{font-size:21px;letter-spacing:-.01em;}
   .lede{color:var(--slate);font-size:18px;max-width:60ch;}
@@ -72,7 +72,7 @@
   /* header */
   header.bar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.86);backdrop-filter:saturate(150%) blur(12px);border-bottom:1px solid var(--line);}
   .bar .wrap{display:flex;align-items:center;justify-content:space-between;min-height:68px;gap:12px;padding-top:8px;padding-bottom:8px;}
-  .bar .logo{display:flex;align-items:center;height:44px;}
+  .bar .logo{display:flex;align-items:center;height:44px;gap:10px;} .bar .logo-text{font-family:var(--sans);font-weight:700;font-size:16px;color:var(--navy);letter-spacing:-.01em;white-space:nowrap;} .bar .logo-text b{font-weight:600;color:var(--slate);font-size:11.5px;margin-left:3px;letter-spacing:.04em;} @media(max-width:900px){.bar .logo-text{display:none;}}
   .bar .logo img{height:42px;width:auto;}
   .bar nav{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:flex-end;}
   .bar nav a.navlink{font-weight:500;font-size:15px;color:var(--navy);opacity:.78;transition:opacity .15s;}
@@ -241,7 +241,7 @@
 <header class="bar">
   <div class="wrap">
     <a class="logo" href="#top" aria-label="Accelerated Experiences — home">
-<img src="ae-disc.png" alt="Accelerated Experiences LLC">
+<img src="ae-disc.png" alt="Accelerated Experiences LLC"><span class="logo-text">Accelerated Experiences<b>LLC</b></span>
     </a>
     <nav>
       <a class="navlink" href="#work">How we work</a>
