@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Products & Pricing — Accelerated Experiences LLC</title>
-<meta name="description" content="Everything Accelerated Experiences LLC builds and sells: seven white-label business hubs, the ESPO family of consumer apps, The Narcs, Neuro Divulge, à la carte services, and programs — priced honestly, one page.">
+<title>AE App Shop — Products &amp; Pricing — Accelerated Experiences LLC</title>
+<meta name="description" content="The AE App Shop: seven white-label business hubs, the ESPO family of consumer apps, The Narcs, Neuro Divulge, à la carte services, and programs — priced honestly, enter and try any of them live, one page.">
 <link rel="icon" href="ae-disc.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -89,6 +89,17 @@ header.bar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.86);bac
 .btn-ghost.on-navy{color:#fff;border-color:rgba(255,255,255,.28);}
 .btn-ghost.on-navy:hover{border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.05);}
 
+/* Shop filter toolbar */
+.shop-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:-8px;margin-bottom:44px;padding:16px 18px;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);}
+.shop-toolbar .stl{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);margin-right:2px;}
+.shop-chip{font-family:var(--sans);font-size:13px;font-weight:600;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--navy);cursor:pointer;transition:all .15s;}
+.shop-chip:hover{border-color:var(--blue-deep);}
+.shop-chip.active{background:linear-gradient(135deg,var(--navy),var(--blue-deep));color:#fff;border-color:transparent;}
+.shop-div{width:1px;align-self:stretch;background:var(--line);margin:0 4px;}
+@media(max-width:680px){.shop-div{display:none;}.shop-toolbar{gap:7px;}}
+.shop-count{margin-left:auto;font-family:var(--mono);font-size:11.5px;color:var(--slate);white-space:nowrap;}
+.hubfeat.hidden{display:none;}
+
 .hubfeat-grid{margin-top:30px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
 @media(max-width:980px){.hubfeat-grid{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:520px){.hubfeat-grid{grid-template-columns:1fr;}}
@@ -100,12 +111,20 @@ header.bar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.86);bac
 .hubfeat-ic.prodmark img{width:100%;height:100%;object-fit:cover;display:block;}
 .hubfeat-ind{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);margin-top:12px;}
 .hubfeat-name{font-weight:800;font-size:19px;margin-top:2px;}
+.hubfeat-sub{margin-top:5px;font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--slate);letter-spacing:.01em;}
+.hubfeat-sub b{color:var(--blue-deep);}
 .hubfeat-tag{color:var(--slate);font-size:13px;margin-top:5px;flex:1;}
 .hubfeat-price{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);}
 .hubfeat-price b{font-weight:900;font-size:20px;color:var(--navy);}
 .hubfeat-price span{font-size:12.5px;color:var(--slate);}
 .hubfeat-price .badge{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.04em;padding:4px 9px;border-radius:999px;background:color-mix(in srgb,var(--acc) 16%,transparent);color:var(--acc);}
 .hubfeat-link{margin-top:8px;font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--acc);}
+.hubfeat-actions{margin-top:12px;display:flex;gap:7px;}
+.hf-btn{flex:1;text-align:center;font-family:var(--sans);font-weight:700;font-size:12px;padding:10px 8px;border-radius:10px;white-space:nowrap;}
+.hf-btn-primary{background:linear-gradient(135deg,var(--navy),var(--blue-deep));color:#fff;}
+.hf-btn-primary:hover{opacity:.92;}
+.hf-btn-ghost{background:var(--bg);border:1px solid var(--line);color:var(--navy);}
+.hf-btn-ghost:hover{border-color:var(--slate);}
 
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
 @media(max-width:820px){.grid3{grid-template-columns:1fr;}}
@@ -144,6 +163,15 @@ header.bar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.86);bac
 .engine-strip .tx p{color:var(--slate);font-size:13.5px;margin-top:3px;}
 .engine-strip .badge{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--blue-deep);background:color-mix(in srgb,var(--blue-bright) 16%,transparent);border-radius:999px;padding:6px 12px;white-space:nowrap;}
 
+/* Commission — build yours */
+.commission-grid{margin-top:32px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+@media(max-width:900px){.commission-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:520px){.commission-grid{grid-template-columns:1fr;}}
+.cstep{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:20px;}
+.cstep-n{width:28px;height:28px;border-radius:50%;background:var(--blue-bright);color:var(--navy);font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.cstep-h{margin-top:12px;font-weight:800;font-size:15.5px;color:#fff;}
+.cstep-d{margin-top:6px;font-size:13px;color:#e8dcc0;line-height:1.5;}
+
 footer{padding:44px 0;}
 footer .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
 footer .left{display:flex;align-items:center;gap:12px;}
@@ -153,13 +181,15 @@ footer nav a{color:var(--slate);font-size:13.5px;}
 footer nav a:hover{color:var(--navy);}
 
 /* Brian concierge widget */
-.brian-fab{position:fixed;right:22px;bottom:22px;z-index:200;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--blue-deep));color:#fff;border:none;cursor:pointer;box-shadow:0 12px 30px rgba(20,15,8,.35);display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-weight:800;font-size:20px;transition:transform .15s;}
+.brian-fab{position:fixed;right:22px;bottom:22px;z-index:200;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--blue-deep));border:none;cursor:pointer;box-shadow:0 12px 30px rgba(20,15,8,.35);display:flex;align-items:center;justify-content:center;padding:8px;transition:transform .15s;}
+.brian-fab img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
 .brian-fab:hover{transform:translateY(-2px) scale(1.04);}
 .brian-fab .dot{position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:50%;background:var(--blue-bright);border:2px solid var(--bg);}
 .brian-panel{position:fixed;right:22px;bottom:92px;z-index:200;width:360px;max-width:calc(100vw - 32px);height:480px;max-height:calc(100vh - 140px);background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;font-family:var(--sans);}
 .brian-panel.open{display:flex;}
 .brian-head{background:linear-gradient(120deg,var(--navy),var(--navy-2));color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;}
-.brian-head .av{width:34px;height:34px;border-radius:50%;background:var(--blue-bright);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;}
+.brian-head .av{width:34px;height:34px;border-radius:50%;background:var(--blue-bright);overflow:hidden;flex:none;}
+.brian-head .av img{width:100%;height:100%;object-fit:cover;}
 .brian-head b{display:block;font-size:14.5px;font-weight:800;}
 .brian-head span{display:block;font-size:11px;color:#e8dcc0;}
 .brian-head .x{margin-left:auto;background:none;border:none;color:#fff;opacity:.7;cursor:pointer;font-size:18px;line-height:1;padding:4px;}
@@ -191,7 +221,7 @@ footer nav a:hover{color:var(--navy);}
     <nav>
       <a class="navlink" href="/#work">How we work</a>
       <a class="navlink" href="/#aehub">AEHub</a>
-      <a class="navlink" href="/products.html" aria-current="page">Products &amp; Pricing</a>
+      <a class="navlink" href="/products.html" aria-current="page">AE App Shop</a>
       <a class="navlink" href="/#services">Services</a>
       <div class="explore">
         <button class="explore-btn" id="exploreBtn">Explore ▾</button>
@@ -217,85 +247,161 @@ footer nav a:hover{color:var(--navy);}
 <section class="navy hero">
   <div class="wrap">
     <div class="hero-brand"><img src="ae-disc.png" alt="Accelerated Experiences LLC"><span class="word"><span class="name">accelerated experiences</span><span class="llc">LLC</span></span></div>
-    <div class="eyebrow on-navy">Products &amp; Pricing</div>
+    <div class="eyebrow on-navy">The AE App Shop</div>
     <h1>Everything we build. <span class="grad-text">Priced honestly</span>, one page.</h1>
-    <p class="lede">Seven white-label business hubs, the ESPO family of consumer apps, and the tools built for our own family — real numbers where we've published them, honest status where we haven't. No per-ticket, per-seat, or hidden fee, anywhere.</p>
+    <p class="lede">Seven white-label business hubs, the ESPO family of consumer apps, and the tools built for our own family — real numbers where we've published them, honest status where we haven't. Walk in, browse the floor, and enter any of them live. No per-ticket, per-seat, or hidden fee, anywhere.</p>
     <div class="note">You keep 100% of your revenue on every hub · non-profit, founder &amp; annual programs available</div>
   </div>
 </section>
 
-<!-- ============ HUB PRICING ============ -->
-<section id="hubs">
+<!-- ============ COMMISSION YOUR OWN APP ============ -->
+<section id="commission" class="navy">
   <div class="wrap">
-    <div class="eyebrow">White-label business hubs · B2B</div>
-    <h2>Seven verticals. Pick yours.</h2>
-    <p class="lede" style="margin-top:10px;">Each hub replaces the tool stack a business runs today — one brand, one price. Tap any card for the full three-tier breakdown.</p>
+    <div class="eyebrow on-navy">Build yours</div>
+    <h2>Tell us what you need. We'll build it in three days.</h2>
+    <p class="lede" style="margin-top:10px;">Describe the app you wish existed. If it's normal app-store-sized, it's $99 — and it's yours for life.</p>
+    <div class="commission-grid">
+      <div class="cstep">
+        <div class="cstep-n">1</div>
+        <div class="cstep-h">Tell us what you want</div>
+        <div class="cstep-d">Any everyday app-sized idea — a tool, a tracker, a utility. Think "app," not "build me Salesforce."</div>
+      </div>
+      <div class="cstep">
+        <div class="cstep-n">2</div>
+        <div class="cstep-h">$99 — half down, half at ship</div>
+        <div class="cstep-d">$49.50 to start, $49.50 when it ships. About a 3-day turnaround. Want it customized beyond the standard build? That's quoted separately.</div>
+      </div>
+      <div class="cstep">
+        <div class="cstep-n">3</div>
+        <div class="cstep-h">It's yours, for life</div>
+        <div class="cstep-d">Your $99 covers a lifetime subscription — you never pay again. Anthony signs off before anything ships.</div>
+      </div>
+      <div class="cstep">
+        <div class="cstep-n">4</div>
+        <div class="cstep-h">It can go in the shop</div>
+        <div class="cstep-d">If it's broadly useful, we list it here for others to subscribe to. You keep your lifetime copy either way — the listing revenue is ours.</div>
+      </div>
+    </div>
+    <div style="margin-top:32px;">
+      <a class="btn btn-primary" href="mailto:anthonye@aexperiences.studio?subject=Custom%20App%20Build%20%E2%80%94%20%2499&body=Here's%20the%20app%20I%20want%20built%3A%0A%0A">Describe your app →</a>
+    </div>
+    <p style="margin-top:14px;font-size:12.5px;color:#c9bda0;">Checkout isn't wired up yet — email the idea and we'll arrange payment directly while we finish building the storefront.</p>
+  </div>
+</section>
+
+<!-- ============ SHOP FILTER TOOLBAR ============ -->
+<section style="padding:56px 0 0;">
+  <div class="wrap">
+    <div class="shop-toolbar" id="shopToolbar">
+      <span class="stl">Genre</span>
+      <button class="shop-chip active" data-filter-genre="all">All</button>
+      <button class="shop-chip" data-filter-genre="business">Business hubs</button>
+      <button class="shop-chip" data-filter-genre="arts">Music &amp; arts</button>
+      <button class="shop-chip" data-filter-genre="learning">Learning &amp; family</button>
+      <button class="shop-chip" data-filter-genre="money">Money &amp; fine print</button>
+      <span class="shop-div"></span>
+      <span class="stl">Price</span>
+      <button class="shop-chip active" data-filter-price="all">All</button>
+      <button class="shop-chip" data-filter-price="free">Free to try</button>
+      <button class="shop-chip" data-filter-price="paid">Paid</button>
+      <span class="shop-count" id="shopCount"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HUB PRICING ============ -->
+<section id="hubs" style="padding-top:24px;">
+  <div class="wrap">
+    <div class="eyebrow">Business hubs</div>
+    <h2>Seven verticals. Pick yours. Walk in and try it.</h2>
+    <p class="lede" style="margin-top:10px;">Each hub replaces the tool stack a business runs today — one brand, one price. Enter any of them live and click around a real, working instance — not a demo.</p>
 
     <div class="hubfeat-grid">
-      <a class="hubfeat" href="/hubs/real-estate.html" style="--acc:#c8794f;">
+      <div class="hubfeat" data-genre="business" data-price="paid" style="--acc:#c8794f;">
         <span class="hubfeat-ic"><svg viewBox="0 0 48 48"><path d="M7 22 24 8l17 14"/><path d="M11 20v19h26V20"/><circle cx="24" cy="29" r="3.2"/><path d="M24 32.2V37"/></svg></span>
         <div class="hubfeat-ind">Real Estate</div>
         <div class="hubfeat-name">Homestead Hub</div>
         <p class="hubfeat-tag">Every listing, client &amp; closing in one branded place.</p>
         <div class="hubfeat-price"><b>$450</b><span>/mo starting · 3 tiers</span></div>
-        <div class="hubfeat-link">See full pricing →</div>
-      </a>
+        <div class="hubfeat-actions">
+          <a class="hf-btn hf-btn-primary" href="https://ae-realestate-hub.vercel.app" target="_blank" rel="noopener">Enter &amp; try it live →</a>
+          <a class="hf-btn hf-btn-ghost" href="/hubs/real-estate.html">Pricing</a>
+        </div>
+      </div>
 
-      <a class="hubfeat" href="/hubs/architecture.html" style="--acc:#5c8a5f;">
+      <div class="hubfeat" data-genre="business" data-price="paid" style="--acc:#5c8a5f;">
         <span class="hubfeat-ic"><svg viewBox="0 0 48 48"><path d="M24 7 11 41M24 7l13 34"/><circle cx="24" cy="7" r="2.6"/><path d="M24 7v11"/><path d="M16 30h16"/></svg></span>
         <div class="hubfeat-ind">Architecture</div>
         <div class="hubfeat-name">Draftline Hub</div>
         <p class="hubfeat-tag">Every commission, phase, RFI &amp; drawing in one studio OS.</p>
         <div class="hubfeat-price"><b>$550</b><span>/mo starting · 3 tiers</span></div>
-        <div class="hubfeat-link">See full pricing →</div>
-      </a>
+        <div class="hubfeat-actions">
+          <a class="hf-btn hf-btn-primary" href="https://ae-architecture-hub.vercel.app" target="_blank" rel="noopener">Enter &amp; try it live →</a>
+          <a class="hf-btn hf-btn-ghost" href="/hubs/architecture.html">Pricing</a>
+        </div>
+      </div>
 
-      <a class="hubfeat" href="/hubs/engineering.html" style="--acc:#18b0ba;">
+      <div class="hubfeat" data-genre="business" data-price="paid" style="--acc:#18b0ba;">
         <span class="hubfeat-ic"><svg viewBox="0 0 48 48"><path d="M6 40 24 9l18 31zM6 40h36"/><path d="M24 9 16 40M24 9l8 31M13 30h22"/></svg></span>
         <div class="hubfeat-ind">Engineering</div>
         <div class="hubfeat-name">Datum Hub</div>
         <p class="hubfeat-tag">Every project, calc, submittal &amp; inspection in one place.</p>
         <div class="hubfeat-price"><b>$650</b><span>/mo starting · 3 tiers</span></div>
-        <div class="hubfeat-link">See full pricing →</div>
-      </a>
+        <div class="hubfeat-actions">
+          <a class="hf-btn hf-btn-primary" href="https://ae-engineering-hub.vercel.app" target="_blank" rel="noopener">Enter &amp; try it live →</a>
+          <a class="hf-btn hf-btn-ghost" href="/hubs/engineering.html">Pricing</a>
+        </div>
+      </div>
 
-      <a class="hubfeat" href="/hubs/theater.html" style="--acc:#e0b24a;">
+      <div class="hubfeat" data-genre="business" data-price="paid" style="--acc:#e0b24a;">
         <span class="hubfeat-ic"><svg viewBox="0 0 48 48"><path d="M9 17h30l-3 22H12z"/><path d="M9 17 13 8h22l4 9"/><circle cx="18" cy="27" r="2.1"/><circle cx="24" cy="27" r="2.1"/><circle cx="30" cy="27" r="2.1"/></svg></span>
         <div class="hubfeat-ind">Live Theater</div>
         <div class="hubfeat-name">Marquee Hub</div>
         <p class="hubfeat-tag">Sell the house · run the season · know your patrons.</p>
         <div class="hubfeat-price"><b>$650</b><span>/mo starting · 3 tiers</span></div>
-        <div class="hubfeat-link">See full pricing →</div>
-      </a>
+        <div class="hubfeat-actions">
+          <a class="hf-btn hf-btn-primary" href="https://ae-theater-hub.vercel.app" target="_blank" rel="noopener">Enter &amp; try it live →</a>
+          <a class="hf-btn hf-btn-ghost" href="/hubs/theater.html">Pricing</a>
+        </div>
+      </div>
 
-      <a class="hubfeat" href="/hubs/cinema.html" style="--acc:#e6b13a;">
+      <div class="hubfeat" data-genre="business" data-price="paid" style="--acc:#e6b13a;">
         <span class="hubfeat-ic"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="15"/><circle cx="24" cy="24" r="4"/><circle cx="24" cy="12.5" r="2.4"/><circle cx="24" cy="35.5" r="2.4"/><circle cx="12.5" cy="24" r="2.4"/><circle cx="35.5" cy="24" r="2.4"/></svg></span>
         <div class="hubfeat-ind">Movie Cinema</div>
         <div class="hubfeat-name">Reel Hub</div>
         <p class="hubfeat-tag">Six screens · every seat online · no per-ticket fee.</p>
         <div class="hubfeat-price"><b>$500</b><span>/mo starting · 3 tiers</span></div>
-        <div class="hubfeat-link">See full pricing →</div>
-      </a>
+        <div class="hubfeat-actions">
+          <a class="hf-btn hf-btn-primary" href="https://ae-cinema-hub.vercel.app" target="_blank" rel="noopener">Enter &amp; try it live →</a>
+          <a class="hf-btn hf-btn-ghost" href="/hubs/cinema.html">Pricing</a>
+        </div>
+      </div>
 
-      <a class="hubfeat" href="/hubs/concerts.html" style="--acc:#bd57e0;">
+      <div class="hubfeat" data-genre="business" data-price="paid" style="--acc:#bd57e0;">
         <span class="hubfeat-ic"><svg viewBox="0 0 48 48"><rect x="19" y="7" width="10" height="21" rx="5"/><path d="M13.5 23.5a10.5 10.5 0 0 0 21 0"/><path d="M24 34v6M18 40h12"/></svg></span>
         <div class="hubfeat-ind">Concerts &amp; Comedy</div>
         <div class="hubfeat-name">Encore Hub</div>
         <p class="hubfeat-tag">Reserved, GA, or cabaret — sold in one place.</p>
         <div class="hubfeat-price"><b>$600</b><span>/mo starting · 3 tiers</span></div>
-        <div class="hubfeat-link">See full pricing →</div>
-      </a>
+        <div class="hubfeat-actions">
+          <a class="hf-btn hf-btn-primary" href="https://ae-concert-hub.vercel.app" target="_blank" rel="noopener">Enter &amp; try it live →</a>
+          <a class="hf-btn hf-btn-ghost" href="/hubs/concerts.html">Pricing</a>
+        </div>
+      </div>
 
-      <a class="hubfeat" href="/hubs/kids-gym.html" style="--acc:#f2743a;">
+      <div class="hubfeat" data-genre="business" data-price="paid" style="--acc:#f2743a;">
         <span class="hubfeat-ic"><svg viewBox="0 0 48 48"><circle cx="24" cy="10" r="4"/><path d="M24 14v11M24 25 14.5 33.5M24 25l9.5 8.5M24 17.5 14.5 21.5M24 17.5l9.5 4"/><path d="M9 41a19 19 0 0 1 30 0"/></svg></span>
         <div class="hubfeat-ind">Kids Activity Gym</div>
         <div class="hubfeat-name">Cartwheel Hub</div>
         <p class="hubfeat-tag">Classes, enrollment, tuition &amp; families — plus your own site.</p>
         <div class="hubfeat-price"><b>$400</b><span>/mo starting · 3 tiers</span></div>
-        <div class="hubfeat-link">See full pricing →</div>
-      </a>
+        <div class="hubfeat-actions">
+          <a class="hf-btn hf-btn-primary" href="https://ae-gym-hub.vercel.app" target="_blank" rel="noopener">Enter &amp; try it live →</a>
+          <a class="hf-btn hf-btn-ghost" href="/hubs/kids-gym.html">Pricing</a>
+        </div>
+      </div>
 
-      <a class="hubfeat" href="#new-vertical" style="--acc:#e0a83a;">
+      <a class="hubfeat" href="#new-vertical" data-genre="business" data-price="paid" style="--acc:#e0a83a;">
         <span class="hubfeat-ic"><svg viewBox="0 0 48 48"><path d="M24 6v36M6 24h36"/><circle cx="24" cy="24" r="17"/></svg></span>
         <div class="hubfeat-ind">Don't see yours</div>
         <div class="hubfeat-name">New vertical</div>
@@ -316,48 +422,48 @@ footer nav a:hover{color:var(--navy);}
 <!-- ============ ESPO + CONSUMER FAMILY ============ -->
 <section id="family" style="background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
   <div class="wrap">
-    <div class="eyebrow">The ESPO family &amp; beyond · B2C</div>
+    <div class="eyebrow">The ESPO family &amp; beyond</div>
     <h2>What we build for real people.</h2>
-    <p class="lede" style="margin-top:10px;">Not everything is priced yet — we'd rather tell you honestly where each one stands than make up a number.</p>
+    <p class="lede" style="margin-top:10px;">Not everything is priced yet — we'd rather tell you honestly where each one stands than make up a number. Every link below opens the real, live app. Paid apps run on a free trial window before anything gates.</p>
 
     <div class="hubfeat-grid">
-      <a class="hubfeat" href="https://espomusic.com/" style="--acc:#e0a83a;" target="_blank" rel="noopener">
+      <a class="hubfeat" href="https://espomusic.com/" data-genre="arts" data-price="paid" style="--acc:#e0a83a;" target="_blank" rel="noopener">
         <span class="hubfeat-ic prodmark"><img src="logo-music.png" alt="ESPO Music"></span>
         <div class="hubfeat-ind">Instrument coaching</div>
         <div class="hubfeat-name">ESPO Music</div>
         <p class="hubfeat-tag">Guitar, piano, harmonica, ukulele, bass — it listens while you play your own instrument and coaches you live.</p>
         <div class="hubfeat-price"><b>$3.33</b><span>/mo · $39.99/yr, all 5 · 3-day trial</span></div>
-        <div class="hubfeat-link">Start free trial →</div>
+        <div class="hubfeat-link">Enter &amp; try it live →</div>
       </a>
 
-      <a class="hubfeat" href="https://espolearning.com/" style="--acc:#5c8a5f;" target="_blank" rel="noopener">
+      <a class="hubfeat" href="https://espolearning.com/" data-genre="learning" data-price="free" style="--acc:#5c8a5f;" target="_blank" rel="noopener">
         <span class="hubfeat-ic prodmark"><img src="logo-learning.png" alt="ESPO Learning"></span>
         <div class="hubfeat-ind">Kids · early skills</div>
         <div class="hubfeat-name">ESPO Learning</div>
         <p class="hubfeat-tag">Calm, no-shame handwriting &amp; reading practice for kids who find school hard, including dysgraphia &amp; dyslexia.</p>
         <div class="hubfeat-price"><span class="badge">Free to try · pricing at launch</span></div>
-        <div class="hubfeat-link">Try it free →</div>
+        <div class="hubfeat-link">Enter &amp; try it live →</div>
       </a>
 
-      <a class="hubfeat" href="https://espogenius.com/" style="--acc:#7a6fd6;" target="_blank" rel="noopener">
+      <a class="hubfeat" href="https://espogenius.com/" data-genre="learning" data-price="free" style="--acc:#7a6fd6;" target="_blank" rel="noopener">
         <span class="hubfeat-ic prodmark"><img src="logo-genius.png" alt="ESPO Genius"></span>
         <div class="hubfeat-ind">Plain-English paperwork</div>
         <div class="hubfeat-name">ESPO Genius</div>
         <p class="hubfeat-tag">For life's hardest paperwork — IEPs, elder care, benefits — read honestly and explained in plain English. Runs entirely in your browser.</p>
         <div class="hubfeat-price"><span class="badge">4 apps · pricing not public yet</span></div>
-        <div class="hubfeat-link">See the apps →</div>
+        <div class="hubfeat-link">Enter &amp; try it live →</div>
       </a>
 
-      <a class="hubfeat" href="https://espodrama.com/" style="--acc:#c8794f;" target="_blank" rel="noopener">
+      <a class="hubfeat" href="https://espodrama.com/" data-genre="arts" data-price="free" style="--acc:#c8794f;" target="_blank" rel="noopener">
         <span class="hubfeat-ic prodmark"><img src="logo-drama.png" alt="ESPO Drama"></span>
         <div class="hubfeat-ind">Theater &amp; dramatic arts</div>
         <div class="hubfeat-name">ESPO Drama</div>
         <p class="hubfeat-tag">ESPO Studios helps first-time and second-act writers finish their first play, monologue, or sketch.</p>
         <div class="hubfeat-price"><span class="badge">1 app live · more coming</span></div>
-        <div class="hubfeat-link">Open ESPO Studios →</div>
+        <div class="hubfeat-link">Enter &amp; try it live →</div>
       </a>
 
-      <a class="hubfeat" href="https://espoedu.com/" style="--acc:#18b0ba;" target="_blank" rel="noopener">
+      <a class="hubfeat" href="https://espoedu.com/" data-genre="learning" data-price="free" style="--acc:#18b0ba;" target="_blank" rel="noopener">
         <span class="hubfeat-ic prodmark"><img src="logo-curriculum.png" alt="ESPO Curriculum"></span>
         <div class="hubfeat-ind">Homeschool K-12</div>
         <div class="hubfeat-name">ESPO Curriculum</div>
@@ -366,22 +472,23 @@ footer nav a:hover{color:var(--navy);}
         <div class="hubfeat-link">Get notified →</div>
       </a>
 
-      <a class="hubfeat" href="https://marketnarc.com/" style="--acc:#2f8f7a;" target="_blank" rel="noopener">
+      <a class="hubfeat" href="https://marketnarc.com/" data-genre="money" data-price="free" style="--acc:#2f8f7a;" target="_blank" rel="noopener">
         <span class="hubfeat-ic prodmark"><img src="logo-narcs.png" alt="The Narcs"></span>
         <div class="hubfeat-ind">Fine print, decoded</div>
         <div class="hubfeat-name">The Narcs</div>
+        <div class="hubfeat-sub">Two tools, one app: <b>The Narc</b> + <b>MarketNarc</b></div>
         <p class="hubfeat-tag">The Narc reads your bills, leases &amp; benefits and drafts the letter to fight back — six tools in one. MarketNarc reads the small-cap market the same honest way.</p>
         <div class="hubfeat-price"><span class="badge">Free while in preview</span></div>
-        <div class="hubfeat-link">Open The Narc →</div>
+        <div class="hubfeat-link">Enter &amp; try it live →</div>
       </a>
 
-      <a class="hubfeat" href="https://neurodivulge.com/" style="--acc:#a85f38;" target="_blank" rel="noopener">
+      <a class="hubfeat" href="https://neurodivulge.com/" data-genre="learning" data-price="paid" style="--acc:#a85f38;" target="_blank" rel="noopener">
         <span class="hubfeat-ic prodmark"><img src="logo-nd.png" alt="Neuro Divulge"></span>
         <div class="hubfeat-ind">Homeschool &amp; neurodivergent tools</div>
         <div class="hubfeat-name">Neuro Divulge</div>
         <p class="hubfeat-tag">An Esposito family project — regulation flashcards, visual routines &amp; checklists, by a homeschooling mom of 4.</p>
         <div class="hubfeat-price"><b>$9</b><span>per tool · free starter checklist</span></div>
-        <div class="hubfeat-link">See the shop →</div>
+        <div class="hubfeat-link">Enter &amp; try it live →</div>
       </a>
     </div>
   </div>
@@ -505,17 +612,17 @@ footer nav a:hover{color:var(--navy);}
     </div>
     <nav>
       <a href="/#aehub">AEHub</a>
-      <a href="/products.html">Products &amp; Pricing</a>
+      <a href="/products.html">AE App Shop</a>
       <a href="/#services">Services</a>
       <a href="mailto:anthonye@aexperiences.studio">Contact</a>
     </nav>
   </div>
 </footer>
 
-<button class="brian-fab" id="brianFab" aria-label="Chat with Brian">B<span class="dot"></span></button>
+<button class="brian-fab" id="brianFab" aria-label="Chat with Brian"><img src="ae-disc.png" alt=""><span class="dot"></span></button>
 <div class="brian-panel" id="brianPanel">
   <div class="brian-head">
-    <div class="av">B</div>
+    <div class="av"><img src="ae-disc.png" alt=""></div>
     <div><b>Brian</b><span>AE concierge · ask me anything</span></div>
     <button class="x" id="brianClose" aria-label="Close">×</button>
   </div>
@@ -524,7 +631,7 @@ footer nav a:hover{color:var(--navy);}
   </div>
   <div class="brian-chips" id="brianChips">
     <button class="brian-chip" data-q="What hub is right for a real estate brokerage?">Which hub fits my business?</button>
-    <button class="brian-chip" data-q="What does ESPO Music do and cost?">ESPO Music</button>
+    <button class="brian-chip" data-q="How does the $99 custom app build work?">Build me an app</button>
     <button class="brian-chip" data-q="I'd like to talk to Anthony or Barry about a project.">Talk to a human</button>
   </div>
   <div class="brian-inputrow">
@@ -539,6 +646,44 @@ footer nav a:hover{color:var(--navy);}
   eBtn.addEventListener('click', function(ev){ ev.stopPropagation(); eMenu.classList.toggle('open'); });
   document.addEventListener('click', function(){ eMenu.classList.remove('open'); });
   eMenu.addEventListener('click', function(ev){ ev.stopPropagation(); });
+})();
+(function(){
+  var toolbar=document.getElementById('shopToolbar');
+  if(!toolbar) return;
+  var countEl=document.getElementById('shopCount');
+  var state={genre:'all', price:'all'};
+  function apply(){
+    var cards=document.querySelectorAll('.hubfeat[data-genre]');
+    var shown=0;
+    cards.forEach(function(card){
+      var g=card.getAttribute('data-genre'), p=card.getAttribute('data-price');
+      var show=(state.genre==='all'||g===state.genre) && (state.price==='all'||p===state.price);
+      card.classList.toggle('hidden', !show);
+      if(show) shown++;
+    });
+    ['hubs','family'].forEach(function(id){
+      var sec=document.getElementById(id);
+      if(!sec) return;
+      var any=Array.prototype.some.call(sec.querySelectorAll('.hubfeat[data-genre]'), function(c){return !c.classList.contains('hidden');});
+      sec.style.display = any ? '' : 'none';
+    });
+    if(countEl) countEl.textContent = shown + (shown===1?' product':' products');
+  }
+  toolbar.addEventListener('click', function(ev){
+    var btn=ev.target.closest('.shop-chip');
+    if(!btn) return;
+    if(btn.hasAttribute('data-filter-genre')){
+      Array.prototype.forEach.call(toolbar.querySelectorAll('[data-filter-genre]'), function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      state.genre=btn.getAttribute('data-filter-genre');
+    } else if(btn.hasAttribute('data-filter-price')){
+      Array.prototype.forEach.call(toolbar.querySelectorAll('[data-filter-price]'), function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      state.price=btn.getAttribute('data-filter-price');
+    }
+    apply();
+  });
+  apply();
 })();
 (function(){
   var fab=document.getElementById('brianFab'), panel=document.getElementById('brianPanel'),
