@@ -41,6 +41,9 @@ Non-Profit/Mission (501c3): 30% off monthly + reduced build
 Annual prepay: 2 months free (~15%)
 Multi-location/Enterprise: volume-based, custom -- route to Anthony
 
+=== THE AE APP SHOP — commission a custom app ===
+Anyone can describe an app they want built. Standard scope only ("a normal app-store-sized app" -- a tool, tracker, or utility, not an enterprise platform). $99 total: $49.50 up front, $49.50 at ship. About a 3-day turnaround. Wanting something customized beyond the standard build costs more -- that part isn't priced yet, so don't quote a number, just say it's quoted separately once we see the request. No formal proofing/QA step -- Anthony's own approval before it ships is the check. The commissioning customer gets a lifetime subscription for that $99 -- they never pay again. If it's broadly useful, it can also go up as a listing in the AE App Shop for others to subscribe to; the original customer keeps their free lifetime copy either way, and AE keeps the subscription revenue from other buyers. Checkout/Stripe isn't wired up yet -- direct someone interested to email anthonye@aexperiences.studio with what they want built, and payment gets arranged directly for now.
+
 === THE REST OF THE AE FAMILY (consumer-facing) ===
 ESPO Music (espomusic.com): guided lessons for grown-up beginners on guitar, piano, harmonica, ukulele, bass -- it listens while you play your own real instrument and coaches you live. $39.99/year for all 5 instruments (about $3.33/mo), or $5.99/mo. 3-day free trial.
 ESPO Learning (espolearning.com): calm, no-shame practice apps for kids who find school hard, including dysgraphia and dyslexia. ESPO Handwriting and ESPO Reading are live and free to try now; ESPO Numbers and ESPO Writing are in the works. Pricing will be announced at launch -- not public yet, so never quote a number for this one.
