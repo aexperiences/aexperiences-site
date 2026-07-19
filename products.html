@@ -96,6 +96,8 @@ header.bar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.86);bac
 .hubfeat:hover{transform:translateY(-3px);border-color:var(--acc);box-shadow:0 22px 46px color-mix(in srgb,var(--acc) 20%,transparent);}
 .hubfeat-ic{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--acc) 18%,transparent);border:1px solid color-mix(in srgb,var(--acc) 42%,transparent);color:var(--acc);}
 .hubfeat-ic svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;}
+.hubfeat-ic.prodmark{background:none;border:1px solid var(--line);padding:0;overflow:hidden;width:48px;height:48px;border-radius:13px;}
+.hubfeat-ic.prodmark img{width:100%;height:100%;object-fit:cover;display:block;}
 .hubfeat-ind{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);margin-top:12px;}
 .hubfeat-name{font-weight:800;font-size:19px;margin-top:2px;}
 .hubfeat-tag{color:var(--slate);font-size:13px;margin-top:5px;flex:1;}
@@ -320,7 +322,7 @@ footer nav a:hover{color:var(--navy);}
 
     <div class="hubfeat-grid">
       <a class="hubfeat" href="https://espomusic.com/" style="--acc:#e0a83a;" target="_blank" rel="noopener">
-        <span class="hubfeat-ic"><svg viewBox="0 0 48 48"><path d="M18 34V10l20-4v24"/><circle cx="14" cy="34" r="4.5"/><circle cx="34" cy="30" r="4.5"/></svg></span>
+        <span class="hubfeat-ic prodmark"><img src="logo-music.png" alt="ESPO Music"></span>
         <div class="hubfeat-ind">Instrument coaching</div>
         <div class="hubfeat-name">ESPO Music</div>
         <p class="hubfeat-tag">Guitar, piano, harmonica, ukulele, bass — it listens while you play your own instrument and coaches you live.</p>
@@ -329,7 +331,7 @@ footer nav a:hover{color:var(--navy);}
       </a>
 
       <a class="hubfeat" href="https://espolearning.com/" style="--acc:#5c8a5f;" target="_blank" rel="noopener">
-        <span class="hubfeat-ic"><svg viewBox="0 0 48 48"><path d="M24 12c-4-3-10-4-16-3v25c6-1 12 0 16 3 4-3 10-4 16-3V9c-6-1-12 0-16 3z"/><path d="M24 12v25"/></svg></span>
+        <span class="hubfeat-ic prodmark"><img src="logo-learning.png" alt="ESPO Learning"></span>
         <div class="hubfeat-ind">Kids · early skills</div>
         <div class="hubfeat-name">ESPO Learning</div>
         <p class="hubfeat-tag">Calm, no-shame handwriting &amp; reading practice for kids who find school hard, including dysgraphia &amp; dyslexia.</p>
@@ -338,7 +340,7 @@ footer nav a:hover{color:var(--navy);}
       </a>
 
       <a class="hubfeat" href="https://espogenius.com/" style="--acc:#7a6fd6;" target="_blank" rel="noopener">
-        <span class="hubfeat-ic"><svg viewBox="0 0 48 48"><rect x="10" y="6" width="28" height="36" rx="3"/><path d="M16 16h16M16 24h16M16 32h10"/></svg></span>
+        <span class="hubfeat-ic prodmark"><img src="logo-genius.png" alt="ESPO Genius"></span>
         <div class="hubfeat-ind">Plain-English paperwork</div>
         <div class="hubfeat-name">ESPO Genius</div>
         <p class="hubfeat-tag">For life's hardest paperwork — IEPs, elder care, benefits — read honestly and explained in plain English. Runs entirely in your browser.</p>
@@ -347,7 +349,7 @@ footer nav a:hover{color:var(--navy);}
       </a>
 
       <a class="hubfeat" href="https://espodrama.com/" style="--acc:#c8794f;" target="_blank" rel="noopener">
-        <span class="hubfeat-ic"><svg viewBox="0 0 48 48"><circle cx="16" cy="18" r="7"/><circle cx="32" cy="18" r="7"/><path d="M11 22c-2 4-2 9 0 12M37 22c2 4 2 9 0 12M16 24v6M32 24v6"/></svg></span>
+        <span class="hubfeat-ic prodmark"><img src="logo-drama.png" alt="ESPO Drama"></span>
         <div class="hubfeat-ind">Theater &amp; dramatic arts</div>
         <div class="hubfeat-name">ESPO Drama</div>
         <p class="hubfeat-tag">ESPO Studios helps first-time and second-act writers finish their first play, monologue, or sketch.</p>
@@ -356,7 +358,7 @@ footer nav a:hover{color:var(--navy);}
       </a>
 
       <a class="hubfeat" href="https://espoedu.com/" style="--acc:#18b0ba;" target="_blank" rel="noopener">
-        <span class="hubfeat-ic"><svg viewBox="0 0 48 48"><path d="M6 14 24 6l18 8-18 8z"/><path d="M14 20v12c0 3 5 6 10 6s10-3 10-6V20"/></svg></span>
+        <span class="hubfeat-ic prodmark"><img src="logo-curriculum.png" alt="ESPO Curriculum"></span>
         <div class="hubfeat-ind">Homeschool K-12</div>
         <div class="hubfeat-name">ESPO Curriculum</div>
         <p class="hubfeat-tag">Homeschool curriculum tools, next up in the ESPO family.</p>
@@ -365,7 +367,7 @@ footer nav a:hover{color:var(--navy);}
       </a>
 
       <a class="hubfeat" href="https://marketnarc.com/" style="--acc:#2f8f7a;" target="_blank" rel="noopener">
-        <span class="hubfeat-ic"><svg viewBox="0 0 48 48"><circle cx="21" cy="21" r="13"/><path d="M30 30l10 10"/></svg></span>
+        <span class="hubfeat-ic prodmark"><img src="logo-narcs.png" alt="The Narcs"></span>
         <div class="hubfeat-ind">Fine print, decoded</div>
         <div class="hubfeat-name">The Narcs</div>
         <p class="hubfeat-tag">The Narc reads your bills, leases &amp; benefits and drafts the letter to fight back — six tools in one. MarketNarc reads the small-cap market the same honest way.</p>
@@ -374,7 +376,7 @@ footer nav a:hover{color:var(--navy);}
       </a>
 
       <a class="hubfeat" href="https://neurodivulge.com/" style="--acc:#a85f38;" target="_blank" rel="noopener">
-        <span class="hubfeat-ic"><svg viewBox="0 0 48 48"><path d="M18 8a8 8 0 0 0-8 8c0 2 1 3 1 5a7 7 0 0 0 7 7v6h12v-6a7 7 0 0 0 7-7c0-2 1-3 1-5a8 8 0 0 0-8-8 8 8 0 0 0-6 3 8 8 0 0 0-6-3z"/></svg></span>
+        <span class="hubfeat-ic prodmark"><img src="logo-nd.png" alt="Neuro Divulge"></span>
         <div class="hubfeat-ind">Homeschool &amp; neurodivergent tools</div>
         <div class="hubfeat-name">Neuro Divulge</div>
         <p class="hubfeat-tag">An Esposito family project — regulation flashcards, visual routines &amp; checklists, by a homeschooling mom of 4.</p>
