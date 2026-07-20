@@ -6,9 +6,9 @@
 <title>ESPOnest — sleep, feeds & diapers, one tap at 3am</title>
 <meta name="description" content="Baby tracker built for one hand in the dark: one-tap sleep, feed and diaper logging, a nap-window estimate, growth log, and free CSV export. Zero trackers — your baby's data goes nowhere. By Accelerated Experiences, LLC.">
 <meta name="theme-color" content="#2E1F3A">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon.png">
-<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="/apps/esponest/manifest.webmanifest">
+<link rel="icon" href="/apps/esponest/icon.png">
+<link rel="apple-touch-icon" href="/apps/esponest/icon.png">
 <style>
 :root{
   --bg:#2E1F3A; --bg2:#392948; --card:#413055; --ink:#F3EDF8; --ink2:#B9A9CB;
@@ -80,7 +80,7 @@ footer{max-width:640px;margin:26px auto 0;padding:0 18px;font-size:12px;color:va
 </head>
 <body>
 <header>
-  <img src="icon.png" alt="">
+  <img src="/apps/esponest/icon.png" alt="">
   <div class="t">ESPO<b>nest</b></div>
   <div class="age" id="age">—</div>
 </header>
@@ -322,7 +322,7 @@ document.querySelectorAll("nav button").forEach(function(b){
 function drawAll(){drawAge();drawSleepBtn();drawToday();drawNap()}
 drawAll();
 setInterval(drawNap,60000);
-if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");
+if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/esponest/sw.js");
 </script>
 </body>
 </html>
