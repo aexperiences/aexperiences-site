@@ -144,6 +144,20 @@
     { id:'social',   label:'Social' }
   ];
 
+  /* HARD GUARD — nobody gets into something that isn't finished.
+     Anything not marked `live` has its link, price and pricing page stripped right here,
+     at load, before any page can render it. So even if someone later pastes a URL onto a
+     coming-soon entry by accident, the store physically cannot offer a way in.
+     A product becomes enterable by one deliberate act: setting state:'live'. */
+  for (var _i = 0; _i < CATALOG.length; _i++) {
+    if (CATALOG[_i].state !== 'live') {
+      delete CATALOG[_i].url;
+      delete CATALOG[_i].price;
+      delete CATALOG[_i].priceNote;
+      delete CATALOG[_i].pricing;
+    }
+  }
+
   function byId(id) { for (var i = 0; i < CATALOG.length; i++) if (CATALOG[i].id === id) return CATALOG[i]; return null; }
   function live()  { return CATALOG.filter(function (a) { return a.state === 'live'; }); }
   function dev()   { return CATALOG.filter(function (a) { return a.state === 'dev'; }); }
