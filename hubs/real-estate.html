@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Homestead Hub — Real Estate white-label hub · Accelerated Experiences</title>
 <meta name="description" content="Homestead Hub — a native, fully-branded real estate operating hub. Every listing, client &amp; closing in one branded place. From $450/mo. Replace your software stack and keep 100% of your fees.">
-<meta name="theme-color" content="#16326d">
+<meta name="theme-color" content="#5a3420">
 <link rel="icon" href="/ae-disc.png">
 <meta property="og:title" content="Homestead Hub — Real Estate hub by Accelerated Experiences">
 <meta property="og:description" content="Every listing, client &amp; closing in one branded place. From $450/mo, on your brand and domain.">
@@ -21,10 +21,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="/hubs/hub.css" rel="stylesheet">
 </head>
-<body style="--h1:#16326d;--h2:#0b1d43;--acc:#2f7bef">
+<body style="--h1:#7a4a2a;--h2:#4a2a18;--acc:#c8794f">
 <header class="bar">
   <div class="wrap">
-    <a class="logo" href="/" aria-label="Accelerated Experiences — home"><img class="ae-disc-mark" src="/ae-disc.png" alt="Accelerated Experiences"><span class="ae-word"><b>accelerated</b><b class="blue">experiences</b><small>LLC</small></span></a>
+    <a class="logo" href="/" aria-label="Accelerated Experiences — home"><img src="/ae-disc.png" alt="Accelerated Experiences LLC"></a>
     <nav>
       <a class="navlink" href="/#aehub">All hubs</a>
       <a class="navlink" href="/#products">Products</a>
@@ -173,7 +173,7 @@
 
 <footer>
   <div class="wrap">
-    <div class="left"><img class="ae-disc-mark" src="/ae-disc.png" alt="Accelerated Experiences"><span class="ae-word"><b>accelerated</b><b class="blue">experiences</b><small>LLC</small></span><span class="meta">© 2026 · Post Falls, Idaho</span></div>
+    <div class="left"><img src="/ae-disc.png" alt="Accelerated Experiences LLC"><span class="meta">© 2026 · Post Falls, Idaho</span></div>
     <nav>
       <a href="/#aehub">All hubs</a><a href="/#products">Products</a><a href="/#services">Services</a>
       <a href="mailto:anthonye@aexperiences.studio">Contact</a>
@@ -187,31 +187,24 @@
   if('IntersectionObserver' in window){var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.08});els.forEach(function(e){io.observe(e);});setTimeout(function(){els.forEach(function(e){e.classList.add('in');});},1500);}else{els.forEach(function(e){e.classList.add('in');});}
   // tier deep-pick
   document.querySelectorAll('[data-pick]').forEach(function(a){a.addEventListener('click',function(){var s=document.querySelector('#leadForm select[name=tier]');if(s){for(var i=0;i<s.options.length;i++){if(s.options[i].value.indexOf(a.getAttribute('data-pick'))===0){s.selectedIndex=i;break;}}}});});
-  // lead form → FormSubmit relay straight to Anthony's inbox (belt-and-suspenders mailto fallback)
+  // lead form → AEHub CRM (with graceful mailto fallback)
   var f=document.getElementById('leadForm'), note=document.getElementById('lfNote');
-  function mailtoFallback(d){
-    var body=encodeURIComponent('Hi Anthony,\n\nI\'m interested in the Homestead Hub.\n\nName: '+(d.name||'')+'\nEmail: '+(d.email||'')+'\nPhone: '+(d.phone||'')+'\nOrg: '+(d.org||'')+'\nTier: '+(d.tier||'')+'\nNotes: '+(d.note||''));
-    window.location.href='mailto:anthonye@aexperiences.studio?subject=Homestead%20Hub%20inquiry&body='+body;
-  }
-  f.addEventListener('submit',async function(e){
+  f.addEventListener('submit',function(e){
     e.preventDefault();
-    var d={}; new FormData(f).forEach(function(val,k){d[k]=val;});
-    if(!d.name||!/.+@.+\..+/.test(d.email||'')){note.textContent='Please add your name and a valid email.';note.className='lf-note err';return;}
+    var d={}; new FormData(f).forEach(function(v,k){d[k]=v;});
+    if(!d.name||!d.email){note.textContent='Please add your name and email.';note.className='lf-note err';return;}
     var btn=f.querySelector('button'); btn.disabled=true; btn.textContent='Sending…';
-    var sent=false;
-    try{
-      var r=await fetch('https://formsubmit.co/ajax/anthonye@aexperiences.studio',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({
-        Name:d.name, Email:d.email, Phone:d.phone||'—', Organization:d.org||'—',
-        Hub:'Homestead Hub', Vertical:'Real Estate', Tier:d.tier||'—', Notes:d.note||'—',
-        _subject:'Homestead Hub inquiry — '+d.name, _template:'table', _captcha:'false'
-      })});
-      var j=await r.json().catch(function(){return {};});
-      sent=r.ok&&(j.success===true||j.success==='true');
-    }catch(_){}
-    if(!sent){ mailtoFallback(d); }
-    f.innerHTML='<div class="lf-done"><b>Thank you, '+((d.name||'').split(' ')[0]||'')+'.</b><br>Your request for the Homestead Hub is in — we\'ll be in touch shortly with a demo and a tailored quote.</div>';
+    fetch('https://aexperiences.studio/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)})
+      .then(function(r){return r.ok?r.json():Promise.reject();})
+      .then(function(){ f.innerHTML='<div class="lf-done"><b>Thank you, '+(d.name.split(' ')[0]||'')+'.</b><br>Your request for the Homestead Hub is in — we’ll be in touch shortly with a demo and a tailored quote.</div>'; })
+      .catch(function(){
+        var body=encodeURIComponent('Hi Anthony,\n\nI\'m interested in the Homestead Hub.\n\nName: '+(d.name||'')+'\nEmail: '+(d.email||'')+'\nPhone: '+(d.phone||'')+'\nOrg: '+(d.org||'')+'\nTier: '+(d.tier||'')+'\nNotes: '+(d.note||''));
+        note.innerHTML='Couldn’t reach the server — <a href="mailto:anthonye@aexperiences.studio?subject=Homestead%20Hub%20inquiry&body='+body+'">click to email us instead →</a>'; note.className='lf-note err';
+        btn.disabled=false; btn.textContent='Book my demo →';
+      });
   });
 })();
 </script>
 </body>
 </html>
+<script src="/brian-voice.js"></script>
