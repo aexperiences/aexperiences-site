@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AE App Shop — Accelerated Experiences LLC</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Try any app in the AE App Shop live, right here — Accelerated Experiences LLC.">
+<link rel="icon" href="ae-disc.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#2a1810; --navy-2:#1c3d22; --blue:#c8794f; --blue-deep:#a85f38; --blue-bright:#e0a83a;
+  --slate:#7a6b56; --line:#e6dcc4; --bg:#f4eede; --card:#fffdf7;
+  --shadow:0 18px 44px rgba(60,40,20,.12); --shadow-lg:0 30px 70px rgba(20,15,8,.48);
+  --sans:'Outfit',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  --mono:'Space Grotesk',ui-monospace,monospace;
+  --acc:#e0a83a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:var(--sans);background:var(--bg);color:var(--navy);display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+
+/* ===== App-Store chrome bar ===== */
+.chrome{flex:none;display:flex;align-items:center;gap:12px;min-height:58px;padding:8px 16px;background:rgba(255,253,247,.94);backdrop-filter:saturate(150%) blur(12px);border-bottom:1px solid var(--line);position:relative;z-index:20;}
+.back{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:13.5px;color:var(--blue-deep);padding:8px 13px;border:1px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap;transition:border-color .15s;}
+.back:hover{border-color:var(--blue-deep);}
+.app-id{display:flex;align-items:center;gap:10px;min-width:0;}
+.app-ic{width:34px;height:34px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--acc) 18%,transparent);border:1px solid color-mix(in srgb,var(--acc) 42%,transparent);color:var(--acc);overflow:hidden;}
+.app-ic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;}
+.app-ic img{width:100%;height:100%;object-fit:cover;display:block;}
+.app-name{font-weight:800;font-size:15.5px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.app-ind{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);}
+.chrome .right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.pill{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:6px 11px;border-radius:999px;background:color-mix(in srgb,var(--acc) 15%,transparent);color:color-mix(in srgb,var(--acc) 72%,var(--navy));white-space:nowrap;}
+.ext{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--slate);white-space:nowrap;}
+.ext:hover{color:var(--blue-deep);}
+@media(max-width:640px){.ext{display:none;}.app-ind{display:none;}}
+
+/* ===== viewer ===== */
+.stage{flex:1;position:relative;min-height:0;background:var(--bg);}
+.stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;}
+.overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--bg);z-index:5;text-align:center;padding:24px;}
+.spin{width:38px;height:38px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--acc);animation:sp .8s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.overlay .ld{font-family:var(--mono);font-size:12px;color:var(--slate);letter-spacing:.06em;}
+
+/* ===== honest fallback ===== */
+.fb-ic{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--acc) 18%,transparent);border:1px solid color-mix(in srgb,var(--acc) 42%,transparent);color:var(--acc);overflow:hidden;}
+.fb-ic svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;}
+.fb-ic img{width:100%;height:100%;object-fit:cover;}
+.overlay h2{font-weight:800;font-size:22px;letter-spacing:-.02em;max-width:26ch;}
+.overlay p{color:var(--slate);font-size:14px;max-width:46ch;line-height:1.6;}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700;font-size:14.5px;padding:12px 24px;border-radius:999px;cursor:pointer;border:1px solid transparent;background:linear-gradient(135deg,var(--navy),var(--blue-deep));color:#fff;box-shadow:0 10px 24px rgba(168,95,56,.32);transition:transform .12s;}
+.btn:hover{transform:translateY(-2px);}
+.btn-ghost{background:transparent;border-color:var(--line);color:var(--navy);box-shadow:none;}
+.btn-ghost:hover{border-color:var(--slate);}
+
+/* ===== trial gate ===== */
+.gate{position:absolute;inset:0;z-index:10;overflow-y:auto;background:linear-gradient(120deg,var(--navy),var(--navy-2));color:#fff;display:flex;align-items:center;justify-content:center;padding:28px 20px;}
+.gate::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(224,168,58,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(224,168,58,.08) 1px,transparent 1px);background-size:56px 56px;pointer-events:none;}
+.gate-card{position:relative;z-index:1;width:100%;max-width:520px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.16);border-radius:20px;padding:34px 30px;text-align:center;box-shadow:var(--shadow-lg);}
+.gate-ic{width:72px;height:72px;margin:0 auto;border-radius:18px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--acc) 24%,transparent);border:1px solid color-mix(in srgb,var(--acc) 55%,transparent);color:var(--acc);overflow:hidden;}
+.gate-ic svg{width:38px;height:38px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;}
+.gate-ic img{width:100%;height:100%;object-fit:cover;}
+.gate h1{margin-top:18px;font-weight:900;font-size:clamp(24px,4.5vw,30px);letter-spacing:-.02em;line-height:1.1;}
+.gate .sub{margin-top:10px;color:#e8dcc0;font-size:14.5px;line-height:1.6;}
+.plans{margin-top:22px;display:flex;flex-direction:column;gap:10px;}
+.plan{display:flex;align-items:center;gap:12px;text-align:left;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.18);border-radius:13px;padding:14px 16px;cursor:pointer;transition:border-color .15s,background .15s;font-family:var(--sans);color:#fff;width:100%;}
+.plan:hover{border-color:rgba(255,255,255,.4);}
+.plan.sel{border-color:var(--blue-bright);background:color-mix(in srgb,var(--blue-bright) 14%,transparent);}
+.plan .radio{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.5);flex:none;position:relative;}
+.plan.sel .radio{border-color:var(--blue-bright);}
+.plan.sel .radio::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--blue-bright);}
+.plan .pl{flex:1;min-width:0;}
+.plan .pl b{display:block;font-weight:800;font-size:15px;}
+.plan .pl span{display:block;font-family:var(--mono);font-size:11px;color:#e8dcc0;margin-top:2px;}
+.plan .pr{font-weight:900;font-size:16px;white-space:nowrap;}
+.plan .tag{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:var(--blue-bright);color:var(--navy);border-radius:999px;padding:3px 8px;margin-left:8px;white-space:nowrap;}
+.gate .btn{margin-top:22px;width:100%;justify-content:center;font-size:15.5px;padding:14px 24px;}
+.gate .honest{margin-top:13px;font-size:12px;color:#c9bda0;line-height:1.55;}
+.gate .links{margin-top:18px;display:flex;gap:18px;justify-content:center;flex-wrap:wrap;}
+.gate .links a{font-family:var(--mono);font-size:12px;font-weight:600;color:#e8dcc0;border-bottom:1px solid rgba(255,255,255,.25);padding-bottom:2px;}
+.gate .links a:hover{color:#fff;border-color:#fff;}
+.gate .brandline{margin-top:24px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:#a89878;}
+</style>
+</head>
+<body>
+
+<header class="chrome" id="chrome">
+  <a class="back" href="/products.html">← App Shop</a>
+  <div class="app-id">
+    <span class="app-ic" id="chromeIc"></span>
+    <span>
+      <span class="app-name" id="chromeName">Loading…</span>
+      <span class="app-ind" id="chromeInd"></span>
+    </span>
+  </div>
+  <div class="right">
+    <span class="pill" id="statusPill" hidden></span>
+    <a class="ext" id="extLink" target="_blank" rel="noopener" hidden>Open in its own window ↗</a>
+  </div>
+</header>
+
+<main class="stage" id="stage">
+  <div class="overlay" id="loadingOv">
+    <div class="spin"></div>
+    <div class="ld" id="loadingTx">OPENING…</div>
+  </div>
+</main>
+
+<script>
+(function(){
+  /* ============ THE SHOP CATALOG ============ */
+  var APPS = {
+    'homestead':{name:'Homestead Hub',ind:'Real Estate',url:'https://ae-realestate-hub.vercel.app',acc:'#c8794f',
+      svg:'<path d="M7 22 24 8l17 14"/><path d="M11 20v19h26V20"/><circle cx="24" cy="29" r="3.2"/><path d="M24 32.2V37"/>',
+      pricing:'/hubs/real-estate.html',gated:true,
+      plans:[{l:'Monthly',d:'Flat rate · 3 tiers from',p:'$450/mo'},{l:'Annual',d:'Pay yearly from',p:'$4,500/yr',tag:'2 months free'}]},
+    'draftline':{name:'Draftline Hub',ind:'Architecture',url:'https://ae-architecture-hub.vercel.app',acc:'#5c8a5f',
+      svg:'<path d="M24 7 11 41M24 7l13 34"/><circle cx="24" cy="7" r="2.6"/><path d="M24 7v11"/><path d="M16 30h16"/>',
+      pricing:'/hubs/architecture.html',gated:true,
+      plans:[{l:'Monthly',d:'Flat rate · 3 tiers from',p:'$550/mo'},{l:'Annual',d:'Pay yearly from',p:'$5,500/yr',tag:'2 months free'}]},
+    'datum':{name:'Datum Hub',ind:'Engineering',url:'https://ae-engineering-hub.vercel.app',acc:'#18b0ba',
+      svg:'<path d="M6 40 24 9l18 31zM6 40h36"/><path d="M24 9 16 40M24 9l8 31M13 30h22"/>',
+      pricing:'/hubs/engineering.html',gated:true,
+      plans:[{l:'Monthly',d:'Flat rate · 3 tiers from',p:'$650/mo'},{l:'Annual',d:'Pay yearly from',p:'$6,500/yr',tag:'2 months free'}]},
+    'marquee':{name:'Marquee Hub',ind:'Live Theater',url:'https://ae-theater-hub.vercel.app',acc:'#e0b24a',
+      svg:'<path d="M9 17h30l-3 22H12z"/><path d="M9 17 13 8h22l4 9"/><circle cx="18" cy="27" r="2.1"/><circle cx="24" cy="27" r="2.1"/><circle cx="30" cy="27" r="2.1"/>',
+      pricing:'/hubs/theater.html',gated:true,
+      plans:[{l:'Monthly',d:'Flat rate · 3 tiers from',p:'$650/mo'},{l:'Annual',d:'Pay yearly from',p:'$6,500/yr',tag:'2 months free'}]},
+    'reel':{name:'Reel Hub',ind:'Movie Cinema',url:'https://ae-cinema-hub.vercel.app',acc:'#e6b13a',
+      svg:'<circle cx="24" cy="24" r="15"/><circle cx="24" cy="24" r="4"/><circle cx="24" cy="12.5" r="2.4"/><circle cx="24" cy="35.5" r="2.4"/><circle cx="12.5" cy="24" r="2.4"/><circle cx="35.5" cy="24" r="2.4"/>',
+      pricing:'/hubs/cinema.html',gated:true,
+      plans:[{l:'Monthly',d:'Flat rate · 3 tiers from',p:'$500/mo'},{l:'Annual',d:'Pay yearly from',p:'$5,000/yr',tag:'2 months free'}]},
+    'encore':{name:'Encore Hub',ind:'Concerts & Comedy',url:'https://ae-concert-hub.vercel.app',acc:'#bd57e0',
+      svg:'<rect x="19" y="7" width="10" height="21" rx="5"/><path d="M13.5 23.5a10.5 10.5 0 0 0 21 0"/><path d="M24 34v6M18 40h12"/>',
+      pricing:'/hubs/concerts.html',gated:true,
+      plans:[{l:'Monthly',d:'Flat rate · 3 tiers from',p:'$600/mo'},{l:'Annual',d:'Pay yearly from',p:'$6,000/yr',tag:'2 months free'}]},
+    'cartwheel':{name:'Cartwheel Hub',ind:'Kids Activity Gym',url:'https://ae-gym-hub.vercel.app',acc:'#f2743a',
+      svg:'<circle cx="24" cy="10" r="4"/><path d="M24 14v11M24 25 14.5 33.5M24 25l9.5 8.5M24 17.5 14.5 21.5M24 17.5l9.5 4"/><path d="M9 41a19 19 0 0 1 30 0"/>',
+      pricing:'/hubs/kids-gym.html',gated:true,
+      plans:[{l:'Monthly',d:'Flat rate · 3 tiers from',p:'$400/mo'},{l:'Annual',d:'Pay yearly from',p:'$4,000/yr',tag:'2 months free'}]},
+    'espo-music':{name:'ESPO Music',ind:'Instrument coaching',url:'https://espomusic.com/',acc:'#e0a83a',img:'logo-music.png',gated:true,
+      plans:[{l:'Monthly',d:'Per app',p:'$3.33/mo'},{l:'Annual',d:'All 5 instruments',p:'$39.99/yr',tag:'best value'}]},
+    'espo-learning':{name:'ESPO Learning',ind:'Kids · early skills',url:'https://espolearning.com/',acc:'#5c8a5f',img:'logo-learning.png',gated:false,
+      free:'Free to try · pricing at launch'},
+    'espo-genius':{name:'ESPO Genius',ind:'Plain-English paperwork',url:'https://espogenius.com/',acc:'#7a6fd6',img:'logo-genius.png',gated:false,
+      free:'Preview — free for now'},
+    'espo-drama':{name:'ESPO Drama',ind:'Theater & dramatic arts',url:'https://espodrama.com/',acc:'#c8794f',img:'logo-drama.png',gated:false,
+      free:'Preview — free for now'},
+    'esposocial':{name:'ESPOsocial',ind:'Private social',url:'https://esposocial.com/',acc:'#5a5fd6',img:'logo-social.png',gated:false,
+      free:'Free while in preview'},
+    'the-narcs':{name:'The Narcs',ind:'Fine print, decoded',url:'https://marketnarc.com/',acc:'#2f8f7a',img:'logo-narcs.png',gated:false,
+      free:'Free while in preview'},
+    'neuro-divulge':{name:'Neuro Divulge',ind:'Regulation tools',url:'https://neurodivulge.com/',acc:'#a85f38',img:'logo-nd.png',gated:true,
+      plans:[{l:'Per tool',d:'One-time · free starter checklist included',p:'$9'}]}
+  };
+
+  var FREE_OPENS = 3;
+  var KEY = 'ae_shop_meter_v1';
+  var MAIL = 'anthonye@aexperiences.studio';
+
+  var id = new URLSearchParams(location.search).get('id');
+  var app = APPS[id];
+  if(!app){ location.replace('/products.html'); return; }
+
+  document.title = app.name + ' — AE App Shop — Accelerated Experiences LLC';
+  document.documentElement.style.setProperty('--acc', app.acc);
+
+  function iconHTML(){
+    return app.img ? '<img src="/'+app.img+'" alt="'+app.name+'">' : '<svg viewBox="0 0 48 48">'+app.svg+'</svg>';
+  }
+  document.getElementById('chromeIc').innerHTML = iconHTML();
+  document.getElementById('chromeName').textContent = app.name;
+  document.getElementById('chromeInd').textContent = app.ind;
+
+  /* ============ METER ============ */
+  function readMeter(){ try{ return JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ return {}; } }
+  function saveMeter(m){ try{ localStorage.setItem(KEY, JSON.stringify(m)); }catch(e){} }
+  var meter = readMeter();
+  var opens = meter[id]||0;
+
+  var stage = document.getElementById('stage');
+  var pill = document.getElementById('statusPill');
+  var extLink = document.getElementById('extLink');
+
+  if(app.gated && opens >= FREE_OPENS){
+    showGate();
+  } else {
+    meter[id] = ++opens;
+    saveMeter(meter);
+    openApp();
+  }
+
+  /* ============ THE IN-STORE VIEWER ============ */
+  function openApp(){
+    pill.hidden = false;
+    pill.textContent = app.gated ? ('Free open '+opens+' of '+FREE_OPENS) : (app.free || 'Free while in preview');
+    extLink.hidden = false;
+    extLink.href = app.url;
+    document.getElementById('loadingTx').textContent = 'OPENING ' + app.name.toUpperCase() + '…';
+
+    var frame = document.createElement('iframe');
+    frame.src = app.url;
+    frame.allow = 'camera; microphone; fullscreen; clipboard-write; autoplay';
+    frame.referrerPolicy = 'no-referrer-when-downgrade';
+    stage.appendChild(frame);
+
+    var loaded = false;
+    frame.addEventListener('load', function(){
+      loaded = true;
+      var ov = document.getElementById('loadingOv');
+      if(ov) ov.remove();
+    });
+    /* Honest fallback — if the app hasn't loaded in ~4s, don't leave a broken screen. */
+    setTimeout(function(){
+      if(!loaded) showFallback(frame);
+    }, 4500);
+  }
+
+  function showFallback(frame){
+    if(frame) frame.remove();
+    var ov = document.getElementById('loadingOv');
+    if(ov) ov.remove();
+    var d = document.createElement('div');
+    d.className = 'overlay';
+    d.innerHTML =
+      '<span class="fb-ic">'+iconHTML()+'</span>'+
+      '<h2>This one opens in its own window for now.</h2>'+
+      '<p>'+app.name+' didn’t load inside the shop this time. No problem — open it in a new tab and the App Shop stays right here behind it.</p>'+
+      '<a class="btn" href="'+app.url+'" target="_blank" rel="noopener">Open '+app.name+' ↗</a>'+
+      '<a class="btn btn-ghost" href="/products.html">← Back to the App Shop</a>';
+    stage.appendChild(d);
+  }
+
+  /* ============ THE TRIAL GATE ============ */
+  function showGate(){
+    pill.hidden = false;
+    pill.textContent = 'Free opens used';
+    var ov = document.getElementById('loadingOv');
+    if(ov) ov.remove();
+
+    var plans = app.plans || [];
+    var sel = plans.length > 1 ? 1 : 0; /* default to annual / best value */
+
+    var g = document.createElement('div');
+    g.className = 'gate';
+    var planHTML = plans.map(function(p,i){
+      return '<button class="plan'+(i===sel?' sel':'')+'" data-i="'+i+'">'+
+        '<span class="radio"></span>'+
+        '<span class="pl"><b>'+p.l+(p.tag?'<span class="tag">'+p.tag+'</span>':'')+'</b><span>'+p.d+'</span></span>'+
+        '<span class="pr">'+p.p+'</span>'+
+      '</button>';
+    }).join('');
+
+    g.innerHTML =
+      '<div class="gate-card">'+
+        '<span class="gate-ic">'+iconHTML()+'</span>'+
+        '<h1>You clearly like '+app.name+'.</h1>'+
+        '<p class="sub">You’ve used your '+FREE_OPENS+' free opens. Start your free 3-day trial and keep going — pick the plan that fits.</p>'+
+        '<div class="plans" id="planPick">'+planHTML+'</div>'+
+        '<a class="btn" id="startTrial">Start free trial →</a>'+
+        '<p class="honest">Checkout is being finished — this sends us an email and we’ll set you up personally, no card needed today. Real people, usually same-day.</p>'+
+        '<div class="links">'+
+          '<a href="/products.html">← Back to the App Shop</a>'+
+          (app.pricing ? '<a href="'+app.pricing+'">See full pricing</a>' : '')+
+        '</div>'+
+        '<div class="brandline">ACCELERATED EXPERIENCES LLC · POST FALLS, IDAHO</div>'+
+      '</div>';
+    stage.appendChild(g);
+
+    var btns = g.querySelectorAll('.plan');
+    function setMailto(){
+      var p = plans[sel];
+      var subject = 'Start my free 3-day trial — '+app.name+' ('+p.l+')';
+      var body = 'Hi Anthony — I’d like to start my free 3-day trial of '+app.name+' on the '+p.l+' plan ('+p.p+').\n\nName:\nBusiness (if any):\nAnything you should know:\n';
+      document.getElementById('startTrial').href =
+        'mailto:'+MAIL+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+    }
+    btns.forEach(function(b){
+      b.addEventListener('click', function(){
+        sel = parseInt(b.getAttribute('data-i'),10);
+        btns.forEach(function(x){x.classList.remove('sel');});
+        b.classList.add('sel');
+        setMailto();
+      });
+    });
+    setMailto();
+  }
+})();
+</script>
+
+</body>
+</html>
