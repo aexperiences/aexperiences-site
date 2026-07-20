@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="family-espofam">
+<rect width="1024" height="1024" rx="232" fill="#2E1F3A"/>
+<circle cx="512" cy="490" r="300" fill="none" stroke="#FFB88A" stroke-width="13" opacity="0.45"/>
+<ellipse cx="512" cy="560" rx="118" ry="148" fill="#FFE9D6"/>
+<path d="M270,560 C270,712 386,800 512,800 C638,800 754,712 754,560 Z" fill="#2E1F3A"/>
+<path d="M290,560 C290,700 390,780 512,780 C634,780 734,700 734,560" fill="none" stroke="#C89B6C" stroke-width="40" stroke-linecap="round"/>
+<path d="M330,610 C360,700 430,744 512,744 C594,744 664,700 694,610" fill="none" stroke="#C89B6C" stroke-width="30" stroke-linecap="round" opacity="0.7"/>
+<path d="M368,660 C400,724 450,752 512,752 C574,752 624,724 656,660" fill="none" stroke="#C89B6C" stroke-width="24" stroke-linecap="round" opacity="0.5"/>
+</svg>

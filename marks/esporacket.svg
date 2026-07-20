@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="esporacket">
+<rect width="1024" height="1024" rx="232" fill="#101C2C"/>
+<circle cx="512" cy="490" r="300" fill="none" stroke="#4ECDC4" stroke-width="13" opacity="0.45"/>
+<circle cx="512" cy="490" r="205" fill="none" stroke="#FFD166" stroke-width="34"/>
+<path d="M450,380 L640,490 L450,600 Z" fill="#4ECDC4"/>
+<path d="M262,300 A330,330 0 0,1 340,232 M762,300 A330,330 0 0,0 684,232" stroke="#4ECDC4" stroke-width="22" fill="none" stroke-linecap="round"/>
+</svg>

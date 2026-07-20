@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="family-espotravel">
+<rect width="1024" height="1024" rx="232" fill="#12303E"/>
+<circle cx="512" cy="490" r="300" fill="none" stroke="#6BD5E1" stroke-width="13" opacity="0.45"/>
+<circle cx="512" cy="490" r="210" fill="none" stroke="#6BD5E1" stroke-width="30"/>
+<path d="M512,300 L575,490 L512,680 L449,490 Z" fill="#FF8A5C"/>
+<path d="M512,300 L575,490 L512,490 Z" fill="#ffffff" opacity="0.35"/>
+<circle cx="512" cy="490" r="40" fill="#6BD5E1"/>
+</svg>
