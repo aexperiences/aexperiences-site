@@ -154,9 +154,10 @@
       blurb:'Sign leases, school forms, waivers and contracts right in your browser — your document never leaves your device.',
       price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr unlimited — vs DocuSign’s $120/yr for 5 documents' },
 
-    { id:'espovineyard', name:'ESPOvineyard', tag:'Wine journal', genre:'savor', state:'dev',
-      acc:'#2E0D19', mark:M+'espovineyard.svg', family:'ESPOsavor', age:'21+',
-      blurb:'Scan the label, remember the bottle, and keep a cellar that is actually yours.' },
+    { id:'espovineyard', name:'ESPOvineyard', tag:'Wine journal · 21+', genre:'savor', state:'live',
+      acc:'#2E0D19', mark:M+'espovineyard.svg', family:'ESPOsavor', age:'21+', url:'/apps/espovineyard/',
+      blurb:'A calm wine journal with a real Wine Country Notebook inside — no ads, no marketplace, a cellar that is actually yours.',
+      price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — journal, cellar & Notebook stay free' },
 
     { id:'esporacket', name:'ESPOracket', tag:'Tennis & pickleball', genre:'sport', state:'dev',
       acc:'#101C2C', mark:M+'esporacket.svg', family:'ESPOcenter',
