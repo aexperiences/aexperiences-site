@@ -58,9 +58,22 @@
 
     /* ─────────── ESPO FAMILY — live today ─────────── */
     { id:'espo-music', name:'ESPO Music', tag:'Instrument coaching', genre:'arts', state:'live',
-      acc:'#e0a83a', url:'https://espomusic.com/', img:'/logo-music.png',
-      blurb:'Five instruments — guitar, piano, harp, ukulele, bass — each with a real coach that listens and responds.',
-      price:'$3.33/mo per app', priceNote:'All five instruments $39.99/yr — best value' },
+      acc:'#e0a83a', url:'https://espomusic.com/fret', img:'/logo-music.png',
+      /* The store sheet IS the product page — url goes INTO the app (never the marketing
+         landing). openMap lets the sheet's instrument picker retarget the Open button. */
+      openMap:{ fret:'https://espomusic.com/fret', grand:'https://espomusic.com/grand',
+                harp:'https://espomusic.com/harp', uke:'https://espomusic.com/uke',
+                bass:'https://espomusic.com/bass' },
+      shots:['/shots/music-fret.png','/shots/music-grand.png','/shots/music-harp.png','/shots/music-uke.png','/shots/music-bass.png'],
+      blurb:'Five instruments — guitar, piano, harmonica, ukulele, bass — each with a real coach that listens and responds.',
+      price:'From $5.99/mo',
+      priceNote:'One instrument $5.99/mo · All-Access (all 5) $14.99/mo, or $39.99/yr — about $3.33/mo, billed once a year · 3-day free trial on every plan',
+      checkout:'https://espomusic.com/api/checkout',
+      plans:[
+        { label:'Single instrument', sub:'Just the one you want', price:'$5.99/mo', plan:'monthly' },
+        { label:'All-Access · monthly', sub:'All 5 instruments', price:'$14.99/mo', plan:'suite_monthly' },
+        { label:'All-Access · yearly', sub:'All 5 · about $3.33/mo, billed once a year', price:'$39.99/yr', plan:'yearly', tag:'Best value' }
+      ] },
 
     { id:'espo-learning', name:'ESPO Learning', tag:'Kids · early skills', genre:'learning', state:'live',
       acc:'#5c8a5f', url:'https://espolearning.com/', img:'/logo-learning.png',
@@ -96,17 +109,17 @@
     { id:'espovocab', name:'ESPOvocab', tag:'Words worth keeping', genre:'learning', state:'live',
       acc:'#1E2A24', mark:M+'espovocab.svg', family:'ESPOgraduate', url:'/apps/espovocab/',
       blurb:'A word a day that actually sticks — etymology, a journal, your own word list. No ads, works offline, export free.',
-      price:'Free right now', priceNote:'Paid plans not switched on yet' },
+      price:'Free right now', priceNote:'Plus coming: $1.99/mo · $14.99/yr — not switched on yet' },
 
     { id:'espotendency', name:'ESPOtendency', tag:'Mood & habits', genre:'mind', state:'live',
       acc:'#232946', mark:M+'espotendency.svg', family:'ESPOmindpeace', url:'/apps/espotendency/',
       blurb:'A 10-second daily check-in and one tiny win at a time. Everything stays on your device — no account, no cloud.',
-      price:'Free right now', priceNote:'Paid plans not switched on yet' },
+      price:'Free right now', priceNote:'Plus coming: $1.99/mo · $19.99/yr — core stays free forever' },
 
     { id:'esponest', name:'ESPOnest', tag:'Baby tracker', genre:'family', state:'live',
       acc:'#2E1F3A', mark:M+'esponest.svg', family:'ESPOfam', url:'/apps/esponest/',
       blurb:'Sleep, feeds and diapers in one tap at 3am — nap-window estimate, growth log, free export, zero trackers.',
-      price:'Free right now', priceNote:'Paid plans not switched on yet' },
+      price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — logging + export free forever' },
 
     /* ─────────── IN DEVELOPMENT — no price, no buy path, notify-me only ─────────── */
 
@@ -160,6 +173,10 @@
       delete CATALOG[_i].price;
       delete CATALOG[_i].priceNote;
       delete CATALOG[_i].pricing;
+      delete CATALOG[_i].plans;
+      delete CATALOG[_i].checkout;
+      delete CATALOG[_i].openMap;
+      delete CATALOG[_i].shots;
     }
   }
 
