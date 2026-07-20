@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESPOtendency — how are you actually doing?</title>
+<meta name="description" content="A 10-second daily check-in and one tiny win at a time. No ads, no account, no cloud — everything stays on your device. By Accelerated Experiences, LLC.">
+<meta name="theme-color" content="#232946">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<style>
+:root{
+  --bg:#232946; --bg2:#2B3155; --card:#313862; --ink:#EEF0FA; --ink2:#A7ADD1;
+  --acc:#EEBB77; --line:#3E466F; --ok:#8BC7A0;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
+  padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+header{padding:calc(14px + env(safe-area-inset-top)) 18px 10px;display:flex;align-items:center;gap:10px}
+header img{width:34px;height:34px;border-radius:9px}
+header .t{font-size:19px;font-weight:700;letter-spacing:.3px}
+header .t b{color:var(--acc);font-weight:700}
+.streak{margin-left:auto;font-size:13px;color:var(--ink2);background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+main{max-width:640px;margin:0 auto;padding:6px 18px 24px}
+.view{display:none}.view.on{display:block;animation:up .25s ease}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h2{font-size:22px;margin:14px 0 4px;line-height:1.3}
+.sub{color:var(--ink2);font-size:14.5px;line-height:1.55;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}
+.card h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:8px}
+.moods{display:flex;gap:8px;justify-content:space-between}
+.moods button{flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:14px;
+  padding:12px 4px;font-size:26px;cursor:pointer;transition:transform .1s}
+.moods button span{display:block;font-size:10.5px;color:var(--ink2);margin-top:4px}
+.moods button.on{border-color:var(--acc);background:#3A3F70;transform:scale(1.05)}
+.acts{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.acts button{background:var(--bg2);border:1px solid var(--line);border-radius:12px;color:var(--ink);
+  font-size:15px;padding:13px 14px;text-align:left;cursor:pointer;line-height:1.4}
+.acts button.done{border-color:var(--ok);color:var(--ok)}
+.acts button b{display:block;font-size:12px;color:var(--ink2);font-weight:400;margin-top:2px}
+.acts button.done b{color:var(--ok)}
+button.b1{background:var(--acc);color:#2b2312;border:0;border-radius:12px;font-size:15.5px;font-weight:700;padding:13px 18px;width:100%;cursor:pointer;margin-top:12px}
+button.b2{background:var(--bg2);color:var(--ink);border:1px solid var(--line);border-radius:12px;font-size:15px;padding:12px 16px;width:100%;cursor:pointer;margin-top:10px}
+textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:12px;color:var(--ink);
+  font-family:var(--sans);font-size:15.5px;line-height:1.5;padding:12px;min-height:70px;resize:vertical}
+textarea:focus,input:focus{outline:2px solid var(--acc)}
+input[type=text]{background:var(--bg2);border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:15.5px;padding:12px;width:100%}
+.hint{font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:10px}
+.bars{display:flex;align-items:flex-end;gap:5px;height:90px;margin-top:8px}
+.bars .b{flex:1;background:var(--acc);border-radius:5px 5px 0 0;min-height:4px;opacity:.85}
+.bars .b.empty{background:var(--line)}
+.blab{display:flex;gap:5px;margin-top:4px}
+.blab span{flex:1;text-align:center;font-size:10px;color:var(--ink2)}
+.hitem{border-bottom:1px solid var(--line);padding:11px 2px;display:flex;gap:10px;align-items:baseline}
+.hitem .e{font-size:20px}
+.hitem .d{font-size:12px;color:var(--ink2);min-width:74px}
+.hitem p{font-size:14.5px;color:var(--ink);line-height:1.45;flex:1}
+.empty2{color:var(--ink2);font-size:14.5px;text-align:center;padding:28px 10px;line-height:1.6}
+nav{position:fixed;left:0;right:0;bottom:0;background:rgba(35,41,70,.96);backdrop-filter:blur(10px);
+  border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
+nav button{background:none;border:0;color:var(--ink2);font-size:11.5px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 14px;cursor:pointer}
+nav button.on{color:var(--acc)}
+nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+footer{max-width:640px;margin:26px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.6}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--acc);color:#2b2312;font-size:14px;font-weight:700;border-radius:999px;padding:9px 18px;opacity:0;pointer-events:none;transition:opacity .25s}
+.toast.on{opacity:1}
+.note{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:14px}
+</style>
+</head>
+<body>
+<header>
+  <img src="icon.png" alt="">
+  <div class="t">ESPO<b>tendency</b></div>
+  <div class="streak" id="streak">—</div>
+</header>
+
+<main>
+  <!-- CHECK-IN -->
+  <section class="view on" id="v-check">
+    <h2 id="greet"></h2>
+    <p class="sub">Ten seconds, honestly. That's the whole job.</p>
+    <div class="card">
+      <h3>Right now I feel…</h3>
+      <div class="moods" id="moods">
+        <button data-m="1">😞<span>Rough</span></button>
+        <button data-m="2">😕<span>Low</span></button>
+        <button data-m="3">😐<span>Okay</span></button>
+        <button data-m="4">🙂<span>Good</span></button>
+        <button data-m="5">😄<span>Great</span></button>
+      </div>
+    </div>
+    <div class="card" id="planCard" style="display:none">
+      <h3 id="planTitle"></h3>
+      <p class="sub" id="planSub" style="margin-bottom:10px"></p>
+      <div class="acts" id="acts"></div>
+    </div>
+    <div class="card" id="noteCard" style="display:none">
+      <h3>One line about today (optional)</h3>
+      <textarea id="note" placeholder="No essays required."></textarea>
+      <button class="b1" id="saveDay">Save today's check-in</button>
+    </div>
+    <div class="note">ESPOtendency is a self-tracking tool, not therapy or medical care, and it makes no health claims.
+    If you're struggling, a professional is the right next step — in the U.S. you can call or text <b>988</b> anytime.</div>
+  </section>
+
+  <!-- TRENDS -->
+  <section class="view" id="v-trend">
+    <h2>The last two weeks</h2>
+    <p class="sub">Patterns, not judgments.</p>
+    <div class="card">
+      <h3>Mood</h3>
+      <div class="bars" id="bars"></div>
+      <div class="blab" id="blab"></div>
+    </div>
+    <div class="card">
+      <h3>History</h3>
+      <div id="hist"></div>
+      <button class="b2" id="exp">Export everything (.csv — always free)</button>
+    </div>
+  </section>
+
+  <!-- WINS -->
+  <section class="view" id="v-wins">
+    <h2>Tiny wins</h2>
+    <p class="sub">Every action you've finished. Proof, in writing, that you show up.</p>
+    <div class="card"><div id="wins"></div></div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="view" id="v-set">
+    <h2>Settings</h2>
+    <div class="card">
+      <h3>Your data</h3>
+      <p class="hint">Everything lives on this device. No account, no cloud, no ads, no trackers — nothing you write here leaves your phone. Export is free forever, and erasing really erases.</p>
+      <button class="b2" id="wipe">Erase everything</button>
+    </div>
+  </section>
+</main>
+
+<nav>
+  <button data-v="check" class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 13.5s1.3 2 3.5 2 3.5-2 3.5-2M9 10h.01M15 10h.01"/></svg>Check-in</button>
+  <button data-v="trend"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="M7 15l3.5-4 3 2.5L18 8"/></svg>Trends</button>
+  <button data-v="wins"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M6 4h12v5a6 6 0 0 1-12 0z"/><path d="M6 6H4a2 2 0 0 0 2 4M18 6h2a2 2 0 0 1-2 4"/></svg>Wins</button>
+  <button data-v="set"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>Settings</button>
+</nav>
+
+<footer>ESPOtendency · part of the ESPOmindpeace family · Accelerated Experiences, LLC — Post Falls, Idaho.
+No ads. No trackers. Not medical advice.</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─── action plans by mood: small, physical, finishable ─── */
+var PLANS={
+ 1:{t:"Rough days get the smallest steps",s:"Not a to-do list. Pick ONE. Finishing it is the whole victory.",a:[
+   ["Sit up and drink a glass of water","2 minutes · your body goes first"],
+   ["Open a window or step outside for 5 breaths","Fresh air is a real reset button"],
+   ["Text one person one sentence","No explaining required — 'thinking of you' counts"],
+   ["Put on actual clothes","Pajama physics is real; break it"],
+   ["Wash your face with cold water","30 seconds, oldest trick there is"]]},
+ 2:{t:"Low, but moving",s:"One or two of these and the day usually bends upward.",a:[
+   ["Walk to the end of the block and back","10 minutes · no podcast needed"],
+   ["Clear ONE surface — a desk, a counter","Visible order calms the noise"],
+   ["Eat something with protein in it","Mood runs on fuel"],
+   ["Write down the one thing bugging you most","On paper it gets smaller"],
+   ["Do the 2-minute version of a chore you're avoiding","Momentum beats motivation"]]},
+ 3:{t:"Okay is workable",s:"A steady day is a good foundation. Stack one brick on it.",a:[
+   ["Take the 15-minute walk, the full one","Okay + oxygen often equals good"],
+   ["Do the thing you've moved to tomorrow twice","You know the one"],
+   ["Call someone instead of texting","Voices land different"],
+   ["Tidy for exactly 10 minutes, timer on","Stop when it rings — that's the trick"],
+   ["Plan one thing to look forward to this week","Anticipation is free mood"]]},
+ 4:{t:"Good — bank some of it",s:"Days like this are when you build the stuff bad days borrow from.",a:[
+   ["Knock out the task future-you dreads","You have the fuel today"],
+   ["Move for 20+ minutes — walk, gym, bike, anything","Keep the engine warmed up"],
+   ["Reach out to someone having a worse week","Good days are for sharing"],
+   ["Prep tomorrow tonight — clothes, bag, list","Gift to tomorrow-you"],
+   ["Write down what's working right now","So rough days can read it"]]},
+ 5:{t:"Great — remember this one",s:"Capture it. Great days are data too.",a:[
+   ["Write 3 lines about why today is great","Your own instruction manual"],
+   ["Do something generous, tiny counts","Tip big, text kind, hold a door"],
+   ["Take on the ambitious thing while the wave is up","Surf it"],
+   ["Take an actual photo of an actual moment","Not for posting — for January"],
+   ["Set one small intention for tomorrow","Carry-over is allowed"]]}
+};
+
+var K="espotendency.v1",S;
+try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
+S.days=S.days||{}; S.wins=S.wins||[];
+function save(){localStorage.setItem(K,JSON.stringify(S))}
+function dkey(d){d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1600)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+/* greeting */
+var h=new Date().getHours();
+document.getElementById("greet").textContent = h<5?"Up late? Quick check-in.":h<12?"Morning. How are you actually doing?":h<18?"Afternoon. How's it actually going?":"Evening. How did today actually go?";
+
+/* streak — gentle: counts check-ins, never scolds a gap */
+function streak(){var n=0,d=new Date();for(;;){if(S.days[dkey(d)]){n++;d.setDate(d.getDate()-1)}else break}return n}
+function drawStreak(){var n=streak();document.getElementById("streak").textContent = n>1?"🌱 "+n+" days":"Welcome"}
+
+/* mood pick */
+var mood=null, doneActs=[];
+var todayRec=S.days[dkey()];
+if(todayRec){mood=todayRec.m;doneActs=todayRec.acts||[]}
+function drawMood(){
+  document.querySelectorAll("#moods button").forEach(function(b){b.classList.toggle("on",+b.dataset.m===mood)});
+  if(mood){
+    var p=PLANS[mood];
+    document.getElementById("planCard").style.display="block";
+    document.getElementById("noteCard").style.display="block";
+    document.getElementById("planTitle").textContent=p.t;
+    document.getElementById("planSub").textContent=p.s;
+    var el=document.getElementById("acts");el.innerHTML="";
+    p.a.forEach(function(a,i){
+      var b=document.createElement("button");
+      var isDone=doneActs.indexOf(a[0])>=0;
+      b.className=isDone?"done":"";
+      b.innerHTML=(isDone?"✓ ":"")+esc(a[0])+"<b>"+esc(a[1])+"</b>";
+      b.onclick=function(){
+        var j=doneActs.indexOf(a[0]);
+        if(j>=0){doneActs.splice(j,1)}else{doneActs.push(a[0]);S.wins.unshift({a:a[0],t:Date.now()});toast("Tiny win ✓")}
+        persistToday();drawMood();
+      };
+      el.appendChild(b);
+    });
+  }
+}
+document.querySelectorAll("#moods button").forEach(function(b){
+  b.onclick=function(){mood=+b.dataset.m;persistToday();drawMood()};
+});
+function persistToday(){
+  S.days[dkey()]={m:mood,acts:doneActs,note:(S.days[dkey()]||{}).note||"",t:Date.now()};save();drawStreak();
+}
+document.getElementById("saveDay").onclick=function(){
+  if(!mood){toast("Pick a mood first");return}
+  S.days[dkey()].note=document.getElementById("note").value.trim();save();
+  toast("Saved. That's the whole job — done.");
+};
+if(todayRec&&todayRec.note)document.getElementById("note").value=todayRec.note;
+
+/* trends */
+function drawTrend(){
+  var bars=document.getElementById("bars"),blab=document.getElementById("blab");
+  bars.innerHTML="";blab.innerHTML="";
+  var d=new Date();d.setDate(d.getDate()-13);
+  for(var i=0;i<14;i++){
+    var rec=S.days[dkey(d)];
+    var b=document.createElement("div");
+    if(rec){b.className="b";b.style.height=(rec.m*18)+"px";b.title=dkey(d)+" — "+rec.m+"/5"}
+    else{b.className="b empty";b.style.height="4px"}
+    bars.appendChild(b);
+    var s=document.createElement("span");s.textContent=(d.getMonth()+1)+"/"+d.getDate();
+    if(i%2===0)blab.appendChild(s);else{s.textContent="";blab.appendChild(s)}
+    d.setDate(d.getDate()+1);
+  }
+  var hist=document.getElementById("hist"),keys=Object.keys(S.days).sort().reverse();
+  if(!keys.length){hist.innerHTML='<div class="empty2">Check in once and your history starts here.</div>';return}
+  var EMO={1:"😞",2:"😕",3:"😐",4:"🙂",5:"😄"};
+  hist.innerHTML=keys.slice(0,30).map(function(k){
+    var r=S.days[k];
+    return '<div class="hitem"><div class="e">'+EMO[r.m]+'</div><div class="d">'+k+'</div><p>'+esc(r.note||"")+(r.acts&&r.acts.length?' <span style="color:var(--ok)">· '+r.acts.length+' win'+(r.acts.length>1?'s':'')+'</span>':'')+'</p></div>';
+  }).join("");
+}
+document.getElementById("exp").onclick=function(){
+  var rows=[["date","mood(1-5)","note","wins_done"]];
+  Object.keys(S.days).sort().forEach(function(k){var r=S.days[k];rows.push([k,r.m,r.note||"",(r.acts||[]).join("; ")])});
+  var c=rows.map(function(r){return r.map(function(v){return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'}).join(",")}).join("\n");
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([c],{type:"text/csv"}));a.download="espotendency.csv";a.click();
+  toast("Exported — your data is yours");
+};
+
+/* wins */
+function drawWins(){
+  var el=document.getElementById("wins");
+  if(!S.wins.length){el.innerHTML='<div class="empty2">Finish any action on a check-in and it lands here. They add up faster than you think.</div>';return}
+  el.innerHTML=S.wins.slice(0,100).map(function(w){
+    return '<div class="hitem"><div class="e">✓</div><div class="d">'+new Date(w.t).toLocaleDateString()+'</div><p>'+esc(w.a)+'</p></div>';
+  }).join("");
+}
+
+/* nav */
+document.querySelectorAll("nav button").forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll("nav button").forEach(function(x){x.classList.remove("on")});
+    document.querySelectorAll(".view").forEach(function(x){x.classList.remove("on")});
+    b.classList.add("on");document.getElementById("v-"+b.dataset.v).classList.add("on");
+    if(b.dataset.v==="trend")drawTrend();
+    if(b.dataset.v==="wins")drawWins();
+  };
+});
+document.getElementById("wipe").onclick=function(){
+  if(confirm("Erase every check-in, note and win from this device? There is no cloud copy — that's the point.")){
+    localStorage.removeItem(K);location.reload();
+  }
+};
+drawStreak();drawMood();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");
+</script>
+</body>
+</html>

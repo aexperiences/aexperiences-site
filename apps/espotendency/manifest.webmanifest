@@ -1,0 +1,14 @@
+{
+  "name": "ESPOtendency",
+  "short_name": "ESPOtendency",
+  "description": "A 10-second daily check-in and one tiny win at a time. By Accelerated Experiences, LLC.",
+  "start_url": "/apps/espotendency/",
+  "scope": "/apps/espotendency/",
+  "display": "standalone",
+  "background_color": "#232946",
+  "theme_color": "#232946",
+  "icons": [
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
+  ]
+}
