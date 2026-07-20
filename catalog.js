@@ -92,18 +92,23 @@
       blurb:'Practical regulation tools for ADHD and autistic brains — built by someone who needs them.',
       price:'$9 per tool', priceNote:'One-time · free starter checklist included' },
 
+    /* ─────────── ESPO REMAKES — live, in-shop apps (/apps/<name>/) ─────────── */
+    { id:'espovocab', name:'ESPOvocab', tag:'Words worth keeping', genre:'learning', state:'live',
+      acc:'#1E2A24', mark:M+'espovocab.svg', family:'ESPOgraduate', url:'/apps/espovocab/',
+      blurb:'A word a day that actually sticks — etymology, a journal, your own word list. No ads, works offline, export free.',
+      price:'Free right now', priceNote:'Paid plans not switched on yet' },
+
+    { id:'espotendency', name:'ESPOtendency', tag:'Mood & habits', genre:'mind', state:'live',
+      acc:'#232946', mark:M+'espotendency.svg', family:'ESPOmindpeace', url:'/apps/espotendency/',
+      blurb:'A 10-second daily check-in and one tiny win at a time. Everything stays on your device — no account, no cloud.',
+      price:'Free right now', priceNote:'Paid plans not switched on yet' },
+
+    { id:'esponest', name:'ESPOnest', tag:'Baby tracker', genre:'family', state:'live',
+      acc:'#2E1F3A', mark:M+'esponest.svg', family:'ESPOfam', url:'/apps/esponest/',
+      blurb:'Sleep, feeds and diapers in one tap at 3am — nap-window estimate, growth log, free export, zero trackers.',
+      price:'Free right now', priceNote:'Paid plans not switched on yet' },
+
     /* ─────────── IN DEVELOPMENT — no price, no buy path, notify-me only ─────────── */
-    { id:'espovocab', name:'ESPOvocab', tag:'Words worth keeping', genre:'learning', state:'dev',
-      acc:'#1E2A24', mark:M+'espovocab.svg', family:'ESPOgraduate',
-      blurb:'A word a day that actually sticks — with a place to write what you did with it.' },
-
-    { id:'espotendency', name:'ESPOtendency', tag:'Mood & habits', genre:'mind', state:'dev',
-      acc:'#232946', mark:M+'espotendency.svg', family:'ESPOmindpeace',
-      blurb:'Track how you are actually doing, and get moving on the days that start badly.' },
-
-    { id:'esponest', name:'ESPOnest', tag:'Baby tracker', genre:'family', state:'dev',
-      acc:'#2E1F3A', mark:M+'esponest.svg', family:'ESPOfam',
-      blurb:'Sleep, feeds and growth — and a nap predictor that learns your actual baby.' },
 
     { id:'esporegulator', name:'ESPOregulator', tag:'Emotional skills', genre:'mind', state:'dev',
       acc:'#2B2350', mark:M+'esporegulator.svg', family:'ESPOmindpeace',
