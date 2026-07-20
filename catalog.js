@@ -105,21 +105,35 @@
       blurb:'Practical regulation tools for ADHD and autistic brains — built by someone who needs them.',
       price:'$9 per tool', priceNote:'One-time · free starter checklist included' },
 
+    { id:'aefunkmaster', name:'AEfunkmaster', tag:'Music studio & looper', genre:'arts', state:'live',
+      acc:'#e0a83a', img:'/ae-disc.png', url:'/apps/aefunkmaster/',
+      shots:['/shots/aefunkmaster.png','/shots/aefunkmaster-2.png','/shots/aefunkmaster-desktop.png'],
+      blurb:'A real studio in your browser, in plain English: a true drum kit, real-instrument keys, a bar-synced looper, your microphone, a mixing desk — and "Put it on wax" to make it sound like a record. Nothing uploaded, nothing collected.',
+      price:'Free right now', priceNote:'Pricing set: $4.99/mo · $29.99/yr — payments not switched on yet' },
+
     /* ─────────── ESPO REMAKES — live, in-shop apps (/apps/<name>/) ─────────── */
     { id:'espovocab', name:'ESPOvocab', tag:'Words worth keeping', genre:'learning', state:'live',
       acc:'#1E2A24', mark:M+'espovocab.svg', family:'ESPOgraduate', url:'/apps/espovocab/',
+      shots:['/shots/espovocab.png'],
       blurb:'A word a day that actually sticks — etymology, a journal, your own word list. No ads, works offline, export free.',
       price:'Free right now', priceNote:'Plus coming: $1.99/mo · $14.99/yr — not switched on yet' },
 
     { id:'espotendency', name:'ESPOtendency', tag:'Mood & habits', genre:'mind', state:'live',
       acc:'#232946', mark:M+'espotendency.svg', family:'ESPOmindpeace', url:'/apps/espotendency/',
+      shots:['/shots/espotendency.png'],
       blurb:'A 10-second daily check-in and one tiny win at a time. Everything stays on your device — no account, no cloud.',
       price:'Free right now', priceNote:'Plus coming: $1.99/mo · $19.99/yr — core stays free forever' },
 
     { id:'esponest', name:'ESPOnest', tag:'Baby tracker', genre:'family', state:'live',
       acc:'#2E1F3A', mark:M+'esponest.svg', family:'ESPOfam', url:'/apps/esponest/',
+      shots:['/shots/esponest.png'],
       blurb:'Sleep, feeds and diapers in one tap at 3am — nap-window estimate, growth log, free export, zero trackers.',
       price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — logging + export free forever' },
+
+    { id:'espohystory', name:'ESPOhystory', tag:'History, but hysterical', genre:'learning', state:'live',
+      acc:'#8a5a2b', mark:'/apps/espohystory/icon.svg', family:'ESPO Learning', url:'/apps/espohystory/',
+      blurb:'K–6 history told funny — 35 read-along stories that highlight each word as they read aloud.',
+      price:'Free right now', priceNote:'Paid plans not switched on yet' },
 
     /* ─────────── IN DEVELOPMENT — no price, no buy path, notify-me only ─────────── */
 
@@ -135,9 +149,10 @@
       acc:'#173428', mark:M+'esponatlparks.svg', family:'ESPOtravel',
       blurb:'Every park, offline — trails, hours and a plan for the day you lose signal.' },
 
-    { id:'esposign', name:'ESPOsign', tag:'Sign, fill, send', genre:'money', state:'dev',
-      acc:'#2A1A4A', mark:M+'esposign.svg', family:'ESPO Genius',
-      blurb:'Leases, school forms, waivers, contracts — signed and sent without a subscription to a giant.' },
+    { id:'esposign', name:'ESPOsign', tag:'Sign it yourself', genre:'money', state:'live',
+      acc:'#2A1A4A', mark:M+'esposign.svg', family:'ESPO Genius', url:'/apps/esposign/',
+      blurb:'Sign leases, school forms, waivers and contracts right in your browser — your document never leaves your device.',
+      price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr unlimited — vs DocuSign’s $120/yr for 5 documents' },
 
     { id:'espovineyard', name:'ESPOvineyard', tag:'Wine journal', genre:'savor', state:'dev',
       acc:'#2E0D19', mark:M+'espovineyard.svg', family:'ESPOsavor', age:'21+',
