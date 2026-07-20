@@ -1,0 +1,1046 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESPOhystory — history, but hysterical</title>
+<meta name="description" content="Read-along history for K–6. True stories told funny, read aloud in a kind teacher voice while the words light up. No ads, no accounts, everything stays on your device. By Accelerated Experiences, LLC.">
+<meta name="theme-color" content="#FBF3E4">
+<link rel="manifest" href="/apps/espohystory/manifest.webmanifest">
+<link rel="icon" href="/apps/espohystory/icon.png">
+<link rel="apple-touch-icon" href="/apps/espohystory/icon.png">
+<style>
+:root{
+  --bg:#FBF3E4; --bg2:#F3E7CF; --card:#FFFDF6; --ink:#3A2E22; --ink2:#8A7760;
+  --accent:#C9603B; --navy:#2C4763; --gold:#E0A63C; --line:#E5D5B8; --ok:#5E8C61;
+  --hl:#FFE08A;
+  --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
+  padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+a{color:var(--accent)}
+header{padding:calc(14px + env(safe-area-inset-top)) 18px 8px;display:flex;align-items:center;gap:10px;max-width:720px;margin:0 auto}
+header img{width:38px;height:38px;border-radius:10px}
+header .t{font-family:var(--serif);font-size:20px}
+header .t b{color:var(--accent);font-weight:700}
+header .tag{margin-left:auto;font-size:12px;color:var(--ink2);font-style:italic}
+main{max-width:720px;margin:0 auto;padding:6px 16px 30px}
+.view{display:none}.view.on{display:block;animation:up .25s ease}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* shelf */
+.intro{font-size:14.5px;color:var(--ink2);line-height:1.55;margin:8px 2px 14px}
+.gsec{margin-bottom:20px}
+.gh{font-family:var(--serif);font-size:20px;margin:0 2px 10px;color:var(--navy)}
+.gh small{font-size:12px;color:var(--ink2);font-family:var(--sans);font-weight:400;margin-left:8px}
+.grow{display:grid;grid-auto-flow:column;grid-auto-columns:76%;gap:12px;overflow-x:auto;
+  scroll-snap-type:x mandatory;padding:2px 2px 8px;-webkit-overflow-scrolling:touch}
+.grow>*{scroll-snap-align:start}
+@media(min-width:560px){.grow{grid-auto-columns:300px}}
+.gcard{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;
+  cursor:pointer;text-align:left;display:block;width:100%;transition:transform .12s}
+.gcard:active{transform:scale(.98)}
+.gcard .art{display:block;width:100%;height:auto}
+.gcard .meta{padding:12px 14px 14px;position:relative}
+.gcard .gr{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:#fff;border-radius:999px;padding:3px 10px;margin-bottom:6px}
+.gcard h2{font-family:var(--serif);font-size:19px;line-height:1.2}
+.gcard p{font-size:13.5px;color:var(--ink2);margin-top:4px;line-height:1.45}
+.gcard .star{position:absolute;top:10px;right:12px;font-size:20px}
+
+/* story */
+.backrow{display:flex;align-items:center;gap:8px;margin:6px 0 10px}
+.backrow button{background:none;border:0;color:var(--accent);font-size:15px;cursor:pointer;padding:6px 4px;font-weight:600}
+.hero{border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.hero svg{display:block;width:100%;height:auto}
+.stitle{font-family:var(--serif);font-size:clamp(26px,6vw,36px);line-height:1.15;margin:14px 0 2px}
+.ssub{font-size:14.5px;color:var(--ink2);font-style:italic;margin-bottom:12px}
+.controls{position:sticky;top:0;z-index:5;background:rgba(251,243,228,.96);backdrop-filter:blur(8px);
+  border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.bplay{background:var(--accent);color:#fff;border:0;border-radius:12px;font-size:16px;font-weight:700;
+  padding:12px 20px;cursor:pointer;min-width:118px}
+.bplay.playing{background:var(--navy)}
+.bsm{background:var(--bg2);color:var(--ink);border:1px solid var(--line);border-radius:10px;
+  font-size:13px;padding:9px 12px;cursor:pointer}
+select{background:var(--bg2);border:1px solid var(--line);border-radius:10px;color:var(--ink);
+  font-size:13px;padding:8px;max-width:150px}
+.stext{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 20px 8px}
+.stext p{font-family:var(--serif);font-size:19px;line-height:1.8;margin-bottom:18px}
+body.easy .stext p{letter-spacing:.04em;word-spacing:.18em;line-height:2.05;font-size:20px}
+.w{cursor:pointer;border-radius:6px;padding:1px 2px;margin:-1px -2px;transition:background .12s}
+.w.hl{background:var(--hl);box-shadow:0 0 0 2px var(--hl)}
+.w:hover{background:var(--bg2)}
+.facts{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-top:16px}
+.facts h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.facts li{font-size:14.5px;line-height:1.6;margin:0 0 8px 18px}
+.done{display:none;text-align:center;padding:22px 10px 8px}
+.done.on{display:block}
+.done .big{font-size:44px}
+.done p{font-family:var(--serif);font-size:18px;margin-top:6px}
+.hint{font-size:12.5px;color:var(--ink2);margin:12px 2px;line-height:1.5;text-align:center}
+footer{max-width:720px;margin:26px auto 0;padding:0 18px calc(8px + env(safe-area-inset-bottom));
+  font-size:12px;color:var(--ink2);line-height:1.7;text-align:center}
+.toast{position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--navy);color:#fff;font-size:14px;font-weight:600;border-radius:999px;
+  padding:9px 18px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:50}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<header>
+  <img src="/apps/espohystory/icon.png" alt="">
+  <div class="t">ESPO<b>hystory</b></div>
+  <div class="tag">history, but hysterical</div>
+</header>
+
+<main>
+  <section class="view on" id="v-shelf">
+    <p class="intro">True stories from history, told the funny way — and read out loud in a kind teacher voice while the words light up so you can read along. Pick your grade. Tap any word to hear it again.</p>
+    <div class="shelf" id="shelf"></div>
+    <p class="hint">Everything stays on this device. No accounts, no ads, no wrong answers — just stories.</p>
+  </section>
+
+  <section class="view" id="v-story">
+    <div class="backrow"><button id="bBack">← All stories</button></div>
+    <div class="hero" id="hero"></div>
+    <h1 class="stitle" id="sTitle"></h1>
+    <div class="ssub" id="sSub"></div>
+    <div class="controls">
+      <button class="bplay" id="bPlay">▶ Read to me</button>
+      <button class="bsm" id="bRestart">↺ Start over</button>
+      <select id="selRate" title="Reading speed">
+        <option value="0.85">🐢 Cozy</option>
+        <option value="0.95" selected>📖 Storytime</option>
+        <option value="1.1">🐇 Zippy</option>
+      </select>
+      <select id="selVoice" title="Voice"></select>
+      <button class="bsm" id="bEasy" title="Bigger spaces between letters and words">Easy-read: off</button>
+    </div>
+    <div class="stext" id="sText"></div>
+    <div class="facts"><h3>The true bits (really!)</h3><ul id="sFacts"></ul></div>
+    <div class="facts"><h3>Talk about it</h3><p id="sTalk" style="font-size:14.5px;line-height:1.6"></p></div>
+    <div class="done" id="sDone"><div class="big">⭐</div><p id="doneMsg"></p></div>
+  </section>
+</main>
+
+<footer>
+  An <b>Accelerated Experiences LLC</b> production ·
+  <a href="/products.html">Back to the AE App Shop</a><br>
+  Stories are told for laughs, but every fact in "The true bits" is real.
+</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ================= STORIES ================= */
+var STORIES=[
+{
+id:"thanksgiving", grade:"K", gname:"Kindergarten", accent:"#C9603B",
+title:"The Very First Thanksgiving",
+sub:"A feast with no forks. None. Zero forks.",
+paras:[
+"A long, long time ago, a big boat called the Mayflower sailed across the ocean. It was full of people called Pilgrims. It was also very, very smelly. Pee-yew!",
+"The Pilgrims landed in a new place. It was cold. Their tummies rumbled. Rumble, rumble, rumble! They did not know how to grow food here.",
+"But guess who did? The Wampanoag people! They had lived there for a very long time, and they were very good at growing corn. A man named Squanto showed the Pilgrims how. He even taught them to plant a fish with the corn seeds. A fish! In the dirt! And it worked!",
+"When the corn grew big and tall, everyone had a giant feast. It lasted three whole days. Three days of eating! They had deer and duck and fish and corn.",
+"But here is the silly part. They had no forks. No forks at all! Everyone ate with spoons and knives and their fingers. Imagine eating a big drumstick with just your hands. Messy, messy, messy!",
+"And that big, happy, messy, three-day dinner became the very first Thanksgiving. The end. Now go wash your hands. Please."
+],
+facts:[
+"The first Thanksgiving really did last three days, in the year 1621.",
+"The Wampanoag people brought five deer to the feast — about ninety Wampanoag guests came with their leader, Massasoit.",
+"Forks were not used there — people really did eat with spoons, knives, and fingers."
+],
+talk:"If you cooked a giant feast for brand-new friends, what would you make?"},
+{
+id:"cherrytree", grade:"1", gname:"1st Grade", accent:"#B04A3C",
+title:"George Washington and the Cherry Tree",
+sub:"A true story about a story that is not true.",
+paras:[
+"You may have heard this story. Little George Washington got a shiny new hatchet. He chopped down his father's cherry tree. Chop, chop, CHOP! Oops.",
+"His father saw the fallen tree and asked, in a big rumbly dad voice, who did this? And little George said, I cannot tell a lie. I did it with my hatchet.",
+"And his father hugged him, because telling the truth mattered more than the tree. What a lovely story. There is just one tiny problem.",
+"It never happened. Not even a little bit!",
+"A man named Parson Weems wrote a book about George Washington after he died. He wanted the book to sell lots and lots of copies. So he added a made-up story about... never telling a lie. Yes. He made up a story about not making up stories. Oh, Parson Weems!",
+"Here is what is true. George Washington was a real kid in Virginia who grew up to lead the American army and become the very first president. He was so honest and so brave that people wanted to tell stories about him forever.",
+"So remember: George did not really chop that tree. But you should still tell the truth. Even if you did chop something. Especially if you chopped something."
+],
+facts:[
+"A writer named Parson Weems made up the cherry tree story in 1806 to help sell his book.",
+"George Washington really was the first president of the United States.",
+"His famous teeth were not wooden — his false teeth were made of ivory and metal. Still not comfy."
+],
+talk:"Why do you think somebody made up a story about telling the truth?"},
+{
+id:"wright", grade:"2", gname:"2nd Grade", accent:"#5E7A4E",
+title:"The Bicycle Brothers Who Built a Flying Machine",
+sub:"First flight: shorter than a TV commercial.",
+paras:[
+"Wilbur and Orville Wright were two brothers from Ohio who fixed bicycles for a living. They had a bike shop, grease on their hands, and one enormous idea: people should fly.",
+"Everyone said it was impossible. Very smart scientists with very fancy mustaches said machines could never fly. The brothers looked at their bicycles, looked at the sky, and said, hmm. We think they can.",
+"They built gliders and crashed them. Built better ones and crashed those too. They even built a wind tunnel — a box with a fan — to test tiny wings. They tested over a hundred little wings. That is a lot of homework for two bicycle guys.",
+"Finally, on a freezing cold morning at a sandy, windy beach called Kitty Hawk, their flying machine was ready. They flipped a coin to see who would go first. Flip! Wilbur won the toss earlier that week — and stalled the plane into the sand. Oops. So on December 17, 1903, it was Orville's turn.",
+"The engine buzzed like a giant angry bee. The machine rolled, wobbled... and lifted into the air. Orville flew for twelve seconds. Twelve! That is shorter than brushing your teeth. He traveled about 120 feet — you could throw a ball farther.",
+"But it did not matter. A human being had FLOWN. The brothers took turns all morning, and by the last flight Wilbur stayed up for 59 whole seconds. Then a gust of wind tumbled the plane across the sand and wrecked it. It never flew again.",
+"It did not need to. The bicycle brothers had already changed the world — twelve seconds at a time."
+],
+facts:[
+"The first flight on December 17, 1903 lasted 12 seconds and covered about 120 feet.",
+"Only five people came to watch. The best flight that day went 852 feet in 59 seconds.",
+"The Wright brothers really did run a bicycle shop in Dayton, Ohio, and built their own wind tunnel."
+],
+talk:"The brothers failed over and over before those 12 seconds. What's something you had to try many times before you got it?"},
+{
+id:"revere", grade:"3", gname:"3rd Grade", accent:"#2C4763",
+title:"Paul Revere's Very Loud Quiet Ride",
+sub:"Spoiler: he never said the famous thing.",
+paras:[
+"On the night of April 18, 1775, a silversmith named Paul Revere got the biggest message of his life. It came by lantern. There were no phones, so lanterns had to do. One lantern in the church tower meant the British army was marching by land. Two lanterns meant they were rowing across the water. That night, the Old North Church showed two lanterns.",
+"Paul had one job. Ride fast, and warn the American leaders. Soldiers were coming to arrest Samuel Adams and John Hancock. They wanted to grab the colonists' supplies, too. So Paul rowed across the river in the dark. He slipped right past a giant British warship. Then he borrowed a horse and took off.",
+"You have probably heard that he galloped along yelling THE BRITISH ARE COMING! Here is the funny part. He almost certainly never said it. Why? At the time, the colonists still WERE British. It would be like running through your school yelling THE STUDENTS ARE COMING! Everyone would just stare at you.",
+"What he probably said was, the Regulars are coming out. Regulars meant the army. And remember, this was a secret mission at midnight. British patrols were hiding everywhere. You do not scream during a secret mission. You knock on doors and whisper-shout, like a very stressed librarian.",
+"Paul woke up house after house. Other riders spread the news, like dominoes falling across Massachusetts. And then... Paul got caught. Yes! Really! A British patrol stopped him at gunpoint before he reached Concord. But a young doctor named Samuel Prescott had joined the ride that night. Prescott jumped his horse over a fence and carried the warning the rest of the way.",
+"The soldiers let Paul go. But they kept the borrowed horse. That is just plain rude. Paul walked back to town in the dark, on foot. He still made it in time to help Hancock escape.",
+"By sunrise, the militia stood ready at Lexington. The American Revolution was about to begin. All because of two lanterns, one borrowed horse, and a man who knew when NOT to yell."
+],
+facts:[
+"Paul Revere really was captured by a British patrol that night — Dr. Samuel Prescott carried the warning to Concord.",
+"He likely said 'the Regulars are coming out,' not 'the British are coming' — the colonists still thought of themselves as British.",
+"Revere was a silversmith who also made false teeth. The lantern signal really was 'one if by land, two if by sea.'"
+],
+talk:"Paul needed lots of helpers to spread the news. Who would be on your midnight-message team, and why?"},
+{
+id:"lewisclark", grade:"4", gname:"4th Grade", accent:"#7A5C36",
+title:"Lewis & Clark: The Worst-Planned Best Road Trip Ever",
+sub:"8,000 miles. One dog. Zero maps that were right.",
+paras:[
+"In 1804, President Thomas Jefferson made a giant deal with France called the Louisiana Purchase. France sold its claim to a huge stretch of land west of the Mississippi River. Nobody asked the many Native nations who already lived all across it — it was their home first. Jefferson had another problem, too. No one in his government knew what the land even looked like. Mountains? Rivers? Woolly mammoths? He honestly wondered about the mammoths.",
+"So he sent his secretary, Meriwether Lewis, and Lewis's friend William Clark to explore. They packed boats, rifles, ink, and medicine. They also packed 193 pounds of something called portable soup. It was a gluey, brown soup-paste. The men hated it so much they would rather eat candles. That is not a joke. Later, starving in the mountains, they really did eat the candles.",
+"The crew included a man named York, who was enslaved by Clark. York hunted, paddled, and helped save the crew the whole way across the country. He did everything the other men did — and was paid nothing for it, which was deeply unfair, and worth remembering. Many Native people the crew met were fascinated by York, and he became one of the most talked-about members of the whole expedition.",
+"Lewis also brought his dog, a huge Newfoundland named Seaman. Seaman was a very good boy. He once chased a swimming beaver, and the beaver bit him. Seaman recovered. The beaver, we assume, told that story at beaver parties forever.",
+"Another hero joined that winter: Sacagawea, a teenage Shoshone woman. She came with her newborn baby strapped to her back. Think about that. The men called themselves tough explorers. Sacagawea did the same trip while babysitting.",
+"And she was better at it than everyone. One day a boat tipped over in a windstorm. The men panicked. Sacagawea — calm as a Tuesday — leaned out and scooped the journals, medicine, and instruments right out of the river. Lewis and Clark named a river after her. It was the least they could do, honestly.",
+"The crew saw things no American map had ever shown. Endless prairies. Grizzly bears, which they tried to fight and instantly regretted. Herds of buffalo. And weird little barking squirrels we now call prairie dogs. They caught one by pouring five barrels of water down its burrow. Then they put it in a box and MAILED IT to President Jefferson. Alive. It arrived alive. The president opened his mail and found a living prairie dog. He was delighted.",
+"In November 1805, after nearly starving in the mountains, they reached the Pacific Ocean. Clark wrote in his journal: Ocian in view! O! the joy! He spelled ocean wrong. He spelled almost everything wrong. He spelled the word Sioux at least a dozen different ways. Explorer: excellent. Speller: catastrophic.",
+"Two years and about 8,000 miles later, they came home. Everyone thought they were dead. Instead, they brought back maps, journals, and plant samples — and proof that the West was bigger, wilder, and stranger than anyone had dreamed. No mammoths, though. Jefferson was a little disappointed about the mammoths."
+],
+facts:[
+"Sacagawea really did save the expedition's journals and instruments when a boat capsized in May 1805 — with her baby along.",
+"They really mailed President Jefferson a live prairie dog, and it survived the trip.",
+"When the crew voted on where to build their winter fort in 1805, York and Sacagawea both got a vote — long before Black Americans or women could vote in the United States.",
+"Clark's journals are full of glorious misspellings, including 'Ocian in view! O! the joy!' The trip covered roughly 8,000 miles in about 28 months."
+],
+talk:"York did the same hard work as everyone but wasn't paid or free. How does that change how you see this adventure?"},
+{
+id:"teaparty", grade:"5", gname:"5th Grade", accent:"#3E5C50",
+title:"The Boston Tea Party: Worst. Party. Ever.",
+sub:"No cake, no music, and all the drinks went in the harbor.",
+paras:[
+"Let's be clear about one thing. The Boston Tea Party had no cake, no balloons, no music, and no dancing. It was three hours of men furiously throwing tea into the ocean in December. If you got invited to a party like that today, you would leave a very bad review.",
+"Here is how it happened. Britain kept taxing the American colonists. But the colonists had no vote in Britain's government. No taxation without representation! they shouted, on basically every street corner in Boston. Parliament finally canceled most of the taxes. But it kept ONE — the tax on tea — mostly just to prove it could. It was the 1700s version of a sibling holding your toy over your head and saying, I'm not touching it.",
+"Then Britain handed one company, the East India Company, a special deal. Its taxed tea would now be cheaper than everyone else's tea. The colonists spotted the trap instantly. Buy the cheap tea, and you accept the tax forever. Boston's answer: absolutely not.",
+"On the night of December 16, 1773, thousands of angry colonists packed a meeting at the Old South Meeting House. Afterward, somewhere between 30 and 130 men marched to Griffin's Wharf. Many wore disguises — paint, blankets — that fooled exactly no one. They boarded three ships and got to work.",
+"They hauled up 342 giant chests of tea. That is over 92,000 pounds of it, worth well over a million dollars in today's money. They smashed the chests open with hatchets. Then they dumped every last leaf into Boston Harbor. The water turned brown. For days afterward, tea kept washing up on shore like the world's saddest seaweed.",
+"Now here is my favorite part. These furious, disguised rebels were also unbelievably polite. They destroyed ONLY the tea. They touched nothing else on the ships. When they finished, they swept the decks clean. One man broke a padlock that belonged to a ship's captain. So the group replaced it. They pulled off one of the most famous acts of rebellion in world history — then tidied up like guests at grandma's house.",
+"One colonist, George Hewes, said a few sneaky men tried stuffing tea into their own pockets. They were caught. Their tea was confiscated and dumped too. Rules are rules. Even at fake parties.",
+"Britain was NOT amused. Parliament slammed Boston with punishments so harsh the colonists called them the Intolerable Acts. But the punishments backfired. Instead of scaring the colonies apart, they glued the colonies together. America rolled one giant step closer to revolution. All because of the world's worst party. Bring cake next time, gentlemen."
+],
+facts:[
+"On December 16, 1773, colonists dumped 342 chests — about 92,000 pounds — of tea into Boston Harbor. It took roughly three hours.",
+"They really did sweep the decks afterward and replace a broken padlock; only the tea was destroyed.",
+"Britain answered with the Coercive Acts of 1774 — the colonists called them the Intolerable Acts — which pushed the colonies toward revolution."
+],
+talk:"The colonists were angry about rules they had no say in. What makes a protest fair — and how do you protest without hurting people?"},
+{
+id:"caesar", grade:"6", gname:"6th Grade", accent:"#6B4E7A",
+title:"Julius Caesar: The Man Who Argued With His Own Kidnappers",
+sub:"Confidence level: dangerously high.",
+paras:[
+"Before Julius Caesar ran Rome, before the fancy laurel wreath and the month of July being named after him, he was a 25-year-old nobleman sailing the Mediterranean — where he was promptly kidnapped by pirates. This is where most stories get scary. This is where Caesar's story gets ridiculous.",
+"The pirates demanded a ransom of twenty talents of silver — a fortune. Caesar was offended. Not by the kidnapping. By the price. He told them he was worth at least fifty, and made them raise their own ransom demand. The pirates, presumably exchanging very confused looks, agreed. He then spent 38 days lounging around their island, joining their exercises, reading them his poetry, and telling them — cheerfully, repeatedly — that once he was free, he would come back and have them all executed. The pirates thought this was hilarious. It was not a joke. He came back with ships, caught every last one of them, and kept his promise. Lesson one about Caesar: he does not bluff.",
+"That confidence carried him up the ladder of Roman politics and across a decade of conquering Gaul — modern France — where his army fought roughly a third of Europe and his political enemies back home grew increasingly nervous. Eventually the Senate ordered him to give up his army and come home alone. Caesar thought about it. Briefly.",
+"In 49 BC he stood at a small stream called the Rubicon — the legal line no general was allowed to cross with an army. Cross it, and he was a criminal starting a civil war. Turn back, and his career was over. He said alea iacta est — the die is cast — and marched across. To this day, crossing the Rubicon means passing the point of no return. It is history's most famous 'well, here goes nothing.'",
+"He won the civil war, naturally, then celebrated by fixing things at a truly alarming pace. The Roman calendar had drifted so badly that harvest festivals were landing in the wrong season, so Caesar replaced it with the 365-day Julian calendar — plus leap years. To reset the drift, the year 46 BC was stretched to 445 days long, and Romans called it the Year of Confusion, possibly the most honest name any government has ever given anything.",
+"After one particularly speedy victory, he summarized the entire military campaign in three words: veni, vidi, vici. I came, I saw, I conquered. Generals had written thousand-page war reports. Caesar delivered a slogan. Unbearable? Yes. Effective? Extremely.",
+"But Rome was a republic, deeply proud of having no kings — and Caesar was starting to look suspiciously king-shaped. Statues. A golden chair. Dictator for life. His friends in the Senate decided the republic could only be saved one way. On March 15, 44 BC — the Ides of March — dozens of senators surrounded him and assassinated him, including his friend Brutus. A fortune-teller had literally warned him: beware the Ides of March. Caesar had joked, on his way in, that the Ides had come and nothing had happened. The fortune-teller replied: aye, Caesar, but not gone.",
+"Here's the twist worthy of a season finale: killing Caesar did not save the republic. It shattered it. His adopted heir Octavian rose from the chaos to become Augustus, Rome's first true emperor — the exact thing the assassins feared. And Caesar got a month of the calendar, the one you probably associate with fireworks and swimming pools. July. His. Forever. Confidence level: still dangerously high, two thousand years later."
+],
+facts:[
+"The pirate story is real, told by the ancient historian Plutarch — Caesar really did demand a higher ransom and later had the pirates executed.",
+"The Julian calendar of 46 BC gave us the 365-day year with leap years; that reset year really lasted 445 days.",
+"Caesar was assassinated on March 15, 44 BC. July is named for him, and Augustus — his heir — became Rome's first emperor."
+],
+talk:"People loved and feared Caesar at the same time. When does confidence help a leader — and when does it become dangerous?"},
+{
+id:"appleseed", grade:"K", gname:"Kindergarten", accent:"#8FAE4E",
+title:"Johnny Appleseed Was a Real Guy!",
+sub:"Barefoot. Full of apple seeds. One hundred percent real.",
+paras:[
+"Did you know Johnny Appleseed was a real person? His real name was John Chapman. And he really, truly loved apples.",
+"John walked and walked and walked. He walked through forests. He walked through mud. He walked with no shoes on! His feet must have been so, so tough. Ouch? Not for John!",
+"Everywhere he went, he planted apple seeds. Baby apple trees grew behind him. He gave trees to families. He sold trees to farmers. Apples, apples, everywhere!",
+"Some people say he wore his cooking pot on his head like a hat. Is that true? Nobody knows! But it is very funny to think about. Bonk! Hat? Pot? Both!",
+"John was kind to animals. He was kind to people too. Families loved when he came to visit. He told stories by the fire. Then he walked off to plant more trees.",
+"So next time you crunch a big juicy apple, say thank you to John. The real, barefoot, seed-planting, maybe-pot-wearing Johnny Appleseed. Crunch!"
+],
+facts:[
+"Johnny Appleseed was a real man named John Chapman, born in Massachusetts in 1774.",
+"He really planted apple tree nurseries across Ohio and Indiana, and often walked barefoot.",
+"The cooking-pot hat might be just a story — no one knows for sure!"
+],
+talk:"If you could plant seeds that grew into anything at all, what would you plant everywhere?"},
+{
+id:"liberty", grade:"K", gname:"Kindergarten", accent:"#4E8C8C",
+title:"The Giant Present From France",
+sub:"She came across the ocean... in boxes!",
+paras:[
+"A long time ago, the country of France gave America a present. Was it a toy? No. Was it a puppy? No. It was a giant green lady. It was the Statue of Liberty!",
+"But here is the silly part. She was too big for the boat! Way, way too big. So the builders took her apart like a giant puzzle.",
+"They packed her into more than two hundred big boxes. Her nose in a box! Her toes in a box! Her giant torch — in a box! Then the boxes sailed across the whole ocean.",
+"In America, workers put her back together piece by piece. It was like the biggest building-block set in the world.",
+"And guess what? Before she was even finished, her arm and torch went on a trip all by themselves! People could visit just the arm. Just one big arm, standing in a park! Hello, arm!",
+"One more secret. She was not always green. She used to be shiny brown, like a penny. The rain and air slowly turned her green. And now she stands in the harbor, holding her torch up high, saying welcome, welcome, welcome!"
+],
+facts:[
+"The Statue of Liberty was a gift from the people of France, and she arrived in 1885 packed in big crates.",
+"Her arm and torch really were shown by themselves in Philadelphia and then in a New York park before she was finished.",
+"She is made of copper — she started penny-brown, and the weather slowly turned her green."
+],
+talk:"If you could build a giant statue for your town, what would it look like?"},
+{
+id:"betsyross", grade:"K", gname:"Kindergarten", accent:"#B04A5C",
+title:"Betsy Ross and the Flag Mystery",
+sub:"A real seamstress. A maybe-story. A whodunit!",
+paras:[
+"Betsy Ross was a real lady. She lived long ago in the city of Philadelphia. She sewed things for a living. Chairs! Curtains! Flags! She was very good with a needle and thread.",
+"There is a famous story about her. It says George Washington came to her shop. It says he asked her to sew the very first American flag. Thirteen stars, in a circle!",
+"Did it really happen? Here is the mystery... nobody knows for sure!",
+"The story came from Betsy's grandson. He told it almost one hundred years later. That is a very long time to wait. Hmm!",
+"But we DO know Betsy was real. We DO know she sewed flags for ships. She was one of the best flag-makers in town. So maybe she made the first one. Maybe her friend did. It is a real history mystery!",
+"So look at the flag. See the stars and stripes? Somebody sewed the very first one... but WHO? Dun dun DUN!"
+],
+facts:[
+"Betsy Ross was a real seamstress in Philadelphia, and she really did sew flags for Pennsylvania's ships.",
+"The famous first-flag story was told by her grandson in 1870 — almost a hundred years after it supposedly happened.",
+"Historians still have not found proof of who sewed the very first American flag. It is a real mystery!"
+],
+talk:"Why should we ask 'how do we know?' when we hear an amazing story?"},
+{
+id:"carver", grade:"K", gname:"Kindergarten", accent:"#A67B3B",
+title:"The Plant Scientist Who Loved Peanuts",
+sub:"Three hundred peanut ideas. Three hundred!",
+paras:[
+"George Washington Carver loved plants. He loved them when he was little. He loved them when he was big. People called him the Plant Doctor!",
+"George grew up to be a real scientist. He worked at a school called Tuskegee. He taught farmers how to keep their dirt happy. Yes, dirt can get tired! Plants eat from the dirt. So the dirt needs care too.",
+"George told farmers: plant peanuts! Peanuts make the dirt strong again. So farmers planted peanuts. Lots and lots and LOTS of peanuts. Maybe too many peanuts...",
+"Soon everyone asked: what do we DO with all these peanuts? George went to his lab. He thought. He mixed. He tested. And he found more than three hundred peanut ideas!",
+"Peanut soap! Peanut medicine! Peanut paper! Peanut ink! George found hundreds of ways to use one little nut.",
+"Here is the funny part. Lots of people think he made the first peanut butter. Nope! Peanut butter was already here. George was busy making three hundred OTHER peanut things. Thank you, Plant Doctor!"
+],
+facts:[
+"George Washington Carver was a real scientist and teacher at Tuskegee Institute in Alabama.",
+"He really did find hundreds of new uses for peanuts, and taught farmers how to keep their soil healthy.",
+"He did NOT invent peanut butter — that is a myth! It was already invented."
+],
+talk:"If you had a laboratory, what would you try to turn a peanut into?"},
+{
+id:"lincolnhat", grade:"1", gname:"1st Grade", accent:"#3A3A4E",
+title:"Abraham Lincoln's Amazing Letter-Holding Hat",
+sub:"Part hat. Part mailbox. All Lincoln.",
+paras:[
+"Abraham Lincoln was very, very tall. He was six feet four inches tall. Then he put on his big black hat — and he was even taller! People could see him coming from far away, like a friendly lighthouse.",
+"But Lincoln's tall hat had a secret. It was not just a hat. It was also his briefcase!",
+"Lincoln stuffed letters inside his hat. He stuffed notes in there. He stuffed important papers in there. When he needed something, he took off his hat and dug around. His head was basically a mailbox with ears.",
+"When Lincoln was a boy, his family was very poor. Books were hard to find. So Abe walked for miles just to borrow one book. He read by the light of the fireplace at night. He loved reading that much.",
+"He grew up to become the sixteenth president of the United States. He worked to end slavery, which made him one of our most important presidents ever. That is a big job for a boy who had to borrow books.",
+"And even in the White House, Lincoln stayed a little bit silly. His sons kept pet goats. The goats pulled them through the halls in a cart! A president, a tall hat full of mail, and goats in the hallway. History is wonderful."
+],
+facts:[
+"Lincoln really did keep letters and papers inside his stovepipe hat.",
+"He was six feet four inches tall — the tallest president America had ever had.",
+"His sons really kept pet goats at the White House, named Nanny and Nanko."
+],
+talk:"Lincoln walked miles to borrow one book. What book would YOU walk that far for?"},
+{
+id:"rubybridges", grade:"1", gname:"1st Grade", accent:"#C77B3B",
+title:"Ruby Bridges, the Bravest First Grader Ever",
+sub:"She was six. She changed a whole school.",
+paras:[
+"Ruby Bridges was six years old. She liked jumping rope. She liked her family. She was a regular first grader — who did something no one had ever done.",
+"A long time ago, some schools had a very unfair rule. Black children and white children were not allowed to learn together. Ruby's city was told to fix that rule. And Ruby was chosen to be first.",
+"On her first day at her new school, Ruby did not walk in alone. Four tall officers walked with her to keep her safe. Some grown-ups outside were angry that she was there. Ruby walked right past them, holding her head up, just like her mama told her.",
+"Inside, the other families kept their kids home. So Ruby's whole class was... just Ruby! One teacher, one student. Her teacher was named Mrs. Henry, and she was kind. She taught Ruby everything, every day, all year.",
+"And here is the amazing part. Ruby never missed a single day of school. Not one! Angry crowds outside, empty desks inside — and Ruby just kept showing up and learning.",
+"Little by little, things changed. More children came back. Schools opened up for everyone. And it started with one brave six-year-old and her backpack. Being brave doesn't mean being big."
+],
+facts:[
+"In 1960, six-year-old Ruby Bridges became the first Black child at her school in New Orleans.",
+"Federal marshals really did walk her to school to keep her safe, and she never missed a day all year.",
+"Her teacher, Mrs. Barbara Henry, taught Ruby in a class of one for the whole school year."
+],
+talk:"Ruby was brave by just showing up every day. When have you kept going even when something felt hard?"},
+{
+id:"franklinkite", grade:"1", gname:"1st Grade", accent:"#5C7A9E",
+title:"Ben Franklin and the Zappy Kite",
+sub:"Do NOT try this. He barely should have.",
+paras:[
+"Ben Franklin loved questions. What is fog? Why do leaves fall? And his biggest question of all: what IS lightning?",
+"Ben had a guess. He thought lightning might be electricity — the same zappy stuff that makes a little spark when you rub your socks on the rug. But how could he test it?",
+"With a kite! On a stormy day, Ben and his son flew a kite up toward the dark clouds. On the string, he tied a metal key.",
+"The storm clouds rumbled. The string got fizzy and tingly. Ben touched his knuckle near the key and — ZAP! — a tiny spark jumped out! Lightning really was electricity. Ben was right!",
+"Now listen closely, because this is important: NEVER try this. Never, ever. Lightning is very dangerous. Ben was very lucky. Scientists today say: good question, Ben, terrible plan.",
+"But Ben used his discovery to keep people safe. He invented the lightning rod, a metal stick for rooftops that catches lightning and sends it safely into the ground. And that was Ben — always asking, always tinkering. He even invented swim flippers when he was just a kid!"
+],
+facts:[
+"Ben Franklin really did fly a kite with a key in a storm in 1752 to study electricity.",
+"He invented the lightning rod, which still protects buildings today.",
+"As a boy, he made himself wooden swim paddles — one of his very first inventions."
+],
+talk:"Ben asked a million questions. What's the biggest question YOU want answered?"},
+{
+id:"rosaparks", grade:"1", gname:"1st Grade", accent:"#7A5C8C",
+title:"Rosa Parks Stays in Her Seat",
+sub:"One quiet 'no' that changed everything.",
+paras:[
+"Rosa Parks was a seamstress. She sewed clothes all day. She was quiet and polite. And she was very, very tired — but not the sleepy kind of tired.",
+"Back then, the city buses had an unfair rule. Black riders had to give up their seats for white riders. Rosa had followed that unfair rule for years. She was tired of it in her heart.",
+"One evening, after work, the bus driver told Rosa to give up her seat. Rosa thought about it. And then she said, quietly and politely... no.",
+"Just no. She did not yell. She did not fight. She just stayed in her seat. And that little word turned out to be one of the loudest words in American history.",
+"Rosa got in trouble that day. But her friends and neighbors had an idea. If the buses are unfair, let's not ride them at all! Thousands of people walked instead. They walked to work. They walked to school. They walked and walked — for more than a whole year!",
+"The buses got empty. The city finally changed the unfair rule. All riders could sit wherever they liked. People call Rosa the mother of the civil rights movement. And it started with one quiet, brave no."
+],
+facts:[
+"On December 1, 1955, Rosa Parks refused to give up her bus seat in Montgomery, Alabama.",
+"People stayed off the buses for 381 days — more than a year — until the rule was changed.",
+"Rosa Parks is often called the mother of the civil rights movement."
+],
+talk:"Rosa's 'no' was quiet but powerful. Why can a calm voice sometimes be stronger than a loud one?"},
+{
+id:"edison", grade:"2", gname:"2nd Grade", accent:"#C9A03B",
+title:"Thomas Edison and the Thousand Tries",
+sub:"He didn't fail. He found what didn't work. A lot.",
+paras:[
+"When Thomas Edison was a boy, he sold candy and newspapers on a train. He also set up a tiny science lab in the baggage car. Chemicals! On a moving train! One day an experiment caught fire. That was the end of Tom's train lab. Fair enough, honestly.",
+"But Tom never stopped experimenting. When he grew up, he built a whole invention workshop in Menlo Park, New Jersey. People called him the Wizard of Menlo Park. His team invented so many things. Edison ended up with more than a thousand patents.",
+"His most famous fight was with the light bulb. Other inventors had made bulbs before. But those bulbs burned out fast or cost too much. Edison wanted a bulb for everybody.",
+"The hard part was the tiny thread inside the bulb that glows. Edison's team tested material after material. Metal wires. Cotton. Cardboard. Even hairs from a friend's beard! Try, fail. Try, fail. Try, fail — hundreds and hundreds of times.",
+"Did Edison give up? Nope. He said something like: I have not failed. I just found thousands of ways that do not work. That might be the most second-grade-teacher thing an inventor has ever said. He was right, though.",
+"Finally, a roasted piece of bamboo fiber glowed for hour after hour after hour. That was it! Soon, electric light spread across whole cities. So the next time you flip a light switch, remember: it took a thousand flops to make that one little click."
+],
+facts:[
+"Young Edison really did run experiments in a train baggage car — until a small fire ended that.",
+"His team tested thousands of materials before finding a filament that lasted, including bamboo.",
+"Edison held more than 1,000 patents, and his first famous machine — the phonograph — recorded him saying 'Mary had a little lamb.'"
+],
+talk:"Edison called failing 'finding what doesn't work.' How does that change how you feel about messing up?"},
+{
+id:"bell", grade:"2", gname:"2nd Grade", accent:"#4E7A8C",
+title:"The First Phone Call Was Basically 'HELP!'",
+sub:"Alexander Graham Bell needed his assistant. Immediately.",
+paras:[
+"Alexander Graham Bell spent his whole life thinking about sound. His mother was deaf, and later his wife was too. Bell taught students who were deaf, and he wondered about voices all day long. Could a voice travel through a wire?",
+"Almost everybody said no. A wire could carry beeps and clicks for telegraph messages, sure. But a real human voice? Impossible, they said.",
+"Bell and his helper, Thomas Watson, worked on it anyway. They worked in a cramped little workshop, night after night, fiddling with wires and springs and batteries.",
+"Then, on March 10, 1876, it happened. Bell was in one room. Watson was in another room with the receiver. And through the wire, Watson heard Bell's voice say: Mr. Watson — come here — I want to see you.",
+"Think about that. The first phone call in history was a man telling his assistant to hurry over. No hello. No how are you. Just: get in here! Watson burst through the door, absolutely thrilled. The telephone worked!",
+"Soon telephones spread everywhere, and the world got a whole lot chattier. And it all started with two rooms, one wire, and the politest emergency in history. Mr. Watson — come here!"
+],
+facts:[
+"The first telephone words, on March 10, 1876, really were: 'Mr. Watson — come here — I want to see you.'",
+"Bell's mother and his wife were both deaf, and he spent years teaching deaf students.",
+"Bell thought 'ahoy' should be how people answer the phone. 'Hello' won instead."
+],
+talk:"If you made the first phone call in history, what would your first words be?"},
+{
+id:"mccoy", grade:"2", gname:"2nd Grade", accent:"#6E5C3A",
+title:"Elijah McCoy and the Real McCoy",
+sub:"His invention was so good, people asked for it by name.",
+paras:[
+"Elijah McCoy's parents were incredibly brave. Before he was born, they escaped slavery in the United States. They made it all the way to Canada. So Elijah was born free.",
+"Elijah loved machines. He took them apart. He put them back together. He learned their secrets. He studied hard and became an engineer. But back in America, many companies would not hire a Black man as an engineer. That was unfair. So the railroad gave him a messy job instead: oiling the trains.",
+"Back then, trains had a big problem. Their metal parts needed oil all the time. Without oil, they would grind and squeal and wear out. So trains had to stop, again and again, just to get oiled. Stop, oil, go. Stop, oil, go. It drove everyone bananas.",
+"Elijah watched. Elijah thought. And then Elijah invented a little metal cup. It dripped oil onto the moving parts all by itself — while the train kept rolling! No more stopping. It worked so well that railroads everywhere wanted it.",
+"Other people sold copycat oil cups. Buyers did not want the fakes. Many say buyers would ask: is this the real McCoy? That meant: is this Elijah's true invention, or a knockoff?",
+"To this day, people call the real thing 'the real McCoy.' Elijah earned more than fifty patents in his life. Not bad for the kid they would only let oil the trains."
+],
+facts:[
+"Elijah McCoy's parents escaped slavery, and he was born free in Canada in 1844.",
+"His automatic oil cup, patented in 1872, let trains oil themselves while moving.",
+"He earned more than 50 patents — and many people believe he's why we say 'the real McCoy.'"
+],
+talk:"Elijah turned a job nobody wanted into a famous invention. What everyday chore would you love to automate?"},
+{
+id:"earhart", grade:"2", gname:"2nd Grade", accent:"#B0523B",
+title:"Amelia Earhart and the Ocean-Sized Shortcut",
+sub:"She landed in a farm field and asked for directions.",
+paras:[
+"Amelia Earhart saw her first airplane at a fair when she was a kid. She was not impressed. It looked like a rickety pile of rusty wire, she said. Then, years later, she rode in one — and from that day on, all she wanted to do was fly.",
+"Flying back then was dangerous and wild. Planes were small and shaky. Pilots wore goggles and thick jackets and hoped for the best. Amelia loved it. She bought a bright yellow plane and nicknamed it the Canary.",
+"In 1932, Amelia tried something huge: flying across the whole Atlantic Ocean. Alone. No other woman had ever done it. For almost fifteen hours she flew through storms, ice, and thick clouds, with the ocean roaring below.",
+"Finally she spotted land and set her plane down... in a farmer's field in Northern Ireland. A very surprised farmer walked over. Amelia asked him where she was. He told her. She had crossed an entire ocean and landed next to some very confused cows.",
+"Amelia became world-famous. She set record after record and showed everyone that women belonged in the sky. Girls everywhere looked up at planes and thought: that could be me.",
+"In 1937, Amelia set off on her biggest adventure ever — a flight around the whole world. Somewhere over the huge Pacific Ocean, her plane disappeared. People are still looking for it today. It is one of the world's great mysteries. But her bravery? That was never lost."
+],
+facts:[
+"In 1932, Amelia Earhart became the first woman to fly solo across the Atlantic — in 14 hours and 56 minutes.",
+"She really did land in a farm field in Northern Ireland, surprising everyone including the cows.",
+"Her plane vanished over the Pacific in 1937, and the mystery is still unsolved."
+],
+talk:"Amelia loved doing things people said she couldn't. What's something you'd love to be first at?"},
+{
+id:"tubman", grade:"3", gname:"3rd Grade", accent:"#2E3A5C",
+title:"Harriet Tubman, the Conductor Who Never Lost a Passenger",
+sub:"No trains. No tracks. Just the North Star and pure nerve.",
+paras:[
+"Harriet Tubman was born enslaved in Maryland. That means the law said another person could own her, force her to work, and never pay her. It was cruel and it was wrong. In 1849, Harriet decided she was done. She escaped north to freedom, traveling by night, about ninety miles.",
+"Now here is the part that makes Harriet a legend. She was free. She was safe. And she went BACK. On purpose. Again and again.",
+"Harriet became a conductor on the Underground Railroad. Do not picture a train. There were no trains and no tracks. It was a secret network of paths, safe houses, and brave helpers, moving people from slavery to freedom in the dark.",
+"Harriet worked at night, when it was safest. She followed the North Star to know which way was north. Cloudy night? No problem. She knew other tricks, like feeling for moss on the north side of trees. She used songs as secret signals, too. One song meant all clear. Another meant danger, stay hidden.",
+"She was clever in ways that would make a spy jealous. She traveled in winter, when nights were long and slave catchers stayed home by the fire. And she kept everyone moving, no matter how scared they were. Turning back was too dangerous, so with Harriet, nobody turned back.",
+"Over about thirteen secret trips, Harriet guided some seventy people to freedom, including her own parents. She later said something amazing: she never lost a single passenger. Not one.",
+"During the Civil War, Harriet kept going. She worked for the Union army as a nurse, a scout — and a spy. She even helped lead a raid that freed more than seven hundred people at once. One woman. All that courage. Remember her name."
+],
+facts:[
+"Harriet Tubman escaped slavery in 1849, then returned about 13 times and guided some 70 people to freedom.",
+"She really used the North Star, winter nights, and coded songs — and said she never lost a passenger.",
+"During the Civil War she helped lead the Combahee River Raid, which freed more than 700 enslaved people."
+],
+talk:"Harriet went back even after she was safe. What do you think gave her that kind of courage?"},
+{
+id:"ponyexpress", grade:"3", gname:"3rd Grade", accent:"#A6693B",
+title:"The Pony Express: Mail at the Speed of Horse",
+sub:"1,900 miles. Ten days. Zero cell towers.",
+paras:[
+"Imagine you live in California in 1860. Your cousin in Missouri sends you a letter. How long does it take to arrive? Weeks. Sometimes months! By then, the news in the letter is older than the bread in your kitchen.",
+"Some businessmen had a wild idea. What if letters raced across the country on horseback? Not one horse — hundreds of horses, in a giant relay race!",
+"They built a chain of stations across about 1,900 miles of prairie, desert, and mountains. A rider galloped full speed to a station, leaped off, threw his special mailbag onto a fresh horse, and blasted off again. Every rider rode for hours before handing the bag to the next rider. The letters never stopped moving. Day and night. Rain, snow, whatever.",
+"The mailbag was called a mochila, and it flopped over the saddle like a leather pancake with pockets. Riders guarded it with everything they had. Legend says the company wanted riders who were young, skinny, and extra brave. The horses were fast. The snacks were few.",
+"And it worked! A letter could cross the country in about ten days. TEN DAYS! People were amazed. It was the text messaging of 1860.",
+"But then, something faster came along: the telegraph. Wires went up pole by pole across the country. Suddenly a message could zip coast to coast in minutes. Just eighteen months after it started, the Pony Express was done. The horses got a rest. The riders got great stories. And the mail? The mail got boring again."
+],
+facts:[
+"The Pony Express really carried mail about 1,900 miles in around 10 days, using a relay of riders and horses.",
+"The mailbag was called a mochila, and it swapped between horses in seconds.",
+"It lasted only about 18 months — the telegraph put it out of business in 1861."
+],
+talk:"The Pony Express was replaced by something faster. What invention today do you think will be replaced next?"},
+{
+id:"libertybell", grade:"3", gname:"3rd Grade", accent:"#7A6E3A",
+title:"The Liberty Bell: Famous for Being Broken",
+sub:"It cracked. They fixed it. It cracked again. Legend.",
+paras:[
+"In Philadelphia, there is a giant bell that millions of people line up to see. It does not ring. It cannot ring. It has a huge crack down the side. It is, in fact, broken. And it is one of the most famous objects in America. Only in history, folks.",
+"The bell was ordered from England in 1751 for Pennsylvania's State House. It sailed across the ocean, got hung up, and — on one of the very first test rings — CRACK. Brand new bell, broken already. Imagine opening a birthday present and it breaks while you are still holding the wrapping paper.",
+"Two Philadelphia workers named Pass and Stow melted the bell down and made a new one from the same metal. People said the new bell's sound was... not great. So they melted it down and tried AGAIN. Third try: good enough. That bell rang for years to call lawmakers to meetings and to celebrate big news.",
+"Look closely at the bell and you will find a typo. The word Pennsylvania is spelled PENSYLVANIA — missing an N! Back then, spelling rules were more relaxed, so it was an okay spelling at the time. Still. It is a giant typo. In metal. Forever.",
+"Sometime in the 1800s — probably the 1840s — the famous zigzag crack appeared and grew. Workers tried to repair the bell so it could ring for George Washington's birthday in 1846. The bell had other plans. A new crack shot upward, and the Liberty Bell went silent for good.",
+"Here is one more surprise. The story that it rang on July 4, 1776 is probably a myth! Historians say the big bell-ringing happened on July 8, when the Declaration of Independence was read out loud to the city. The bell became a symbol of freedom anyway — chosen especially by people fighting to end slavery, who loved the words carved on it: Proclaim liberty throughout all the land."
+],
+facts:[
+"The bell cracked on an early test ring, and locals Pass and Stow recast it twice.",
+"'Pennsylvania' really is spelled 'Pensylvania' on the bell — an accepted spelling in the 1750s.",
+"It likely rang on July 8, 1776 — not July 4 — and abolitionists made it a symbol of freedom."
+],
+talk:"Why do you think people love the Liberty Bell MORE because it's broken?"},
+{
+id:"sampson", grade:"3", gname:"3rd Grade", accent:"#5C4E7A",
+title:"Deborah Sampson's Super-Secret Soldier Disguise",
+sub:"She fooled an entire army. For over a year.",
+paras:[
+"In 1782, a tall young soldier named Robert Shurtliff joined the American army. Robert was strong, brave, and kept to himself. Robert also had a gigantic secret. Robert was not Robert. Robert was Deborah Sampson, and women were not allowed to be soldiers.",
+"Deborah had grown up poor in Massachusetts, working hard on farms. She was tall and strong, and she wanted to fight for her new country. The rules said no. So Deborah sewed herself a man's uniform, tied back her hair, walked into a recruiting office, and signed up under a fake name. Nobody blinked.",
+"Being a soldier was hard. Long marches. Cold nights. Heavy gear. Deborah did all of it, right alongside the men, and earned their respect. They even teased young Robert for having such smooth cheeks. If only they knew.",
+"Then came the scary part. In one fight, Deborah was wounded in the leg. At the field hospital, a doctor started to help her — and Deborah panicked. A doctor would discover her secret! So she slipped away and treated her own leg, by herself. It was painful and dangerous, but her secret stayed safe. That is a level of stubborn that deserves its own medal.",
+"For more than a year, nobody figured it out. Deborah fought, marched, and served like everyone else. She was that good.",
+"Finally, she got very sick with a fever, and a doctor discovered the truth. But instead of being punished, Deborah was quietly given an honorable discharge. Years later, she did something no woman had done before: she toured the country giving speeches about her army days. And when she asked for a soldier's pension, a famous friend helped argue her case — Paul Revere! Yes, that Paul Revere. History is a small town."
+],
+facts:[
+"Deborah Sampson really enlisted in 1782 as 'Robert Shurtliff' and served over a year before being discovered.",
+"She treated her own leg wound herself to protect her secret.",
+"Paul Revere later helped her win a soldier's pension, and she toured the country telling her story."
+],
+talk:"Deborah broke a rule she thought was unfair. When is it right to challenge a rule, and how should you do it?"},
+{
+id:"sacagawea", grade:"4", gname:"4th Grade", accent:"#8C5C3A",
+title:"Sacagawea: Her Own Story",
+sub:"The teenager who out-explored the explorers.",
+paras:[
+"You may have met Sacagawea in the Lewis and Clark story. But she deserves her own story. So here it is.",
+"Sacagawea was born a Shoshone girl in the Rocky Mountains. When she was around twelve, raiders from another nation, the Hidatsa, kidnapped her and carried her far from home. She grew up hundreds of miles from her family. Remember that — it matters later.",
+"When Lewis and Clark's crew built their winter fort near the Hidatsa villages, they needed interpreters. Sacagawea, still a teenager, joined the expedition. Weeks before they left, she had a baby boy, Jean Baptiste. Clark nicknamed him Pomp. So yes — she crossed mountains, rivers, and plains with a baby on her back the entire time.",
+"Sacagawea turned out to be indispensable. She found roots and plants the crew could actually eat. She stayed calm when boats tipped and grown men screamed. And just by being there, she made the whole crew safer. A group traveling with a woman and a baby did not look like a war party. She was a walking peace flag — while also doing everyone's plant homework.",
+"Then came the moment that sounds too perfect to be true. The crew desperately needed horses to cross the Rocky Mountains. They reached a Shoshone band and brought in its leader to negotiate. Sacagawea began interpreting... then stopped. She stared at the chief. Then she ran to him, threw her blanket around him, and wept.",
+"The chief, Cameahwait, was her brother. After all those years, hundreds of miles from where she was taken, the expedition's fate landed in the hands of her own family. The Shoshone traded the horses. The expedition survived the mountains. Historians double-checked this one. It is real.",
+"When the crew voted on where to spend the winter by the Pacific, Sacagawea voted too — remarkable for that time. She had earned it a hundred times over. She carried her son 8,000 miles. The men just carried gear."
+],
+facts:[
+"Sacagawea was kidnapped from the Shoshone as a girl — and years later, the chief the expedition needed horses from was her brother, Cameahwait.",
+"She interpreted, found food, and did it all with her baby son on her back.",
+"She voted in the crew's decision on where to build their winter fort in 1805."
+],
+talk:"Sacagawea's reunion with her brother changed everything. What are the chances? Why do you think this moment stuck in everyone's journals?"},
+{
+id:"goldrush", grade:"4", gname:"4th Grade", accent:"#C9A03B",
+title:"The Gold Rush: When Everybody Lost Their Minds",
+sub:"Free gold! (Not actually free. Or easy. Or likely.)",
+paras:[
+"On January 24, 1848, a carpenter named James Marshall was building a sawmill on a California river. He looked down into the water and saw something glittering. Gold. Real gold, just lying there. He tried to keep it secret. The secret lasted about as long as a snowball in July.",
+"By 1849, the word was out across the world, and everybody lost their minds. Farmers dropped their plows. Sailors abandoned their ships. Doctors, teachers, and bakers packed a shovel and headed west. They were nicknamed the forty-niners, after the year they came.",
+"San Francisco exploded from a sleepy village of about 800 people into a wild city of 25,000 in about two years. So many sailors ditched their ships for the gold fields that the harbor filled with empty ghost ships. People turned them into stores, hotels, even a jail. A jail! Made of ship!",
+"Here is what the shiny posters did not mention: mining was miserable. Miners stood in freezing rivers all day, swirling pans of gravel, hunting for sparkles. Most found barely anything. And the prices! Everything cost a fortune in the gold camps. A single egg could cost the same as a whole fancy dinner back home. An egg!",
+"The people who got rich were usually not the miners at all. They were the ones selling stuff TO the miners. Shovels, boots, flour, eggs — the real gold mine was the general store. A merchant named Levi Strauss came to sell supplies and later helped create the world's first blue jeans. You may have heard of them.",
+"The Gold Rush changed California forever — it became a state in 1850, almost overnight by history standards. But it was hard on many people, especially California's Native nations, who lost land, homes, and lives as hundreds of thousands of strangers flooded in. Gold made some people rich. It cost other people everything. Both things are true, and a good historian holds onto both."
+],
+facts:[
+"James Marshall really found gold at Sutter's Mill on January 24, 1848 — and the secret got out fast.",
+"San Francisco's harbor filled with abandoned ships, which were reused as buildings.",
+"Levi Strauss came to sell supplies to miners and later co-created blue jeans. California became a state in 1850."
+],
+talk:"The people selling shovels got richer than the people digging. What does that teach you about chasing a craze?"},
+{
+id:"railroad", grade:"4", gname:"4th Grade", accent:"#4E4E5C",
+title:"The Great Train Race Across America",
+sub:"Two crews. One golden spike. Ten miles in a day.",
+paras:[
+"In the 1860s, getting from New York to California was a nightmare. You could bump along in a wagon for five or six months. Or you could sail all the way around South America. Either way: months of your life, gone. America wanted a shortcut. America wanted a railroad — all the way across.",
+"So the government set up something like a race. The Union Pacific company started in Nebraska and built west. The Central Pacific company started in California and built east. Somewhere in the middle, they would meet. The more track each company laid, the more money and land it earned. Ready, set, HAMMER!",
+"The Central Pacific had a monster in its path: the Sierra Nevada mountains. Solid granite. The company hired thousands of workers from China — as many as 15,000 — who did the hardest, most dangerous work of the entire railroad. They carved ledges into cliff faces. They blasted fifteen tunnels through mountain rock. They kept working through blizzards, in snow tunnels, all winter. It was brutal, and they were paid less than other workers, which was flat-out unfair. No crew on Earth worked harder.",
+"Out on the plains, the Union Pacific crews slammed down track at unbelievable speed. The two companies got so competitive that near the end, the Central Pacific set an all-time record: TEN MILES of track in ONE day. Ten miles! By hand! That record still amazes engineers.",
+"On May 10, 1869, the two tracks finally met at Promontory Summit, Utah. A special golden spike was tapped in to finish the job. A telegraph operator sent a single word flashing across the country: DONE. Cannons fired. Bells rang. America partied coast to coast.",
+"The trip that took six months now took about a week. The country was stitched together with iron thread. And the workers who swung the hammers — especially those Chinese crews in the mountains — deserve to be remembered every time a train whistles."
+],
+facts:[
+"As many as 15,000 Chinese workers built the hardest sections through the Sierra Nevada, blasting 15 tunnels.",
+"On April 28, 1869, Central Pacific crews laid 10 miles of track in a single day — a record.",
+"The golden spike was driven at Promontory Summit, Utah, on May 10, 1869, and the telegraph flashed 'DONE.'"
+],
+talk:"The workers who did the hardest jobs got the least credit for a long time. Why does it matter who gets remembered?"},
+{
+id:"oregontrail", grade:"4", gname:"4th Grade", accent:"#5E7A4E",
+title:"The Oregon Trail: A 2,000-Mile Walk to a New Home",
+sub:"Yes, WALK. The wagon was for the bacon.",
+paras:[
+"In the 1840s, thousands of American families sold almost everything they owned, packed a wagon, and set out to walk about 2,000 miles to Oregon. Why? Free-to-claim farmland, rich soil, and a fresh start. The catch? Everything in between.",
+"First, let's fix the movie version in your head. Most pioneers did not RIDE in their wagons. The wagons were stuffed with food and supplies — hundreds of pounds of flour, bacon, beans, and coffee. Riding meant bouncing on a wooden box with no springs anyway. So people walked. Ten to fifteen miles a day. For five or six months. Kids, grandmas, everybody — walking to Oregon.",
+"The wagons were called prairie schooners, because their white canvas tops looked like little sailboats gliding across a sea of grass. Pulling them were oxen — slow, steady, and strong. Top speed: about two miles per hour. A snail with a good head start could stay competitive.",
+"Life on the trail was a strange mix of scary and boring. River crossings were dangerous. Storms were wild. Supplies ran low. But most days were just... walking. And chores. Kids collected fuel for the campfires, and out on the treeless prairie, the best fuel was dried buffalo poop. Pioneer kids gathered poop patties every single evening. You may now feel better about your chores.",
+"Along the way, families carved their names into a giant stone called Independence Rock — a sort of guest book made of granite. Thousands of names are still there today. The trail also crossed lands that Native nations had lived on for generations, and by the way — pioneers and Native people traded with each other far more often than they fought. The movies got that wrong, too.",
+"After half a year of mud, dust, rivers, and blisters, the lucky families rolled down into Oregon's green valleys. They had walked across most of a continent in butter-churning slow motion. New home: earned."
+],
+facts:[
+"The trail ran about 2,000 miles, and most pioneers walked nearly the whole way beside their wagons.",
+"Kids really did collect dried buffalo droppings for campfire fuel on the treeless plains.",
+"Thousands of pioneer names are still carved on Independence Rock in Wyoming, the 'register of the desert.'"
+],
+talk:"Would you trade your life for six months on the trail if a new home waited at the end? What would you pack in your 100 pounds?"},
+{
+id:"delaware", grade:"5", gname:"5th Grade", accent:"#3A5C7A",
+title:"Washington's Christmas Night Surprise",
+sub:"Password: 'Victory or Death.' Not dramatic at all.",
+paras:[
+"By December 1776, the American Revolution was going terribly. Washington's army had lost New York and retreated across New Jersey. Soldiers were freezing, starving, and quitting. Many enlistments ended January 1. In a week, the army might simply... dissolve. Washington needed a win, fast, or the revolution was over.",
+"So he chose the most miserable night imaginable. Christmas night. In a storm of snow, sleet, and wind. His plan: sneak 2,400 men across the ice-choked Delaware River in the dark, march nine miles, and surprise the enemy garrison at Trenton at dawn. The password for the mission tells you everything about the mood: Victory or Death.",
+"The crossing was brutal. Big flat boats shoved through floating slabs of ice. Horses stamped nervously. Cannons — eighteen of them — had to be ferried across too. The storm actually helped: no enemy lookout expected anyone to attack in weather that awful. That was the whole point.",
+"About the famous painting — you know, Washington standing heroically in the boat? It was painted 75 years later by a German artist, Emanuel Leutze. The flag in it? Wrong flag — that design didn't exist yet. The river? Modeled on a German river. Standing up in an icy rowboat? A fantastic way to go for a swim. Great painting. Terrible history.",
+"Washington's soaked, frozen army marched through the night and hit Trenton the morning after Christmas. The Hessian soldiers there — German troops hired by Britain — were completely surprised. The battle lasted about 45 minutes. Nearly 900 Hessians were captured. American battle deaths: almost none. It was the most lopsided comeback of the war.",
+"News of the victory raced through the colonies. Soldiers re-enlisted. New recruits signed up. France started paying attention. The revolution, which had been about a week from collapsing, was suddenly alive again — all because one army was willing to have the worst Christmas in American history."
+],
+facts:[
+"The password for the December 25–26, 1776 crossing really was 'Victory or Death.'",
+"About 2,400 men crossed an ice-filled river at night in a storm; the Battle of Trenton lasted about 45 minutes.",
+"The famous painting was made 75 years later — with the wrong flag and a German river as the model."
+],
+talk:"Washington attacked when things looked hopeless. When is a bold risk smart — and when is it just reckless?"},
+{
+id:"constitution", grade:"5", gname:"5th Grade", accent:"#7A3A4E",
+title:"The Constitution: America's Sweatiest Group Project",
+sub:"Fifty-five delegates. One locked room. Zero air conditioning.",
+paras:[
+"In the summer of 1787, fifty-five delegates gathered in Philadelphia to fix America's broken rulebook. The old rules — the Articles of Confederation — were so weak the country could barely function. The states were acting like thirteen siblings sharing one bathroom.",
+"The delegates met in the Pennsylvania State House and immediately made a bold choice: total secrecy. They kept the windows shut and posted guards so nobody could listen in. Remember, this was a Philadelphia SUMMER. No fans. No AC. Wool suits. For four months. The Constitution was written by men who were, at all times, extremely sweaty.",
+"Benjamin Franklin, 81 years old and the convention's superstar, was too frail to walk far — so he arrived carried in a fancy chair by four strong men, like a founding father in a parade float. Rhode Island, meanwhile, refused to send anyone at all. The other states basically said: fine, more chairs for us.",
+"The biggest fight nearly blew up the whole project. Big states wanted votes in Congress based on population. Small states wanted every state equal. The argument raged for weeks. The fix — the Great Compromise — split the difference: a House based on population, plus a Senate where every state gets two votes. Both sides grumbled, which is how you know it was fair.",
+"There is a hard truth in the story, too. To keep Southern states on board, the delegates made compromises that protected slavery. Many delegates knew it was wrong even then. They chose the deal anyway. It would take a civil war, decades later, to begin fixing that — and the country is still doing the homework.",
+"When it was finally done, a woman reportedly stopped Franklin outside and asked: well, Doctor, what have we got? A republic or a monarchy? Franklin's answer became legend: a republic — if you can keep it. Meaning: the Constitution is not a machine that runs itself. It is a group project that never ends, and every generation — including yours — gets added to the group."
+],
+facts:[
+"The delegates really did keep the State House windows shut for secrecy through a Philadelphia summer.",
+"Franklin, 81, was carried to sessions in a sedan chair; Rhode Island never showed up at all.",
+"Franklin's reply — 'A republic, if you can keep it' — was recorded by a fellow delegate."
+],
+talk:"'A republic, if you can keep it.' What does keeping it look like for regular people — including kids?"},
+{
+id:"douglass", grade:"5", gname:"5th Grade", accent:"#4E3A5C",
+title:"Frederick Douglass and the Most Dangerous Skill",
+sub:"They banned him from reading. Big mistake. Huge.",
+paras:[
+"Frederick Douglass was born enslaved in Maryland around 1818. He never knew his birthday. Enslavers often kept that information from people, along with everything else — including the ability to read. And that last one is where this story turns.",
+"When Frederick was a boy, the wife of his enslaver began teaching him the alphabet. Her husband found out and exploded: teaching an enslaved person to read was forbidden. It would, he said, make Frederick unfit for slavery. Frederick, listening, had a life-changing realization: if reading could unfit him for slavery... then reading was the way OUT. They had just told him exactly where the key was hidden.",
+"From then on, Frederick treated every scrap of printed paper like treasure. He carried bread in his pockets and traded it to poor white kids in the streets for reading lessons. He practiced letters on fences and pavement with chalk. He got his hands on a book of famous speeches — The Columbian Orator — and read it until the ideas of liberty were burned into his mind.",
+"At about age twenty, he made his escape — and it took less than 24 hours. Disguised as a free Black sailor, carrying borrowed identification papers, he boarded a train north. Every stop was a chance to be caught. He made it to New York a free man, heart pounding.",
+"Then Frederick Douglass did the truly dangerous thing: he started talking. And writing. His speeches were so brilliant, and his book about his life so powerful, that some people refused to believe a formerly enslaved man had written it. He kept receipts, named names, and became the most famous abolitionist in America. He even advised President Lincoln during the Civil War.",
+"One more delightful fact: Douglass understood the power of images, too. He sat for photograph after photograph — serious, dignified, unstoppable — and became the most photographed American of the entire 1800s. More than Lincoln. The boy they tried to stop from reading became impossible to ignore, in print AND in pictures."
+],
+facts:[
+"Douglass really traded bread for reading lessons as a boy and taught himself from The Columbian Orator.",
+"His 1838 escape — disguised as a sailor with borrowed papers — took less than 24 hours.",
+"He was the most photographed American of the 19th century and advised President Lincoln."
+],
+talk:"The moment they banned reading, Frederick knew it was powerful. What does that tell you about why education matters?"},
+{
+id:"abigail", grade:"5", gname:"5th Grade", accent:"#8C4E6E",
+title:"Abigail Adams: 'Remember the Ladies' (He Did Not)",
+sub:"She ran the farm, dodged a war, and told off a future president. By mail.",
+paras:[
+"While the founding fathers argued in Philadelphia, Abigail Adams was home in Massachusetts doing... everything else. Her husband, John Adams, was away for years helping run the revolution. Abigail ran the farm, managed the money, raised the kids, and dodged an actual war that sometimes rumbled within earshot. She also wrote letters. Over a thousand survive. And they are GOLD.",
+"Abigail's letters to John were sharp, funny, and full of news and opinions. John once got a letter from her while Boston was under siege, and she casually described watching cannon fire from a hilltop with her little son, John Quincy — who, by the way, grew up to be a president. Abigail was raising presidents AND livestock. What are the rest of us even doing.",
+"In March 1776, while Congress was inventing a new country, Abigail sent John her most famous letter. If you are making new laws, she wrote, remember the ladies. Do not put unlimited power in the hands of husbands. And then the mic drop: if women are ignored, we will not hold ourselves bound by laws in which we have no voice.",
+"John's reply? He laughed. As to your extraordinary code of laws, he wrote, I cannot but laugh. He thought she was joking. She was not entirely joking. History's grade for John on this assignment: F.",
+"Abigail did not stop pushing. She believed girls deserved real education — she had never been allowed to attend school herself, and she taught herself from her father's library. She made brave calls, too: during a smallpox outbreak, she had herself and the children inoculated, which was the risky new science of the day. It worked.",
+"Years later, Abigail became First Lady, and the family moved into the brand-new, unfinished White House. It was cold, damp, and half-built. So Abigail did the most practical thing in First Lady history: she hung the family laundry to dry in the giant empty East Room. Today that room hosts presidents and kings. Once upon a time, it was Abigail Adams's drying rack. Remember the ladies, indeed."
+],
+facts:[
+"Abigail's 'Remember the Ladies' letter is real (March 1776) — and John really replied 'I cannot but laugh.'",
+"More than 1,100 of her letters survive, a treasure chest for historians.",
+"She really hung laundry in the White House East Room, and her son John Quincy Adams became president."
+],
+talk:"Abigail warned that people ignored by the law won't accept it forever. Where have you seen that come true in history?"},
+{
+id:"cleopatra", grade:"6", gname:"6th Grade", accent:"#3A6E6E",
+title:"Cleopatra: Smarter Than Everyone in Nine Languages",
+sub:"Also: she once entered a palace rolled up in bedding. It worked.",
+paras:[
+"Start with the fact that breaks everyone's brain: Cleopatra lived closer in time to the Moon landing than to the building of the Great Pyramids. The pyramids were already more than two thousand years old — ancient history — when she was born in 69 BC. Egypt itself was old enough to have its own ancient history. Sit with that for a second.",
+"Cleopatra was the last pharaoh of Egypt, but her family, the Ptolemies, was actually Greek — descended from one of Alexander the Great's generals. For nearly 300 years, her ancestors ruled Egypt without bothering to learn Egyptian. Cleopatra was reportedly the FIRST of her entire dynasty to learn the language of the country they ruled. Ancient writers say she spoke many languages — some claim as many as nine — and rarely needed an interpreter. She wasn't just royal. She was the smartest person in most rooms.",
+"She needed to be, because her own family was a shark tank. Ptolemies had a long tradition of fighting their siblings for the throne, and Cleopatra's little brother's advisors forced her out of Alexandria. Exiled from her own capital, she needed to reach Julius Caesar — who was staying in her palace — without her brother's guards catching her. Her solution was legendary.",
+"According to the ancient historian Plutarch, Cleopatra had herself rolled up inside bedding — later storytellers upgraded it to a carpet — and smuggled straight into the palace, where she was unrolled in front of a very surprised Caesar. Security walked her right past security. Caesar was impressed. Egypt's throne came back into her reach. That is an all-time entrance.",
+"As queen, she was genuinely good at the job: she managed the economy, handled famines, built up the navy, and made Egypt an essential power while Rome swallowed everyone else. Roman writers spread rumors that she was mostly a pretty face. Ancient sources say otherwise — Plutarch wrote that her real magic was her conversation, her voice, her mind. The 'just a beauty' story was, frankly, Roman spin.",
+"Her ending is famous — Rome came for Egypt at last, and Cleopatra chose to die a queen rather than be paraded as a trophy. But do not let the ending swallow the story. For twenty years, in a world run by Roman generals, one multilingual chess master kept an ancient kingdom independent, using nothing but brains, nerve, and the occasional rolled-up carpet."
+],
+facts:[
+"Cleopatra really did live closer in time to the Moon landing than to the Great Pyramid's construction.",
+"Plutarch says she was smuggled to Caesar hidden in bedding, and that she was the first Ptolemy to learn Egyptian.",
+"She ruled about 20 years as Egypt's last pharaoh — her dynasty was Greek, descended from Alexander's general Ptolemy."
+],
+talk:"Romans wrote most of what we know about Cleopatra — her enemies. How should we read history written by someone's rivals?"},
+{
+id:"mansamusa", grade:"6", gname:"6th Grade", accent:"#B08C2E",
+title:"Mansa Musa: The Man Who Broke Gold Itself",
+sub:"He gave away so much gold, gold had a bad decade.",
+paras:[
+"Quick quiz. Who is the richest person in history? A tech billionaire? A Roman emperor? Wrong continent, wrong millennium. Many historians give the crown to Mansa Musa, ruler of the Mali Empire in West Africa in the 1300s. His wealth was so enormous that modern economists basically shrug and write: cannot be calculated. That is rich rich.",
+"Mali's money came from two things the world desperately wanted: gold and salt. Mali controlled some of the richest goldfields on Earth right as Europe and the Middle East were hungry for gold coins. Caravans crossed the Sahara loaded with it. Mansa Musa ruled an empire of trade routes, universities, and cities — roughly the size of Western Europe.",
+"In 1324, Mansa Musa, a devout Muslim, set out on his pilgrimage to Mecca. Kings had made pilgrimages before. Nobody had ever done it like this. Arab historians describe a caravan of tens of thousands of people, herds of camels, and staggering amounts of gold — carried by camels and servants in a procession that took breath away in every city it entered.",
+"Then the caravan reached Cairo, one of the biggest cities in the world. And Mansa Musa started giving gold away. To officials. To the poor. To basically everyone. He and his people also shopped like champions. So much gold flooded into Cairo that the price of gold CRASHED — and according to the historian al-Umari, it stayed depressed for years. Let that sink in: one man's generosity broke a major currency in one of history's great cities. He is possibly the only person ever to cause inflation as a souvenir.",
+"The pilgrimage put Mali on the map — literally. Decades later, European mapmakers drew the famous Catalan Atlas with Mansa Musa at the center of West Africa, seated on a throne, holding up a lump of gold like the world's most intimidating business card.",
+"But Mansa Musa's best investment wasn't gold. Coming home, he brought scholars, architects, and books. His city of Timbuktu grew into a world center of learning, with a famous university and libraries holding hundreds of thousands of manuscripts. Centuries later, people still study them. Gold gets spent. Libraries compound."
+],
+facts:[
+"The historian al-Umari recorded that Mansa Musa's 1324 gold-giving in Cairo depressed gold's value for years.",
+"The 1375 Catalan Atlas really shows him enthroned in West Africa holding a gold nugget.",
+"Timbuktu became a world center of learning, and many of its ancient manuscripts survive today."
+],
+talk:"Mansa Musa is remembered for gold, but his libraries outlasted it. What's worth more in the long run — treasure or knowledge? Defend your answer."},
+{
+id:"trojan", grade:"6", gname:"6th Grade", accent:"#6E4E3A",
+title:"The Trojan Horse: History's Greatest Trick (Probably a Story)",
+sub:"Free horse. What could go wrong? Everything. Everything could go wrong.",
+paras:[
+"You know the story. The Greeks besieged the city of Troy for ten years and couldn't crack it. So the clever Odysseus cooked up the most famous trick in history: build a giant wooden horse, hide soldiers inside, pretend to sail away, and let the Trojans wheel the 'gift' into their own city. That night, the hidden Greeks crept out, opened the gates, and Troy fell. Roll credits.",
+"Now, the sixth-grade question: did that actually happen? This is where it gets genuinely interesting, because the answer is a delicious mix of yes, no, and we're still digging.",
+"First, the yes part. Troy was a REAL city. For centuries, people assumed it was pure myth — until archaeologists dug into a mound called Hisarlik, in modern Turkey, and found it: a fortified city, rebuilt layer upon layer, nine cities stacked like a lasagna. One of those layers shows destruction right around the era the legends point to. A real city, in the right place, wrecked at roughly the right time. Chills.",
+"Now the 'probably not' part. The horse itself comes from epic poems — and here's a plot twist: the famous horse scene isn't even in Homer's Iliad, which ends before the war does. The details come from later poems like the Odyssey and Virgil's Aeneid, written centuries after any real war. That's a long game of telephone. Some scholars think the 'horse' might be a poetic memory of something real — a siege machine that battered the walls, or even an earthquake (the sea god Poseidon, who Greeks blamed for earthquakes, was symbolized by... a horse). Nobody knows. Isn't that great?",
+"The story is also packed with warnings nobody heeded, which is why we still quote it. The priest Laocoön warned, in Virgil's telling: I fear Greeks, even bearing gifts. The princess Cassandra — cursed to always be right and never be believed — said do not bring the horse in. Troy's response? Big party, horse inside, gates closed. Some lessons need three thousand years to sink in, and honestly, some people STILL haven't downloaded this one.",
+"So what do we do with a story that's part real city, part poem? We do exactly what historians do: keep the legend on one shelf and the evidence on another, and enjoy both. And we keep the phrase, because it has never stopped being useful: beware of Trojan horses. Even today, a computer virus disguised as a friendly download is literally called a Trojan. A 3,000-year-old story is still catching people. That might be the greatest trick of all."
+],
+facts:[
+"Troy was real — archaeologists found its stacked ruins at Hisarlik in Turkey, with a destruction layer near the legendary era.",
+"The wooden horse scene isn't in the Iliad; it comes from later epics like the Odyssey and the Aeneid.",
+"Malicious software disguised as something friendly is still called a 'Trojan' after the story."
+],
+talk:"Troy is real; the horse is probably poetry. How do historians decide which parts of an old story to believe?"},
+{
+id:"pompeii", grade:"6", gname:"6th Grade", accent:"#8C3A3A",
+title:"Pompeii: The City That Hit Pause",
+sub:"Bread still in the oven. Graffiti still on the walls. 79 AD, saved on read.",
+paras:[
+"In the year 79, Pompeii was a busy Roman city near the Bay of Naples: about 11,000 people, markets, theaters, snack bars, election posters, and a big beautiful mountain looming over it all called Vesuvius. The Pompeiians thought it was just a mountain. It was not just a mountain.",
+"When Vesuvius erupted, it blasted a column of ash and stone miles into the sky. Ash rained down on Pompeii for hours, then came surges of scorching gas and debris. The city was buried under meters of ash. Many people escaped early. Those who stayed did not. It was a catastrophe — and, in the strangest twist in archaeology, it was also a perfect preservation machine.",
+"Because here's the thing about all that ash: it sealed the city like a time capsule. No rebuilding on top. No centuries of remodeling. Pompeii just... stopped. Loaves of bread were left baking and turned to carbon in their ovens — round Roman loaves, still scored into eight slices, that you can see in museums today. A dog mosaic by a front door still warns visitors CAVE CANEM: beware of the dog.",
+"And the walls talk. Pompeii is covered in ancient graffiti, and it is gloriously ordinary. People scratched things like 'Gaius was here,' complaints about innkeepers, love notes, jokes about friends, and cheers for their favorite gladiators. Two thousand years pass, and humans do not change even a little bit. If Pompeii had had phone cases, someone would have dropped one and we'd have that too.",
+"We even have an eyewitness. A teenager across the bay — later known as Pliny the Younger — watched the eruption and wrote it all down: the cloud shaped like an umbrella pine tree, the falling ash, the panic, and his uncle Pliny the Elder sailing TOWARD the disaster to rescue people, which cost him his life. Those letters are considered the first detailed eyewitness account of a volcanic eruption ever written. Scientists still call this type of eruption 'Plinian' in his honor.",
+"Pompeii was forgotten for about 1,500 years, then rediscovered, and archaeologists have been carefully uncovering it ever since — streets, houses, bakeries, and the everyday lives of people who never got to finish their day. That's why we study it, and why we visit respectfully: it is not a theme park. It is the world's most complete snapshot of ordinary Roman life — a whole city on pause, teaching us that history isn't about marble statues. It's about people, mid-sandwich."
+],
+facts:[
+"Carbonized loaves of bread — scored into eight slices — really were found in Pompeii's ovens.",
+"The graffiti is real, including 'beware of the dog' mosaics and everyday jokes and notes.",
+"Pliny the Younger's letters are the first detailed eyewitness account of an eruption; volcanologists still use the term 'Plinian.'"
+],
+talk:"Pompeii preserves ordinary life — bread, graffiti, doormats. Why might everyday stuff teach us more than palaces and statues do?"}
+];
+
+/* ================= ART ================= */
+function art(id,accent){
+var A={
+thanksgiving:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#FDEBC8"/><circle cx="200" cy="28" r="16" fill="#E0A63C"/><ellipse cx="120" cy="118" rx="130" ry="26" fill="#D9B98A"/><ellipse cx="88" cy="78" rx="26" ry="22" fill="#8A5A33"/><circle cx="88" cy="56" r="12" fill="#8A5A33"/><path d="M60 70 Q46 52 56 40" stroke="#C9603B" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M66 66 Q56 46 68 34" stroke="#E0A63C" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M74 63 Q70 42 82 32" stroke="#5E7A4E" stroke-width="7" fill="none" stroke-linecap="round"/><polygon points="96,56 106,59 96,62" fill="#E0A63C"/><circle cx="91" cy="53" r="2.4" fill="#2b1d12"/><path d="M80 44 h16 l-2-10 h-12 z" fill="#3A2E22"/><rect x="78" y="42" width="20" height="4" rx="2" fill="#3A2E22"/><rect x="84" y="36" width="8" height="4" fill="#E0A63C"/><path d="M84 100 q4 8 0 16 M92 100 q-4 8 0 16" stroke="#C9603B" stroke-width="4" fill="none" stroke-linecap="round"/><rect x="138" y="82" width="66" height="8" rx="4" fill="#8A5A33"/><rect x="144" y="90" width="6" height="20" fill="#6E4526"/><rect x="192" y="90" width="6" height="20" fill="#6E4526"/><circle cx="154" cy="76" r="7" fill="#E0A63C"/><circle cx="172" cy="74" r="8" fill="#C9603B"/><circle cx="190" cy="76" r="7" fill="#5E7A4E"/></svg>',
+cherrytree:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#E8F0DC"/><ellipse cx="120" cy="120" rx="130" ry="22" fill="#9FB77E"/><rect x="150" y="62" width="12" height="48" rx="4" fill="#7A5C36"/><circle cx="156" cy="46" r="30" fill="#5E8C61"/><circle cx="136" cy="56" r="18" fill="#5E8C61"/><circle cx="178" cy="54" r="16" fill="#5E8C61"/><circle cx="146" cy="40" r="4" fill="#C0392B"/><circle cx="166" cy="34" r="4" fill="#C0392B"/><circle cx="160" cy="52" r="4" fill="#C0392B"/><circle cx="176" cy="46" r="4" fill="#C0392B"/><circle cx="140" cy="52" r="4" fill="#C0392B"/><circle cx="70" cy="74" r="12" fill="#F2C9A0"/><path d="M58 70 q12 -14 24 0" fill="#fff" stroke="#fff"/><rect x="62" y="86" width="16" height="24" rx="6" fill="#2C4763"/><rect x="58" y="88" width="8" height="18" rx="4" fill="#F2C9A0" transform="rotate(-24 62 88)"/><rect x="44" y="76" width="16" height="6" rx="3" fill="#8A7760" transform="rotate(-38 52 79)"/><rect x="40" y="66" width="10" height="12" rx="2" fill="#9AA5AE" transform="rotate(-38 45 72)"/><circle cx="66" cy="72" r="1.8" fill="#2b1d12"/><circle cx="74" cy="72" r="1.8" fill="#2b1d12"/><path d="M66 79 q4 4 8 0" stroke="#2b1d12" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>',
+wright:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#D8E9F2"/><circle cx="204" cy="26" r="14" fill="#F6D77B"/><ellipse cx="120" cy="122" rx="140" ry="20" fill="#E7D3A5"/><ellipse cx="60" cy="118" rx="60" ry="14" fill="#DEC697"/><g transform="rotate(-6 120 64)"><rect x="70" y="52" width="100" height="6" rx="3" fill="#8A5A33"/><rect x="70" y="76" width="100" height="6" rx="3" fill="#8A5A33"/><line x1="80" y1="55" x2="80" y2="79" stroke="#6E4526" stroke-width="3"/><line x1="120" y1="55" x2="120" y2="79" stroke="#6E4526" stroke-width="3"/><line x1="158" y1="55" x2="158" y2="79" stroke="#6E4526" stroke-width="3"/><ellipse cx="120" cy="70" rx="10" ry="6" fill="#3A2E22"/></g><path d="M40 40 q10 -6 20 0 M52 30 q10 -6 20 0" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/></svg>',
+revere:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#1F2E44"/><circle cx="196" cy="30" r="16" fill="#F6E3A1"/><ellipse cx="120" cy="122" rx="140" ry="18" fill="#141F30"/><rect x="30" y="34" width="26" height="56" fill="#2C4763"/><polygon points="30,34 43,16 56,34" fill="#3E5C7E"/><rect x="37" y="42" width="5" height="7" fill="#F6D77B"/><rect x="45" y="42" width="5" height="7" fill="#F6D77B"/><g fill="#0E1826"><ellipse cx="140" cy="86" rx="34" ry="16"/><path d="M112 82 q-10 -18 4 -26 l8 -4 q8 -2 10 6 l-4 14z" /><path d="M118 56 l-8 -14 12 4 4 -8 6 10z"/><rect x="116" y="96" width="7" height="22" rx="3" transform="rotate(14 120 96)"/><rect x="134" y="98" width="7" height="22" rx="3" transform="rotate(-6 138 98)"/><rect x="152" y="96" width="7" height="22" rx="3" transform="rotate(-18 156 96)"/><rect x="166" y="92" width="7" height="22" rx="3" transform="rotate(-30 170 92)"/><path d="M172 78 q16 -8 22 4 q-12 2 -16 8z"/><ellipse cx="146" cy="62" rx="9" ry="12"/><circle cx="146" cy="46" r="7"/><path d="M136 44 l20 -4 -10 -6z"/><rect x="150" y="66" width="16" height="6" rx="3" transform="rotate(-24 158 69)"/></g><circle cx="70" cy="24" r="3" fill="#F6E3A1" opacity=".9"/><circle cx="104" cy="16" r="2" fill="#F6E3A1" opacity=".7"/><circle cx="150" cy="24" r="2.4" fill="#F6E3A1" opacity=".8"/></svg>',
+lewisclark:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#DCEAF0"/><polygon points="0,86 52,30 104,86" fill="#8FA6B8"/><polygon points="52,30 66,46 38,46" fill="#fff"/><polygon points="70,86 130,20 190,86" fill="#75909F"/><polygon points="130,20 146,40 114,40" fill="#fff"/><rect x="0" y="86" width="240" height="44" fill="#4E7F94"/><path d="M0 96 q30 6 60 0 t60 0 t60 0 t60 0" stroke="#3D6B80" stroke-width="3" fill="none"/><path d="M60 96 q60 -22 120 0 l-10 12 q-50 -16 -100 0 z" fill="#8A5A33"/><circle cx="96" cy="82" r="7" fill="#F2C9A0"/><rect x="90" y="88" width="12" height="12" rx="4" fill="#5E7A4E"/><circle cx="128" cy="80" r="7" fill="#F2C9A0"/><rect x="122" y="86" width="12" height="14" rx="4" fill="#B04A3C"/><rect x="118" y="60" width="4" height="30" fill="#6E4526" transform="rotate(18 120 75)"/><ellipse cx="158" cy="88" rx="11" ry="8" fill="#2b1d12"/><circle cx="167" cy="82" r="5" fill="#2b1d12"/><path d="M170 80 l4 -3 -1 4" fill="#2b1d12"/></svg>',
+teaparty:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#20304A"/><circle cx="42" cy="26" r="13" fill="#F6E3A1"/><rect x="0" y="92" width="240" height="38" fill="#17385C"/><path d="M0 100 q30 6 60 0 t60 0 t60 0 t60 0" stroke="#0F2A47" stroke-width="3" fill="none"/><path d="M96 92 q64 -20 128 0 l-14 16 q-50 -12 -100 0 z" fill="#5A3A22"/><rect x="150" y="30" width="6" height="62" fill="#3A2E22"/><polygon points="156,34 196,52 156,66" fill="#EDE3CC"/><rect x="120" y="76" width="22" height="16" rx="2" fill="#8A5A33"/><rect x="120" y="80" width="22" height="3" fill="#E0A63C"/><g transform="rotate(-18 84 74)"><rect x="72" y="66" width="24" height="17" rx="2" fill="#8A5A33"/><rect x="72" y="70" width="24" height="3" fill="#E0A63C"/></g><path d="M64 96 q4 -8 10 -4 M58 102 q6 -8 12 -3" stroke="#C8B98D" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="70" cy="108" r="3" fill="#6E4526"/><circle cx="82" cy="112" r="2.4" fill="#6E4526"/><circle cx="58" cy="112" r="2" fill="#6E4526"/></svg>',
+caesar:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#EFE4EE"/><rect x="18" y="30" width="16" height="70" fill="#D8CCD8"/><rect x="14" y="24" width="24" height="8" rx="2" fill="#C4B5C6"/><rect x="14" y="98" width="24" height="8" rx="2" fill="#C4B5C6"/><rect x="206" y="30" width="16" height="70" fill="#D8CCD8"/><rect x="202" y="24" width="24" height="8" rx="2" fill="#C4B5C6"/><rect x="202" y="98" width="24" height="8" rx="2" fill="#C4B5C6"/><ellipse cx="120" cy="118" rx="80" ry="12" fill="#C4B5C6"/><rect x="96" y="92" width="48" height="18" rx="4" fill="#D8CCD8"/><path d="M104 92 q-2 -34 16 -44 q18 10 16 44 z" fill="#EDE6DA"/><circle cx="120" cy="52" r="22" fill="#EDE6DA"/><path d="M100 48 q20 -14 40 0 q-2 -18 -20 -18 q-18 0 -20 18z" fill="#DCD2BE"/><g fill="#5E8C61"><ellipse cx="98" cy="46" rx="9" ry="4.5" transform="rotate(-34 98 46)"/><ellipse cx="106" cy="38" rx="9" ry="4.5" transform="rotate(-18 106 38)"/><ellipse cx="116" cy="33" rx="9" ry="4.5" transform="rotate(-6 116 33)"/><ellipse cx="142" cy="46" rx="9" ry="4.5" transform="rotate(34 142 46)"/><ellipse cx="134" cy="38" rx="9" ry="4.5" transform="rotate(18 134 38)"/><ellipse cx="124" cy="33" rx="9" ry="4.5" transform="rotate(6 124 33)"/></g><circle cx="112" cy="52" r="2.2" fill="#3A2E22"/><circle cx="128" cy="52" r="2.2" fill="#3A2E22"/><path d="M112 62 q8 6 16 -1" stroke="#3A2E22" stroke-width="2" fill="none" stroke-linecap="round"/></svg>'
+,
+appleseed:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#EAF2D8"/><ellipse cx="120" cy="120" rx="140" ry="22" fill="#A8C078"/><rect x="168" y="58" width="10" height="52" rx="4" fill="#7A5C36"/><circle cx="173" cy="44" r="26" fill="#5E8C61"/><circle cx="158" cy="54" r="15" fill="#5E8C61"/><circle cx="188" cy="52" r="14" fill="#5E8C61"/><circle cx="165" cy="40" r="4" fill="#C0392B"/><circle cx="181" cy="48" r="4" fill="#C0392B"/><circle cx="174" cy="56" r="4" fill="#C0392B"/><circle cx="66" cy="66" r="11" fill="#F2C9A0"/><path d="M54 62 a12 8 0 0 1 24 0 z" fill="#8A8F98"/><rect x="62" y="52" width="8" height="6" fill="#6E7680"/><rect x="58" y="77" width="16" height="24" rx="6" fill="#8C6E4E"/><path d="M50 84 l-10 8 M74 84 l10 8" stroke="#8C6E4E" stroke-width="5" stroke-linecap="round"/><path d="M60 101 l-4 14 M72 101 l4 14" stroke="#5C4632" stroke-width="5" stroke-linecap="round"/><circle cx="96" cy="112" r="4" fill="#C0392B"/><circle cx="112" cy="106" r="4" fill="#C0392B"/><circle cx="128" cy="112" r="4" fill="#C0392B"/><circle cx="63" cy="64" r="1.8" fill="#2b1d12"/><circle cx="70" cy="64" r="1.8" fill="#2b1d12"/><path d="M63 70 q3.5 3.5 7 0" stroke="#2b1d12" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>',
+liberty:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#D8E9F2"/><rect x="0" y="96" width="240" height="34" fill="#4E7F94"/><path d="M0 102 q30 6 60 0 t60 0 t60 0 t60 0" stroke="#3D6B80" stroke-width="3" fill="none"/><rect x="56" y="52" width="86" height="52" rx="4" fill="#B08C5A" stroke="#8A6E42" stroke-width="4"/><path d="M56 62 h86 M56 82 h86 M84 52 v52 M114 52 v52" stroke="#8A6E42" stroke-width="3"/><rect x="88" y="20" width="14" height="36" rx="6" fill="#7FB89A"/><path d="M88 26 l-8 6 v8 l8 -4z" fill="#7FB89A"/><circle cx="95" cy="14" r="9" fill="#E0A63C"/><path d="M95 2 l3 8 -6 0z" fill="#E0A63C"/><path d="M84 8 l4 4 M106 8 l-4 4 M95 -2 l0 5" stroke="#E0A63C" stroke-width="3" stroke-linecap="round"/><circle cx="196" cy="26" r="13" fill="#F6D77B"/><path d="M20 40 q10 -6 20 0 M32 30 q10 -6 20 0" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/></svg>',
+betsyross:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#F2E4E0"/><rect x="40" y="26" width="110" height="70" rx="4" fill="#FFFDF6" stroke="#B04A5C" stroke-width="4"/><rect x="40" y="26" width="110" height="10" fill="#B04A5C"/><rect x="40" y="46" width="110" height="10" fill="#B04A5C"/><rect x="40" y="66" width="110" height="10" fill="#B04A5C"/><rect x="40" y="86" width="110" height="10" fill="#B04A5C"/><rect x="40" y="26" width="48" height="40" fill="#2C4763"/><g fill="#FFFDF6"><circle cx="64" cy="38" r="3"/><circle cx="76" cy="42" r="3"/><circle cx="76" cy="54" r="3"/><circle cx="64" cy="58" r="3"/><circle cx="52" cy="54" r="3"/><circle cx="52" cy="42" r="3"/><circle cx="64" cy="48" r="3"/></g><rect x="20" y="18" width="8" height="86" rx="4" fill="#7A5C36"/><path d="M178 44 q22 8 8 28" stroke="#8A8F98" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="178" cy="42" r="4" fill="#8A8F98"/><text x="196" y="98" font-family="Georgia,serif" font-size="44" font-weight="bold" fill="#B04A5C">?</text></svg>',
+carver:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#EFEAD8"/><ellipse cx="120" cy="122" rx="140" ry="16" fill="#C9B98A"/><path d="M60 96 q-10 -26 8 -40 q-2 -14 12 -16 q4 -10 16 -8 q14 -2 16 10 q14 4 10 18 q12 14 0 36z" fill="#D9A05B" stroke="#A6733B" stroke-width="4"/><path d="M74 62 q10 8 0 16 M92 58 q-8 10 2 18" stroke="#A6733B" stroke-width="3" fill="none"/><path d="M140 96 v-30 q0 -10 10 -10 h6 q10 0 10 10 v30" fill="none" stroke="#3E5C50" stroke-width="5"/><path d="M136 96 h34 l-6 14 h-22z" fill="#7FB88A" stroke="#3E5C50" stroke-width="4"/><circle cx="150" cy="104" r="3" fill="#3E5C50"/><circle cx="158" cy="100" r="2.4" fill="#3E5C50"/><path d="M196 92 q-2 -20 14 -26 M196 92 q2 -16 -8 -24" stroke="#5E8C61" stroke-width="4" fill="none" stroke-linecap="round"/><ellipse cx="212" cy="62" rx="10" ry="5" fill="#5E8C61" transform="rotate(-30 212 62)"/><ellipse cx="186" cy="64" rx="9" ry="4.5" fill="#5E8C61" transform="rotate(28 186 64)"/></svg>',
+lincolnhat:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#E8E8F0"/><ellipse cx="120" cy="122" rx="140" ry="14" fill="#C6C6D6"/><rect x="72" y="26" width="60" height="66" rx="6" fill="#2A2A38"/><rect x="54" y="88" width="96" height="12" rx="6" fill="#2A2A38"/><rect x="72" y="74" width="60" height="8" fill="#5C5C74"/><g transform="rotate(-14 92 22)"><rect x="80" y="12" width="24" height="16" rx="2" fill="#FFFDF6" stroke="#B0A890" stroke-width="2"/><path d="M80 12 l12 9 12 -9" stroke="#B0A890" stroke-width="2" fill="none"/></g><g transform="rotate(10 122 20)"><rect x="110" y="10" width="24" height="16" rx="2" fill="#FFFDF6" stroke="#B0A890" stroke-width="2"/><path d="M110 10 l12 9 12 -9" stroke="#B0A890" stroke-width="2" fill="none"/></g><g fill="#D8D8E4"><ellipse cx="196" cy="106" rx="20" ry="12"/><circle cx="212" cy="96" r="8"/><path d="M216 90 l6 -8 2 8z"/><rect x="182" y="112" width="5" height="12" rx="2"/><rect x="204" y="112" width="5" height="12" rx="2"/></g><circle cx="214" cy="95" r="1.8" fill="#2A2A38"/></svg>',
+rubybridges:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#F2E9D8"/><rect x="120" y="30" width="104" height="76" fill="#C97B5A"/><polygon points="120,30 172,8 224,30" fill="#A65C42"/><rect x="160" y="70" width="22" height="36" fill="#6E4526"/><rect x="132" y="44" width="16" height="16" fill="#FDF6E7"/><rect x="196" y="44" width="16" height="16" fill="#FDF6E7"/><rect x="30" y="52" width="14" height="46" rx="6" fill="#3A3A4E"/><circle cx="37" cy="44" r="9" fill="#E8C49A"/><rect x="58" y="52" width="14" height="46" rx="6" fill="#3A3A4E"/><circle cx="65" cy="44" r="9" fill="#E8C49A"/><circle cx="92" cy="66" r="9" fill="#8C5A3A"/><path d="M84 60 a10 8 0 0 1 16 0 z" fill="#2A2A38"/><rect x="85" y="75" width="14" height="20" rx="5" fill="#C9603B"/><rect x="88" y="95" width="4" height="12" fill="#8C5A3A"/><rect x="94" y="95" width="4" height="12" fill="#8C5A3A"/><rect x="100" y="78" width="8" height="12" rx="2" fill="#2C4763"/><circle cx="89" cy="64" r="1.6" fill="#2b1d12"/><circle cx="95" cy="64" r="1.6" fill="#2b1d12"/><path d="M89 69 q3 3 6 0" stroke="#2b1d12" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>',
+franklinkite:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#3A4258"/><ellipse cx="60" cy="26" rx="34" ry="14" fill="#5C6478"/><ellipse cx="96" cy="20" rx="28" ry="12" fill="#5C6478"/><ellipse cx="150" cy="28" rx="40" ry="15" fill="#4E5668"/><polygon points="150,40 178,64 150,88 122,64" fill="#E0A63C" stroke="#B0812E" stroke-width="3"/><path d="M150 40 v48 M122 64 h56" stroke="#B0812E" stroke-width="2.5"/><path d="M150 88 q-14 20 -34 26" stroke="#EDE3CC" stroke-width="2.5" fill="none"/><path d="M124 106 l6 4 -6 4 6 4" stroke="#EDE3CC" stroke-width="2" fill="none"/><g transform="rotate(18 108 116)"><rect x="104" y="108" width="8" height="12" rx="4" fill="none" stroke="#F6D77B" stroke-width="3"/><rect x="106" y="118" width="4" height="8" fill="#F6D77B"/></g><path d="M74 44 l-10 16 h10 l-12 20" stroke="#F6E3A1" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+rosaparks:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#E4EAE4"/><rect x="24" y="30" width="192" height="66" rx="12" fill="#D9B23B" stroke="#A6852E" stroke-width="4"/><rect x="24" y="52" width="192" height="8" fill="#A6852E"/><rect x="38" y="38" width="26" height="14" rx="3" fill="#BFD8E4"/><rect x="72" y="38" width="26" height="14" rx="3" fill="#BFD8E4"/><rect x="106" y="38" width="26" height="14" rx="3" fill="#BFD8E4"/><rect x="140" y="38" width="26" height="14" rx="3" fill="#BFD8E4"/><rect x="174" y="38" width="26" height="14" rx="3" fill="#BFD8E4"/><circle cx="66" cy="100" r="14" fill="#3A3A44"/><circle cx="66" cy="100" r="6" fill="#8A8F98"/><circle cx="174" cy="100" r="14" fill="#3A3A44"/><circle cx="174" cy="100" r="6" fill="#8A8F98"/><circle cx="119" cy="41" r="6.5" fill="#8C5A3A"/><path d="M112 37 a8 7 0 0 1 14 0 l0 3 a10 6 0 0 0 -14 0z" fill="#4E3A5C"/><rect x="113" y="47" width="12" height="7" rx="3" fill="#7A5C8C"/></svg>'
+,
+edison:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#2E2A38"/><g stroke="#4E4A5C" stroke-width="3" fill="#3A3648"><circle cx="48" cy="44" r="14"/><rect x="43" y="56" width="10" height="10" rx="2"/><circle cx="92" cy="44" r="14"/><rect x="87" y="56" width="10" height="10" rx="2"/><circle cx="148" cy="44" r="14"/><rect x="143" y="56" width="10" height="10" rx="2"/></g><circle cx="192" cy="44" r="17" fill="#F6D77B"/><rect x="186" y="59" width="12" height="11" rx="2" fill="#B0A890"/><path d="M188 44 q4 -8 8 0" stroke="#C9903B" stroke-width="2.5" fill="none"/><g stroke="#F6E3A1" stroke-width="3" stroke-linecap="round"><path d="M192 18 v-8"/><path d="M172 26 l-6 -6"/><path d="M212 26 l6 -6"/><path d="M168 44 h-8"/><path d="M216 44 h8"/></g><path d="M30 96 h180" stroke="#4E4A5C" stroke-width="4" stroke-linecap="round"/><path d="M40 108 h90" stroke="#4E4A5C" stroke-width="4" stroke-linecap="round" opacity=".6"/></svg>',
+bell:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#E8EEF0"/><ellipse cx="120" cy="120" rx="140" ry="14" fill="#C6D2D8"/><rect x="66" y="96" width="44" height="10" rx="5" fill="#3A3A44"/><rect x="82" y="46" width="12" height="52" fill="#3A3A44"/><path d="M88 46 q-16 -4 -16 -18 a16 12 0 0 1 32 0 q0 14 -16 18z" fill="#3A3A44"/><circle cx="88" cy="28" r="7" fill="#2A2A32"/><path d="M104 78 q14 2 14 14 l0 6" stroke="#3A3A44" stroke-width="4" fill="none"/><ellipse cx="118" cy="104" rx="9" ry="6" fill="#3A3A44"/><g stroke="#4E7A8C" stroke-width="4" fill="none" stroke-linecap="round"><path d="M142 56 q6 8 0 16"/><path d="M154 48 q12 16 0 32"/><path d="M166 40 q18 24 0 48"/></g><circle cx="196" cy="30" r="3" fill="#4E7A8C"/><circle cx="206" cy="42" r="2.4" fill="#4E7A8C"/><circle cx="200" cy="56" r="2" fill="#4E7A8C"/></svg>',
+mccoy:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#E4E0D4"/><rect x="0" y="102" width="240" height="8" fill="#6E6656"/><rect x="0" y="112" width="240" height="4" fill="#8A8272"/><rect x="26" y="46" width="92" height="46" rx="8" fill="#3A4E5C"/><rect x="104" y="30" width="40" height="62" rx="6" fill="#2E3E4A"/><rect x="112" y="38" width="24" height="18" rx="3" fill="#BFD8E4"/><rect x="38" y="30" width="16" height="20" fill="#2E3E4A"/><path d="M38 26 h16 l4 6 h-24z" fill="#2E3E4A"/><circle cx="52" cy="96" r="12" fill="#2A2A32"/><circle cx="52" cy="96" r="5" fill="#8A8F98"/><circle cx="92" cy="96" r="12" fill="#2A2A32"/><circle cx="92" cy="96" r="5" fill="#8A8F98"/><circle cx="126" cy="96" r="12" fill="#2A2A32"/><circle cx="126" cy="96" r="5" fill="#8A8F98"/><path d="M20 40 q-8 -10 4 -14 q-2 -8 8 -8 q8 -2 10 6 q10 0 6 10" fill="#C6C2B6" opacity=".8"/><g transform="rotate(-18 186 52)"><path d="M172 60 h28 v-8 h-12 l-4 -8 h-8z" fill="#B0812E"/><path d="M200 56 l14 -10" stroke="#B0812E" stroke-width="4" stroke-linecap="round"/></g><circle cx="216" cy="58" r="3" fill="#E0A63C"/><circle cx="220" cy="68" r="2.4" fill="#E0A63C"/><circle cx="217" cy="78" r="2" fill="#E0A63C"/></svg>',
+earhart:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#CDE4EE"/><circle cx="42" cy="26" r="14" fill="#F6D77B"/><rect x="0" y="96" width="240" height="34" fill="#4E7F94"/><path d="M0 104 q30 6 60 0 t60 0 t60 0 t60 0" stroke="#3D6B80" stroke-width="3" fill="none"/><g transform="rotate(-8 120 56)"><ellipse cx="120" cy="56" rx="46" ry="12" fill="#C0392B"/><ellipse cx="120" cy="50" rx="14" ry="7" fill="#8C2B20"/><rect x="150" y="46" width="18" height="8" rx="4" fill="#C0392B"/><ellipse cx="92" cy="56" rx="20" ry="5" fill="#D9603B"/><circle cx="160" cy="56" r="4" fill="#F6D77B"/><path d="M74 56 h-14 M74 52 h-10 M74 60 h-10" stroke="#EDF3F6" stroke-width="2.5" stroke-linecap="round"/></g><path d="M186 30 q10 -6 20 0 M198 20 q10 -6 20 0" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".85"/></svg>',
+tubman:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#1A2438"/><circle cx="120" cy="30" r="8" fill="#F6E3A1"/><g stroke="#F6E3A1" stroke-width="2.5" stroke-linecap="round"><path d="M120 14 v-6"/><path d="M120 46 v6"/><path d="M104 30 h-6"/><path d="M136 30 h6"/><path d="M109 19 l-4 -4"/><path d="M131 19 l4 -4"/><path d="M109 41 l-4 4"/><path d="M131 41 l4 4"/></g><circle cx="46" cy="22" r="2" fill="#F6E3A1" opacity=".7"/><circle cx="76" cy="14" r="1.6" fill="#F6E3A1" opacity=".6"/><circle cx="170" cy="18" r="2" fill="#F6E3A1" opacity=".7"/><circle cx="204" cy="30" r="1.6" fill="#F6E3A1" opacity=".6"/><polygon points="30,110 44,66 58,110" fill="#22412E"/><polygon points="60,110 76,58 92,110" fill="#1B3626"/><polygon points="180,110 196,62 212,110" fill="#22412E"/><path d="M0 118 q60 -12 120 0 t120 0 l0 12 -240 0z" fill="#2E2A26"/><path d="M96 118 q22 -8 44 0" stroke="#C9A03B" stroke-width="3" fill="none" stroke-dasharray="5 6"/><rect x="142" y="92" width="8" height="12" rx="2" fill="#3A2E22"/><path d="M142 92 a4 4 0 0 1 8 0" fill="none" stroke="#F6D77B" stroke-width="2.5"/><circle cx="146" cy="98" r="3" fill="#F6D77B"/></svg>',
+ponyexpress:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#F2DCC0"/><circle cx="202" cy="28" r="15" fill="#E08C3B"/><rect x="24" y="26" width="30" height="44" fill="#C97B4A"/><rect x="18" y="22" width="42" height="8" rx="4" fill="#A65C36"/><rect x="30" y="34" width="8" height="10" fill="#7A4626"/><path d="M0 110 q60 -10 120 0 t120 0 l0 20 -240 0z" fill="#D9B98A"/><g fill="#4E3A2E"><ellipse cx="130" cy="78" rx="30" ry="14"/><path d="M104 74 q-12 -14 2 -22 l10 -2 q8 0 8 8 l-4 12z"/><path d="M108 52 l-6 -12 10 4 4 -8 6 10z"/><path d="M100 88 l-14 16 M118 90 l-6 20 M142 90 l6 20 M156 84 l16 12" stroke="#4E3A2E" stroke-width="6" stroke-linecap="round"/><path d="M158 74 q18 -6 22 6 q-12 0 -16 6z"/></g><circle cx="136" cy="52" r="8" fill="#E8C49A"/><path d="M128 50 a9 6 0 0 1 16 -2 l4 0 -6 -6 a10 10 0 0 0 -14 2z" fill="#8C5A3A"/><rect x="128" y="60" width="16" height="16" rx="5" fill="#B04A3C"/><rect x="120" y="70" width="14" height="12" rx="3" fill="#8C6E4E"/><path d="M120 70 h14" stroke="#6E4E32" stroke-width="2"/></svg>',
+libertybell:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#EDE6D8"/><rect x="66" y="14" width="108" height="12" rx="4" fill="#7A5C36"/><rect x="112" y="24" width="16" height="10" fill="#5C4428"/><path d="M120 34 q-38 0 -38 44 q0 10 -8 16 l92 0 q-8 -6 -8 -16 q0 -44 -38 -44z" fill="#B08C5A" stroke="#8A6E42" stroke-width="4"/><path d="M92 50 h56 M88 60 h64" stroke="#8A6E42" stroke-width="2.5"/><rect x="70" y="94" width="100" height="10" rx="4" fill="#8A6E42"/><ellipse cx="120" cy="104" rx="9" ry="6" fill="#8A6E42"/><path d="M120 94 l-5 -10 6 -8 -5 -9 5 -8" stroke="#5C4428" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+sampson:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#E4E8EE"/><ellipse cx="120" cy="122" rx="140" ry="12" fill="#B8C0CC"/><path d="M70 42 l30 -14 30 14 -30 8z" fill="#2A2A38"/><circle cx="100" cy="52" r="13" fill="#E8C49A"/><path d="M100 65 q-20 4 -22 34 l44 0 q-2 -30 -22 -34z" fill="#2C4763"/><path d="M100 65 v34 M88 74 l24 0" stroke="#F2E9D8" stroke-width="2.5"/><circle cx="100" cy="80" r="2" fill="#F6D77B"/><circle cx="100" cy="90" r="2" fill="#F6D77B"/><path d="M96 50 q4 4 8 0" stroke="#2b1d12" stroke-width="1.6" fill="none" stroke-linecap="round"/><circle cx="95" cy="48" r="1.8" fill="#2b1d12"/><circle cx="105" cy="48" r="1.8" fill="#2b1d12"/><rect x="146" y="30" width="6" height="74" rx="3" fill="#7A5C36"/><path d="M149 30 l0 -10" stroke="#8A8F98" stroke-width="5" stroke-linecap="round"/><path d="M60 108 q40 10 120 0" stroke="#8A92A0" stroke-width="3" fill="none" opacity=".5"/></svg>'
+,
+sacagawea:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#E8EAD8"/><polygon points="120,70 170,18 220,70" fill="#8FA6B8"/><polygon points="170,18 182,32 158,32" fill="#fff"/><polygon points="60,70 100,30 140,70" fill="#A6B8C4"/><rect x="0" y="70" width="240" height="60" fill="#9FB77E"/><path d="M0 96 q40 -10 80 0 t80 0 t80 0 l0 34 -240 0z" fill="#4E7F94"/><circle cx="76" cy="52" r="11" fill="#8C5A3A"/><path d="M66 48 a11 8 0 0 1 20 0 l0 4 -20 0z" fill="#2A2A32"/><path d="M86 44 l6 -3 -1 6" fill="#C0392B"/><rect x="66" y="63" width="20" height="30" rx="7" fill="#B04A3C"/><rect x="88" y="60" width="12" height="22" rx="6" fill="#C9906E"/><circle cx="94" cy="58" r="5.5" fill="#8C5A3A"/><path d="M89 55 a6 5 0 0 1 10 0z" fill="#2A2A32"/><rect x="68" y="93" width="6" height="16" fill="#8C5A3A"/><rect x="78" y="93" width="6" height="16" fill="#8C5A3A"/><g fill="#7A5C36"><ellipse cx="176" cy="82" rx="16" ry="8"/><path d="M162 78 q-6 -8 2 -12 l6 -1 q5 0 5 5 l-2 8z"/><rect x="166" y="88" width="4" height="12" rx="2"/><rect x="182" y="88" width="4" height="12" rx="2"/><path d="M190 78 q10 -3 12 4 q-7 0 -9 3z"/></g><g fill="#8C6E4E"><ellipse cx="210" cy="86" rx="13" ry="7"/><path d="M199 82 q-5 -7 2 -10 l5 -1 q4 0 4 4 l-2 7z"/><rect x="203" y="91" width="3.5" height="10" rx="1.75"/><rect x="215" y="91" width="3.5" height="10" rx="1.75"/></g><circle cx="72" cy="50" r="1.8" fill="#2b1d12"/><circle cx="80" cy="50" r="1.8" fill="#2b1d12"/><path d="M73 56 q3 3 6 0" stroke="#2b1d12" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>',
+goldrush:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#EAE2C8"/><polygon points="0,74 60,26 120,74" fill="#B8A272"/><polygon points="90,74 150,32 210,74" fill="#C9B98A"/><rect x="0" y="74" width="240" height="56" fill="#4E7F94"/><path d="M0 84 q30 6 60 0 t60 0 t60 0 t60 0" stroke="#3D6B80" stroke-width="3" fill="none"/><g transform="rotate(-10 120 96)"><ellipse cx="120" cy="96" rx="34" ry="14" fill="#5C5C64"/><ellipse cx="120" cy="92" rx="26" ry="9" fill="#3A3A44"/><circle cx="112" cy="92" r="4" fill="#F6D77B"/><circle cx="124" cy="90" r="3" fill="#F6D77B"/><circle cx="118" cy="96" r="2.4" fill="#F6D77B"/></g><path d="M52 94 l4 -8 4 8 M64 98 l3 -6 3 6" stroke="#F6D77B" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="206" cy="24" r="13" fill="#F6D77B"/></svg>',
+railroad:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#E6E0D0"/><rect x="0" y="100" width="240" height="8" fill="#6E6656"/><path d="M8 108 h18 M38 108 h18 M68 108 h18 M98 108 h18 M128 108 h18 M158 108 h18 M188 108 h18 M218 108 h18" stroke="#5C5446" stroke-width="5"/><g fill="#2E3E4A"><rect x="18" y="58" width="66" height="34" rx="5"/><rect x="70" y="44" width="22" height="48" rx="4"/><rect x="26" y="44" width="12" height="16"/><path d="M26 40 h12 l4 6 h-20z"/><circle cx="36" cy="96" r="10"/><circle cx="64" cy="96" r="10"/><circle cx="88" cy="96" r="8"/></g><g fill="#4A2E2E"><rect x="156" y="58" width="66" height="34" rx="5"/><rect x="148" y="44" width="22" height="48" rx="4"/><rect x="202" y="44" width="12" height="16"/><path d="M202 40 h12 l4 6 h-20z"/><circle cx="152" cy="96" r="8"/><circle cx="176" cy="96" r="10"/><circle cx="204" cy="96" r="10"/></g><rect x="116" y="80" width="8" height="18" rx="3" fill="#E0A63C"/><path d="M112 78 h16" stroke="#B0812E" stroke-width="4" stroke-linecap="round"/><path d="M120 60 l-4 8 M120 60 l4 8 M120 60 v-8" stroke="#E0A63C" stroke-width="2.5" stroke-linecap="round"/><path d="M96 34 q-6 -10 4 -12 q0 -8 10 -6 q8 -4 10 4 q8 2 4 10z" fill="#C6C2B6" opacity=".7"/><path d="M128 30 q-4 -8 4 -10 q2 -6 8 -4 q6 -2 8 4 q6 2 2 10z" fill="#C6C2B6" opacity=".6"/></svg>',
+oregontrail:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#F2E4C8"/><circle cx="36" cy="26" r="13" fill="#F6D77B"/><path d="M0 104 q60 -14 120 0 t120 0 l0 26 -240 0z" fill="#C9B472"/><path d="M150 96 q30 -34 60 0z" fill="#B8A272"/><g><path d="M60 58 q30 -18 60 0 l-4 30 -52 0z" fill="#F6F0E0" stroke="#B0A890" stroke-width="3"/><rect x="56" y="86" width="70" height="12" rx="3" fill="#8C6E4E"/><circle cx="74" cy="104" r="12" fill="#7A5C36"/><circle cx="74" cy="104" r="4" fill="#4E3A22"/><circle cx="110" cy="104" r="12" fill="#7A5C36"/><circle cx="110" cy="104" r="4" fill="#4E3A22"/></g><g fill="#8C7E5A"><ellipse cx="160" cy="94" rx="17" ry="10"/><path d="M146 90 q-6 -8 2 -12 l7 -1 q5 0 5 5 l-2 8z"/><path d="M146 78 l-5 -8 6 3 3 -5 4 7z"/><rect x="150" y="102" width="5" height="12" rx="2"/><rect x="166" y="102" width="5" height="12" rx="2"/></g><path d="M126 92 q10 -2 20 -1" stroke="#5C4632" stroke-width="3" fill="none"/></svg>',
+delaware:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#2A3648"/><circle cx="52" cy="26" r="12" fill="#E8ECF2" opacity=".9"/><circle cx="90" cy="16" r="1.8" fill="#fff" opacity=".8"/><circle cx="140" cy="22" r="1.5" fill="#fff" opacity=".7"/><circle cx="186" cy="14" r="2" fill="#fff" opacity=".8"/><rect x="0" y="84" width="240" height="46" fill="#3D5C74"/><g fill="#DCE6EE" opacity=".9"><polygon points="18,92 52,88 44,98"/><polygon points="70,102 104,96 96,108"/><polygon points="150,90 184,86 176,98"/><polygon points="204,104 234,100 226,110"/></g><path d="M74 84 q46 -14 92 0 l-10 14 q-36 -10 -72 0z" fill="#4E3A2E"/><rect x="112" y="44" width="5" height="40" fill="#7A5C36"/><path d="M117 46 h26 l-6 7 6 7 h-26z" fill="#C0392B"/><circle cx="98" cy="62" r="7" fill="#E8C49A"/><path d="M90 58 a9 6 0 0 1 16 0 l3 0 -4 -7 a10 8 0 0 0 -14 0z" fill="#2A2A38"/><rect x="91" y="69" width="14" height="18" rx="5" fill="#2C4763"/><circle cx="140" cy="70" r="6" fill="#E8C49A"/><rect x="134" y="76" width="12" height="12" rx="4" fill="#3A4E5C"/><circle cx="162" cy="72" r="6" fill="#E8C49A"/><rect x="156" y="78" width="12" height="10" rx="4" fill="#3A4E5C"/><path d="M170 80 l14 -18" stroke="#7A5C36" stroke-width="3.5" stroke-linecap="round"/></svg>',
+constitution:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#EFE8D8"/><rect x="48" y="20" width="112" height="90" rx="4" fill="#FBF6E8" stroke="#C9B98A" stroke-width="3"/><path d="M48 24 q-8 8 0 16 M160 24 q8 8 0 16" stroke="#C9B98A" stroke-width="3" fill="none"/><text x="64" y="52" font-family="Georgia,serif" font-size="20" font-weight="bold" fill="#3A2E22" font-style="italic">We the</text><text x="64" y="74" font-family="Georgia,serif" font-size="20" font-weight="bold" fill="#3A2E22" font-style="italic">People</text><path d="M64 86 h80 M64 94 h72 M64 102 h76" stroke="#B0A890" stroke-width="2.5"/><circle cx="178" cy="96" r="13" fill="#B04A3C"/><path d="M172 96 l5 5 8 -10" stroke="#F2D8C8" stroke-width="2.5" fill="none"/><path d="M196 66 q18 -26 22 -44 q-14 10 -20 30 z" fill="#E8E0C8" stroke="#B0A890" stroke-width="2.5"/><path d="M196 66 l-4 12" stroke="#8A7760" stroke-width="3" stroke-linecap="round"/></svg>',
+douglass:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#3A3648"/><circle cx="120" cy="34" r="20" fill="#E0A63C" opacity=".25"/><circle cx="120" cy="34" r="12" fill="#E0A63C" opacity=".5"/><path d="M62 108 q0 -18 26 -18 q14 0 20 8 q6 -8 20 -8 q26 0 26 18 l0 4 -92 0z" fill="#FBF6E8"/><path d="M108 90 v20 M74 96 h24 M74 102 h24 M74 108 h20 M118 96 h24 M118 102 h24 M118 108 h20" stroke="#B0A890" stroke-width="2.2"/><path d="M62 108 q46 -10 92 0" stroke="#8A7760" stroke-width="3" fill="none"/><g stroke="#F6E3A1" stroke-width="3" stroke-linecap="round"><path d="M120 58 v8"/><path d="M96 62 l4 7"/><path d="M144 62 l-4 7"/><path d="M78 74 l6 5"/><path d="M162 74 l-6 5"/></g></svg>',
+abigail:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#F0E6E0"/><rect x="44" y="38" width="96" height="62" rx="4" fill="#FBF6E8" stroke="#C9A08A" stroke-width="3"/><path d="M44 38 l48 34 48 -34" stroke="#C9A08A" stroke-width="3" fill="none"/><circle cx="92" cy="86" r="9" fill="#B04A3C"/><path d="M88 86 l3 3 6 -7" stroke="#F2D8C8" stroke-width="2" fill="none"/><path d="M160 88 q20 -30 24 -52 q-16 12 -22 36z" fill="#E8E0C8" stroke="#B0A890" stroke-width="2.5"/><path d="M160 88 l-5 14" stroke="#8A7760" stroke-width="3" stroke-linecap="round"/><rect x="188" y="70" width="18" height="30" rx="3" fill="#C9B98A"/><ellipse cx="197" cy="68" rx="5" ry="8" fill="#E8943B"/><path d="M197 58 q3 -6 0 -10" stroke="#8A7760" stroke-width="2.5" fill="none"/><path d="M20 24 h56 M28 24 v-6 M44 24 v-6 M60 24 v-6" stroke="#8A92A0" stroke-width="2.5"/><path d="M26 18 q6 8 12 0 M42 18 q6 8 12 0" stroke="#8A92A0" stroke-width="2" fill="none" opacity=".6"/></svg>',
+cleopatra:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#F2E0C0"/><circle cx="204" cy="26" r="15" fill="#E08C3B"/><polygon points="20,96 70,34 120,96" fill="#C9A05B"/><polygon points="98,96 142,48 186,96" fill="#B8905B"/><rect x="0" y="96" width="240" height="34" fill="#D9B98A"/><g transform="rotate(-6 120 106)"><path d="M60 106 a10 10 0 0 1 0 -20 l72 0 a10 10 0 0 1 0 20z" fill="#8C3A5C"/><path d="M60 86 a10 10 0 0 0 0 20" fill="#6E2E4A"/><circle cx="60" cy="96" r="6" fill="#F2E0C0"/><path d="M66 92 h64 M66 100 h64" stroke="#B05C7A" stroke-width="2.5"/><circle cx="140" cy="90" r="7" fill="#C9906E"/><path d="M132 86 a9 6 0 0 1 16 0 l0 3 -16 0z" fill="#2A2A32"/><rect x="132" y="80" width="16" height="4" rx="2" fill="#E0A63C"/><path d="M140 78 l0 -5 3 3z" fill="#E0A63C"/><circle cx="137" cy="90" r="1.5" fill="#2b1d12"/><circle cx="143" cy="90" r="1.5" fill="#2b1d12"/><path d="M138 94 q2 2 5 0" stroke="#2b1d12" stroke-width="1.3" fill="none" stroke-linecap="round"/></g></svg>',
+mansamusa:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#F2D8A0"/><circle cx="46" cy="28" r="16" fill="#E0A63C"/><path d="M0 108 q60 -16 120 0 t120 0 l0 22 -240 0z" fill="#D9A85B"/><g fill="#7A4E2E"><ellipse cx="120" cy="86" rx="24" ry="12"/><path d="M112 74 q-2 -10 6 -12 q8 2 6 12z"/><path d="M100 82 q-10 -4 -8 -14 l4 -8 q4 -4 8 0 l0 12z"/><path d="M96 60 l-2 -8 5 4 3 -5 3 7z"/><rect x="104" y="96" width="5" height="14" rx="2"/><rect x="116" y="96" width="5" height="14" rx="2"/><rect x="128" y="96" width="5" height="14" rx="2"/></g><rect x="108" y="66" width="24" height="10" rx="3" fill="#B04A3C"/><circle cx="120" cy="60" r="7" fill="#8C5A3A"/><rect x="112" y="52" width="16" height="5" rx="2" fill="#E0A63C"/><circle cx="120" cy="49" r="2.5" fill="#E0A63C"/><g fill="#8C6236"><ellipse cx="184" cy="94" rx="18" ry="9"/><path d="M178 85 q-1 -8 5 -9 q6 1 5 9z"/><path d="M170 90 q-8 -3 -6 -11 l3 -6 q3 -3 6 0 l0 9z"/><rect x="172" y="102" width="4" height="11" rx="2"/><rect x="192" y="102" width="4" height="11" rx="2"/></g><circle cx="66" cy="98" r="4" fill="#E0A63C"/><circle cx="78" cy="104" r="3" fill="#E0A63C"/><circle cx="58" cy="106" r="2.5" fill="#E0A63C"/></svg>',
+trojan:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#E8DCC8"/><rect x="176" y="30" width="64" height="80" fill="#B8A282"/><rect x="176" y="22" width="10" height="10" fill="#B8A282"/><rect x="192" y="22" width="10" height="10" fill="#B8A282"/><rect x="208" y="22" width="10" height="10" fill="#B8A282"/><rect x="224" y="22" width="10" height="10" fill="#B8A282"/><rect x="196" y="70" width="24" height="40" rx="10" fill="#6E5C42"/><ellipse cx="120" cy="122" rx="140" ry="10" fill="#C9B98A"/><g fill="#8C6E4E" stroke="#6E5236" stroke-width="3"><rect x="52" y="52" width="60" height="34" rx="6"/><path d="M108 58 q16 -4 16 -18 q0 -10 -10 -10 q-8 0 -8 8 l0 14" fill="#8C6E4E"/><path d="M114 34 l10 -4" stroke-linecap="round"/><rect x="56" y="86" width="8" height="22"/><rect x="72" y="86" width="8" height="22"/><rect x="88" y="86" width="8" height="22"/><rect x="100" y="86" width="8" height="22"/></g><circle cx="60" cy="112" r="8" fill="#7A5C36" stroke="#5C4428" stroke-width="3"/><circle cx="104" cy="112" r="8" fill="#7A5C36" stroke="#5C4428" stroke-width="3"/><path d="M118 44 q-2 -6 4 -7 q1 -5 7 -4 q5 -2 6 3 q5 1 2 8z" fill="#6E5236"/><path d="M76 66 h14 M76 72 h10" stroke="#5C4428" stroke-width="2" opacity=".6"/></svg>',
+pompeii:'<svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="130" fill="#E8D8C8"/><polygon points="120,20 60,96 180,96" fill="#6E5C5C"/><polygon points="120,20 100,46 140,46" fill="#3A2E2E"/><path d="M120 20 q-10 -14 2 -18 q0 -8 10 -6 q10 -2 10 6 q10 2 6 12 q-8 -4 -14 0 q-8 -4 -14 6z" fill="#8A8272"/><path d="M112 12 q-14 -6 -24 2" stroke="#8A8272" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M120 46 q6 20 -2 50 M130 46 q10 24 4 50" stroke="#C0523B" stroke-width="4" fill="none" stroke-linecap="round"/><rect x="0" y="96" width="240" height="34" fill="#C9B08A"/><g fill="#B85C3B" stroke="#8C4630" stroke-width="3"><rect x="24" y="76" width="40" height="24"/><polygon points="24,76 44,62 64,76"/><rect x="188" y="78" width="36" height="22"/><polygon points="188,78 206,64 224,78"/></g><rect x="38" y="86" width="10" height="14" fill="#6E3A26"/><rect x="200" y="88" width="9" height="12" fill="#6E3A26"/><circle cx="86" cy="110" r="3" fill="#8A8272"/><circle cx="120" cy="114" r="2.4" fill="#8A8272"/><circle cx="152" cy="110" r="2.8" fill="#8A8272"/></svg>'
+};
+return A[id]||'<svg viewBox="0 0 240 130"><rect width="240" height="130" fill="'+accent+'"/></svg>';
+}
+
+/* ================= STATE ================= */
+var K="espohystory.v1";
+var S;
+try{S=JSON.parse(localStorage.getItem(K))||{}}catch(e){S={}}
+S.done=S.done||{}; S.rate=S.rate||"0.95"; S.easy=!!S.easy;
+function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");
+  clearTimeout(toast._i);toast._i=setTimeout(function(){t.classList.remove("on")},2200)}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+
+/* ================= SHELF ================= */
+function drawShelf(){
+  var el=document.getElementById("shelf");
+  var order=["K","1","2","3","4","5","6"];
+  var names={"K":"Kindergarten","1":"1st Grade","2":"2nd Grade","3":"3rd Grade","4":"4th Grade","5":"5th Grade","6":"6th Grade"};
+  el.innerHTML=order.map(function(g){
+    var cards=[];
+    STORIES.forEach(function(s,i){if(s.grade===g)cards.push({s:s,i:i})});
+    if(!cards.length)return "";
+    var stars=cards.filter(function(x){return S.done[x.s.id]}).length;
+    return '<div class="gsec"><h2 class="gh">'+names[g]
+      +'<small>'+stars+' of '+cards.length+' ⭐</small></h2><div class="grow">'
+      +cards.map(function(x){var s=x.s;
+        return '<button class="gcard" data-i="'+x.i+'">'
+        +'<span class="art">'+art(s.id,s.accent)+'</span>'
+        +'<span class="meta"><span class="gr" style="background:'+s.accent+'">'+s.gname+'</span>'
+        +(S.done[s.id]?'<span class="star">⭐</span>':'')
+        +'<h2>'+esc(s.title)+'</h2><p>'+esc(s.sub)+'</p></span></button>';
+      }).join("")+'</div></div>';
+  }).join("");
+  Array.prototype.forEach.call(el.querySelectorAll(".gcard"),function(b){
+    b.onclick=function(){openStory(+b.dataset.i)};
+  });
+}
+
+/* ================= STORY VIEW ================= */
+var cur=null, tokens=[], paraTokens=[];
+function openStory(i){
+  stopSpeech();
+  cur=STORIES[i];
+  document.getElementById("v-shelf").classList.remove("on");
+  document.getElementById("v-story").classList.add("on");
+  document.getElementById("hero").innerHTML=art(cur.id,cur.accent);
+  document.getElementById("sTitle").textContent=cur.title;
+  document.getElementById("sSub").textContent=cur.sub;
+  document.getElementById("sDone").classList.remove("on");
+  var host=document.getElementById("sText");
+  host.innerHTML=""; tokens=[]; paraTokens=[];
+  cur.paras.forEach(function(p,pi){
+    var el=document.createElement("p");
+    var list=[]; var pos=0;
+    p.split(" ").forEach(function(word,wi){
+      var sp=document.createElement("span");
+      sp.className="w"; sp.textContent=word;
+      sp.dataset.pi=pi; sp.dataset.wi=wi;
+      sp.onclick=function(){sayWord(word,sp)};
+      el.appendChild(sp);
+      if(wi<p.split(" ").length-1)el.appendChild(document.createTextNode(" "));
+      list.push({start:pos,end:pos+word.length,el:sp,word:word});
+      pos+=word.length+1;
+    });
+    host.appendChild(el);
+    paraTokens.push(list);
+  });
+  document.getElementById("sFacts").innerHTML=cur.facts.map(function(f){return "<li>"+esc(f)+"</li>"}).join("");
+  document.getElementById("sTalk").textContent=cur.talk||"What was the funniest part — and which part surprised you the most?";
+  P.pi=0;P.wi=0;setPlayBtn(false);
+  window.scrollTo({top:0});
+}
+document.getElementById("bBack").onclick=function(){
+  stopSpeech();
+  document.getElementById("v-story").classList.remove("on");
+  document.getElementById("v-shelf").classList.add("on");
+  drawShelf();
+};
+
+/* ================= SPEECH ENGINE ================= */
+var P={pi:0,wi:0,playing:false,est:null,boundarySeen:false,utter:null};
+var voices=[],voiceSel=document.getElementById("selVoice");
+function loadVoices(){
+  voices=window.speechSynthesis?speechSynthesis.getVoices().filter(function(v){return v.lang&&v.lang.indexOf("en")===0}):[];
+  var pref=["Samantha","Google US English","Microsoft Aria","Microsoft Jenny","Karen","Victoria","Moira"];
+  voices.sort(function(a,b){
+    function r(v){for(var i=0;i<pref.length;i++)if(v.name.indexOf(pref[i])>-1)return i;return 99}
+    return r(a)-r(b);
+  });
+  voiceSel.innerHTML=voices.map(function(v,i){return '<option value="'+i+'">'+esc(v.name.replace(/Microsoft |Google /,""))+"</option>"}).join("")||"<option>Default voice</option>";
+  if(S.voice){for(var i=0;i<voices.length;i++)if(voices[i].name===S.voice){voiceSel.value=i;break}}
+}
+if(window.speechSynthesis){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+voiceSel.onchange=function(){
+  if(voices[voiceSel.value]){S.voice=voices[voiceSel.value].name;save()}
+  if(P.playing){pauseSpeech();playFromCurrent()}
+};
+
+function clearHl(){document.querySelectorAll(".w.hl").forEach(function(e){e.classList.remove("hl")})}
+function hl(pi,wi){
+  clearHl();
+  var t=paraTokens[pi]&&paraTokens[pi][wi];
+  if(!t)return;
+  t.el.classList.add("hl");
+  var r=t.el.getBoundingClientRect();
+  if(r.top<90||r.bottom>window.innerHeight-60)
+    t.el.scrollIntoView({block:"center",behavior:"smooth"});
+}
+function setPlayBtn(on){
+  var b=document.getElementById("bPlay");
+  b.textContent=on?"⏸ Pause":"▶ Read to me";
+  b.classList.toggle("playing",on);
+}
+function stopEst(){if(P.est){clearTimeout(P.est);P.est=null}}
+function stopSpeech(){
+  P.playing=false;stopEst();
+  if(window.speechSynthesis)speechSynthesis.cancel();
+  clearHl();setPlayBtn(false);
+}
+function pauseSpeech(){
+  P.playing=false;stopEst();
+  if(window.speechSynthesis)speechSynthesis.cancel();
+  setPlayBtn(false);
+}
+function estimateStep(list,idx,offsetWi){
+  // fallback pacing when no boundary events (some browsers)
+  if(!P.playing||P.boundarySeen)return;
+  var t=list[idx];if(!t){return}
+  hl(+t.el.dataset.pi,+t.el.dataset.wi);
+  P.wi=+t.el.dataset.wi;
+  var rate=parseFloat(S.rate)||0.95;
+  var ms=Math.max(180,(t.word.length+1)/(13*rate)*1000);
+  P.est=setTimeout(function(){estimateStep(list,idx+1,offsetWi)},ms);
+}
+function playFromCurrent(){
+  if(!window.speechSynthesis){toast("This browser can't read aloud — but you can still read together!");return}
+  if(!cur)return;
+  var list=paraTokens[P.pi];
+  if(!list){finishStory();return}
+  var startTok=list[P.wi]||list[0];
+  var text=cur.paras[P.pi].slice(startTok.start);
+  var offset=startTok.start;
+  var u=new SpeechSynthesisUtterance(text);
+  u.rate=parseFloat(S.rate)||0.95;
+  u.pitch=1.05;
+  if(voices[voiceSel.value])u.voice=voices[voiceSel.value];
+  P.boundarySeen=false;P.utter=u;
+  u.onboundary=function(e){
+    if(e.charIndex==null)return;
+    P.boundarySeen=true;stopEst();
+    var ci=e.charIndex+offset;
+    for(var i=0;i<list.length;i++){
+      if(ci>=list[i].start&&ci<=list[i].end){P.wi=i;hl(P.pi,i);break}
+    }
+  };
+  u.onend=function(){
+    if(!P.playing)return;
+    stopEst();
+    P.pi++;P.wi=0;
+    if(P.pi<paraTokens.length){playFromCurrent()}
+    else finishStory();
+  };
+  u.onerror=function(){stopEst()};
+  P.playing=true;setPlayBtn(true);
+  speechSynthesis.speak(u);
+  // if no boundary events after 900ms, estimate
+  setTimeout(function(){
+    if(P.playing&&!P.boundarySeen&&P.utter===u){
+      var idx=P.wi;estimateStep(list,idx,idx);
+    }
+  },900);
+}
+function finishStory(){
+  P.playing=false;setPlayBtn(false);clearHl();
+  S.done[cur.id]=true;save();
+  var msgs=["You did it! That story is officially in your brain forever.",
+    "The end! Go tell somebody the funny part.",
+    "Story complete! History is 100% funnier when you know it."];
+  document.getElementById("doneMsg").textContent=msgs[Math.floor(Math.random()*msgs.length)];
+  document.getElementById("sDone").classList.add("on");
+  document.getElementById("sDone").scrollIntoView({block:"center",behavior:"smooth"});
+}
+function sayWord(word,el){
+  if(!window.speechSynthesis)return;
+  var wasPlaying=P.playing;
+  pauseSpeech();
+  clearHl();el.classList.add("hl");
+  var u=new SpeechSynthesisUtterance(word.replace(/[^A-Za-z0-9''-]/g,""));
+  u.rate=0.8;u.pitch=1.05;
+  if(voices[voiceSel.value])u.voice=voices[voiceSel.value];
+  speechSynthesis.speak(u);
+  P.pi=+el.dataset.pi;P.wi=+el.dataset.wi;
+  if(wasPlaying)u.onend=function(){P.playing=true;setPlayBtn(true);playFromCurrent()};
+}
+
+/* ================= CONTROLS ================= */
+document.getElementById("bPlay").onclick=function(){
+  if(P.playing){pauseSpeech();toast("Paused — tap any word to jump there")}
+  else playFromCurrent();
+};
+document.getElementById("bRestart").onclick=function(){
+  pauseSpeech();P.pi=0;P.wi=0;clearHl();
+  window.scrollTo({top:0,behavior:"smooth"});
+  playFromCurrent();
+};
+var rateSel=document.getElementById("selRate");
+rateSel.value=S.rate;
+rateSel.onchange=function(){
+  S.rate=rateSel.value;save();
+  if(P.playing){pauseSpeech();playFromCurrent()}
+};
+var bEasy=document.getElementById("bEasy");
+function drawEasy(){bEasy.textContent="Easy-read: "+(S.easy?"on":"off");document.body.classList.toggle("easy",S.easy)}
+bEasy.onclick=function(){S.easy=!S.easy;save();drawEasy();toast(S.easy?"Bigger, roomier letters — on":"Easy-read off")};
+drawEasy();
+drawShelf();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/espohystory/sw.js");
+</script>
+</body>
+</html>

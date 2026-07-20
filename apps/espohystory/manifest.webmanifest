@@ -1,0 +1,14 @@
+{
+  "name": "ESPOhystory",
+  "short_name": "ESPOhystory",
+  "description": "History, but hysterical. Read-along stories for K–6 with a kind teacher voice and words that light up. By Accelerated Experiences, LLC.",
+  "start_url": "/apps/espohystory/",
+  "scope": "/apps/espohystory/",
+  "display": "standalone",
+  "background_color": "#FBF3E4",
+  "theme_color": "#FBF3E4",
+  "icons": [
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
+  ]
+}
