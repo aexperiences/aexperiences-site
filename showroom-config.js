@@ -171,6 +171,27 @@
     engineering: {
       id:'engineering', hub:'Datum Hub', trade:'Engineering', acc:'#18b0ba', acc2:'#0f8a92',
       firm:'Basalt Engineering', firmSub:'14 people · Post Falls, Idaho', who:'a fourteen-person practice', priceId:'datum',
+      
+      /* Same AEC practice-management category as architecture — Deltek/BQE serve A&E firms.
+         Sourced Jul 20 2026: monograph.com, itqlick.com, deelo.ai. */
+      stack:[
+        { tool:'BQE Core', job:'Projects, time & billing', cost:'$24-79/user/mo', note:'module-based' },
+        { tool:'Deltek Ajera / Vantagepoint', job:'Full A&E ERP', cost:'from $200/user/mo', note:'real 3-yr cost often ~3x sticker' },
+        { tool:'Submittal/RFI tool (Newforma class)', job:'Submittals & transmittals', cost:'quoted', note:'per-project or enterprise' },
+        { tool:'DocuSign', job:'Signatures', cost:'$40-120/mo', note:'per user' },
+        { tool:'QuickBooks', job:'Books & payroll feed', cost:'$99/mo', note:'plus a bookkeeper' },
+        { tool:'Google Workspace + Drive', job:'Everything else', cost:'$115/mo', note:'14 seats' }
+      ],
+      stackNote:'The A&E tools bill per seat, so a growing firm pays for growth twice - once in salary, once in software.',
+      pain:[
+        { t:'Utilization is a month-late number', d:'Hours land in one tool, revenue in another. By the time budgeted-vs-actual is reconciled, the project that lost money is already stamped and issued.' },
+        { t:'Submittals live outside the drawings', d:'The tracker knows the item; it does not know the sheet, the revision, or the transmittal history. During a claim, that gets rebuilt by hand.' },
+        { t:'PE licenses and CEUs on a spreadsheet', d:'A stamp on a lapsed registration is not a paperwork problem, it is a liability event. Most firms track renewals manually.' },
+        { t:'Sub-consultant money is a side ledger', d:'What you owe structural and what the client owes you live in different systems and never quite agree.' }
+      ],
+      painStat:'Deltek Ajera lists from $200 per user per month; independent analysis puts real three-year cost near triple the sticker after implementation.',
+      painStatSrc:'ITQlick pricing analysis, 2026',
+      painHeadline:'$200/user/mo - before the 3x',
       kpis:[
         { k:'Active jobs', v:'17', s:'$412k fees in motion', tone:'good' },
         { k:'Submittals in review', v:'9', s:'3 due back this week', tone:'warn' },
@@ -210,13 +231,34 @@
         { id:'deals', label:'Jobs', icon:'M3 7h18v13H3zM3 7l3-4h12l3 4M9 12h6' },
         { id:'people', label:'Team', icon:'M16 20v-2a4 4 0 0 0-8 0v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8' },
         { id:'money', label:'Billing', icon:'M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
-        { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' }
+        { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' },
+        { id:'stack', label:'What this replaces', icon:'M3 6h18M3 12h18M3 18h18' }
       ]
     },
 
     theater: {
       id:'theater', hub:'Marquee Hub', trade:'Live theater', acc:'#e0b24a', acc2:'#b8902f',
       firm:'Granite Box Theatre', firmSub:'149 seats · community company', who:'a community theater', priceId:'marquee',
+      
+      /* Sourced Jul 20 2026: audienceview.com pricing pages + their ticketing-cost guide. */
+      stack:[
+        { tool:'AudienceView Professional (Theatre Manager class)', job:'Box office & ticketing', cost:'quoted', note:'subscription + per-ticket fees + setup' },
+        { tool:'Per-ticket processing', job:'Every online sale', cost:'per ticket', note:'the fee your patrons see' },
+        { tool:'SignUpGenius / spreadsheets', job:'Volunteers & house crews', cost:'$0-27/mo', note:'and a phone tree' },
+        { tool:'Donor CRM (Little Green Light class)', job:'Donors & grants', cost:'$45-100/mo', note:'separate from ticket history' },
+        { tool:'QuickBooks', job:'The books, the 990', cost:'$99/mo', note:'plus a volunteer treasurer' },
+        { tool:'Email tool + website host', job:'Marketing & the site', cost:'$50-150/mo', note:'two more logins' }
+      ],
+      stackNote:'Ticketing platforms charge per ticket, so the better your season sells, the more you pay - and your donor records still cannot see your ticket history.',
+      pain:[
+        { t:'The ticketing platform taxes every seat', d:'Per-ticket fees mean your best-selling run is also your biggest software bill. A flat monthly does not care how well you sell.' },
+        { t:'Donors and patrons are strangers to each other', d:'The person who bought season tickets for ten years and the person who gave $500 are the same person - in two databases that have never met.' },
+        { t:'Volunteers run on a phone tree', d:'House crews fill by text message and memory. Nobody can see Saturday is short until Saturday.' },
+        { t:'Royalties are a calendar reminder', d:'Rights, royalty deadlines and per-performance reporting live in someone head. Miss one and the licensor notices.' }
+      ],
+      painStat:'Venue ticketing platforms typically charge a subscription plus per-ticket fees on every online sale, with one-time setup and migration fees on top.',
+      painStatSrc:'AudienceView ticketing-cost guide, 2026',
+      painHeadline:'A fee on every ticket you sell',
       kpis:[
         { k:'This week\'s house', v:'82%', s:'sold · 4 performances', tone:'good' },
         { k:'Season tickets', v:'214', s:'renewals open', tone:'' },
@@ -256,13 +298,34 @@
         { id:'deals', label:'Season', icon:'M3 7h18v13H3zM3 7l3-4h12l3 4M9 12h6' },
         { id:'people', label:'Company', icon:'M16 20v-2a4 4 0 0 0-8 0v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8' },
         { id:'money', label:'Box office', icon:'M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
-        { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' }
+        { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' },
+        { id:'stack', label:'What this replaces', icon:'M3 6h18M3 12h18M3 18h18' }
       ]
     },
 
     cinema: {
       id:'cinema', hub:'Reel Hub', trade:'Cinema', acc:'#8a6fd6', acc2:'#6b52b0',
       firm:'The Orpheum', firmSub:'3 screens · downtown single-site', who:'a three-screen independent', priceId:'reel',
+      
+      /* Sourced Jul 20 2026: filmgrail.com cinema-software roundup, veezi.com model. */
+      stack:[
+        { tool:'Veezi (Vista class, indie tier)', job:'Ticketing & showtimes', cost:'modular, pay-as-you-go', note:'per-module monthly' },
+        { tool:'Per-ticket / processing fees', job:'Every online sale', cost:'per ticket', note:'on top of the modules' },
+        { tool:'Distributor settlement', job:'Splits & remittance', cost:'spreadsheets', note:'by hand, weekly' },
+        { tool:'Membership tool or punch cards', job:'Members & loyalty', cost:'$50-100/mo', note:'separate list' },
+        { tool:'QuickBooks', job:'The books', cost:'$99/mo', note:'plus a bookkeeper' },
+        { tool:'Email + website host', job:'Marketing & the site', cost:'$50-150/mo', note:'two more logins' }
+      ],
+      stackNote:'The point-of-sale knows tonight. The spreadsheet knows the split. The books know last month. Nobody knows the whole house at once.',
+      pain:[
+        { t:'Settlement is a weekly spreadsheet ritual', d:'Grosses come out of the POS, splits get computed by hand, remittances go out late. One formula error is a distributor phone call.' },
+        { t:'Members are a list, not a relationship', d:'The loyalty tool cannot see what anyone actually watched, so member night is a guess.' },
+        { t:'Concessions per-head is invisible', d:'The number that decides whether tonight made money is not on any screen - it is division someone does later, if they do it.' },
+        { t:'Fees scale with success', d:'Per-ticket pricing means a sold-out week costs more to process than a dead one.' }
+      ],
+      painStat:'Independent-cinema platforms price per module plus per-ticket fees, while distributor settlement - the money that actually leaves - stays in spreadsheets.',
+      painStatSrc:'FilmGrail cinema-software review; Veezi pricing model, 2026',
+      painHeadline:'POS, splits, books: three systems',
       kpis:[
         { k:'Tonight', v:'71%', s:'sold across 3 screens', tone:'good' },
         { k:'This week', v:'$21,480', s:'box + concessions', tone:'' },
@@ -302,13 +365,34 @@
         { id:'deals', label:'Programme', icon:'M3 7h18v13H3zM3 7l3-4h12l3 4M9 12h6' },
         { id:'people', label:'Crew', icon:'M16 20v-2a4 4 0 0 0-8 0v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8' },
         { id:'money', label:'Settlement', icon:'M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
-        { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' }
+        { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' },
+        { id:'stack', label:'What this replaces', icon:'M3 6h18M3 12h18M3 18h18' }
       ]
     },
 
     concerts: {
       id:'concerts', hub:'Encore Hub', trade:'Concerts & venues', acc:'#d65f8a', acc2:'#b04068',
       firm:'The Foundry', firmSub:'450 cap · club venue', who:'a 450-cap club', priceId:'encore',
+      
+      /* Sourced Jul 20 2026: AudienceView ticketing-cost guide (fee models); category structure. */
+      stack:[
+        { tool:'Ticketing platform (Eventbrite/etix class)', job:'Tickets & presales', cost:'per ticket', note:'a cut of every sale' },
+        { tool:'Settlement spreadsheets', job:'Artist deals & payouts', cost:'by hand', note:'every show, night-of' },
+        { tool:'Advance sheets in email', job:'Riders, input lists, day-of', cost:'inbox', note:'version chaos' },
+        { tool:'Bar POS', job:'Bar revenue', cost:'$60-100/mo + fees', note:'never meets the ticket data' },
+        { tool:'QuickBooks', job:'The books', cost:'$99/mo', note:'plus a bookkeeper' },
+        { tool:'Email + website host', job:'Marketing & the site', cost:'$50-150/mo', note:'two more logins' }
+      ],
+      stackNote:'Ticketing takes a cut of every sale, settlement lives in a 1am spreadsheet, and bar-per-head - the number a club actually runs on - is not in any system.',
+      pain:[
+        { t:'The platform takes a cut of every ticket', d:'Percentage ticketing fees mean your biggest nights carry your biggest software cost. A flat monthly does not scale against you.' },
+        { t:'Settlement happens at 1am on a spreadsheet', d:'Counts, splits, expenses and deposits reconciled by a tired person after the encore. Every error is an artist-relations problem.' },
+        { t:'The advance lives in email', d:'Riders and input lists get versioned in an inbox. The one that matters is whichever one production printed.' },
+        { t:'Bar and tickets never meet', d:'Bar-per-head decides which bookings work, and it is computed - when it is computed - by hand.' }
+      ],
+      painStat:'Event ticketing platforms typically charge per-ticket fees on every online sale - a percentage of your gross, taken before settlement.',
+      painStatSrc:'AudienceView ticketing-cost guide, 2026',
+      painHeadline:'A percentage of every good night',
       kpis:[
         { k:'Next show', v:'88%', s:'sold · Saturday', tone:'good' },
         { k:'On sale now', v:'6', s:'shows this quarter', tone:'' },
@@ -348,13 +432,34 @@
         { id:'deals', label:'Shows', icon:'M3 7h18v13H3zM3 7l3-4h12l3 4M9 12h6' },
         { id:'people', label:'Crew', icon:'M16 20v-2a4 4 0 0 0-8 0v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8' },
         { id:'money', label:'Settlement', icon:'M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
-        { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' }
+        { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' },
+        { id:'stack', label:'What this replaces', icon:'M3 6h18M3 12h18M3 18h18' }
       ]
     },
 
     kidsgym: {
       id:'kidsgym', hub:'Cartwheel Hub', trade:'Kids gyms & programs', acc:'#4aa3d6', acc2:'#3480ad',
       firm:'Tumble Town', firmSub:'2 gyms · 340 families', who:'a two-location kids gym', priceId:'cartwheel',
+      
+      /* Sourced Jul 20 2026: jackrabbitclass.com/pricing, Capterra iClassPro listing. */
+      stack:[
+        { tool:'Jackrabbit Class', job:'Classes, rosters, tuition', cost:'from $49/mo', note:'scales with student count; Plus from $93/mo + $169 setup; Enterprise to $331/mo' },
+        { tool:'iClassPro', job:'The alternative', cost:'from $139/mo/location', note:'tiers up from there' },
+        { tool:'Waiver tool (SmartWaiver class)', job:'Waivers & e-sign', cost:'$15-50/mo', note:'separate from enrollment' },
+        { tool:'QuickBooks', job:'The books', cost:'$99/mo', note:'plus a bookkeeper' },
+        { tool:'Email tool + website host', job:'Marketing & the site', cost:'$50-150/mo', note:'two more logins' },
+        { tool:'Group texts & paper binders', job:'Coach certs, CPR, schedules', cost:'someone\'s memory', note:'the real system of record' }
+      ],
+      stackNote:'Class software prices climb with your student count - growth costs twice. And the safety-critical stuff - waivers, CPR certs - lives outside it anyway.',
+      pain:[
+        { t:'Price climbs with every student', d:'Student-count pricing means enrollment growth raises your software bill automatically. A flat monthly does not.' },
+        { t:'Waivers live outside enrollment', d:'The waiver tool does not know who is on the roster, so a kid can attend a first class unsigned - which is exactly the day it matters.' },
+        { t:'Coach certs are a binder', d:'CPR and safety certifications expire quietly. Nothing flags a lapsed cert before that coach takes a class.' },
+        { t:'Parents get texts from three places', d:'Enrollment emails, coach group-texts, billing receipts - three senders, no thread, and the make-up-class question lands in all of them.' }
+      ],
+      painStat:'Jackrabbit tiers from $49 to $331 a month scaling with student count; iClassPro from $139 per location - before waivers, books and marketing tools.',
+      painStatSrc:'Jackrabbit pricing page; Capterra, 2026',
+      painHeadline:'Growth raises their bill, not ours',
       kpis:[
         { k:'Enrolled now', v:'417', s:'kids across 2 gyms', tone:'good' },
         { k:'This week\'s classes', v:'58', s:'4 with open spots', tone:'' },
@@ -394,7 +499,8 @@
         { id:'deals', label:'Classes', icon:'M3 7h18v13H3zM3 7l3-4h12l3 4M9 12h6' },
         { id:'people', label:'Coaches', icon:'M16 20v-2a4 4 0 0 0-8 0v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8' },
         { id:'money', label:'Tuition', icon:'M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
-        { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' }
+        { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' },
+        { id:'stack', label:'What this replaces', icon:'M3 6h18M3 12h18M3 18h18' }
       ]
     }
   };
