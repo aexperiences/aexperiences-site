@@ -6,9 +6,9 @@
 <title>ESPOvocab — a word a day that actually sticks</title>
 <meta name="description" content="One beautiful word a day — definition, etymology, usage — plus your own word list and a journal. No ads, no account, your words stay on your device. By Accelerated Experiences, LLC.">
 <meta name="theme-color" content="#1E2A24">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon.png">
-<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="/apps/espovocab/manifest.webmanifest">
+<link rel="icon" href="/apps/espovocab/icon.png">
+<link rel="apple-touch-icon" href="/apps/espovocab/icon.png">
 <style>
 :root{
   --bg:#1E2A24; --bg2:#243329; --card:#2A3A30; --ink:#EDF3EE; --ink2:#A9BDB0;
@@ -88,7 +88,7 @@ footer{max-width:640px;margin:26px auto 0;padding:0 18px;font-size:12px;color:va
 </head>
 <body>
 <header>
-  <img src="icon.png" alt="">
+  <img src="/apps/espovocab/icon.png" alt="">
   <div class="t">ESPO<b>vocab</b></div>
   <div class="streak" id="streak">—</div>
 </header>
@@ -408,7 +408,7 @@ document.getElementById("wipe").onclick=function(){
   }
 };
 drawStreak();pick();
-if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");
+if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/espovocab/sw.js");
 </script>
 </body>
 </html>
