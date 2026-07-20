@@ -1,0 +1,14 @@
+{
+  "name": "ESPOnest",
+  "short_name": "ESPOnest",
+  "description": "Sleep, feeds and diapers — one tap at 3am. Zero trackers. By Accelerated Experiences, LLC.",
+  "start_url": "/apps/esponest/",
+  "scope": "/apps/esponest/",
+  "display": "standalone",
+  "background_color": "#2E1F3A",
+  "theme_color": "#2E1F3A",
+  "icons": [
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
+  ]
+}

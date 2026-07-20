@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESPOnest — sleep, feeds & diapers, one tap at 3am</title>
+<meta name="description" content="Baby tracker built for one hand in the dark: one-tap sleep, feed and diaper logging, a nap-window estimate, growth log, and free CSV export. Zero trackers — your baby's data goes nowhere. By Accelerated Experiences, LLC.">
+<meta name="theme-color" content="#2E1F3A">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<style>
+:root{
+  --bg:#2E1F3A; --bg2:#392948; --card:#413055; --ink:#F3EDF8; --ink2:#B9A9CB;
+  --acc:#F3C46E; --line:#4E3B64; --sleep:#8FA7E8; --feed:#8BC7A0; --dia:#E8A78F;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
+  padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+header{padding:calc(14px + env(safe-area-inset-top)) 18px 10px;display:flex;align-items:center;gap:10px}
+header img{width:34px;height:34px;border-radius:9px}
+header .t{font-size:19px;font-weight:700}
+header .t b{color:var(--acc)}
+.age{margin-left:auto;font-size:13px;color:var(--ink2);background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+main{max-width:640px;margin:0 auto;padding:6px 18px 24px}
+.view{display:none}.view.on{display:block;animation:up .25s ease}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h2{font-size:22px;margin:14px 0 4px}
+.sub{color:var(--ink2);font-size:14.5px;line-height:1.55;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}
+.card h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:8px}
+
+/* the 3am buttons — biggest in the world */
+.big{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.big button{border:0;border-radius:20px;padding:26px 10px;font-size:19px;font-weight:800;cursor:pointer;
+  color:#241830;display:flex;flex-direction:column;align-items:center;gap:6px;line-height:1.2;
+  transition:transform .08s}
+.big button:active{transform:scale(.96)}
+.big .ico{font-size:34px}
+.big .s{font-size:12px;font-weight:600;opacity:.75}
+#bSleep{background:var(--sleep)}#bFeed{background:var(--feed)}
+#bDia{background:var(--dia);grid-column:1/3;padding:20px 10px}
+#bSleep.going{background:#5B79D6;color:#fff}
+.napwin{margin-top:14px}
+.napwin .est{font-size:24px;font-weight:800;color:var(--acc)}
+.napwin small{display:block;font-size:12px;color:var(--ink2);line-height:1.5;margin-top:6px}
+.today{display:flex;gap:10px;margin-top:14px}
+.today div{flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.today b{display:block;font-size:20px}
+.today span{font-size:11.5px;color:var(--ink2)}
+
+/* log */
+.litem{border-bottom:1px solid var(--line);padding:11px 2px;display:flex;gap:10px;align-items:center}
+.litem .e{font-size:20px;width:28px;text-align:center}
+.litem .m{flex:1}
+.litem .m b{font-size:15px;font-weight:600}
+.litem .m span{display:block;font-size:12px;color:var(--ink2)}
+.litem button{background:none;border:0;color:var(--ink2);font-size:13px;cursor:pointer;padding:4px 8px}
+.litem button:hover{color:var(--acc)}
+.empty2{color:var(--ink2);font-size:14.5px;text-align:center;padding:28px 10px;line-height:1.6}
+button.b1{background:var(--acc);color:#241830;border:0;border-radius:12px;font-size:15.5px;font-weight:700;padding:13px 18px;width:100%;cursor:pointer;margin-top:12px}
+button.b2{background:var(--bg2);color:var(--ink);border:1px solid var(--line);border-radius:12px;font-size:15px;padding:12px 16px;width:100%;cursor:pointer;margin-top:10px}
+input,select{background:var(--bg2);border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:15.5px;padding:12px;width:100%}
+input:focus,select:focus{outline:2px solid var(--acc)}
+label{font-size:13px;color:var(--ink2);display:block;margin:12px 0 5px}
+.hint{font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+nav{position:fixed;left:0;right:0;bottom:0;background:rgba(46,31,58,.96);backdrop-filter:blur(10px);
+  border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
+nav button{background:none;border:0;color:var(--ink2);font-size:11.5px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 14px;cursor:pointer}
+nav button.on{color:var(--acc)}
+nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+footer{max-width:640px;margin:26px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.6}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--acc);color:#241830;font-size:14px;font-weight:700;border-radius:999px;padding:9px 18px;opacity:0;pointer-events:none;transition:opacity .25s}
+.toast.on{opacity:1}
+.note{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:14px}
+</style>
+</head>
+<body>
+<header>
+  <img src="icon.png" alt="">
+  <div class="t">ESPO<b>nest</b></div>
+  <div class="age" id="age">—</div>
+</header>
+
+<main>
+  <!-- LOG (home) -->
+  <section class="view on" id="v-log">
+    <div class="card">
+      <h3>One tap. One hand. In the dark.</h3>
+      <div class="big">
+        <button id="bSleep"><span class="ico">🌙</span><span id="bSleepT">Sleep</span><span class="s" id="bSleepS">tap when baby's down</span></button>
+        <button id="bFeed"><span class="ico">🍼</span>Feed<span class="s">tap when it starts</span></button>
+        <button id="bDia"><span class="ico">🧷</span>Diaper — one tap logs it<span class="s">wet + dirty combined; details optional after</span></button>
+      </div>
+    </div>
+    <div class="card napwin">
+      <h3>Next nap window <span style="color:var(--ink2)">· estimate, not gospel</span></h3>
+      <div class="est" id="nap">—</div>
+      <small id="napWhy"></small>
+      <small><b>This is a heuristic based on age and today's log — a guide, never medical advice.</b> Your baby didn't read the chart, and that's fine.</small>
+    </div>
+    <div class="today">
+      <div><b id="cSleep">0</b><span>sleeps</span></div>
+      <div><b id="cFeed">0</b><span>feeds</span></div>
+      <div><b id="cDia">0</b><span>diapers</span></div>
+    </div>
+    <div class="card">
+      <h3>Today</h3>
+      <div id="todayList"></div>
+    </div>
+  </section>
+
+  <!-- HISTORY -->
+  <section class="view" id="v-hist">
+    <h2>History</h2>
+    <p class="sub">Every entry, every day — never behind a paywall.</p>
+    <div class="card"><div id="histList"></div>
+      <button class="b2" id="exp">Export everything (.csv — always free)</button>
+    </div>
+  </section>
+
+  <!-- GROWTH -->
+  <section class="view" id="v-grow">
+    <h2>Growth</h2>
+    <p class="sub">Weight and length over time. For percentile questions, your pediatrician has the real charts.</p>
+    <div class="card">
+      <h3>Add a measurement</h3>
+      <div class="grid2">
+        <div><label for="gW">Weight</label><input id="gW" type="text" inputmode="decimal" placeholder="e.g. 12.4"></div>
+        <div><label for="gWu">Unit</label><select id="gWu"><option>lb</option><option>kg</option></select></div>
+        <div><label for="gL">Length</label><input id="gL" type="text" inputmode="decimal" placeholder="e.g. 24.5"></div>
+        <div><label for="gLu">Unit</label><select id="gLu"><option>in</option><option>cm</option></select></div>
+      </div>
+      <button class="b1" id="gAdd">Save measurement</button>
+    </div>
+    <div class="card"><h3>Log</h3><div id="growList"></div></div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="view" id="v-set">
+    <h2>Settings</h2>
+    <div class="card">
+      <h3>Your baby</h3>
+      <label for="sName">Name (or nickname)</label><input id="sName" type="text" placeholder="Peanut">
+      <label for="sDob">Birth date</label><input id="sDob" type="date">
+      <button class="b1" id="sSave">Save</button>
+    </div>
+    <div class="card">
+      <h3>Your data</h3>
+      <p class="hint"><b>Your baby's data goes nowhere.</b> No account, no cloud, no ads, and zero third-party trackers — this page doesn't talk to Google, Facebook, or anyone else. Everything lives on this device, export is free forever, and erasing really erases.</p>
+      <button class="b2" id="wipe">Erase everything</button>
+    </div>
+    <div class="note">ESPOnest is a logging tool, not a medical device, and its estimates are not medical advice. For anything health-related, call your pediatrician.</div>
+  </section>
+</main>
+
+<nav>
+  <button data-v="log" class="on"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/></svg>Log</button>
+  <button data-v="hist"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>History</button>
+  <button data-v="grow"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="M7 15l3.5-4 3 2.5L18 8"/></svg>Growth</button>
+  <button data-v="set"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>Settings</button>
+</nav>
+
+<footer>ESPOnest · part of the ESPOfam family · Accelerated Experiences, LLC — Post Falls, Idaho.
+No ads. Zero trackers. Your baby's data goes nowhere.</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+var K="esponest.v1",S;
+try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
+S.log=S.log||[]; S.growth=S.growth||[]; S.baby=S.baby||{};
+function save(){localStorage.setItem(K,JSON.stringify(S))}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1600)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function hm(t){return new Date(t).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}
+function dkey(t){var d=t?new Date(t):new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+
+/* age chip */
+function drawAge(){
+  var el=document.getElementById("age");
+  if(!S.baby.dob){el.textContent="Set birth date →";return}
+  var days=Math.floor((Date.now()-new Date(S.baby.dob+"T00:00"))/864e5);
+  var n=S.baby.name?S.baby.name+" · ":"";
+  el.textContent = n + (days<0?"any day now":days<60?days+" days":days<730?Math.floor(days/30.44)+" months":Math.floor(days/365.25)+" yrs");
+}
+
+/* nap-window heuristic: age-based wake windows (common parenting guidance ranges).
+   ESTIMATE ONLY — labeled as such everywhere it appears. */
+function wakeWindow(){
+  if(!S.baby.dob)return null;
+  var w=Math.floor((Date.now()-new Date(S.baby.dob+"T00:00"))/6048e5); // weeks
+  if(w<0)return null;
+  if(w<6)  return [45,60];
+  if(w<13) return [60,90];
+  if(w<26) return [90,150];
+  if(w<39) return [120,210];
+  if(w<52) return [150,240];
+  if(w<78) return [240,300];
+  return [300,360];
+}
+function drawNap(){
+  var el=document.getElementById("nap"),why=document.getElementById("napWhy"),ww=wakeWindow();
+  if(!ww){el.textContent="Set a birth date first";why.textContent="The estimate is based on age — add it in Settings.";return}
+  var lastWake=null;
+  for(var i=0;i<S.log.length;i++){var e=S.log[i];
+    if(e.k==="sleep"&&e.end){lastWake=e.end;break}
+    if(e.k==="sleep"&&!e.end){el.textContent="Asleep now 🌙";why.textContent="Tap Sleep again when baby wakes and the next window will be waiting.";return}
+  }
+  if(!lastWake){el.textContent="Log a sleep first";why.textContent="After the first wake-up, a window range appears here.";return}
+  var a=new Date(lastWake+ww[0]*6e4),b=new Date(lastWake+ww[1]*6e4);
+  el.textContent=hm(a)+" – "+hm(b);
+  why.textContent="A range, on purpose — based on awake time since "+hm(lastWake)+" and typical wake windows for this age. Watch the baby, not the clock.";
+}
+
+/* logging */
+function openSleep(){return S.log.find(function(e){return e.k==="sleep"&&!e.end})}
+function drawSleepBtn(){
+  var o=openSleep(),b=document.getElementById("bSleep");
+  document.getElementById("bSleepT").textContent=o?"Woke up":"Sleep";
+  document.getElementById("bSleepS").textContent=o?"asleep since "+hm(o.t)+" — tap to end":"tap when baby's down";
+  b.className=o?"going":"";
+}
+document.getElementById("bSleep").onclick=function(){
+  var o=openSleep();
+  if(o){o.end=Date.now();toast("Sleep logged: "+Math.round((o.end-o.t)/6e4)+" min")}
+  else{S.log.unshift({k:"sleep",t:Date.now(),end:null});toast("Night night 🌙")}
+  save();drawAll();
+};
+document.getElementById("bFeed").onclick=function(){
+  S.log.unshift({k:"feed",t:Date.now()});save();toast("Feed logged 🍼");drawAll();
+};
+document.getElementById("bDia").onclick=function(){
+  S.log.unshift({k:"dia",t:Date.now(),what:"wet+dirty"});save();toast("Diaper logged 🧷");drawAll();
+};
+
+var EMO={sleep:"🌙",feed:"🍼",dia:"🧷"};
+function lineFor(e){
+  if(e.k==="sleep")return e.end?("Sleep · "+hm(e.t)+" – "+hm(e.end)+" ("+Math.round((e.end-e.t)/6e4)+" min)"):("Sleeping since "+hm(e.t));
+  if(e.k==="feed")return "Feed · "+hm(e.t);
+  return "Diaper · "+hm(e.t)+(e.what?" · "+e.what:"");
+}
+function drawToday(){
+  var tl=document.getElementById("todayList"),tk=dkey();
+  var todays=S.log.filter(function(e){return dkey(e.t)===tk});
+  document.getElementById("cSleep").textContent=todays.filter(function(e){return e.k==="sleep"}).length;
+  document.getElementById("cFeed").textContent=todays.filter(function(e){return e.k==="feed"}).length;
+  document.getElementById("cDia").textContent=todays.filter(function(e){return e.k==="dia"}).length;
+  if(!todays.length){tl.innerHTML='<div class="empty2">Nothing yet today. The buttons up top are the whole app.</div>';return}
+  tl.innerHTML=todays.map(function(e,i){
+    return '<div class="litem"><div class="e">'+EMO[e.k]+'</div><div class="m"><b>'+lineFor(e)+'</b></div><button data-t="'+e.t+'">undo</button></div>';
+  }).join("");
+  tl.querySelectorAll("button").forEach(function(b){
+    b.onclick=function(){S.log=S.log.filter(function(e){return String(e.t)!==b.dataset.t});save();drawAll();toast("Removed")};
+  });
+}
+function drawHist(){
+  var el=document.getElementById("histList");
+  if(!S.log.length){el.innerHTML='<div class="empty2">History shows up as you log. All of it stays free.</div>';return}
+  var byDay={};
+  S.log.forEach(function(e){var k=dkey(e.t);(byDay[k]=byDay[k]||[]).push(e)});
+  el.innerHTML=Object.keys(byDay).sort().reverse().slice(0,30).map(function(k){
+    var rows=byDay[k].map(function(e){return '<div class="litem"><div class="e">'+EMO[e.k]+'</div><div class="m"><b>'+lineFor(e)+'</b></div></div>'}).join("");
+    return '<div style="margin-top:10px"><div style="font-size:12px;color:var(--ink2);letter-spacing:.08em">'+k+'</div>'+rows+'</div>';
+  }).join("");
+}
+document.getElementById("exp").onclick=function(){
+  var rows=[["type","start","end","minutes","details"]];
+  S.log.slice().reverse().forEach(function(e){
+    rows.push([e.k,new Date(e.t).toISOString(),e.end?new Date(e.end).toISOString():"",e.end?Math.round((e.end-e.t)/6e4):"",e.what||""]);
+  });
+  S.growth.slice().reverse().forEach(function(g){
+    rows.push(["growth",new Date(g.t).toISOString(),"","",(g.w?g.w+" "+g.wu:"")+(g.l?" · "+g.l+" "+g.lu:"")]);
+  });
+  var c=rows.map(function(r){return r.map(function(v){return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'}).join(",")}).join("\n");
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([c],{type:"text/csv"}));a.download="esponest.csv";a.click();
+  toast("Exported — your baby's data is yours");
+};
+
+/* growth */
+document.getElementById("gAdd").onclick=function(){
+  var w=document.getElementById("gW").value.trim(),l=document.getElementById("gL").value.trim();
+  if(!w&&!l){toast("Enter a weight or length");return}
+  S.growth.unshift({t:Date.now(),w:w,wu:document.getElementById("gWu").value,l:l,lu:document.getElementById("gLu").value});
+  save();document.getElementById("gW").value="";document.getElementById("gL").value="";
+  drawGrow();toast("Saved");
+};
+function drawGrow(){
+  var el=document.getElementById("growList");
+  if(!S.growth.length){el.innerHTML='<div class="empty2">Add the numbers from each checkup and watch the line climb.</div>';return}
+  el.innerHTML=S.growth.map(function(g){
+    return '<div class="litem"><div class="e">📈</div><div class="m"><b>'+(g.w?esc(g.w)+" "+esc(g.wu):"")+(g.w&&g.l?" · ":"")+(g.l?esc(g.l)+" "+esc(g.lu):"")+'</b><span>'+new Date(g.t).toLocaleDateString()+'</span></div></div>';
+  }).join("");
+}
+
+/* settings */
+document.getElementById("sName").value=S.baby.name||"";
+document.getElementById("sDob").value=S.baby.dob||"";
+document.getElementById("sSave").onclick=function(){
+  S.baby.name=document.getElementById("sName").value.trim();
+  S.baby.dob=document.getElementById("sDob").value;
+  save();drawAll();toast("Saved");
+};
+document.getElementById("wipe").onclick=function(){
+  if(confirm("Erase every log, growth entry and setting from this device? There is no cloud copy — that's the point.")){
+    localStorage.removeItem(K);location.reload();
+  }
+};
+
+/* nav */
+document.querySelectorAll("nav button").forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll("nav button").forEach(function(x){x.classList.remove("on")});
+    document.querySelectorAll(".view").forEach(function(x){x.classList.remove("on")});
+    b.classList.add("on");document.getElementById("v-"+b.dataset.v).classList.add("on");
+    if(b.dataset.v==="hist")drawHist();
+    if(b.dataset.v==="grow")drawGrow();
+  };
+});
+function drawAll(){drawAge();drawSleepBtn();drawToday();drawNap()}
+drawAll();
+setInterval(drawNap,60000);
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");
+</script>
+</body>
+</html>
