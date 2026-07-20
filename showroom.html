@@ -60,6 +60,29 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 
 .main{padding:20px 16px 90px;min-width:0}
 @media(min-width:960px){ .main{padding:24px 26px 60px} }
+
+/* command bar — the top-tier chrome */
+.cmd{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.cmd .cs{position:relative;flex:1;max-width:440px}
+.cmd .cs svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--mute);fill:none;stroke-width:2;pointer-events:none}
+.cmd input{width:100%;min-height:42px;padding:0 12px 0 36px;border-radius:11px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.05);font:inherit;font-size:14.5px;color:var(--cream)}
+.cmd input::placeholder{color:var(--mute)}
+.cmd input:focus{outline:none;border-color:var(--gold);background:rgba(255,255,255,.08)}
+.cmd .sp{flex:1}
+.bell{position:relative;width:42px;height:42px;border-radius:11px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center}
+.bell svg{width:18px;height:18px;stroke:var(--cream-2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.bell i{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;border-radius:9px;background:var(--warn);color:#231a06;font-style:normal;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.avatar{width:42px;height:42px;border-radius:11px;background:linear-gradient(180deg,var(--acc),var(--acc2));display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:14px;color:#fff}
+.qa{display:flex;gap:8px;flex-wrap:wrap;margin:-6px 0 20px}
+.qab{display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:0 14px;border-radius:20px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.05);font-size:13.5px;font-weight:700;color:var(--cream-2)}
+.qab:hover{border-color:var(--gold);color:var(--cream)}
+.qab svg{width:15px;height:15px;stroke:var(--gold);fill:none;stroke-width:2.2;stroke-linecap:round}
+.kpi{position:relative;overflow:hidden}
+.kpi .spark{position:absolute;right:10px;bottom:8px;width:74px;height:26px;opacity:.85}
+.kpi .spark polyline{fill:none;stroke:var(--gold);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.kpi.good .spark polyline{stroke:var(--good)}
+.card{box-shadow:0 14px 34px rgba(0,0,0,.18)}
+.card:hover{border-color:var(--line-2)}
 .h{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:20px}
 .h h1{margin:0;font-size:clamp(21px,4.6vw,28px);font-weight:800;letter-spacing:-.025em}
 .h .sub{margin:4px 0 0;color:var(--mute);font-size:14px}
@@ -254,10 +277,33 @@ td.n{font-family:var(--mono);white-space:nowrap}
   }
 
   /* ---- sections ---- */
+  /* deterministic sparkline per KPI — same shape every visit, seeded off the label */
+  function spark(seedStr, tone){
+    var seed=0; for(var i=0;i<seedStr.length;i++) seed=(seed*31+seedStr.charCodeAt(i))>>>0;
+    var pts=[]; var v=12;
+    for(var x=0;x<=9;x++){ seed=(seed*1103515245+12345)>>>0; v=Math.max(3,Math.min(23,v+((seed>>16)%9)-(tone==='warn'?5:3))); pts.push((x*8)+','+(26-v)); }
+    return '<svg class="spark" viewBox="0 0 74 26" preserveAspectRatio="none" aria-hidden="true"><polyline points="'+pts.join(' ')+'"/></svg>';
+  }
+
   function dash(){
-    return '<div class="h"><div><h1>Good morning</h1><p class="sub">Here is '+esc(T.firm)+' today.</p></div></div>'
+    var warns = T.today.filter(function(x){return x.tone==='warn';}).length;
+    var hour = new Date().getHours();
+    var greet = hour<12 ? 'Good morning' : hour<17 ? 'Good afternoon' : 'Good evening';
+    var initials = T.firm.split(/\s+/).map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+    return '<div class="cmd">'
+      + '<div class="cs"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>'
+      + '<input id="cmdQ" type="search" placeholder="Search '+esc(T.firm)+'…" aria-label="Search"></div>'
+      + '<span class="sp"></span>'
+      + '<button class="bell" aria-label="'+warns+' items need attention" data-s="dash"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>'+(warns?'<i>'+warns+'</i>':'')+'</button>'
+      + '<div class="avatar">'+esc(initials)+'</div></div>'
+      + '<div class="h"><div><h1>'+greet+'</h1><p class="sub">Here is '+esc(T.firm)+' today.</p></div></div>'
+      + '<div class="qa">'
+      + T.sections.filter(function(s){return s.id!=='dash';}).slice(0,4).map(function(s){
+          return '<button class="qab" data-s="'+s.id+'"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'+esc(s.label)+'</button>';
+        }).join('')
+      + '</div>'
       + '<div class="kpis">' + T.kpis.map(function(k){
-          return '<div class="kpi '+(k.tone||'')+'"><div class="k">'+esc(k.k)+'</div><div class="v">'+esc(k.v)+'</div><div class="s">'+esc(k.s)+'</div></div>';
+          return '<div class="kpi '+(k.tone||'')+'"><div class="k">'+esc(k.k)+'</div><div class="v">'+esc(k.v)+'</div><div class="s">'+esc(k.s)+'</div>'+spark(k.k+T.id,k.tone)+'</div>';
         }).join('') + '</div>'
       + '<div class="cols"><div>'
         + '<div class="card"><h3>'+esc(T.chart.title)+'</h3><p class="cs">Last six months, in '+esc(T.chart.unit)+'.</p>'+chart(T.chart)+'</div>'
@@ -361,6 +407,14 @@ td.n{font-family:var(--mono);white-space:nowrap}
     if (!T.sections.some(function(s){ return s.id===section; })) section='dash';
     var fn = VIEWS[section] || dash;
     el('main').innerHTML = fn();
+    // wire the dashboard's quick actions + the live search (filters deals as you type)
+    [].forEach.call(el('main').querySelectorAll('[data-s]'), function(b){
+      if(b.id!=='cmdQ') b.addEventListener('click', function(){ go(b.dataset.s); });
+    });
+    var q=document.getElementById('cmdQ');
+    if(q){ q.addEventListener('keydown', function(e){
+      if(e.key==='Enter'){ go('deals'); }
+    }); }
     // pull the live price into the comparison, so this page can never quote a stale number
     var slot = el('ourPrice');
     if (slot) {
