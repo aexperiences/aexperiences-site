@@ -5,25 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Homestead Hub — Real Estate white-label hub · Accelerated Experiences</title>
 <meta name="description" content="Homestead Hub — a native, fully-branded real estate operating hub. Every listing, client &amp; closing in one branded place. From $450/mo. Replace your software stack and keep 100% of your fees.">
-<meta name="theme-color" content="#5a3420">
+<meta name="theme-color" content="#16326d">
 <link rel="icon" href="/ae-disc.png">
 <meta property="og:title" content="Homestead Hub — Real Estate hub by Accelerated Experiences">
 <meta property="og:description" content="Every listing, client &amp; closing in one branded place. From $450/mo, on your brand and domain.">
+  <meta property="og:image" content="https://www.aexperiences.com/og-hub-real-estate.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Homestead Hub — Real Estate hub by Accelerated Experiences">
+  <meta name="twitter:description" content="Every listing, client &amp; closing in one branded place. From $450/mo, on your brand and domain.">
+  <meta name="twitter:image" content="https://www.aexperiences.com/og-hub-real-estate.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="/hubs/hub.css" rel="stylesheet">
 </head>
-<body style="--h1:#7a4a2a;--h2:#4a2a18;--acc:#c8794f">
+<body style="--h1:#16326d;--h2:#0b1d43;--acc:#2f7bef">
 <header class="bar">
   <div class="wrap">
-    <a class="logo" href="/" aria-label="Accelerated Experiences — home"><img src="/ae-disc.png" alt="Accelerated Experiences LLC"></a>
+    <a class="logo" href="/" aria-label="Accelerated Experiences — home"><img class="ae-disc-mark" src="/ae-disc.png" alt="Accelerated Experiences"><span class="ae-word"><b>accelerated</b><b class="blue">experiences</b><small>LLC</small></span></a>
     <nav>
       <a class="navlink" href="/#aehub">All hubs</a>
       <a class="navlink" href="/#products">Products</a>
       <a class="navlink" href="/#services">Services</a>
       <a class="btn btn-acc" href="#start">Book a demo</a>
-    <div class="explore2"><button class="explore2-btn" id="exploreBtn2">Explore ▾</button><div class="explore2-menu" id="exploreMenu2"><div class="lbl">The whole AE family</div><a href="https://aexperiences.com/">Accelerated Experiences <span class="tag">Studio</span></a><a href="https://espomusic.com/">ESPO Music <span class="tag">Instrument coaching</span></a><a href="https://espolearning.com/">ESPO Learning <span class="tag">Early skills</span></a><a href="https://espogenius.com/">ESPO Genius <span class="tag">Navigate the system</span></a><a href="https://espodrama.com/">ESPO Drama <span class="tag">Act &amp; create</span></a><a href="https://espoedu.com/">ESPO Curriculum <span class="tag">Homeschool K-12</span></a><a href="https://marketnarc.com/">The Narcs <span class="tag">See through it</span></a><a href="https://neurodivulge.com/">Neuro Divulge <span class="tag">Regulation tools</span></a><hr><a href="/products.html">AE App Shop <span class="tag">All pricing</span></a><a href="https://aexperiences.studio/">AE Hub <span class="tag">Operations</span></a></div></div></nav>
+    </nav>
   </div>
 </header>
 
@@ -95,9 +102,9 @@
     <h2>Three tiers. Pick where you start.</h2>
     <p class="lede">One-time build (we customize the hub to your business) + a flat monthly for hosting, support, updates, and your AI. Every price is a value-anchored starting point we tailor to you.</p>
     <div class="tiers">
-      
+
       <div class="tier">
-        
+
         <div class="tier-name">Solo / Team</div>
         <div class="tier-price">$450<span>/mo</span></div>
         <div class="tier-build">+ $2,500 one-time build</div>
@@ -113,7 +120,7 @@
         <a class="btn btn-acc" href="#start" data-pick="Team">Start with Team →</a>
       </div>
       <div class="tier">
-        
+
         <div class="tier-name">Brokerage</div>
         <div class="tier-price">$2,400<span>/mo</span></div>
         <div class="tier-build">+ $18,000 one-time build</div>
@@ -166,7 +173,7 @@
 
 <footer>
   <div class="wrap">
-    <div class="left"><img src="/ae-disc.png" alt="Accelerated Experiences LLC"><span class="meta">© 2026 · Post Falls, Idaho</span></div>
+    <div class="left"><img class="ae-disc-mark" src="/ae-disc.png" alt="Accelerated Experiences"><span class="ae-word"><b>accelerated</b><b class="blue">experiences</b><small>LLC</small></span><span class="meta">© 2026 · Post Falls, Idaho</span></div>
     <nav>
       <a href="/#aehub">All hubs</a><a href="/#products">Products</a><a href="/#services">Services</a>
       <a href="mailto:anthonye@aexperiences.studio">Contact</a>
@@ -180,24 +187,31 @@
   if('IntersectionObserver' in window){var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.08});els.forEach(function(e){io.observe(e);});setTimeout(function(){els.forEach(function(e){e.classList.add('in');});},1500);}else{els.forEach(function(e){e.classList.add('in');});}
   // tier deep-pick
   document.querySelectorAll('[data-pick]').forEach(function(a){a.addEventListener('click',function(){var s=document.querySelector('#leadForm select[name=tier]');if(s){for(var i=0;i<s.options.length;i++){if(s.options[i].value.indexOf(a.getAttribute('data-pick'))===0){s.selectedIndex=i;break;}}}});});
-  // lead form → AEHub CRM (with graceful mailto fallback)
+  // lead form → FormSubmit relay straight to Anthony's inbox (belt-and-suspenders mailto fallback)
   var f=document.getElementById('leadForm'), note=document.getElementById('lfNote');
-  f.addEventListener('submit',function(e){
+  function mailtoFallback(d){
+    var body=encodeURIComponent('Hi Anthony,\n\nI\'m interested in the Homestead Hub.\n\nName: '+(d.name||'')+'\nEmail: '+(d.email||'')+'\nPhone: '+(d.phone||'')+'\nOrg: '+(d.org||'')+'\nTier: '+(d.tier||'')+'\nNotes: '+(d.note||''));
+    window.location.href='mailto:anthonye@aexperiences.studio?subject=Homestead%20Hub%20inquiry&body='+body;
+  }
+  f.addEventListener('submit',async function(e){
     e.preventDefault();
-    var d={}; new FormData(f).forEach(function(v,k){d[k]=v;});
-    if(!d.name||!d.email){note.textContent='Please add your name and email.';note.className='lf-note err';return;}
+    var d={}; new FormData(f).forEach(function(val,k){d[k]=val;});
+    if(!d.name||!/.+@.+\..+/.test(d.email||'')){note.textContent='Please add your name and a valid email.';note.className='lf-note err';return;}
     var btn=f.querySelector('button'); btn.disabled=true; btn.textContent='Sending…';
-    fetch('https://aexperiences.studio/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)})
-      .then(function(r){return r.ok?r.json():Promise.reject();})
-      .then(function(){ f.innerHTML='<div class="lf-done"><b>Thank you, '+(d.name.split(' ')[0]||'')+'.</b><br>Your request for the Homestead Hub is in — we’ll be in touch shortly with a demo and a tailored quote.</div>'; })
-      .catch(function(){
-        var body=encodeURIComponent('Hi Anthony,\n\nI\'m interested in the Homestead Hub.\n\nName: '+(d.name||'')+'\nEmail: '+(d.email||'')+'\nPhone: '+(d.phone||'')+'\nOrg: '+(d.org||'')+'\nTier: '+(d.tier||'')+'\nNotes: '+(d.note||''));
-        note.innerHTML='Couldn’t reach the server — <a href="mailto:anthonye@aexperiences.studio?subject=Homestead%20Hub%20inquiry&body='+body+'">click to email us instead →</a>'; note.className='lf-note err';
-        btn.disabled=false; btn.textContent='Book my demo →';
-      });
+    var sent=false;
+    try{
+      var r=await fetch('https://formsubmit.co/ajax/anthonye@aexperiences.studio',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({
+        Name:d.name, Email:d.email, Phone:d.phone||'—', Organization:d.org||'—',
+        Hub:'Homestead Hub', Vertical:'Real Estate', Tier:d.tier||'—', Notes:d.note||'—',
+        _subject:'Homestead Hub inquiry — '+d.name, _template:'table', _captcha:'false'
+      })});
+      var j=await r.json().catch(function(){return {};});
+      sent=r.ok&&(j.success===true||j.success==='true');
+    }catch(_){}
+    if(!sent){ mailtoFallback(d); }
+    f.innerHTML='<div class="lf-done"><b>Thank you, '+((d.name||'').split(' ')[0]||'')+'.</b><br>Your request for the Homestead Hub is in — we\'ll be in touch shortly with a demo and a tailored quote.</div>';
   });
 })();
 </script>
-<button class="brian-fab" id="brianFab2" aria-label="Chat with Brian"><img src="/ae-disc.png" alt=""><span class="dot"></span></button><div class="brian-panel" id="brianPanel2"><div class="brian-head"><div class="av"><img src="/ae-disc.png" alt=""></div><div><b>Brian</b><span>AE concierge · ask me anything</span></div><button class="x" id="brianClose2" aria-label="Close">×</button></div><div class="brian-body" id="brianBody2"><div class="brian-msg bot">Hey — I'm Brian. Ask me about this hub's pricing, or anything else across the AE family.</div></div><div class="brian-chips" id="brianChips2"><button class="brian-chip" data-q="What are the pricing tiers for this hub?">Pricing tiers</button><button class="brian-chip" data-q="How does the $99 custom app build work?">Build me an app</button><button class="brian-chip" data-q="I want to talk to Anthony or Barry.">Talk to a human</button></div><div class="brian-inputrow"><input id="brianInput2" type="text" placeholder="Ask Brian anything…" maxlength="500"><button id="brianSend2">Send</button></div></div><script>(function(){var eBtn=document.getElementById('exploreBtn2'),eMenu=document.getElementById('exploreMenu2');if(eBtn){eBtn.addEventListener('click',function(ev){ev.stopPropagation();eMenu.classList.toggle('open');});document.addEventListener('click',function(){eMenu.classList.remove('open');});eMenu.addEventListener('click',function(ev){ev.stopPropagation();});}})();(function(){var fab=document.getElementById('brianFab2'),panel=document.getElementById('brianPanel2'),closeBtn=document.getElementById('brianClose2'),body=document.getElementById('brianBody2'),input=document.getElementById('brianInput2'),send=document.getElementById('brianSend2'),chips=document.getElementById('brianChips2');if(!fab)return;var history=[];function open(){panel.classList.add('open');input.focus();}function close(){panel.classList.remove('open');}fab.addEventListener('click',function(){panel.classList.contains('open')?close():open();});closeBtn.addEventListener('click',close);function addMsg(t,who){var d=document.createElement('div');d.className='brian-msg '+who;d.textContent=t;body.appendChild(d);body.scrollTop=body.scrollHeight;}function ask(q){if(!q)return;addMsg(q,'user');history.push({role:'user',content:q});input.value='';send.disabled=true;var typing=document.createElement('div');typing.className='brian-typing';typing.textContent='Brian is typing…';body.appendChild(typing);body.scrollTop=body.scrollHeight;fetch('/api/brian',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,history:history})}).then(function(r){return r.json();}).then(function(j){typing.remove();var reply=(j&&j.reply)?j.reply:"Trouble connecting — email anthonye@aexperiences.studio";addMsg(reply,'bot');history.push({role:'assistant',content:reply});}).catch(function(){typing.remove();addMsg("Trouble connecting — email anthonye@aexperiences.studio",'bot');}).finally(function(){send.disabled=false;});}send.addEventListener('click',function(){ask(input.value.trim());});input.addEventListener('keydown',function(e){if(e.key==='Enter'){ask(input.value.trim());}});chips.addEventListener('click',function(e){var q=e.target.getAttribute('data-q');if(q)ask(q);});})();</script></body>
+</body>
 </html>
-<script src="/brian-voice.js"></script>
