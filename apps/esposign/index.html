@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESPOsign — sign it yourself, on your device</title>
+<meta name="description" content="Sign leases, school forms, waivers and contracts right in your browser. Draw or type your signature, place it, download the signed PDF. Your document never leaves your device — no upload, no account. By Accelerated Experiences, LLC.">
+<meta name="theme-color" content="#2A1A4A">
+<link rel="manifest" href="/apps/esposign/manifest.webmanifest">
+<link rel="icon" href="/apps/esposign/icon.png">
+<link rel="apple-touch-icon" href="/apps/esposign/icon.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+:root{
+  --bg:#2A1A4A; --bg2:#352359; --card:#3D2A66; --ink:#F2EDFA; --ink2:#B6A8D4;
+  --acc:#E8C468; --line:#4D3A78; --ok:#8BC7A0; --sig:#1a2fb8;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
+  padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+header{padding:calc(14px + env(safe-area-inset-top)) 18px 10px;display:flex;align-items:center;gap:10px;max-width:820px;margin:0 auto}
+header img{width:34px;height:34px;border-radius:9px}
+header .t{font-size:19px;font-weight:700}
+header .t b{color:var(--acc)}
+header .priv{margin-left:auto;font-size:12px;color:var(--ink2);background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+main{max-width:820px;margin:0 auto;padding:6px 18px 24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}
+.card h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:8px}
+.sub{color:var(--ink2);font-size:14.5px;line-height:1.55}
+button{font-family:var(--sans);cursor:pointer;border:0;border-radius:12px;font-size:15px}
+.b1{background:var(--acc);color:#2b2312;padding:13px 18px;font-weight:700}
+.b2{background:var(--bg2);color:var(--ink);border:1px solid var(--line);padding:12px 16px}
+.b2.on{border-color:var(--acc);color:var(--acc)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.row>*{flex:1;min-width:130px}
+
+/* drop zone */
+#drop{border:2px dashed var(--line);border-radius:16px;padding:44px 20px;text-align:center;margin-top:14px;cursor:pointer}
+#drop.hot{border-color:var(--acc)}
+#drop .big{font-size:19px;font-weight:700;margin-top:10px}
+#drop .ico{font-size:40px}
+#drop p{color:var(--ink2);font-size:14px;margin-top:8px;line-height:1.5}
+
+/* viewer */
+#viewer{display:none}
+#stage{position:relative;margin:14px auto 0;box-shadow:0 8px 30px rgba(0,0,0,.4);border-radius:6px;overflow:hidden;width:fit-content;max-width:100%}
+#pg{display:block;max-width:100%;height:auto}
+#overlay{position:absolute;inset:0;cursor:crosshair}
+.stamp{position:absolute;transform:translate(-50%,-50%);cursor:pointer;user-select:none}
+.stamp img{display:block;pointer-events:none}
+.stamp span{font-family:"Snell Roundhand","Segoe Script",cursive;color:var(--sig);white-space:nowrap;pointer-events:none}
+.stamp.txt span{font-family:var(--sans);color:#111;font-weight:600}
+.stamp:hover{outline:2px dashed #d33}
+.nav{display:flex;align-items:center;gap:10px;justify-content:center;margin-top:12px}
+.nav button{padding:9px 16px}
+.nav span{font-size:14px;color:var(--ink2)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;justify-content:center}
+.tools button{padding:10px 14px;font-size:14px}
+.hint{font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:10px;text-align:center}
+
+/* signature modal */
+#sigModal{display:none;position:fixed;inset:0;background:rgba(20,10,40,.85);z-index:50;align-items:center;justify-content:center;padding:18px}
+#sigModal.on{display:flex}
+#sigBox{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;width:100%;max-width:520px}
+#sigPad{background:#fff;border-radius:12px;touch-action:none;width:100%;height:180px;display:block}
+#typeIn{width:100%;background:#fff;border:0;border-radius:12px;padding:16px;font-family:"Snell Roundhand","Segoe Script",cursive;font-size:34px;color:var(--sig);display:none}
+.note{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:14px}
+footer{max-width:820px;margin:26px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.6}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--acc);color:#2b2312;font-size:14px;font-weight:700;border-radius:999px;padding:9px 18px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
+.toast.on{opacity:1}
+#dlBar{display:none;position:fixed;left:0;right:0;bottom:0;background:rgba(42,26,74,.97);border-top:1px solid var(--line);
+  padding:12px 18px calc(12px + env(safe-area-inset-bottom));z-index:40}
+#dlBar .in{max-width:820px;margin:0 auto;display:flex;gap:10px;align-items:center}
+#dlBar .b1{flex:1}
+</style>
+</head>
+<body>
+<header>
+  <img src="/apps/esposign/icon.png" alt="">
+  <div class="t">ESPO<b>sign</b></div>
+  <div class="priv">🔒 Never uploaded</div>
+</header>
+
+<main>
+  <!-- PICK -->
+  <section id="pick">
+    <div id="drop">
+      <div class="ico">✍️</div>
+      <div class="big">Drop a PDF here, or tap to choose</div>
+      <p>Leases, school forms, waivers, contracts.<br>
+      Everything happens on this device — your document is never uploaded anywhere.</p>
+      <input type="file" id="file" accept="application/pdf" hidden>
+    </div>
+    <div class="card">
+      <h3>How it works</h3>
+      <p class="sub">1 — Load your PDF. &nbsp; 2 — Make your signature once (draw it or type it; it's saved on this device for next time). &nbsp; 3 — Tap the page where the signature goes. &nbsp; 4 — Download the signed PDF. Done.</p>
+    </div>
+    <div class="note">ESPOsign places your signature image on the document, on your device. Whether an e-signature is acceptable for a given document is between you and whoever's asking for it — nothing here is legal advice.</div>
+  </section>
+
+  <!-- VIEWER -->
+  <section id="viewer">
+    <div class="tools">
+      <button class="b2 on" data-tool="sig">✍️ Signature</button>
+      <button class="b2" data-tool="ini">Initials</button>
+      <button class="b2" data-tool="date">📅 Date</button>
+      <button class="b2" data-tool="txt">Text…</button>
+      <button class="b2" id="editSig">Change signature</button>
+    </div>
+    <p class="hint">Pick a tool, then tap the page where it goes. Tap a placed item to remove it.</p>
+    <div id="stage">
+      <canvas id="pg"></canvas>
+      <div id="overlay"></div>
+    </div>
+    <div class="nav">
+      <button class="b2" id="prev">← Page</button>
+      <span id="pgLabel">1 / 1</span>
+      <button class="b2" id="next">Page →</button>
+    </div>
+  </section>
+</main>
+
+<div id="dlBar"><div class="in">
+  <button class="b2" id="startOver">Start over</button>
+  <button class="b1" id="download">⬇ Download signed PDF</button>
+</div></div>
+
+<!-- SIGNATURE MODAL -->
+<div id="sigModal">
+  <div id="sigBox">
+    <h3 style="color:var(--acc);font-size:13px;letter-spacing:.1em;margin-bottom:10px">YOUR SIGNATURE</h3>
+    <div class="row" style="margin-top:0">
+      <button class="b2 on" id="mDraw">Draw it</button>
+      <button class="b2" id="mType">Type it</button>
+    </div>
+    <div style="margin-top:12px">
+      <canvas id="sigPad"></canvas>
+      <input id="typeIn" type="text" placeholder="Type your name" autocomplete="name">
+    </div>
+    <div class="row">
+      <button class="b2" id="sigClear">Clear</button>
+      <button class="b1" id="sigSave">Save signature</button>
+    </div>
+    <p class="sub" style="margin-top:10px;font-size:12.5px">Saved only on this device. Erase it anytime with Change signature → Clear → Save.</p>
+  </div>
+</div>
+
+<footer>ESPOsign · part of the ESPO Genius family · Accelerated Experiences, LLC — Post Falls, Idaho.
+No upload. No account. No trackers. Your contracts are your business.</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+var K="esposign.v1", S;
+try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
+function save(){localStorage.setItem(K,JSON.stringify(S))}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1800)}
+
+var pdfDoc=null, srcBytes=null, srcName="document", pageNum=1, tool="sig";
+var placements=[]; // {page, xr, yr, kind, data(dataURL|text), wr} ratios relative to canvas
+var scale=1;
+
+/* ─── file load ─── */
+var drop=document.getElementById("drop"), file=document.getElementById("file");
+drop.onclick=function(){file.click()};
+drop.ondragover=function(e){e.preventDefault();drop.classList.add("hot")};
+drop.ondragleave=function(){drop.classList.remove("hot")};
+drop.ondrop=function(e){e.preventDefault();drop.classList.remove("hot");if(e.dataTransfer.files[0])load(e.dataTransfer.files[0])};
+file.onchange=function(){if(file.files[0])load(file.files[0])};
+function load(f){
+  if(f.type!=="application/pdf"&&!/\.pdf$/i.test(f.name)){toast("That's not a PDF");return}
+  srcName=f.name.replace(/\.pdf$/i,"");
+  var r=new FileReader();
+  r.onload=function(){
+    srcBytes=new Uint8Array(r.result);
+    pdfjsLib.getDocument({data:srcBytes.slice()}).promise.then(function(doc){
+      pdfDoc=doc;pageNum=1;placements=[];
+      document.getElementById("pick").style.display="none";
+      document.getElementById("viewer").style.display="block";
+      document.getElementById("dlBar").style.display="block";
+      render();
+      if(!S.sig)openSig();
+    }).catch(function(){toast("Couldn't read that PDF")});
+  };
+  r.readAsArrayBuffer(f);
+}
+
+/* ─── render ─── */
+function render(){
+  pdfDoc.getPage(pageNum).then(function(page){
+    var maxW=Math.min(document.getElementById("viewer").clientWidth||780,780);
+    var v1=page.getViewport({scale:1});
+    scale=maxW/v1.width;
+    var vp=page.getViewport({scale:scale*(window.devicePixelRatio||1)});
+    var c=document.getElementById("pg");
+    c.width=vp.width;c.height=vp.height;
+    c.style.width=(vp.width/(window.devicePixelRatio||1))+"px";
+    c.style.height=(vp.height/(window.devicePixelRatio||1))+"px";
+    page.render({canvasContext:c.getContext("2d"),viewport:vp});
+    document.getElementById("pgLabel").textContent=pageNum+" / "+pdfDoc.numPages;
+    drawStamps();
+  });
+}
+document.getElementById("prev").onclick=function(){if(pageNum>1){pageNum--;render()}};
+document.getElementById("next").onclick=function(){if(pageNum<pdfDoc.numPages){pageNum++;render()}};
+
+/* ─── tools ─── */
+document.querySelectorAll(".tools button[data-tool]").forEach(function(b){
+  b.onclick=function(){
+    tool=b.dataset.tool;
+    document.querySelectorAll(".tools button[data-tool]").forEach(function(x){x.classList.remove("on")});
+    b.classList.add("on");
+    if(tool==="txt"){var t=prompt("Text to place (name, address, etc.):");if(!t){tool="sig";document.querySelector('[data-tool="sig"]').classList.add("on");b.classList.remove("on");return}b.dataset.text=t}
+  };
+});
+document.getElementById("editSig").onclick=openSig;
+
+/* ─── placing ─── */
+var overlay=document.getElementById("overlay");
+overlay.onclick=function(e){
+  var r=overlay.getBoundingClientRect();
+  var xr=(e.clientX-r.left)/r.width, yr=(e.clientY-r.top)/r.height;
+  if(tool==="sig"||tool==="ini"){
+    if(!S.sig){openSig();return}
+    placements.push({page:pageNum,xr:xr,yr:yr,kind:tool,data:S.sig,wr:tool==="sig"?0.28:0.12});
+  }else if(tool==="date"){
+    placements.push({page:pageNum,xr:xr,yr:yr,kind:"txt",data:new Date().toLocaleDateString(),wr:0});
+  }else if(tool==="txt"){
+    var t=document.querySelector('[data-tool="txt"]').dataset.text||"";
+    if(!t)return;
+    placements.push({page:pageNum,xr:xr,yr:yr,kind:"txt",data:t,wr:0});
+  }
+  drawStamps();
+};
+function drawStamps(){
+  overlay.innerHTML="";
+  var W=overlay.clientWidth,H=overlay.clientHeight;
+  placements.forEach(function(p,i){
+    if(p.page!==pageNum)return;
+    var d=document.createElement("div");d.className="stamp"+(p.kind==="txt"?" txt":"");
+    d.style.left=(p.xr*100)+"%";d.style.top=(p.yr*100)+"%";
+    if(p.kind==="txt"){
+      var s=document.createElement("span");s.textContent=p.data;s.style.fontSize=Math.max(13,H*0.018)+"px";d.appendChild(s);
+    }else{
+      var im=document.createElement("img");im.src=p.data;im.style.width=(p.wr*W)+"px";d.appendChild(im);
+    }
+    d.onclick=function(ev){ev.stopPropagation();placements.splice(i,1);drawStamps()};
+    overlay.appendChild(d);
+  });
+}
+
+/* ─── signature modal ─── */
+var modal=document.getElementById("sigModal"),pad=document.getElementById("sigPad"),typeIn=document.getElementById("typeIn");
+var mode="draw",drawing=false,drew=false,ctx;
+function openSig(){
+  modal.classList.add("on");
+  pad.width=pad.clientWidth*2;pad.height=360;
+  ctx=pad.getContext("2d");ctx.scale(2,2);
+  ctx.fillStyle="#fff";ctx.fillRect(0,0,pad.width,pad.height);
+  ctx.strokeStyle="#1a2fb8";ctx.lineWidth=2.4;ctx.lineCap="round";ctx.lineJoin="round";
+  drew=false;
+}
+function pos(e){var r=pad.getBoundingClientRect();var t=e.touches?e.touches[0]:e;return[t.clientX-r.left,t.clientY-r.top]}
+function down(e){e.preventDefault();drawing=true;drew=true;var p=pos(e);ctx.beginPath();ctx.moveTo(p[0],p[1])}
+function move(e){if(!drawing)return;e.preventDefault();var p=pos(e);ctx.lineTo(p[0],p[1]);ctx.stroke()}
+function up(){drawing=false}
+pad.addEventListener("mousedown",down);pad.addEventListener("mousemove",move);window.addEventListener("mouseup",up);
+pad.addEventListener("touchstart",down,{passive:false});pad.addEventListener("touchmove",move,{passive:false});pad.addEventListener("touchend",up);
+document.getElementById("mDraw").onclick=function(){mode="draw";pad.style.display="block";typeIn.style.display="none";
+  this.classList.add("on");document.getElementById("mType").classList.remove("on")};
+document.getElementById("mType").onclick=function(){mode="type";pad.style.display="none";typeIn.style.display="block";typeIn.focus();
+  this.classList.add("on");document.getElementById("mDraw").classList.remove("on")};
+document.getElementById("sigClear").onclick=function(){
+  if(mode==="draw"){ctx.fillStyle="#fff";ctx.fillRect(0,0,pad.width,pad.height);drew=false}
+  else typeIn.value="";
+  S.sig=null;save();
+};
+document.getElementById("sigSave").onclick=function(){
+  var out;
+  if(mode==="draw"){
+    if(!drew){toast("Draw your signature first");return}
+    out=trimCanvas(pad);
+  }else{
+    var name=typeIn.value.trim();if(!name){toast("Type your name first");return}
+    var c=document.createElement("canvas");c.width=Math.max(300,name.length*46);c.height=120;
+    var x=c.getContext("2d");x.fillStyle="rgba(0,0,0,0)";x.font='72px "Snell Roundhand","Segoe Script",cursive';
+    x.fillStyle="#1a2fb8";x.textBaseline="middle";x.fillText(name,10,60);
+    out=c.toDataURL("image/png");
+  }
+  S.sig=out;save();modal.classList.remove("on");toast("Signature saved on this device ✍️");
+};
+function trimCanvas(c){
+  var x=c.getContext("2d"),d=x.getImageData(0,0,c.width,c.height),px=d.data;
+  var minX=c.width,minY=c.height,maxX=0,maxY=0;
+  for(var i=0;i<px.length;i+=4){
+    if(px[i]<240||px[i+1]<240||px[i+2]<240){ // non-white ink
+      var p=i/4,X=p%c.width,Y=(p/c.width)|0;
+      if(X<minX)minX=X;if(X>maxX)maxX=X;if(Y<minY)minY=Y;if(Y>maxY)maxY=Y;
+    }
+  }
+  if(maxX<=minX)return c.toDataURL("image/png");
+  var pad2=10,w=maxX-minX+pad2*2,h=maxY-minY+pad2*2;
+  var o=document.createElement("canvas");o.width=w;o.height=h;
+  o.getContext("2d").drawImage(c,minX-pad2,minY-pad2,w,h,0,0,w,h);
+  return o.toDataURL("image/png");
+}
+
+/* ─── export ─── */
+document.getElementById("download").onclick=async function(){
+  if(!placements.length){toast("Tap the page to place your signature first");return}
+  toast("Building your signed PDF…");
+  try{
+    var doc=await PDFLib.PDFDocument.load(srcBytes);
+    var pages=doc.getPages();
+    var imgCache={};
+    for(var i=0;i<placements.length;i++){
+      var p=placements[i],page=pages[p.page-1];
+      var pw=page.getWidth(),ph=page.getHeight();
+      if(p.kind==="txt"){
+        var fnt=await doc.embedFont(PDFLib.StandardFonts.Helvetica);
+        var size=ph*0.018>10?ph*0.018:10;
+        page.drawText(p.data,{x:p.xr*pw,y:ph-(p.yr*ph)-size/2,size:size,font:fnt,color:PDFLib.rgb(0.07,0.07,0.07)});
+      }else{
+        if(!imgCache[p.data])imgCache[p.data]=await doc.embedPng(p.data);
+        var img=imgCache[p.data];
+        var w=p.wr*pw,h=w*(img.height/img.width);
+        page.drawImage(img,{x:p.xr*pw-w/2,y:ph-(p.yr*ph)-h/2,width:w,height:h});
+      }
+    }
+    var bytes=await doc.save();
+    var a=document.createElement("a");
+    a.href=URL.createObjectURL(new Blob([bytes],{type:"application/pdf"}));
+    a.download=srcName+" — signed.pdf";a.click();
+    toast("Signed PDF downloaded ✓ Nothing was uploaded.");
+  }catch(e){toast("Export failed — try reloading the PDF")}
+};
+document.getElementById("startOver").onclick=function(){
+  if(confirm("Clear this document and start over? (Your saved signature stays.)"))location.reload();
+};
+window.addEventListener("resize",function(){if(pdfDoc)render()});
+if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/esposign/sw.js");
+</script>
+</body>
+</html>
