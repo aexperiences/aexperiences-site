@@ -327,11 +327,10 @@ td.n{font-family:var(--mono);white-space:nowrap}
       + '<div class="pain">' + T.pain.map(function(p){
           return '<div class="p"><div class="pt">'+esc(p.t)+'</div><div class="pd">'+esc(p.d)+'</div></div>';
         }).join('') + '</div>'
-      + '<div class="mathbox"><div class="big">'+ (function(){
-            var m=T.painMath; var hrs=Math.round(m.deals*m.minutes/60);
-            return hrs.toLocaleString('en-US')+' hours a year';
-          })() +'</div>'
-        + '<p>'+esc(T.painStat)+' At '+T.painMath.deals+' '+esc(T.painMath.label)+', that is a full-time job doing nothing but moving the same information between systems that will not talk to each other.</p>'
+      + '<div class="mathbox"><div class="big">'+ (T.painMath
+            ? (function(){ var m=T.painMath; return Math.round(m.deals*m.minutes/60).toLocaleString('en-US')+' hours a year'; })()
+            : esc(T.painHeadline||'')) +'</div>'
+        + '<p>'+esc(T.painStat)+(T.painMath ? ' At '+T.painMath.deals+' '+esc(T.painMath.label)+', that is a full-time job doing nothing but moving the same information between systems that will not talk to each other.' : '')+'</p>'
         + '<div class="src">Source: '+esc(T.painStatSrc)+'. Your numbers will differ — we will work them out with you rather than guess.</div></div>'
       + '<div class="cta"><h3>This is the real thing</h3>'
         + '<p>Everything you just clicked is the actual interface, running in your browser. Nothing saves, because this floor model is not wired to a database — yours would be.</p>'

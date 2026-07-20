@@ -102,6 +102,28 @@
     architecture: {
       id:'architecture', hub:'Draftline Hub', trade:'Architecture', acc:'#5c8a5f', acc2:'#43703f',
       firm:'North Fork Studio', firmSub:'9 people · Spokane, Washington', who:'a nine-person studio', priceId:'draftline',
+
+      /* Sourced Jul 20 2026 — monograph.com, itqlick.com, deelo.ai, basebuilders.com.
+         Benchmark category per Barry Burris's audit: Deltek Ajera/Vantagepoint, BQE Core,
+         Monograph, Newforma. */
+      stack: [
+        { tool:'BQE Core or Monograph', job:'Projects, time & billing', cost:'$24–79/user/mo', note:'BQE modular; Monograph ~$500–1,200/mo at 20 staff' },
+        { tool:'Deltek Ajera (the firms that outgrow those)', job:'Full ERP', cost:'from $200/user/mo', note:'real cost often ~3x after implementation' },
+        { tool:'Newforma-class tool', job:'RFIs, submittals, transmittals', cost:'quoted', note:'per-project or enterprise' },
+        { tool:'DocuSign', job:'Signatures & contracts', cost:'$40–120/mo', note:'per user' },
+        { tool:'QuickBooks', job:'The actual books', cost:'$99/mo', note:'plus a bookkeeper' },
+        { tool:'Google Workspace + Drive', job:'Everything else', cost:'$75/mo', note:'9 seats' }
+      ],
+      stackNote:'For a nine-person studio the modular tools alone run $2,600–$8,500 a year before the ERP conversation even starts — and none of them holds the drawings, the money and the people in one place.',
+      pain: [
+        { t:'Time lives away from billing', d:'Hours go into one tool, invoices come out of another. You know what you billed — not what a project actually cost you in labor. Budgeted vs. actual hours vs. revenue is the number the whole practice runs on, and it lives in a spreadsheet.' },
+        { t:'RFIs are not tied to drawings', d:'The tracker knows RFI 041 exists. It does not know which sheet it is about, which revision answered it, or what got transmitted when. That reconstruction happens by hand, at the worst possible time — during a dispute.' },
+        { t:'Licenses are nobody\'s job', d:'A stamped drawing is only valid on a current registration. Most firms track registrations, renewals and insurance certs in a spreadsheet someone forgets to check.' },
+        { t:'Nothing upstream of the proposal', d:'Pursuits, RFPs and win rates live in email. The pipeline that feeds the whole firm has no system of record.' }
+      ],
+      painStat:'Deltek Ajera lists at $200 per user per month — and independent analysis puts the real three-year cost near triple the sticker after implementation and add-ons.',
+      painStatSrc:'ITQlick pricing analysis, 2026',
+      painHeadline:'$200/user/mo — before the 3x',
       kpis:[
         { k:'Active projects', v:'11', s:'$268k fees in motion', tone:'good' },
         { k:'Open RFIs', v:'7', s:'2 overdue', tone:'warn' },
@@ -141,7 +163,8 @@
         { id:'deals', label:'Projects', icon:'M3 7h18v13H3zM3 7l3-4h12l3 4M9 12h6' },
         { id:'people', label:'Studio', icon:'M16 20v-2a4 4 0 0 0-8 0v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8' },
         { id:'money', label:'Billing', icon:'M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
-        { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' }
+        { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' },
+        { id:'stack', label:'What this replaces', icon:'M3 6h18M3 12h18M3 18h18' }
       ]
     },
 
