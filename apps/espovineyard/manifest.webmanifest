@@ -1,0 +1,14 @@
+{
+  "name": "ESPOvineyard",
+  "short_name": "ESPOvineyard",
+  "description": "A calm wine journal for adults 21+ — a cellar that is actually yours. By Accelerated Experiences, LLC.",
+  "start_url": "/apps/espovineyard/",
+  "scope": "/apps/espovineyard/",
+  "display": "standalone",
+  "background_color": "#2E0D19",
+  "theme_color": "#2E0D19",
+  "icons": [
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
+  ]
+}

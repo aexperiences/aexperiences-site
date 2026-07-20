@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESPOvineyard — a cellar that is actually yours</title>
+<meta name="description" content="A calm wine journal for adults 21+: remember every bottle with a photo, rating and tasting note, keep a cellar with your own drinking windows, and read the Wine Country Notebook — real features on real wineries. No ads, no marketplace, nothing leaves your device. By Accelerated Experiences, LLC.">
+<meta name="theme-color" content="#2E0D19">
+<link rel="manifest" href="/apps/espovineyard/manifest.webmanifest">
+<link rel="icon" href="/apps/espovineyard/icon.png">
+<link rel="apple-touch-icon" href="/apps/espovineyard/icon.png">
+<style>
+:root{
+  --bg:#2E0D19; --bg2:#3C1524; --card:#451A2B; --ink:#F7EEF0; --ink2:#C9A8B2;
+  --dusk:#E0A075; --rose:#C97B8E; --gold:#D8B45A; --line:#5A2438; --ok:#8BC7A0;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --serif:"Iowan Old Style",Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
+  padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+header{padding:calc(14px + env(safe-area-inset-top)) 18px 10px;display:flex;align-items:center;gap:10px}
+header img{width:34px;height:34px;border-radius:9px}
+header .t{font-family:var(--serif);font-size:19px;font-weight:600}
+header .t b{color:var(--dusk);font-weight:600}
+.age{margin-left:auto;font-size:12px;color:var(--ink2);background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+main{max-width:680px;margin:0 auto;padding:6px 18px 24px}
+.view{display:none}.view.on{display:block;animation:up .25s ease}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h2{font-family:var(--serif);font-size:23px;margin:14px 0 4px}
+.sub{color:var(--ink2);font-size:14.5px;line-height:1.55;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}
+.card h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--dusk);margin-bottom:8px}
+button{font-family:var(--sans);cursor:pointer;border:0;border-radius:12px;font-size:15px}
+.b1{background:var(--dusk);color:#3a1c0e;padding:13px 18px;font-weight:700;width:100%;margin-top:12px}
+.b2{background:var(--bg2);color:var(--ink);border:1px solid var(--line);padding:12px 16px;width:100%;margin-top:10px}
+input,select,textarea{background:var(--bg2);border:1px solid var(--line);border-radius:12px;color:var(--ink);
+  font-family:var(--sans);font-size:15.5px;padding:12px;width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--dusk)}
+label{font-size:13px;color:var(--ink2);display:block;margin:12px 0 5px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hint{font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:10px}
+
+/* glasses rating */
+.glasses{display:flex;gap:6px;margin-top:4px}
+.glasses button{background:none;font-size:30px;padding:2px;filter:grayscale(1) opacity(.45)}
+.glasses button.on{filter:none}
+
+/* journal list */
+.jcard{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin-top:12px}
+.jcard img{width:64px;height:64px;object-fit:cover;border-radius:10px;background:var(--bg2)}
+.jcard .ph{width:64px;height:64px;border-radius:10px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:26px}
+.jcard .m{flex:1;min-width:0}
+.jcard .m b{font-family:var(--serif);font-size:17px;display:block}
+.jcard .m span{font-size:13px;color:var(--ink2);display:block;margin-top:2px}
+.jcard .m p{font-size:13.5px;color:var(--ink);margin-top:6px;line-height:1.45}
+.jcard .r{font-size:14px;white-space:nowrap}
+.jcard button{background:none;color:var(--ink2);font-size:12px;padding:2px 6px;align-self:flex-start}
+.empty{color:var(--ink2);font-size:14.5px;text-align:center;padding:28px 10px;line-height:1.6}
+
+/* cellar */
+.badge{display:inline-block;font-size:11px;font-weight:700;border-radius:999px;padding:3px 10px;margin-left:8px}
+.badge.ready{background:var(--ok);color:#1c3324}
+.badge.hold{background:var(--gold);color:#3a2d10}
+.badge.past{background:var(--rose);color:#3a1220}
+
+/* notebook */
+.region{font-family:var(--serif);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);margin:22px 0 2px}
+.piece{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:10px}
+.piece h4{font-family:var(--serif);font-size:20px;margin-bottom:2px}
+.piece .where{font-size:12.5px;color:var(--dusk);margin-bottom:8px}
+.piece p{font-family:var(--serif);font-size:15.5px;line-height:1.65;color:var(--ink)}
+.nb-intro{font-family:var(--serif);font-size:15.5px;line-height:1.65;color:var(--ink2);font-style:italic;margin-top:8px}
+
+/* nav */
+nav{position:fixed;left:0;right:0;bottom:0;background:rgba(46,13,25,.96);backdrop-filter:blur(10px);
+  border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
+nav button{background:none;color:var(--ink2);font-size:11.5px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px}
+nav button.on{color:var(--dusk)}
+nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+footer{max-width:680px;margin:26px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.6}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--dusk);color:#3a1c0e;font-size:14px;font-weight:700;border-radius:999px;padding:9px 18px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
+.toast.on{opacity:1}
+
+/* 21+ gate */
+#gate{position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+#gate .in{max-width:420px;text-align:center}
+#gate img{width:96px;height:96px;border-radius:22px;margin-bottom:18px}
+#gate h1{font-family:var(--serif);font-size:30px}
+#gate p{color:var(--ink2);font-size:15px;line-height:1.6;margin:14px 0 20px}
+</style>
+</head>
+<body>
+<div id="gate" style="display:none">
+  <div class="in">
+    <img src="/apps/espovineyard/icon.png" alt="">
+    <h1>ESPO<span style="color:var(--dusk)">vineyard</span></h1>
+    <p>A quiet journal for wine. This app is for adults of legal drinking age — 21+ in the United States.
+    Please enjoy responsibly.</p>
+    <button class="b1" id="gateYes">I'm 21 or older — come in</button>
+  </div>
+</div>
+
+<header>
+  <img src="/apps/espovineyard/icon.png" alt="">
+  <div class="t">ESPO<b>vineyard</b></div>
+  <div class="age">21+</div>
+</header>
+
+<main>
+  <!-- JOURNAL -->
+  <section class="view on" id="v-journal">
+    <h2>The journal</h2>
+    <p class="sub">Every bottle worth remembering, remembered. Nothing here is for sale — this is yours.</p>
+    <div class="card">
+      <h3>Remember a bottle</h3>
+      <label for="bPhoto">Label photo (optional)</label>
+      <input type="file" id="bPhoto" accept="image/*" capture="environment">
+      <div class="grid2">
+        <div><label for="bName">Wine</label><input id="bName" type="text" placeholder="e.g. Estate Pinot Noir"></div>
+        <div><label for="bWinery">Winery</label><input id="bWinery" type="text" placeholder="e.g. Rodney Strong"></div>
+        <div><label for="bVintage">Vintage</label><input id="bVintage" type="text" inputmode="numeric" placeholder="2021"></div>
+        <div><label for="bVarietal">Varietal / style</label><input id="bVarietal" type="text" placeholder="Pinot Noir"></div>
+      </div>
+      <label>My pour</label>
+      <div class="glasses" id="glasses">
+        <button data-g="1">🍷</button><button data-g="2">🍷</button><button data-g="3">🍷</button><button data-g="4">🍷</button><button data-g="5">🍷</button>
+      </div>
+      <label for="bNotes">Tasting note</label>
+      <textarea id="bNotes" rows="2" placeholder="What it tasted like, where you were, who you were with."></textarea>
+      <button class="b1" id="bSave">Save to my journal</button>
+    </div>
+    <div id="jList"></div>
+    <button class="b2" id="expJ">Export journal (.csv — always free)</button>
+  </section>
+
+  <!-- CELLAR -->
+  <section class="view" id="v-cellar">
+    <h2>The cellar</h2>
+    <p class="sub">Bottles you're holding, with drinking windows you set. Your call — never gospel.</p>
+    <div class="card">
+      <h3>Add to the cellar</h3>
+      <div class="grid2">
+        <div><label for="cName">Wine</label><input id="cName" type="text" placeholder="e.g. Brut Rosé"></div>
+        <div><label for="cWinery">Winery</label><input id="cWinery" type="text" placeholder="e.g. Iron Horse"></div>
+        <div><label for="cQty">Bottles</label><input id="cQty" type="text" inputmode="numeric" placeholder="2"></div>
+        <div><label for="cVintage">Vintage</label><input id="cVintage" type="text" inputmode="numeric" placeholder="2019"></div>
+        <div><label for="cFrom">Drink from (year)</label><input id="cFrom" type="text" inputmode="numeric" placeholder="2026"></div>
+        <div><label for="cTo">Drink by (year)</label><input id="cTo" type="text" inputmode="numeric" placeholder="2030"></div>
+      </div>
+      <button class="b1" id="cSave">Add to cellar</button>
+    </div>
+    <div id="cList"></div>
+    <button class="b2" id="expC">Export cellar (.csv — always free)</button>
+  </section>
+
+  <!-- WINE COUNTRY NOTEBOOK -->
+  <section class="view" id="v-notebook">
+    <h2>Wine Country Notebook</h2>
+    <p class="nb-intro">Real places, real wineries, written the way a wine country magazine would have it —
+    starting where the Russian River runs through the redwoods, and wandering out from there.</p>
+    <div id="nb"></div>
+    <p class="hint" style="text-align:left">Every fact above is verified against the wineries' own histories and regional records.
+    More regions join the Notebook over time. Suggest one from Settings.</p>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="view" id="v-set">
+    <h2>Settings</h2>
+    <div class="card">
+      <h3>Your data</h3>
+      <p class="hint">Everything — journal, cellar, photos — lives on this device. No account, no ads, no marketplace,
+      no trackers. Export is free forever, and erasing really erases.</p>
+      <button class="b2" id="wipe">Erase everything</button>
+    </div>
+    <div class="card">
+      <h3>Suggest a region for the Notebook</h3>
+      <p class="hint">Somewhere we should write about next?</p>
+      <button class="b2" onclick="location.href='mailto:anthonye@aexperiences.studio?subject=ESPOvineyard%20Notebook%20—%20region%20suggestion'">Email a suggestion</button>
+    </div>
+    <div class="card">
+      <h3>Drink responsibly</h3>
+      <p class="hint">ESPOvineyard is a journal for adults 21+. It makes no health claims about wine, and neither should anyone.
+      If drinking stops feeling like a choice, the SAMHSA helpline is 1-800-662-4357.</p>
+    </div>
+  </section>
+</main>
+
+<nav>
+  <button data-v="journal" class="on"><svg viewBox="0 0 24 24"><path d="M6 3h12v18H6z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>Journal</button>
+  <button data-v="cellar"><svg viewBox="0 0 24 24"><path d="M9 3h6v4c0 2 2 3 2 6v8H7v-8c0-3 2-4 2-6z"/><path d="M9 15h6"/></svg>Cellar</button>
+  <button data-v="notebook"><svg viewBox="0 0 24 24"><path d="M4 5c3-2 6-2 8 0 2-2 5-2 8 0v14c-3-2-6-2-8 0-2-2-5-2-8 0z"/><path d="M12 5v14"/></svg>Notebook</button>
+  <button data-v="set"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>Settings</button>
+</nav>
+
+<footer>ESPOvineyard · part of the ESPOsavor family · Accelerated Experiences, LLC — Post Falls, Idaho.
+21+ · No ads. No marketplace. Your cellar is actually yours.</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─── Wine Country Notebook — every fact verified Jul 2026 (sources in the AE research file) ─── */
+var NB=[
+{region:"Russian River Valley — Sonoma County",pieces:[
+{t:"Rodney Strong Vineyards",w:"Healdsburg, CA",
+ p:"Before he was a winemaker, Rodney D. Strong was a professional dancer — and in 1959 he traded the stage for Sonoma County soil, founding just the 13th bonded winery in the county. He was among the first to plant seriously in the Russian River Valley, Chalk Hill and Alexander Valley, back when that looked more like faith than strategy. Since 1989 the winery has belonged to the Kleins, a fourth-generation California farming family, and the tasting room on Old Redwood Highway still pours like a house that knows exactly where it came from."},
+{t:"Korbel Champagne Cellars",w:"Guerneville, CA",
+ p:"Three Bohemian brothers — Francis, Anton and Joseph Korbel — planted their future among the redwoods on River Road in 1882, and the ivy-covered cellars have been making méthode champenoise sparkling ever since. Korbel is the bottle America actually opens: its California champagne has been poured at ten presidential inaugurations. Come for the history, stay because a cold glass of brut under coast redwoods on a summer afternoon is one of the great inexpensive luxuries in wine country."},
+{t:"Iron Horse Vineyards",w:"Sebastopol, CA — Green Valley",
+ p:"Audrey and Barry Sterling first saw the property in pouring February rain in 1976, crested the hill on Ross Station Road, and bought all 300 acres within two weeks. Romantics, clearly — and right. Their estate sparkling from the fog-cooled Green Valley of the Russian River Valley has been served at the White House since 1985, beginning with the Reagan–Gorbachev summit, across seven administrations. The outdoor tasting bar looks over vine rows to Mount St. Helena, and there is no better view in Sonoma County with a flute in your hand."},
+{t:"Monte Rio & the Lower River",w:"Monte Rio → Duncans Mills, CA",
+ p:"Monte Rio calls itself Vacation Wonderland on the arch over the road, and the lower Russian River earns it — redwoods to the waterline, beach towns the size of a long exhale. This stretch drinks more wine than it makes: Sophie's Cellars, the lower river's beloved wine merchant and longtime Monte Rio fixture, now pours just downriver in Duncans Mills, stocking small-production Sonoma bottles you won't find in a supermarket. And the town lends its name to Monte Rio Cellars, a winery label carrying the river's easy spirit onto the shelf."}]},
+{region:"Sonoma Valley",pieces:[
+{t:"Chateau St. Jean",w:"Kenwood, CA",
+ p:"Since 1973, Chateau St. Jean has made single-vineyard wine the point, not the exception — site-specific bottlings that read like a map of Sonoma. The setting matches the ambition: a 1920s chateau and its gardens at the foot of Sugarloaf Ridge, in the quiet middle of the Valley of the Moon. Kenwood is the unhurried heart of Sonoma Valley, and an afternoon on this lawn explains why nobody who stops here is ever early for their next appointment."},
+{t:"Benziger Family Winery",w:"Glen Ellen, CA",
+ p:"Glen Ellen is Jack London's town — the Valley of the Moon he wrote from — and up London Ranch Road, right beside Jack London State Historic Park, the Benziger family farms a volcanic bowl on Sonoma Mountain. Making wine since their first harvest in 1981, the Benzigers became pioneers of biodynamic farming, running the estate as one living ecosystem: sheep, insectaries, cover crops, the works. The tram tour through the vineyard is the single best explain-it-to-me hour in California wine."}]},
+{region:"Central Coast — San Luis Obispo & Pismo",pieces:[
+{t:"The SLO Coast Trail",w:"Edna Valley & Arroyo Grande, CA",
+ p:"California's coastal fog does its finest quiet work just inland from Pismo Beach. The SLO Coast AVA — designated in March 2022, wrapping Edna Valley and Arroyo Grande — strings 32 wineries along one of the state's longest, coolest growing seasons, and the Chardonnay and Pinot Noir come up bright, saline and unmistakably maritime. Talley Vineyards' 1986 debut was the first Chardonnay and Pinot ever made in the Arroyo Grande Valley; Tolosa and Chamisal anchor Edna Valley. Taste down the trail, then finish with your feet in the sand at Pismo."}]},
+{region:"Walla Walla — Washington",pieces:[
+{t:"Leonetti Cellar & L'Ecole № 41",w:"Walla Walla Valley, WA",
+ p:"Walla Walla's wine story starts in a family garage in 1977, when Gary and Nancy Figgins founded Leonetti Cellar — the valley's first commercial winery — and proved Washington could make reds worth waiting years for. Six years later, L'Ecole № 41 opened as just the third winery in the valley, pouring inside a 1915 Frenchtown schoolhouse in Lowden that still wears its name on the label. From two wineries to a few hundred in a generation: no American wine region grew up faster, or kept its small-town manners better."}]},
+{region:"Temecula Valley — Southern California",pieces:[
+{t:"Wilson Creek Winery",w:"Temecula, CA",
+ p:"An hour from San Diego, Temecula Valley is Southern California's own wine country — hot-air balloons at sunrise, Rainbow Gap breezes by afternoon. Wilson Creek has been the valley's family-owned favorite for more than 25 years, and its calling card is pure Temecula: an almond sparkling that purists side-eye and everyone else cheerfully finishes. That's the valley's charm in a glass — SoCal doesn't do stuffy, and its wine country never has."}]}
+];
+
+var K="espovineyard.v1",S;
+try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
+S.journal=S.journal||[]; S.cellar=S.cellar||[];
+function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){toast("Storage full — export & remove old photos")}}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1800)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+/* 21+ gate */
+if(!S.adult){document.getElementById("gate").style.display="flex"}
+document.getElementById("gateYes").onclick=function(){S.adult=true;save();document.getElementById("gate").style.display="none"};
+
+/* rating */
+var rating=0;
+document.querySelectorAll("#glasses button").forEach(function(b){
+  b.onclick=function(){rating=+b.dataset.g;
+    document.querySelectorAll("#glasses button").forEach(function(x){x.classList.toggle("on",+x.dataset.g<=rating)})};
+});
+
+/* photo -> compressed dataURL */
+var photoData=null;
+document.getElementById("bPhoto").onchange=function(){
+  var f=this.files[0];if(!f)return;
+  var img=new Image();
+  img.onload=function(){
+    var max=640,r=Math.min(1,max/Math.max(img.width,img.height));
+    var c=document.createElement("canvas");c.width=img.width*r;c.height=img.height*r;
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    photoData=c.toDataURL("image/jpeg",0.72);toast("Label photo ready 📷");
+  };
+  img.src=URL.createObjectURL(f);
+};
+
+/* journal */
+function glassStr(n){var s="";for(var i=0;i<n;i++)s+="🍷";return s}
+document.getElementById("bSave").onclick=function(){
+  var name=document.getElementById("bName").value.trim();
+  if(!name){toast("Give the wine a name");return}
+  S.journal.unshift({name:name,winery:document.getElementById("bWinery").value.trim(),
+    vintage:document.getElementById("bVintage").value.trim(),varietal:document.getElementById("bVarietal").value.trim(),
+    rating:rating,notes:document.getElementById("bNotes").value.trim(),photo:photoData,t:Date.now()});
+  save();
+  ["bName","bWinery","bVintage","bVarietal","bNotes"].forEach(function(id){document.getElementById(id).value=""});
+  document.getElementById("bPhoto").value="";photoData=null;rating=0;
+  document.querySelectorAll("#glasses button").forEach(function(x){x.classList.remove("on")});
+  drawJ();toast("Remembered 🍷");
+};
+function drawJ(){
+  var el=document.getElementById("jList");
+  if(!S.journal.length){el.innerHTML='<div class="empty">No bottles yet. The next one you love goes here — with the photo, the note, and the night attached.</div>';return}
+  el.innerHTML=S.journal.map(function(j,i){
+    return '<div class="jcard">'+(j.photo?'<img src="'+j.photo+'">':'<div class="ph">🍷</div>')
+      +'<div class="m"><b>'+esc(j.name)+(j.vintage?' ’'+esc(String(j.vintage).slice(-2)):'')+'</b>'
+      +'<span>'+esc(j.winery||"")+(j.varietal?' · '+esc(j.varietal):'')+' · '+new Date(j.t).toLocaleDateString()+'</span>'
+      +(j.notes?'<p>'+esc(j.notes)+'</p>':'')+'</div>'
+      +'<div class="r">'+glassStr(j.rating||0)+'</div>'
+      +'<button data-i="'+i+'">✕</button></div>';
+  }).join("");
+  el.querySelectorAll("button").forEach(function(b){
+    b.onclick=function(){if(confirm("Remove this bottle from your journal?")){S.journal.splice(+b.dataset.i,1);save();drawJ()}};
+  });
+}
+
+/* cellar */
+document.getElementById("cSave").onclick=function(){
+  var name=document.getElementById("cName").value.trim();
+  if(!name){toast("Give the wine a name");return}
+  S.cellar.unshift({name:name,winery:document.getElementById("cWinery").value.trim(),
+    qty:document.getElementById("cQty").value.trim()||"1",vintage:document.getElementById("cVintage").value.trim(),
+    from:document.getElementById("cFrom").value.trim(),to:document.getElementById("cTo").value.trim(),t:Date.now()});
+  save();["cName","cWinery","cQty","cVintage","cFrom","cTo"].forEach(function(id){document.getElementById(id).value=""});
+  drawC();toast("In the cellar 🍾");
+};
+function windowBadge(c){
+  var y=new Date().getFullYear(),f=parseInt(c.from),to=parseInt(c.to);
+  if(!f&&!to)return "";
+  if(f&&y<f)return '<span class="badge hold">HOLD until '+f+'</span>';
+  if(to&&y>to)return '<span class="badge past">your window passed</span>';
+  return '<span class="badge ready">READY'+(to?' — drink by '+to:'')+'</span>';
+}
+function drawC(){
+  var el=document.getElementById("cList");
+  if(!S.cellar.length){el.innerHTML='<div class="empty">An empty rack, full of potential. Add what you\'re holding and set the window you plan to drink it in.</div>';return}
+  el.innerHTML=S.cellar.map(function(c,i){
+    return '<div class="jcard"><div class="ph">🍾</div><div class="m"><b>'+esc(c.name)+(c.vintage?' ’'+esc(String(c.vintage).slice(-2)):'')+'</b>'
+      +'<span>'+esc(c.winery||"")+' · '+esc(c.qty)+' bottle'+(c.qty!=="1"?'s':'')+'</span>'
+      +'<p>'+windowBadge(c)+'</p></div>'
+      +'<button data-d="'+i+'" title="Drank one — move to journal">🍷→</button>'
+      +'<button data-i="'+i+'">✕</button></div>';
+  }).join("");
+  el.querySelectorAll("button[data-i]").forEach(function(b){
+    b.onclick=function(){if(confirm("Remove from cellar?")){S.cellar.splice(+b.dataset.i,1);save();drawC()}};
+  });
+  el.querySelectorAll("button[data-d]").forEach(function(b){
+    b.onclick=function(){
+      var c=S.cellar[+b.dataset.d];
+      var q=parseInt(c.qty)||1;
+      if(q>1){c.qty=String(q-1)}else{S.cellar.splice(+b.dataset.d,1)}
+      document.querySelector('[data-v="journal"]').click();
+      document.getElementById("bName").value=c.name;
+      document.getElementById("bWinery").value=c.winery||"";
+      document.getElementById("bVintage").value=c.vintage||"";
+      save();drawC();toast("Popped 🍾 — write it down while it's fresh");
+      window.scrollTo({top:0,behavior:"smooth"});
+    };
+  });
+}
+
+/* notebook */
+document.getElementById("nb").innerHTML=NB.map(function(r){
+  return '<div class="region">'+r.region+'</div>'+r.pieces.map(function(p){
+    return '<div class="piece"><h4>'+p.t+'</h4><div class="where">'+p.w+'</div><p>'+p.p+'</p></div>';
+  }).join("");
+}).join("");
+
+/* export */
+function csv(rows,name){
+  var c=rows.map(function(r){return r.map(function(v){return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'}).join(",")}).join("\n");
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([c],{type:"text/csv"}));a.download=name;a.click();
+}
+document.getElementById("expJ").onclick=function(){
+  var rows=[["wine","winery","vintage","varietal","rating","notes","date"]];
+  S.journal.forEach(function(j){rows.push([j.name,j.winery,j.vintage,j.varietal,j.rating,j.notes,new Date(j.t).toISOString()])});
+  csv(rows,"espovineyard-journal.csv");toast("Exported — your cellar is yours");
+};
+document.getElementById("expC").onclick=function(){
+  var rows=[["wine","winery","vintage","qty","drink_from","drink_by"]];
+  S.cellar.forEach(function(c){rows.push([c.name,c.winery,c.vintage,c.qty,c.from,c.to])});
+  csv(rows,"espovineyard-cellar.csv");toast("Exported — your cellar is yours");
+};
+document.getElementById("wipe").onclick=function(){
+  if(confirm("Erase your whole journal, cellar and photos from this device? There is no cloud copy — that's the point.")){
+    localStorage.removeItem(K);location.reload();
+  }
+};
+
+/* nav */
+document.querySelectorAll("nav button").forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll("nav button").forEach(function(x){x.classList.remove("on")});
+    document.querySelectorAll(".view").forEach(function(x){x.classList.remove("on")});
+    b.classList.add("on");document.getElementById("v-"+b.dataset.v).classList.add("on");
+  };
+});
+drawJ();drawC();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/espovineyard/sw.js");
+</script>
+</body>
+</html>
