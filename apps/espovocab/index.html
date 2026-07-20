@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESPOvocab — a word a day that actually sticks</title>
+<meta name="description" content="One beautiful word a day — definition, etymology, usage — plus your own word list and a journal. No ads, no account, your words stay on your device. By Accelerated Experiences, LLC.">
+<meta name="theme-color" content="#1E2A24">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<style>
+:root{
+  --bg:#1E2A24; --bg2:#243329; --card:#2A3A30; --ink:#EDF3EE; --ink2:#A9BDB0;
+  --gold:#D8B45A; --line:#3A4C40; --ok:#7FB88A;
+  --serif:"New York","Iowan Old Style",Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
+  padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+a{color:var(--gold)}
+header{padding:calc(14px + env(safe-area-inset-top)) 18px 10px;display:flex;align-items:center;gap:10px}
+header img{width:34px;height:34px;border-radius:9px}
+header .t{font-family:var(--serif);font-size:19px;letter-spacing:.3px}
+header .t b{color:var(--gold);font-weight:600}
+.streak{margin-left:auto;font-size:13px;color:var(--ink2);background:var(--bg2);
+  border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+main{max-width:640px;margin:0 auto;padding:6px 18px 24px}
+.view{display:none}.view.on{display:block;animation:up .25s ease}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* today card */
+.date{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);margin:14px 0 4px}
+.word{font-family:var(--serif);font-size:clamp(40px,11vw,64px);line-height:1.05;font-weight:600}
+.pr{color:var(--gold);font-size:16px;margin-top:6px;font-style:italic}
+.pos{display:inline-block;font-size:12px;color:var(--ink2);border:1px solid var(--line);
+  border-radius:999px;padding:2px 10px;margin:12px 0 4px}
+.def{font-family:var(--serif);font-size:20px;line-height:1.5;margin-top:8px}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-top:14px}
+.sec h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;font-weight:600}
+.sec p{font-size:15.5px;line-height:1.55;color:var(--ink)}
+.sec p em{color:var(--ink2)}
+.row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+button{font-family:var(--sans);cursor:pointer;border:0;border-radius:12px;font-size:15px}
+.b1{background:var(--gold);color:#22301c;padding:12px 18px;font-weight:600;flex:1}
+.b2{background:var(--bg2);color:var(--ink);border:1px solid var(--line);padding:12px 18px;flex:1}
+.b2.saved{color:var(--ok);border-color:var(--ok)}
+.hint{font-size:12.5px;color:var(--ink2);margin-top:12px;line-height:1.5}
+
+/* journal */
+textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:12px;
+  color:var(--ink);font-family:var(--serif);font-size:16px;line-height:1.5;padding:12px;min-height:90px;resize:vertical}
+textarea:focus{outline:2px solid var(--gold)}
+.jitem{border-bottom:1px solid var(--line);padding:12px 2px}
+.jitem .jw{font-family:var(--serif);font-size:18px;color:var(--gold)}
+.jitem .jd{font-size:12px;color:var(--ink2);margin:2px 0 6px}
+.jitem p{font-family:var(--serif);font-size:15.5px;line-height:1.5}
+
+/* lists */
+.li{display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--line);padding:12px 2px}
+.li .w{font-family:var(--serif);font-size:19px;flex:1}
+.li .m{font-size:13px;color:var(--ink2)}
+.li button{background:none;color:var(--ink2);font-size:13px;padding:4px 8px}
+.li button:hover{color:var(--gold)}
+input[type=text]{background:var(--bg2);border:1px solid var(--line);border-radius:12px;
+  color:var(--ink);font-size:16px;padding:12px;width:100%}
+input[type=text]:focus{outline:2px solid var(--gold)}
+label{font-size:13px;color:var(--ink2);display:block;margin:12px 0 5px}
+select{background:var(--bg2);border:1px solid var(--line);border-radius:10px;color:var(--ink);font-size:15px;padding:10px;width:100%}
+.empty{color:var(--ink2);font-size:14.5px;text-align:center;padding:30px 10px;line-height:1.6}
+
+/* nav */
+nav{position:fixed;left:0;right:0;bottom:0;background:rgba(30,42,36,.96);backdrop-filter:blur(10px);
+  border-top:1px solid var(--line);display:flex;justify-content:space-around;
+  padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
+nav button{background:none;color:var(--ink2);font-size:11.5px;display:flex;flex-direction:column;
+  align-items:center;gap:3px;padding:4px 14px;border-radius:10px}
+nav button.on{color:var(--gold)}
+nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+footer{max-width:640px;margin:26px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.6}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--gold);color:#22301c;font-size:14px;font-weight:600;border-radius:999px;
+  padding:9px 18px;opacity:0;pointer-events:none;transition:opacity .25s}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<header>
+  <img src="icon.png" alt="">
+  <div class="t">ESPO<b>vocab</b></div>
+  <div class="streak" id="streak">—</div>
+</header>
+
+<main>
+  <!-- TODAY -->
+  <section class="view on" id="v-today">
+    <div class="date" id="tDate"></div>
+    <div class="word" id="tWord"></div>
+    <div class="pr" id="tPr"></div>
+    <div><span class="pos" id="tPos"></span></div>
+    <p class="def" id="tDef"></p>
+    <div class="sec"><h3>Where it comes from</h3><p id="tEty"></p></div>
+    <div class="sec"><h3>In the wild</h3><p id="tEx"></p></div>
+    <div class="sec">
+      <h3>What did you do with it?</h3>
+      <textarea id="tNote" placeholder="Use it in a sentence about your day — that's how it sticks."></textarea>
+      <div class="row"><button class="b1" id="tSaveNote">Save to journal</button></div>
+    </div>
+    <div class="row">
+      <button class="b2" id="tKeep">☆ Keep this word</button>
+      <button class="b2" id="tAnother">Show me another</button>
+    </div>
+    <p class="hint">A new word arrives each day. Your streak grows when you visit — and never shames you when you don't.</p>
+  </section>
+
+  <!-- MY WORDS -->
+  <section class="view" id="v-words">
+    <div class="date">My words</div>
+    <div class="sec">
+      <h3>Add your own</h3>
+      <label for="awW">Word</label><input type="text" id="awW" autocapitalize="none">
+      <label for="awD">What it means (in your words)</label><input type="text" id="awD">
+      <div class="row"><button class="b1" id="awAdd">Add word</button></div>
+    </div>
+    <div id="wordList"></div>
+    <div class="row"><button class="b2" id="expWords">Export my words (.csv — always free)</button></div>
+  </section>
+
+  <!-- JOURNAL -->
+  <section class="view" id="v-journal">
+    <div class="date">Journal</div>
+    <div id="jList"></div>
+    <div class="row"><button class="b2" id="expJournal">Export journal (.csv — always free)</button></div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="view" id="v-set">
+    <div class="date">Settings</div>
+    <div class="sec">
+      <h3>Word level</h3>
+      <select id="setLv">
+        <option value="1">Everyday — useful words you half-know</option>
+        <option value="2" selected>Curious — the sweet spot</option>
+        <option value="3">Scholar — rare and glorious</option>
+      </select>
+      <p class="hint">The level you pick is the level you get. No bait-and-switch.</p>
+    </div>
+    <div class="sec">
+      <h3>Your data</h3>
+      <p class="hint">Everything lives on this device. No account, no ads, no trackers, nothing leaves your phone. Export is free forever.</p>
+      <div class="row"><button class="b2" id="wipe">Erase everything</button></div>
+    </div>
+  </section>
+</main>
+
+<nav>
+  <button data-v="today" class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Today</button>
+  <button data-v="words"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg>My words</button>
+  <button data-v="journal"><svg viewBox="0 0 24 24"><path d="M6 3h12v18H6z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>Journal</button>
+  <button data-v="set"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>Settings</button>
+</nav>
+
+<footer>ESPOvocab · part of the ESPOgraduate family · Accelerated Experiences, LLC — Post Falls, Idaho.
+No ads. No trackers. Your words are yours.</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─── word bank: {w, pos, pr, d, e(tymology), x(ample), lv} ─── */
+var BANK=[
+{w:"resilient",pos:"adjective",pr:"rih-ZIL-yent",d:"Able to recover quickly from difficulty; springing back into shape.",e:"From Latin resilire, 'to leap back' — re- (back) + salire (to jump). The same salire gives us 'salient' and 'somersault.'",x:"The town proved resilient, rebuilding the bridge within a year of the flood.",lv:1},
+{w:"candor",pos:"noun",pr:"KAN-der",d:"Honest, open sincerity in speech; freedom from pretense.",e:"From Latin candor, 'whiteness, radiance,' from candere, 'to shine' — the same root as 'candle' and 'candidate' (Roman office-seekers wore bright white togas).",x:"She answered with a candor that surprised the whole board.",lv:1},
+{w:"meander",pos:"verb",pr:"mee-AN-der",d:"To wander aimlessly or follow a winding course.",e:"From the Maeander River in ancient Anatolia (today's Büyük Menderes in Turkey), famous for its winding path.",x:"We meandered through the old quarter with no map and no plan.",lv:1},
+{w:"tenacity",pos:"noun",pr:"teh-NASS-ih-tee",d:"Persistent determination; the quality of holding on.",e:"From Latin tenax, 'holding fast,' from tenere, 'to hold' — cousin to 'tenant,' 'tenure,' and 'contain.'",x:"It was tenacity, not talent, that got the shop through its first winter.",lv:1},
+{w:"lucid",pos:"adjective",pr:"LOO-sid",d:"Clear and easy to understand; also, mentally clear.",e:"From Latin lucidus, 'bright,' from lux, 'light' — the root shining through 'translucent' and 'elucidate.'",x:"Her lucid explanation made the tax form almost pleasant.",lv:1},
+{w:"gregarious",pos:"adjective",pr:"grih-GAIR-ee-us",d:"Fond of company; sociable.",e:"From Latin gregarius, 'belonging to a flock,' from grex, 'herd' — the same herd in 'congregate' and 'egregious' (originally 'out of the flock,' i.e., outstanding).",x:"A gregarious host, he remembered every guest's name by dessert.",lv:1},
+{w:"wistful",pos:"adjective",pr:"WIST-ful",d:"Full of gentle, thoughtful longing.",e:"From obsolete English wistly, 'intently,' blended over time with 'wishful' — a word that drifted into its own meaning.",x:"He gave the old guitar a wistful look before closing the case.",lv:1},
+{w:"pragmatic",pos:"adjective",pr:"prag-MAT-ik",d:"Dealing with things practically rather than idealistically.",e:"From Greek pragma, 'deed, act,' from prassein, 'to do' — practice over theory, baked right into the root.",x:"The pragmatic fix was ugly, cheap, and worked perfectly.",lv:1},
+{w:"earnest",pos:"adjective",pr:"UR-nist",d:"Sincere and serious in intention.",e:"From Old English eornoste, 'serious, zealous' — one of the sturdy native words that survived a thousand years nearly unchanged.",x:"Her earnest apology ended the feud on the spot.",lv:1},
+{w:"vivid",pos:"adjective",pr:"VIV-id",d:"Producing strong, clear images in the mind; intensely bright.",e:"From Latin vividus, 'full of life,' from vivere, 'to live' — alive like 'vivacious,' 'survive,' and 'revive.'",x:"Twenty years later, the smell of cut grass still brings a vivid memory of that field.",lv:1},
+{w:"ample",pos:"adjective",pr:"AM-pul",d:"More than enough; generously sufficient.",e:"From Latin amplus, 'large, spacious' — the same generosity in 'amplify.'",x:"There was ample time for a second cup of coffee.",lv:1},
+{w:"keen",pos:"adjective",pr:"KEEN",d:"Sharp — in edge, mind, or enthusiasm.",e:"From Old English cene, 'brave, clever.' The 'sharp blade' sense sharpened later, and the mind followed the metaphor.",x:"She has a keen eye for a bargain.",lv:1},
+{w:"savor",pos:"verb",pr:"SAY-ver",d:"To enjoy slowly and completely.",e:"From Latin sapor, 'taste,' from sapere, 'to taste, to be wise' — the delicious fact that 'sapient' (wise) and 'savor' share a root: to taste is to know.",x:"Don't rush it — savor the last chapter.",lv:1},
+{w:"mend",pos:"verb",pr:"MEND",d:"To repair; to return to health or good condition.",e:"A medieval shortening of 'amend,' from Latin emendare, 'to free from fault' — menda meant 'a flaw.'",x:"The friendship took a year to mend, but it mended.",lv:1},
+{w:"drowsy",pos:"adjective",pr:"DROW-zee",d:"Sleepy; heavy-lidded and slow.",e:"From Old English drusian, 'to sink, become sluggish' — the sinking feeling, made literal.",x:"The drowsy afternoon sun emptied the office by three.",lv:1},
+{w:"nimble",pos:"adjective",pr:"NIM-bul",d:"Quick and light in movement or thought.",e:"From Old English niman, 'to take, grasp' — originally 'quick to grasp,' for hands and minds alike.",x:"A nimble reply turned the heckler into a fan.",lv:1},
+{w:"stark",pos:"adjective",pr:"STARK",d:"Severe or bare in appearance; sharply plain.",e:"From Old English stearc, 'stiff, strong.' 'Stark naked' began as 'start naked' — start meaning 'tail.'",x:"The stark difference between the two offers made the choice easy.",lv:1},
+{w:"brisk",pos:"adjective",pr:"BRISK",d:"Quick, active, and energizing.",e:"Probably a variant of French brusque, 'lively, fierce,' softened by English weather into something you say about walks and wind.",x:"A brisk walk before breakfast fixed his mood for the day.",lv:1},
+{w:"hearten",pos:"verb",pr:"HAR-tun",d:"To give courage or cheer to.",e:"Heart + -en, built on Old English heorte — courage has lived in the heart since before English was written down.",x:"The early sales numbers heartened the whole team.",lv:1},
+{w:"threshold",pos:"noun",pr:"THRESH-old",d:"A doorway's base; the point where something begins.",e:"From Old English þrescold, its first element related to threshing — likely the place where feet tread. The 'point of change' sense is the doorway made metaphor.",x:"She paused at the threshold of a completely new career.",lv:1},
+{w:"ephemeral",pos:"adjective",pr:"ih-FEM-er-ul",d:"Lasting a very short time.",e:"From Greek ephemeros, 'lasting a day' — epi (on) + hemera (day). Mayflies are officially Ephemeroptera: wings for a day.",x:"The blossom season is ephemeral, which is exactly why the whole city shows up for it.",lv:2},
+{w:"serendipity",pos:"noun",pr:"sair-en-DIP-ih-tee",d:"Finding good things you weren't looking for.",e:"Coined by Horace Walpole in 1754 after the Persian tale 'The Three Princes of Serendip,' whose heroes kept making happy accidental discoveries. Serendip is an old name for Sri Lanka.",x:"Pure serendipity: the wrong bus stop, the right bookshop.",lv:2},
+{w:"laconic",pos:"adjective",pr:"luh-KON-ik",d:"Using very few words.",e:"From Laconia, the region of Sparta. When Philip of Macedon threatened, 'If I enter Laconia, I will raze Sparta,' the Spartans reportedly replied: 'If.'",x:"His laconic review — 'it works' — was all the endorsement we needed.",lv:2},
+{w:"sonder",pos:"noun",pr:"SON-der",d:"The realization that every passerby has a life as vivid and complex as your own.",e:"A modern coinage from John Koenig's Dictionary of Obscure Sorrows (2012) — new enough that dictionaries are still deciding, beloved enough that people use it anyway.",x:"Stuck in traffic, she felt a sudden sonder: every car a whole world.",lv:2},
+{w:"petrichor",pos:"noun",pr:"PET-rih-kor",d:"The earthy smell of rain on dry ground.",e:"Coined by scientists Bear and Thomas in 1964: Greek petra (stone) + ichor (the fluid in the veins of the gods).",x:"The first storm of September filled the street with petrichor.",lv:2},
+{w:"quixotic",pos:"adjective",pr:"kwik-SOT-ik",d:"Nobly impractical; chasing ideals against all odds.",e:"From Don Quixote, Cervantes' knight who tilted at windmills (1605). One of the few words English took from a single fictional character.",x:"A quixotic plan to hand-deliver every invitation — and somehow he did it.",lv:2},
+{w:"mellifluous",pos:"adjective",pr:"meh-LIF-loo-us",d:"Sweetly, smoothly flowing — usually of a voice.",e:"From Latin mel, 'honey' + fluere, 'to flow': literally honey-flowing.",x:"The narrator's mellifluous voice made the six-hour drive vanish.",lv:2},
+{w:"halcyon",pos:"adjective",pr:"HAL-see-on",d:"Idyllically calm and happy, especially of a remembered past.",e:"From Greek alkyon, the kingfisher — myth held the bird nested on a calm sea in midwinter, and the gods stilled the waves for it. 'Halcyon days' were originally a real date: the weeks around the winter solstice.",x:"Those halcyon summers at the lake got longer every time he told the story.",lv:2},
+{w:"sanguine",pos:"adjective",pr:"SANG-gwin",d:"Cheerfully optimistic.",e:"From Latin sanguis, 'blood.' Medieval medicine taught that a dominance of blood among the four humors made you ruddy and hopeful — the diagnosis faded, the disposition stayed.",x:"She stayed sanguine about the launch even after the second delay.",lv:2},
+{w:"vellichor",pos:"noun",pr:"VEL-ih-kor",d:"The strange wistfulness of used bookstores.",e:"Another Koenig coinage (Dictionary of Obscure Sorrows), built to rhyme with petrichor — new, unofficial, and instantly understood by anyone who has smelled old paper.",x:"Vellichor hit her the moment the shop bell rang.",lv:2},
+{w:"apricity",pos:"noun",pr:"uh-PRISS-ih-tee",d:"The warmth of the sun in winter.",e:"From Latin apricus, 'sun-warmed.' Recorded in 1623 by lexicographer Henry Cockeram, then nearly forgotten for four centuries — revived by people who needed it in January.",x:"They stood in the parking lot a minute longer, soaking up the apricity.",lv:2},
+{w:"susurrus",pos:"noun",pr:"soo-SUR-us",d:"A soft whispering or rustling sound.",e:"Straight from Latin susurrus, 'a whisper' — an onomatopoeia so good the Romans barely had to invent it.",x:"The susurrus of the aspens put the baby to sleep faster than any lullaby.",lv:2},
+{w:"limerence",pos:"noun",pr:"LIM-er-ence",d:"The involuntary, obsessive state of early romantic infatuation.",e:"Coined by psychologist Dorothy Tennov in 1979 for her book Love and Limerence — she said the word was invented for its sound alone.",x:"It wasn't love yet; it was limerence, complete with checking his phone every four minutes.",lv:2},
+{w:"gossamer",pos:"noun",pr:"GOSS-uh-mer",d:"Something impossibly light and delicate; fine spider silk.",e:"Likely from Middle English gos + somer, 'goose summer' — the warm autumn spell when geese were eaten and drifting spider threads filled the air.",x:"Promises of gossamer, she thought, pretty and unlikely to hold.",lv:2},
+{w:"ineffable",pos:"adjective",pr:"in-EFF-uh-bul",d:"Too great or extreme to be put into words.",e:"From Latin ineffabilis: in- (not) + effari (to speak out), from fari, 'to speak' — the same root as 'fate' (that which is spoken) and 'infant' (one who cannot yet speak).",x:"The view from the rim was, for once literally, ineffable.",lv:2},
+{w:"chiaroscuro",pos:"noun",pr:"kee-ar-oh-SKOOR-oh",d:"The dramatic interplay of light and shadow.",e:"Italian chiaro (clear, light) + oscuro (dark) — a Renaissance painting term that escaped the studio into photography, film, and prose.",x:"The alley at dusk was pure chiaroscuro, all lamplight and long shadow.",lv:2},
+{w:"zephyr",pos:"noun",pr:"ZEF-er",d:"A soft, gentle breeze.",e:"From Zephyrus, Greek god of the west wind — the mild one, herald of spring, brother to the harsher winds.",x:"A zephyr off the water carried the smell of the barbecue clear down the block.",lv:2},
+{w:"umbrage",pos:"noun",pr:"UM-brij",d:"Offense; a sense of being slighted (usually 'take umbrage').",e:"From Latin umbra, 'shadow' — originally shade itself; taking umbrage is feeling thrown into someone's shadow. Same root as 'umbrella': little shadow.",x:"He took umbrage at being called 'the backup option.'",lv:2},
+{w:"lambent",pos:"adjective",pr:"LAM-bent",d:"Glowing softly; flickering lightly over a surface.",e:"From Latin lambere, 'to lick' — flame imagined as licking gently at what it lights.",x:"Lambent candlelight moved across the ceiling as the door opened.",lv:2},
+{w:"redolent",pos:"adjective",pr:"RED-uh-lent",d:"Strongly smelling of; powerfully reminiscent of.",e:"From Latin redolere, 'to give off a scent' — re- + olere (to smell), sharing a nose with 'olfactory.'",x:"The kitchen was redolent of cinnamon and every Christmas before 2010.",lv:2},
+{w:"denouement",pos:"noun",pr:"day-noo-MON",d:"The final unravelling of a story's plot; the part after the climax where everything settles.",e:"French dénouement, 'an untying,' from Latin nodus, 'knot' — the plot literally imagined as a knot to be untied.",x:"The film's denouement gave every character exactly one quiet minute.",lv:2},
+{w:"aplomb",pos:"noun",pr:"uh-PLOM",d:"Cool self-possession, especially under pressure.",e:"French à plomb, 'according to the plummet' — the plumb line's perfect vertical, standing perfectly upright made character.",x:"She fielded the surprise question with total aplomb.",lv:2},
+{w:"verdant",pos:"adjective",pr:"VUR-dent",d:"Lush and green with growing things.",e:"From Old French verdoyant, from Latin viridis, 'green' — the green in 'verdigris' ('green of Greece') too.",x:"After the rains, the hills went impossibly verdant.",lv:2},
+{w:"sotto voce",pos:"adverb",pr:"SOT-oh VOH-chay",d:"In a deliberately quiet voice, as an aside.",e:"Italian, 'under the voice' — a stage direction that walked out of the opera house into ordinary rooms.",x:"'That's the third time he's told that story,' she added sotto voce.",lv:2},
+{w:"panacea",pos:"noun",pr:"pan-uh-SEE-uh",d:"A supposed cure-all for every problem.",e:"From Greek panakeia — pan (all) + akos (remedy). Panacea was a goddess of healing, daughter of Asclepius; skeptics have used her name for false hope ever since.",x:"The new software is useful, but it's no panacea.",lv:2},
+{w:"maelstrom",pos:"noun",pr:"MAIL-strum",d:"A violent whirlpool; a scene of chaotic turbulence.",e:"From Dutch malen (to grind, whirl) + stroom (stream). The original Maelstrom is a real tidal whirlpool off Norway's Lofoten Islands, inflated to monster size by Poe and Verne.",x:"He walked into a maelstrom of moving boxes, toddlers, and one loose dog.",lv:2},
+{w:"solace",pos:"noun",pr:"SOL-iss",d:"Comfort in sorrow or distress.",e:"From Latin solacium, 'a soothing,' from solari, 'to console' — the same soothing inside 'console' itself.",x:"After the news, she found solace in the garden.",lv:2},
+{w:"burgeon",pos:"verb",pr:"BUR-jun",d:"To grow or flourish rapidly.",e:"From Old French burjon, 'a bud' — growth pictured at the moment of budding.",x:"The little market burgeoned into a Saturday institution.",lv:2},
+{w:"cynosure",pos:"noun",pr:"SY-nuh-shur",d:"The center of attention; a guiding focal point.",e:"From Greek kynosoura, 'dog's tail' — the constellation Ursa Minor, whose tail-tip is the North Star. What everyone steers by became what everyone stares at.",x:"In the red dress she was the cynosure of the reunion.",lv:3},
+{w:"apotheosis",pos:"noun",pr:"uh-poth-ee-OH-sis",d:"The highest point; elevation to divine status.",e:"From Greek apotheoun, 'to make a god of' — apo- + theos (god). Roman emperors got one by senate vote, posthumously.",x:"The final movement is the apotheosis of everything the symphony promised.",lv:3},
+{w:"sesquipedalian",pos:"adjective",pr:"ses-kwih-peh-DAY-lee-un",d:"Given to long words; (of a word) very long.",e:"From Horace's Ars Poetica: sesquipedalia verba, 'words a foot and a half long' — sesqui (one and a half) + pes (foot). A 2,000-year-old joke about words like itself.",x:"His sesquipedalian emails required a second coffee to open.",lv:3},
+{w:"palimpsest",pos:"noun",pr:"PAL-imp-sest",d:"A manuscript scraped and rewritten, older text ghosting through; anything layered with visible history.",e:"From Greek palin (again) + psestos (scraped). Parchment cost a fortune, so scribes recycled it — and monks' erased pages preserved lost ancient texts by accident.",x:"The city is a palimpsest: Roman stones under medieval walls under neon.",lv:3},
+{w:"weltschmerz",pos:"noun",pr:"VELT-shmairts",d:"World-weary melancholy; the ache of a world that falls short of what it could be.",e:"German Welt (world) + Schmerz (pain), coined by the writer Jean Paul around 1827 and adopted whole by English, umlaut-free.",x:"By November the news had given the whole office a mild case of weltschmerz.",lv:3},
+{w:"anagnorisis",pos:"noun",pr:"an-ag-NOR-ih-sis",d:"A story's moment of critical discovery — when a character finally recognizes the truth.",e:"Greek, 'recognition,' from Aristotle's Poetics, where it names the turn — Oedipus learning who he is is the textbook case.",x:"Her anagnorisis came in aisle five: she didn't hate cooking, she hated that kitchen.",lv:3},
+{w:"borborygmus",pos:"noun",pr:"bor-buh-RIG-mus",d:"A stomach rumble.",e:"From Greek borborygmos — an onomatopoeia the Greeks made by imitating the noise itself. Plural: borborygmi.",x:"A cathedral-loud borborygmus interrupted the moment of silence.",lv:3},
+{w:"eucatastrophe",pos:"noun",pr:"yoo-kuh-TASS-truh-fee",d:"A sudden, joyous turn when all seems lost.",e:"Coined by J.R.R. Tolkien (eu-, 'good' + catastrophe) in his 1947 essay On Fairy-Stories — he considered it the fairy tale's highest function.",x:"The eagles' arrival is the textbook eucatastrophe.",lv:3},
+{w:"psithurism",pos:"noun",pr:"SITH-er-iz-um",d:"The sound of wind whispering through trees.",e:"From Greek psithuros, 'whispering' — a rare 19th-century borrowing kept alive almost entirely by people who love lists of beautiful words.",x:"They stopped talking and let the psithurism do it for them.",lv:3},
+{w:"velleity",pos:"noun",pr:"veh-LEE-ih-tee",d:"A wish too faint to prompt any action.",e:"From Latin velle, 'to wish' — scholastic philosophers needed a word for wanting something while doing absolutely nothing about it.",x:"His gym membership had long since become a velleity.",lv:3},
+{w:"ultracrepidarian",pos:"noun",pr:"ul-truh-krep-ih-DAIR-ee-un",d:"Someone who opines far beyond their knowledge.",e:"From Pliny's tale of the painter Apelles and a cobbler: the cobbler critiqued a sandal (fair), then the whole painting — 'ne supra crepidam,' not beyond the shoe.",x:"Every comment section has its resident ultracrepidarian.",lv:3},
+{w:"scintilla",pos:"noun",pr:"sin-TIL-uh",d:"A tiny trace; the smallest spark.",e:"Latin scintilla, 'spark' — which French wore down into étincelle and English kept whole, plus 'scintillate,' to sparkle.",x:"There wasn't a scintilla of doubt in her voice.",lv:3},
+{w:"obstreperous",pos:"adjective",pr:"ob-STREP-er-us",d:"Noisily unruly; loudly resistant to control.",e:"From Latin ob- (against) + strepere (to make a racket) — resistance with the volume turned up.",x:"The obstreperous parrot ended three consecutive video calls.",lv:3},
+{w:"hiraeth",pos:"noun",pr:"HEER-eyeth",d:"A deep longing for a home you can't return to — or one that never quite existed.",e:"Welsh, famously untranslatable; kin to Portuguese saudade. English borrowed it whole because nothing native came close.",x:"The old photos brought on a wave of hiraeth for a kitchen that no longer exists.",lv:3},
+{w:"numinous",pos:"adjective",pr:"NOO-mih-nus",d:"Filled with a sense of the divine or the profoundly mysterious.",e:"From Latin numen, 'divine will, a nod of the god's head' — theologian Rudolf Otto made it a term of art in 1917 for awe beyond words.",x:"Even the loud kids went quiet in the sequoia grove; the place is numinous.",lv:3},
+{w:"perspicacious",pos:"adjective",pr:"pur-spih-KAY-shus",d:"Acutely perceptive; seeing through to the truth of things.",e:"From Latin perspicax, 'sharp-sighted,' from perspicere, 'to see through' — the same glass as 'perspective.'",x:"One perspicacious question from the intern unraveled the whole plan's flaw.",lv:3},
+{w:"pulchritude",pos:"noun",pr:"PUL-krih-tood",d:"Physical beauty.",e:"From Latin pulchritudo, from pulcher, 'beautiful' — the famous irony being that few English words for beauty sound less beautiful.",x:"An essay on pulchritude, written in a word that proves beauty and sound are different things.",lv:3},
+{w:"defenestration",pos:"noun",pr:"dee-fen-ih-STRAY-shun",d:"The act of throwing someone or something out of a window.",e:"From Latin de- (out of) + fenestra (window) — coined for the 1618 Defenestration of Prague, when two imperial governors were thrown from a castle window, helping ignite the Thirty Years' War. They survived; accounts differ on the dung heap.",x:"The laptop narrowly escaped defenestration during tax season.",lv:3},
+{w:"callipygian",pos:"adjective",pr:"kal-ih-PIJ-ee-un",d:"Having beautifully shaped buttocks.",e:"From Greek kallos (beauty) + pyge (buttocks), after the Aphrodite Kallipygos, a celebrated ancient statue admiring exactly that.",x:"The gym's ad promised callipygian results in six weeks.",lv:3},
+{w:"zugzwang",pos:"noun",pr:"TSOOK-tsvahng",d:"A position where any move makes things worse — but you must move.",e:"German Zug (move) + Zwang (compulsion), from chess, where standing pat is illegal and every legal move loses ground.",x:"Reply and escalate, or ignore and offend: pure zugzwang.",lv:3},
+{w:"acumen",pos:"noun",pr:"AK-yoo-men",d:"Sharpness of judgment; the ability to make good decisions quickly.",e:"Latin acumen, 'a point, a sting,' from acuere, 'to sharpen' — same whetstone as 'acute' and 'acupuncture.'",x:"Her business acumen turned a food truck into four restaurants.",lv:1},
+{w:"amiable",pos:"adjective",pr:"AY-mee-uh-bul",d:"Friendly and pleasant in manner.",e:"From Latin amicabilis, from amicus, 'friend,' from amare, 'to love' — the same warmth in 'amicable' and 'amateur' (one who does it for love).",x:"The amiable barista knew half the town by drink order.",lv:1},
+{w:"bewilder",pos:"verb",pr:"bih-WIL-der",d:"To confuse completely.",e:"be- + archaic wilder, 'to lead astray into the wild' — being lost in the woods, promoted to a state of mind.",x:"The new phone's settings menu bewildered everyone over nine.",lv:1},
+{w:"cordial",pos:"adjective",pr:"KOR-jul",d:"Warm and friendly, especially in a polite way.",e:"From Latin cor, cordis, 'heart' — originally of medicine or drink that stimulated the heart; the friendliness kept the warmth.",x:"Relations between the rival bakeries remained surprisingly cordial.",lv:1},
+{w:"dwindle",pos:"verb",pr:"DWIN-dul",d:"To shrink gradually away.",e:"From Old English dwinan, 'to waste away,' with the -le ending English uses for slow repeated action (sparkle, crumble).",x:"By August the lake had dwindled to a pond.",lv:1},
+{w:"foster",pos:"verb",pr:"FOSS-ter",d:"To encourage the growth of; to care for as one's own.",e:"From Old English fostrian, 'to nourish,' from fostor, 'food' — feeding first, everything else after.",x:"The library's late hours foster a whole community of night readers.",lv:1},
+{w:"glean",pos:"verb",pr:"GLEEN",d:"To gather bit by bit — grain after the harvest, or facts from scattered sources.",e:"From Old French glener, gathering the stalks reapers missed — an ancient legal right of the poor, and the subject of Millet's painting The Gleaners.",x:"From three vague texts she gleaned the whole story.",lv:1},
+{w:"hasten",pos:"verb",pr:"HAY-sun",d:"To hurry; to make happen sooner.",e:"From haste, borrowed from Old French, ultimately Germanic — a word that ran a lap through France and came home.",x:"The smell of rain hastened the picnic's end.",lv:1},
+{w:"jovial",pos:"adjective",pr:"JOH-vee-ul",d:"Full of hearty good humor.",e:"From Latin Iovialis, 'of Jupiter' — astrology held that those born under Jove were merry. Saturn's children got 'saturnine' instead.",x:"A jovial uncle carved the turkey and the tension both.",lv:2},
+{w:"kindle",pos:"verb",pr:"KIN-dul",d:"To set alight; to stir into activity.",e:"From Old Norse kynda, 'to light a fire' — Vikings gave English its everyday fire-starting verb.",x:"One good teacher kindled a lifelong obsession with maps.",lv:1},
+{w:"lull",pos:"noun",pr:"LULL",d:"A brief calm in activity or noise.",e:"From the soothing sound lu-lu sung to babies — the lullaby's first half, standing alone.",x:"He wrote his novel in the lull between lunch and the dinner rush.",lv:1},
+{w:"muster",pos:"verb",pr:"MUSS-ter",d:"To gather up — troops, courage, or enthusiasm.",e:"From Latin monstrare, 'to show' (same as 'demonstrate') — soldiers assembled to be shown and counted.",x:"She mustered a smile for the fourth school recital of the week.",lv:1},
+{w:"noteworthy",pos:"adjective",pr:"NOHT-wur-thee",d:"Deserving attention.",e:"Note + worthy — English compounding at its most direct, on the pattern of 'praiseworthy' and 'seaworthy.'",x:"A noteworthy detail: the winning pie used store-bought crust.",lv:1},
+{w:"parch",pos:"verb",pr:"PARCH",d:"To dry out with heat.",e:"Middle English perchen, origin uncertain — possibly kin to 'perish.' Etymologists shrug; the thirst is universal.",x:"July parched the lawn to the color of toast.",lv:1},
+{w:"quell",pos:"verb",pr:"KWELL",d:"To put down or suppress; to calm.",e:"From Old English cwellan, 'to kill' — a thousand years mellowed it from slaying dragons to settling nerves.",x:"A joke from the pilot quelled the cabin's worry.",lv:2},
+{w:"rally",pos:"verb",pr:"RAL-ee",d:"To come together again for a shared effort; to recover strength.",e:"From French re- + allier, 'to unite again' — scattered troops re-forming, then teams, markets, and patients.",x:"Down ten points at half, the team rallied.",lv:1},
+{w:"scour",pos:"verb",pr:"SKOW-er",d:"To clean by hard scrubbing; to search thoroughly.",e:"Probably from Latin excurare, 'to clean off' — the searching sense is the scrubbing motion applied to a map.",x:"They scoured three counties for the right barn door.",lv:1},
+{w:"trove",pos:"noun",pr:"TROHV",d:"A store of valuable things discovered.",e:"From French trové, 'found' — clipped from legal 'treasure trove,' literally 'treasure found.'",x:"The attic turned out to be a trove of 1960s postcards.",lv:1},
+{w:"unfurl",pos:"verb",pr:"un-FURL",d:"To open out from a rolled state.",e:"un- + furl, likely from French ferler — a sailor's word for sails that spread to flags, ferns, and plans.",x:"The café unfurled its awning and summer officially began.",lv:1},
+{w:"venture",pos:"verb",pr:"VEN-chur",d:"To dare to go, do, or say.",e:"A medieval clipping of 'adventure,' from Latin advenire, 'to arrive, happen' — risk baked into arrival.",x:"No one ventured an opinion until the boss left the room.",lv:1},
+{w:"wry",pos:"adjective",pr:"RYE",d:"Dryly humorous, with a twist.",e:"From Old English wrigian, 'to turn, bend' — a twisted expression made a whole style of humor.",x:"Her wry footnote was the best sentence in the report.",lv:1},
+{w:"yearn",pos:"verb",pr:"YURN",d:"To long deeply for.",e:"From Old English giernan, 'to desire' — one of the old, unkillable feeling-words.",x:"By February the whole town yearned for the lake.",lv:1},
+{w:"zenith",pos:"noun",pr:"ZEE-nith",d:"The highest point.",e:"From Arabic samt ar-ra's, 'the way over the head,' via a medieval scribe's misreading of samt as senit — a copying error frozen into the sky. Its opposite, nadir, is Arabic too.",x:"The band hit its zenith two albums before anyone noticed.",lv:2},
+{w:"eloquent",pos:"adjective",pr:"EL-uh-kwent",d:"Fluent and persuasive in expression.",e:"From Latin eloqui, 'to speak out' — e- + loqui (to speak), the chatty root of 'loquacious' and 'colloquial.'",x:"The photo was more eloquent than the whole press release.",lv:1},
+{w:"fathom",pos:"verb",pr:"FATH-um",d:"To understand deeply; to measure the depth of.",e:"From Old English fæthm, 'outstretched arms' — the six-foot span sailors used to sound the sea. To fathom something is to reach its bottom.",x:"She couldn't fathom why anyone would refuse free pie.",lv:1},
+{w:"garner",pos:"verb",pr:"GAR-ner",d:"To gather or earn, especially gradually.",e:"From Latin granarium, 'granary' — the storehouse became the verb for filling it.",x:"The tiny film garnered awards all winter.",lv:2},
+{w:"idyllic",pos:"adjective",pr:"eye-DIL-ik",d:"Blissfully peaceful and picturesque.",e:"From Greek eidyllion, 'little picture' — the diminutive of eidos (form). Short pastoral poems were 'little pictures' of country life; the picture became a lifestyle.",x:"An idyllic morning: coffee, porch, absolutely nothing scheduled.",lv:1},
+{w:"luminous",pos:"adjective",pr:"LOO-mih-nus",d:"Radiating light; glowing with insight.",e:"From Latin lumen, 'light' — the lamp beside lux, glowing in 'illuminate.'",x:"The essay's last paragraph is quietly luminous.",lv:1},
+{w:"resolute",pos:"adjective",pr:"REZ-uh-loot",d:"Firmly determined; unwavering.",e:"From Latin resolvere, 'to loosen, resolve' — oddly, first meaning 'dissolved,' then 'decided'; the mind loosened from doubt.",x:"She stayed resolute through all four rounds of interviews.",lv:1},
+{w:"serene",pos:"adjective",pr:"suh-REEN",d:"Calm, clear, and untroubled.",e:"From Latin serenus, 'clear sky, fair weather' — a weather report promoted to a state of soul.",x:"The lake at 6 a.m. was perfectly serene.",lv:1},
+{w:"tranquil",pos:"adjective",pr:"TRANG-kwil",d:"Free from disturbance; peacefully quiet.",e:"From Latin tranquillus, 'calm, still' — possibly trans + quies, 'rest through and through.'",x:"The garden stayed tranquil even with the freeway two blocks off.",lv:1},
+{w:"voracious",pos:"adjective",pr:"vor-AY-shus",d:"Having a huge appetite — for food or anything else.",e:"From Latin vorare, 'to devour' — the same open mouth in 'carnivore' and 'omnivore.'",x:"A voracious reader, she cleared the library's mystery shelf by spring.",lv:1},
+{w:"whimsical",pos:"adjective",pr:"WIM-zih-kul",d:"Playfully fanciful and unpredictable.",e:"From whim-wham, a 16th-century word for a fanciful trifle, origin unknown — a whimsical origin for whimsy itself.",x:"The bakery's whimsical window display stopped traffic on the hour.",lv:1},
+{w:"catalyst",pos:"noun",pr:"KAT-uh-list",d:"Something that sparks change without being consumed by it.",e:"From Greek katalysis, 'a dissolving' — chemistry's term (1902) for a substance that speeds reactions, borrowed by every board meeting since.",x:"The pop-up market was the catalyst for the whole street's revival.",lv:1},
+{w:"epiphany",pos:"noun",pr:"ih-PIF-uh-nee",d:"A sudden flash of understanding.",e:"From Greek epiphaneia, 'appearing, manifestation' — first the church feast of the Magi's revelation, lowercased by James Joyce into everyday lightning.",x:"Mid-commute epiphany: the bug wasn't in the code, it was in the data.",lv:2},
+{w:"paradox",pos:"noun",pr:"PAIR-uh-doks",d:"A statement that contradicts itself yet may be true.",e:"From Greek para (contrary to) + doxa (opinion) — 'against expectation,' which is exactly how it still feels.",x:"The paradox of the empty calendar: no meetings, and somehow no time.",lv:1},
+{w:"lackadaisical",pos:"adjective",pr:"lak-uh-DAY-zih-kul",d:"Carelessly lazy; lacking spirit.",e:"From the archaic cry 'lackaday!' ('alas the day!') — theatrical sighing turned into an adjective for people who sigh instead of doing.",x:"The team's lackadaisical warm-up worried the coach more than the score.",lv:2},
+{w:"nonchalant",pos:"adjective",pr:"non-shuh-LAHNT",d:"Coolly unconcerned; casually indifferent.",e:"French, from non + chaloir, 'to be warm, to care,' from Latin calere — literally 'not heating up.' Staying cool, etymologically certified.",x:"He was suspiciously nonchalant about the missing cookies.",lv:1},
+{w:"plethora",pos:"noun",pr:"PLETH-er-uh",d:"An overabundance.",e:"From Greek plethore, 'fullness' — originally a medical diagnosis of too much blood; now a diagnosis of too much everything.",x:"A plethora of streaming services, and still nothing to watch.",lv:2},
+{w:"juxtapose",pos:"verb",pr:"JUK-stuh-pohz",d:"To place side by side for contrast.",e:"From Latin iuxta, 'next to' + French poser, 'to place' — a 19th-century academic build that earned its keep.",x:"The exhibit juxtaposes farm tools with the paintings they inspired.",lv:2},
+{w:"cacophony",pos:"noun",pr:"kuh-KOF-uh-nee",d:"A harsh, discordant racket.",e:"From Greek kakos (bad) + phone (sound) — bad noise, said beautifully. Its twin is euphony, good sound.",x:"The kindergarten's rhythm-band concert was a beloved cacophony.",lv:2},
+{w:"labyrinthine",pos:"adjective",pr:"lab-uh-RIN-thin",d:"Maze-like; intricately tangled.",e:"From the Labyrinth of Cretan myth, built by Daedalus to hold the Minotaur — possibly echoing labrys, the double axe of Minoan palaces.",x:"The refund process was labyrinthine by design.",lv:2},
+{w:"magnanimous",pos:"adjective",pr:"mag-NAN-ih-mus",d:"Generous and forgiving, especially toward a rival.",e:"From Latin magnus (great) + animus (soul) — great-souled, Aristotle's crowning virtue, wearing a toga.",x:"A magnanimous champion, she praised the runner-up's final set.",lv:2},
+{w:"obfuscate",pos:"verb",pr:"OB-fuss-kayt",d:"To deliberately make unclear.",e:"From Latin ob- + fuscus, 'dark' — to darken on purpose. Fuscus survives in the dusky brown of 'obfuscation'-free dictionaries.",x:"The fine print obfuscates what the headline promises.",lv:2},
+{w:"quintessential",pos:"adjective",pr:"kwin-teh-SEN-shul",d:"The purest, most perfect example of something.",e:"From medieval Latin quinta essentia, 'fifth essence' — beyond earth, air, fire, and water, the celestial stuff of the stars. The most essential essence there is.",x:"A rocking chair on a porch: the quintessential summer evening.",lv:2},
+{w:"taciturn",pos:"adjective",pr:"TASS-ih-turn",d:"Habitually quiet; saying little.",e:"From Latin tacere, 'to be silent' — the root that also whispers inside 'tacit.'",x:"The taciturn farmer said more with one nod than most say in an hour.",lv:2},
+{w:"vestige",pos:"noun",pr:"VESS-tij",d:"A last remaining trace of something gone.",e:"From Latin vestigium, 'footprint' — what remains is literally a track left behind; 'investigate' follows the same footprints.",x:"The stone wall is the last vestige of the original orchard.",lv:2},
+{w:"alacrity",pos:"noun",pr:"uh-LAK-rih-tee",d:"Cheerful, brisk readiness.",e:"From Latin alacer, 'lively, eager' — the same eager root Italian kept in allegro.",x:"He accepted the dessert menu with alacrity.",lv:3},
+{w:"antediluvian",pos:"adjective",pr:"an-tee-dih-LOO-vee-un",d:"Comically ancient; from before the flood.",e:"Latin ante (before) + diluvium (flood) — literally before Noah's flood; now applied to fax machines.",x:"The office's antediluvian printer requires a ritual and a prayer.",lv:3},
+{w:"crepuscular",pos:"adjective",pr:"krih-PUSS-kyoo-ler",d:"Of twilight; active at dawn and dusk.",e:"From Latin crepusculum, 'twilight' — zoology's word for deer, fireflies, and everyone's cat at 5 a.m.",x:"Rabbits are crepuscular, which explains the garden's dawn raids.",lv:3},
+{w:"grandiloquent",pos:"adjective",pr:"gran-DIL-uh-kwent",d:"Pompously high-flown in language.",e:"From Latin grandis (grand) + loqui (to speak) — big talk, in a word that demonstrates itself.",x:"The menu's grandiloquent description concealed a grilled cheese.",lv:3},
+{w:"insouciant",pos:"adjective",pr:"in-SOO-see-unt",d:"Cheerfully unconcerned; lightheartedly carefree.",e:"French, from in- + soucier, 'to worry,' from Latin sollicitare — unworried, imported with its accent intact.",x:"She strolled in twenty minutes late, entirely insouciant.",lv:3},
+{w:"penumbra",pos:"noun",pr:"peh-NUM-bruh",d:"The soft partial shadow around a full one; a surrounding gray area.",e:"Coined by astronomer Kepler in 1604 from Latin paene (almost) + umbra (shadow) — the almost-shadow of an eclipse.",x:"The rule's penumbra covers cases nobody thought to write down.",lv:3},
+{w:"recalcitrant",pos:"adjective",pr:"rih-KAL-sih-trunt",d:"Stubbornly resistant to authority.",e:"From Latin recalcitrare, 'to kick back' — calx means 'heel'; a mule's objection, dictionary-approved.",x:"The recalcitrant lawnmower starts only for the neighbor.",lv:3},
+{w:"soporific",pos:"adjective",pr:"sop-er-IF-ik",d:"Sleep-inducing.",e:"From Latin sopor, 'deep sleep' + facere, 'to make.' Beatrix Potter taught it to generations: lettuce, says The Tale of the Flopsy Bunnies, is very soporific.",x:"The quarterly compliance video is powerfully soporific.",lv:3},
+{w:"perennial",pos:"adjective",pr:"puh-REN-ee-ul",d:"Lasting year after year; recurring reliably.",e:"From Latin per (through) + annus (year) — the garden word for plants that return, promoted to problems and favorites that do too.",x:"Parking is the town's perennial argument.",lv:1},
+{w:"eddy",pos:"noun",pr:"ED-ee",d:"A small circular current, running against the main flow.",e:"Probably from Old Norse iða, 'whirlpool' — another river word the Vikings left in English.",x:"Leaves spun in an eddy by the porch steps.",lv:2},
+{w:"pithy",pos:"adjective",pr:"PITH-ee",d:"Brief, forceful, and full of meaning.",e:"From pith, Old English piþa — the dense core of a plant stem; language with the spongy parts removed.",x:"Her pithy summary replaced the whole slide deck.",lv:2},
+{w:"felicity",pos:"noun",pr:"feh-LISS-ih-tee",d:"Intense happiness; a perfectly apt turn of phrase.",e:"From Latin felix, 'happy, fruitful' — the root inside 'Felicia' and Rome's goddess of good luck.",x:"The toast's closing line had real felicity.",lv:2},
+{w:"halcyon days",pos:"noun phrase",pr:"HAL-see-on DAYZ",d:"A remembered season of near-perfect calm and happiness.",e:"Originally the literal two calm weeks around the winter solstice, when the mythical kingfisher nested at sea.",x:"The halcyon days of the startup: four people, one room, infinite coffee.",lv:2}
+];
+
+/* ─── tiny store ─── */
+var K="espovocab.v1", S;
+try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
+S.kept=S.kept||[]; S.own=S.own||[]; S.journal=S.journal||[]; S.visits=S.visits||[];
+S.lv=S.lv||"2"; S.extra=S.extra||0;
+function save(){localStorage.setItem(K,JSON.stringify(S))}
+
+/* ─── streak (gentle) ─── */
+function today(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+if(S.visits.indexOf(today())<0){S.visits.push(today());if(S.visits.length>400)S.visits=S.visits.slice(-400);save()}
+function streak(){var n=0,d=new Date();for(;;){var k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");if(S.visits.indexOf(k)>=0){n++;d.setDate(d.getDate()-1)}else break}return n}
+function drawStreak(){var n=streak();
+  document.getElementById("streak").textContent = n>1 ? "🔥 "+n+" days" : "Day "+n+" — welcome";}
+
+/* ─── word of the day ─── */
+function pool(){var lv=+S.lv;var p=BANK.filter(function(b){return b.lv===lv});return p.length?p:BANK}
+function dayIndex(){var e=new Date(2026,0,1),n=new Date();return Math.floor((n-e)/864e5)}
+var W;
+function pick(){var p=pool();W=p[(dayIndex()+S.extra)%p.length];drawToday()}
+function drawToday(){
+  var d=new Date();
+  document.getElementById("tDate").textContent=d.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
+  document.getElementById("tWord").textContent=W.w;
+  document.getElementById("tPr").textContent="/ "+W.pr+" /";
+  document.getElementById("tPos").textContent=W.pos;
+  document.getElementById("tDef").textContent=W.d;
+  document.getElementById("tEty").textContent=W.e;
+  document.getElementById("tEx").innerHTML="&ldquo;"+W.x+"&rdquo;";
+  var kept=S.kept.some(function(k){return k.w===W.w});
+  var b=document.getElementById("tKeep");
+  b.textContent=kept?"★ Kept":"☆ Keep this word"; b.className="b2"+(kept?" saved":"");
+}
+
+/* ─── ui ─── */
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1600)}
+document.querySelectorAll("nav button").forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll("nav button").forEach(function(x){x.classList.remove("on")});
+    document.querySelectorAll(".view").forEach(function(x){x.classList.remove("on")});
+    b.classList.add("on");
+    document.getElementById("v-"+b.dataset.v).classList.add("on");
+    if(b.dataset.v==="words")drawWords();
+    if(b.dataset.v==="journal")drawJournal();
+  };
+});
+document.getElementById("tKeep").onclick=function(){
+  var i=S.kept.findIndex(function(k){return k.w===W.w});
+  if(i>=0){S.kept.splice(i,1);toast("Removed")}else{S.kept.push({w:W.w,d:W.d,src:"daily",t:Date.now()});toast("Kept ★")}
+  save();drawToday();
+};
+document.getElementById("tAnother").onclick=function(){S.extra++;save();pick()};
+document.getElementById("tSaveNote").onclick=function(){
+  var v=document.getElementById("tNote").value.trim();if(!v){toast("Write a line first");return}
+  S.journal.unshift({w:W.w,note:v,t:Date.now()});save();
+  document.getElementById("tNote").value="";toast("Saved to journal");
+};
+document.getElementById("awAdd").onclick=function(){
+  var w=document.getElementById("awW").value.trim(),d=document.getElementById("awD").value.trim();
+  if(!w){toast("Type a word");return}
+  S.own.unshift({w:w,d:d,t:Date.now()});save();
+  document.getElementById("awW").value="";document.getElementById("awD").value="";
+  drawWords();toast("Added — it's yours forever");
+};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function drawWords(){
+  var el=document.getElementById("wordList"),h="";
+  var all=S.own.map(function(o){return{w:o.w,d:o.d,m:"yours",t:o.t}})
+    .concat(S.kept.map(function(o){return{w:o.w,d:o.d,m:"kept",t:o.t}}));
+  if(!all.length){el.innerHTML='<div class="empty">No words yet. Keep today\'s word, or add one of your own — saving is unlimited and free.</div>';return}
+  all.forEach(function(o,i){h+='<div class="li"><div class="w">'+esc(o.w)+'</div><div class="m">'+esc(o.d||"")+' · '+o.m+'</div><button data-i="'+i+'" data-m="'+o.m+'" data-w="'+esc(o.w)+'">remove</button></div>'});
+  el.innerHTML=h;
+  el.querySelectorAll("button").forEach(function(b){
+    b.onclick=function(){
+      if(b.dataset.m==="yours"){S.own=S.own.filter(function(o){return o.w!==b.dataset.w})}
+      else{S.kept=S.kept.filter(function(o){return o.w!==b.dataset.w})}
+      save();drawWords();
+    };
+  });
+}
+function drawJournal(){
+  var el=document.getElementById("jList");
+  if(!S.journal.length){el.innerHTML='<div class="empty">Nothing yet. When a word earns a sentence, it lives here.</div>';return}
+  el.innerHTML=S.journal.map(function(j){
+    return '<div class="jitem"><div class="jw">'+esc(j.w)+'</div><div class="jd">'+new Date(j.t).toLocaleDateString()+'</div><p>'+esc(j.note)+'</p></div>';
+  }).join("");
+}
+function csv(rows,name){
+  var c=rows.map(function(r){return r.map(function(v){return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'}).join(",")}).join("\n");
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([c],{type:"text/csv"}));a.download=name;a.click();
+}
+document.getElementById("expWords").onclick=function(){
+  var rows=[["word","meaning","source","saved"]];
+  S.own.forEach(function(o){rows.push([o.w,o.d,"mine",new Date(o.t).toISOString()])});
+  S.kept.forEach(function(o){rows.push([o.w,o.d,"daily",new Date(o.t).toISOString()])});
+  csv(rows,"espovocab-words.csv");toast("Exported — your data is yours");
+};
+document.getElementById("expJournal").onclick=function(){
+  var rows=[["word","note","date"]];
+  S.journal.forEach(function(j){rows.push([j.w,j.note,new Date(j.t).toISOString()])});
+  csv(rows,"espovocab-journal.csv");toast("Exported — your data is yours");
+};
+var lv=document.getElementById("setLv");lv.value=S.lv;
+lv.onchange=function(){S.lv=lv.value;S.extra=0;save();pick();toast("Level set — and respected")};
+document.getElementById("wipe").onclick=function(){
+  if(confirm("Erase all words, journal entries and streaks from this device? There is no cloud copy — that's the point.")){
+    localStorage.removeItem(K);location.reload();
+  }
+};
+drawStreak();pick();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");
+</script>
+</body>
+</html>
