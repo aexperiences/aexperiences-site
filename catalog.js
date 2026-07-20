@@ -168,5 +168,54 @@
     });
   }
 
-  root.AEShop = { CATALOG: CATALOG, GENRES: GENRES, byId: byId, live: live, dev: dev, activeGenres: activeGenres };
+  /* TWO AISLES. This is the only distinction a visitor has to understand:
+       business — software that runs a company. You and your team. Setup fee + monthly.
+       personal — something one person uses. Small price or free.
+     Everything else (genre, price, family) is a filter inside an aisle. */
+  function aisleOf(a) { return a.genre === 'business' ? 'business' : 'personal'; }
+  function inAisle(id) { return CATALOG.filter(function (a) { return aisleOf(a) === id; }); }
+
+  var AISLES = [
+    { id:'business', label:'For your business',
+      line:'Complete operating systems for a working company — the whole team, one flat monthly.',
+      cta:'Every one is a live instance. Walk in and use it before you talk to anyone.' },
+    { id:'personal', label:'For you',
+      line:'Apps for one person. Open them right now — most are free to try.',
+      cta:'No account needed to look around.' }
+  ];
+
+  /* LIVE PRICING. The numbers above are a baked-in fallback, not a second source of truth.
+     Anthony types a price in the hub; this pulls it in and overwrites the copy here.
+     If the service is unreachable the store shows slightly stale prices rather than a blank
+     page — a shop with no prices in front of a prospect is worse than a price a day old.
+     Only ever touches `live` products: a coming-soon app has no price by design. */
+  var PRICE_API = 'https://aexperiences.studio/api/pricing';
+  function refreshPrices() {
+    return fetch(PRICE_API).then(function (r) {
+      if (!r.ok) throw new Error('pricing unavailable');
+      return r.json();
+    }).then(function (rec) {
+      (rec.hubs || []).forEach(function (h) {
+        var a = byId(h.id);
+        if (!a || a.state !== 'live' || !h.tiers || !h.tiers.length) return;
+        var t = h.tiers[0];
+        a.price = '$' + Number(t.mo).toLocaleString('en-US') + '/mo';
+        a.priceNote = h.tiers.length + ' tiers · from $' + Number(t.build).toLocaleString('en-US')
+                    + ' one-time setup · first year $' + Number(t.firstYear).toLocaleString('en-US');
+      });
+      if (rec.appShop && rec.appShop.build) {
+        root.AEShop.appShop = rec.appShop;
+      }
+      root.AEShop.priceSource = 'live';
+      return true;
+    }).catch(function () { root.AEShop.priceSource = 'fallback'; return false; });
+  }
+
+  root.AEShop = {
+    CATALOG: CATALOG, GENRES: GENRES, AISLES: AISLES,
+    byId: byId, live: live, dev: dev, activeGenres: activeGenres,
+    aisleOf: aisleOf, inAisle: inAisle,
+    refreshPrices: refreshPrices, priceSource: 'fallback',
+    appShop: { build: 99, terms: 'Half up front, half on delivery', turnaround: '3 days' }
+  };
 })(window);
