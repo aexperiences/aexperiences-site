@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Rate Card — Accelerated Experiences, LLC</title>
+<link rel="icon" href="/ae-disc.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#1c3d22; --forest-d:#122a18; --forest-dd:#0c1d10;
+  --clay:#c8794f; --clay-d:#a85f38; --gold:#e0a83a;
+  --cream:#f4eede; --cream-2:#d8cfb8; --mute:#9db09f;
+  --line:rgba(255,255,255,.11); --line-2:rgba(255,255,255,.18);
+  --sans:'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'Space Grotesk',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--forest-d)}
+body{font-family:var(--sans);color:var(--cream);-webkit-text-size-adjust:100%}
+img{max-width:100%;display:block}
+.wrap{max-width:940px;margin:0 auto;padding:0 18px}
+h1,h2,h3{letter-spacing:-.022em}
+
+.top{background:radial-gradient(120% 100% at 50% 0%,#25502d 0%,var(--forest) 48%,var(--forest-d) 100%);padding:30px 0 28px;border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:11px;margin-bottom:22px}
+.brandrow img{width:34px;height:34px;object-fit:contain}
+.brandrow .bn{font-weight:800;font-size:14px;line-height:1.1}
+.brandrow .bn b{display:block;font-size:9.5px;font-weight:600;color:var(--mute);letter-spacing:.15em;text-transform:uppercase}
+.kicker{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+h1{margin:8px 0 0;font-size:clamp(30px,7vw,48px);font-weight:900;line-height:1.03}
+.lede{margin:12px 0 0;font-size:clamp(15px,3.6vw,18px);line-height:1.55;color:var(--cream-2);max-width:60ch}
+
+/* the one thing Barry has to remember */
+.model{margin:24px 0 0;background:rgba(224,168,58,.1);border:1px solid rgba(224,168,58,.35);border-radius:16px;padding:18px 20px}
+.model .t{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
+.model .eq{font-size:clamp(18px,4.6vw,26px);font-weight:800;line-height:1.35}
+.model .eq span{color:var(--gold)}
+.model p{margin:11px 0 0;font-size:14.5px;line-height:1.6;color:var(--cream-2)}
+
+section{padding:38px 0}
+h2{font-size:clamp(21px,4.8vw,28px);font-weight:800;margin:0 0 6px}
+.sub{margin:0 0 22px;color:var(--mute);font-size:14.5px;line-height:1.55;max-width:64ch}
+
+/* vertical block */
+.vert{border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-bottom:18px;background:rgba(255,255,255,.025)}
+.vh{display:flex;align-items:center;gap:12px;padding:15px 18px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.04)}
+.dot{width:34px;height:34px;border-radius:10px;flex:none;display:flex;align-items:center;justify-content:center}
+.dot svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.vh .nm{font-weight:800;font-size:17px;line-height:1.15}
+.vh .who{font-size:12.5px;color:var(--mute);margin-top:1px}
+.tiers{display:grid;grid-template-columns:1fr}
+@media(min-width:720px){ .tiers{grid-template-columns:repeat(3,1fr)} }
+.tier{padding:16px 18px;border-bottom:1px solid var(--line)}
+@media(min-width:720px){ .tier{border-bottom:none;border-right:1px solid var(--line)} .tier:last-child{border-right:none} }
+.tier:last-child{border-bottom:none}
+.tier .tn{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.tier .mo{font-size:25px;font-weight:900;line-height:1;letter-spacing:-.02em}
+.tier .mo small{font-size:13px;font-weight:600;color:var(--mute);letter-spacing:0}
+.tier .bd{margin-top:7px;font-size:13.5px;color:var(--cream-2)}
+.tier .bd b{color:var(--cream)}
+.tier .inc{margin-top:10px;font-size:13px;color:var(--mute);line-height:1.5}
+.tier .yr1{margin-top:11px;padding-top:10px;border-top:1px dashed var(--line-2);font-family:var(--mono);font-size:12px;color:var(--gold)}
+
+/* app shop + notes */
+.cards{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:720px){ .cards{grid-template-columns:1fr 1fr} }
+.card{border:1px solid var(--line);border-radius:16px;padding:19px;background:rgba(255,255,255,.03)}
+.card h3{margin:0 0 8px;font-size:17px;font-weight:800}
+.card p{margin:0 0 10px;font-size:14.5px;line-height:1.6;color:var(--cream-2)}
+.card .big{font-size:29px;font-weight:900;letter-spacing:-.02em}
+.card .big small{font-size:13px;color:var(--mute);font-weight:600}
+ul{margin:0;padding-left:19px}
+li{font-size:14.5px;line-height:1.7;color:var(--cream-2);margin-bottom:3px}
+li b{color:var(--cream)}
+
+/* objections */
+.qa{border-left:3px solid var(--gold);padding:2px 0 2px 16px;margin-bottom:20px}
+.qa .q{font-weight:800;font-size:15.5px;margin-bottom:5px}
+.qa .a{font-size:14.5px;line-height:1.65;color:var(--cream-2)}
+
+.rule{border:none;border-top:1px solid var(--line);margin:0}
+footer{padding:26px 0 44px;color:var(--mute);font-size:13px;line-height:1.7;border-top:1px solid var(--line)}
+footer b{color:var(--cream-2)}
+
+@media print{
+  html,body{background:#fff;color:#111}
+  .top{background:#fff;border-bottom:2px solid #1c3d22}
+  h1,.vh .nm,.tier .mo,.card .big,.qa .q{color:#111}
+  .lede,.sub,.tier .inc,.card p,li,.qa .a,.tier .bd{color:#333}
+  .kicker,.tier .tn,.tier .yr1,.model .eq span{color:#a85f38}
+  .vert,.card,.model{border-color:#ccc;background:#fff;break-inside:avoid}
+  .model{background:#fdf6e4}
+  .noprint{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap">
+    <div class="brandrow">
+      <img src="/ae-disc.png" alt="">
+      <div class="bn">Accelerated Experiences<b>LLC</b></div>
+    </div>
+    <div class="kicker">Rate card · internal · for sales conversations</div>
+    <h1>What we charge, and&nbsp;why.</h1>
+    <p class="lede">Everything we sell runs on one pricing idea. Learn the idea and you can quote any vertical without looking anything up.</p>
+
+    <div class="model">
+      <div class="t">The whole model, in one line</div>
+      <div class="eq"><span>One-time build</span> &nbsp;+&nbsp; <span>flat monthly</span></div>
+      <p><b>The build fee</b> is us taking the hub and making it theirs — their brand, their domain, their workflow, their data moved in. Paid once, up front.<br>
+      <b>The monthly</b> is hosting, support, updates and the AI running inside it. Never a per-seat fee, never a per-transaction cut. Their team can grow without the price moving.</p>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2>The seven hubs</h2>
+    <p class="sub">Same software underneath, shaped for a different trade. Three tiers each — small shop, established firm, multi-location. Start them where they are; moving up a tier later is a conversation, not a migration.</p>
+    <div id="verts"></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="wrap">
+    <h2>The App Shop</h2>
+    <p class="sub">A separate, much smaller sale — and a good door-opener for someone not ready for a hub.</p>
+    <div class="cards">
+      <div class="card">
+        <h3>Commission an app</h3>
+        <div class="big">$99 <small>per app</small></div>
+        <p>Half up front, half when it ships. Roughly three days. Standard app-shop scope — if they want it customized beyond that, it is quoted separately and it is not $99.</p>
+        <ul>
+          <li>They get <b>lifetime access</b> to the app they paid for.</li>
+          <li>The app then <b>lists in the shop</b>, and other buyers pay a subscription.</li>
+          <li>We keep that subscription revenue.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>What that means for the pitch</h3>
+        <p>They are not buying a custom build at a custom price. They are paying to move their idea to the front of a line, and getting a real app out of it.</p>
+        <p>It is the cheapest way for a skeptical prospect to find out whether we actually deliver — which is usually the real objection behind a stalled hub deal.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="wrap">
+    <h2>Included in every hub, every tier</h2>
+    <p class="sub">Worth saying out loud on a call — most of these are line items elsewhere.</p>
+    <div class="cards">
+      <div class="card">
+        <ul>
+          <li>Their <b>brand and their domain</b>, not ours</li>
+          <li>Hosting, security and updates</li>
+          <li>The AI assistant, running inside the hub</li>
+          <li>Support from the people who built it</li>
+        </ul>
+      </div>
+      <div class="card">
+        <ul>
+          <li>No per-seat pricing — <b>add staff for free</b></li>
+          <li>No cut of their transactions</li>
+          <li>Their data stays theirs, exportable</li>
+          <li>A live instance they can try before signing</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="wrap">
+    <h2>The five questions you will actually get</h2>
+    <p class="sub">Short answers. Say them plainly and move on.</p>
+
+    <div class="qa">
+      <div class="q">"Why is there a build fee at all?"</div>
+      <div class="a">Because they are not renting a template — we rebuild the hub around how their business actually runs, on their brand and their domain. That work happens once, so it is billed once. The monthly stays flat afterward.</div>
+    </div>
+
+    <div class="qa">
+      <div class="q">"That monthly is more than [competitor]."</div>
+      <div class="a">Compare the whole stack, not one line. Most firms are paying four or five separate subscriptions plus per-seat fees. Ours is one number that does not move when they hire.</div>
+    </div>
+
+    <div class="qa">
+      <div class="q">"Can we start smaller?"</div>
+      <div class="a">Yes — start at the entry tier. Moving up later is a settings change and a new monthly, not a rebuild. Never discount the build fee to close; step them down a tier instead.</div>
+    </div>
+
+    <div class="qa">
+      <div class="q">"Can we see it first?"</div>
+      <div class="a">Yes, and this is our best move. Send them the live hub for their trade from the App Shop. It is real working software, not a slide deck — walking them through it beats any brochure.</div>
+    </div>
+
+    <div class="qa">
+      <div class="q">"Can you do it cheaper?"</div>
+      <div class="a">Pricing changes are not yours or mine to give — bring it back to us and we will decide together. Discounting on the call is how the whole card loses its meaning.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <b>Accelerated Experiences, LLC</b> · Post Falls, Idaho<br>
+    Internal document — pricing here is current as of the date printed. Anything outside this card, bring back to us before quoting.<br>
+    <span class="noprint">Live product pages: <a href="/shop.html" style="color:var(--gold)">the AE App Shop</a> — send prospects there to try any hub for themselves.</span>
+  </div>
+</footer>
+
+<script>
+/* Real numbers, pulled from the live hub pages. Keep this table and the hub pages in step. */
+var VERTS = [
+  { nm:'Homestead Hub', who:'Real estate brokerages & teams', acc:'#c8794f', id:'homestead',
+    svg:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',
+    tiers:[ {n:'Solo / Team', mo:'$450', b:'$2,500', inc:'Pipeline + CRM + commissions, DeepSeek AI'},
+            {n:'Team', mo:'$950', b:'$6,500', inc:'Full suite + broker views + marketing + Claude'},
+            {n:'Brokerage', mo:'$2,400', b:'$18,000', inc:'Multi-team · compliance · custom + premium AI'} ] },
+  { nm:'Draftline Hub', who:'Architecture studios & firms', acc:'#5c8a5f', id:'draftline',
+    svg:'<path d="M12 3 6 21M12 3l6 18"/><path d="M8 15h8"/>',
+    tiers:[ {n:'Studio', mo:'$550', b:'$3,500', inc:'Projects + RFIs + billing + Detail Studio'},
+            {n:'Firm', mo:'$1,200', b:'$9,000', inc:'Full suite + custom workflows + Claude eyes'},
+            {n:'Multi-office', mo:'$2,800', b:'$22,000', inc:'Unlimited + custom modules + white-glove'} ] },
+  { nm:'Datum Hub', who:'Engineering practices', acc:'#18b0ba', id:'datum',
+    svg:'<path d="M3 20 12 4l9 16zM3 20h18"/>',
+    tiers:[ {n:'Practice', mo:'$650', b:'$3,500', inc:'Projects + submittals + Calc Studio'},
+            {n:'Firm', mo:'$1,400', b:'$10,000', inc:'Full suite + QA + premium AI eyes'},
+            {n:'Multi-discipline', mo:'$3,200', b:'$24,000', inc:'Unlimited + custom + priority SLA'} ] },
+  { nm:'Marquee Hub', who:'Theaters & producing companies', acc:'#e0b24a', id:'marquee',
+    svg:'<path d="M5 9h14l-1.5 11h-11z"/><path d="M5 9 12 4l7 5"/>',
+    tiers:[ {n:'Community', mo:'$650', b:'$4,000', inc:'Box office + productions + patrons'},
+            {n:'Producing', mo:'$1,500', b:'$10,000', inc:'+ subscriptions · marketing · full house tools'},
+            {n:'Regional / Multi-venue', mo:'$3,200', b:'$25,000', inc:'Multi-venue + custom + premium AI'} ] },
+  { nm:'Reel Hub', who:'Cinemas & circuits', acc:'#8a6fd6', id:'reel',
+    svg:'<rect x="3" y="6" width="12" height="12" rx="2"/><path d="M15 11l6-3v8l-6-3z"/>',
+    tiers:[ {n:'Single / Twin', mo:'$500', b:'$3,000', inc:'Box office + showtimes + members'},
+            {n:'Multiplex', mo:'$1,200', b:'$8,500', inc:'Up to 8 screens + reserved + concessions'},
+            {n:'Circuit', mo:'$2,800', b:'$22,000', inc:'Multi-location + custom + premium AI'} ] },
+  { nm:'Encore Hub', who:'Music venues & promoters', acc:'#d65f8a', id:'encore',
+    svg:'<path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2.4"/><circle cx="17" cy="16" r="2.4"/>',
+    tiers:[ {n:'Club', mo:'$600', b:'$3,500', inc:'Box office (GA/reserved/cabaret) + lineup'},
+            {n:'Venue', mo:'$1,400', b:'$9,000', inc:'Full suite + marketing + memberships'},
+            {n:'Group / Promoter', mo:'$3,000', b:'$22,000', inc:'Multi-venue + custom + priority SLA'} ] },
+  { nm:'Cartwheel Hub', who:'Kids gyms, camps & programs', acc:'#4aa3d6', id:'cartwheel',
+    svg:'<circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16"/>',
+    tiers:[ {n:'Studio', mo:'$400', b:'$2,500', inc:'Schedule + enrollment + tuition + families'},
+            {n:'Center', mo:'$750', b:'$6,000', inc:'Full suite + coaches + parent portal + your site'},
+            {n:'Multi-location', mo:'$1,600', b:'$15,000', inc:'Multi-site + custom + premium AI'} ] }
+];
+
+function n(s){ return parseInt(String(s).replace(/[^0-9]/g,''),10)||0; }
+function fmt(v){ return '$' + v.toLocaleString('en-US'); }
+
+document.getElementById('verts').innerHTML = VERTS.map(function(v){
+  return '<div class="vert">'
+    + '<div class="vh"><div class="dot" style="background:'+v.acc+'"><svg viewBox="0 0 24 24">'+v.svg+'</svg></div>'
+    + '<div><div class="nm">'+v.nm+'</div><div class="who">'+v.who+'</div></div></div>'
+    + '<div class="tiers">' + v.tiers.map(function(t){
+        var yr1 = n(t.b) + n(t.mo)*12;
+        return '<div class="tier">'
+          + '<div class="tn">'+t.n+'</div>'
+          + '<div class="mo">'+t.mo+'<small>/mo</small></div>'
+          + '<div class="bd">+ <b>'+t.b+'</b> one-time build</div>'
+          + '<div class="inc">'+t.inc+'</div>'
+          + '<div class="yr1">First year total &nbsp;'+fmt(yr1)+'</div>'
+          + '</div>';
+      }).join('') + '</div></div>';
+}).join('');
+</script>
+</body>
+</html>
