@@ -261,7 +261,7 @@ td.n{font-family:var(--mono);white-space:nowrap}
         }).join('') + '</div>'
       + '<div class="cols"><div>'
         + '<div class="card"><h3>'+esc(T.chart.title)+'</h3><p class="cs">Last six months, in '+esc(T.chart.unit)+'.</p>'+chart(T.chart)+'</div>'
-        + '<div class="card"><h3>Where everything stands</h3><p class="cs">Every deal in one place — the part your CRM stops tracking.</p>'+funnel(T.funnel)+'</div>'
+        + '<div class="card"><h3>'+esc(T.funnelTitle||'Where everything stands')+'</h3><p class="cs">'+esc(T.funnelSub||'Everything in one place, at a glance.')+'</p>'+funnel(T.funnel)+'</div>'
       + '</div><div>'
         + '<div class="card"><h3>Needs you today</h3><p class="cs">Pulled from the deals themselves, not a separate task list.</p><div class="rows">'
         + T.today.map(function(x){
@@ -271,8 +271,9 @@ td.n{font-family:var(--mono);white-space:nowrap}
   }
 
   function deals(){
-    return '<div class="h"><div><h1>Deals</h1><p class="sub">Every file, every stage, one list.</p></div></div>'
-      + '<div class="card"><table><thead><tr><th>Property</th><th>Price</th><th>Stage</th><th class="hide-s">Agent</th><th class="hide-s">Next</th></tr></thead><tbody>'
+    var meta = T.dealsMeta || { h1:'Deals', sub:'Every file, every stage, one list.', cols:['Property','Price','Stage','Agent','Next'] };
+    return '<div class="h"><div><h1>'+esc(meta.h1)+'</h1><p class="sub">'+esc(meta.sub)+'</p></div></div>'
+      + '<div class="card"><table><thead><tr><th>'+esc(meta.cols[0])+'</th><th>'+esc(meta.cols[1])+'</th><th>'+esc(meta.cols[2])+'</th><th class="hide-s">'+esc(meta.cols[3])+'</th><th class="hide-s">'+esc(meta.cols[4])+'</th></tr></thead><tbody>'
       + T.deals.map(function(d){
           return '<tr><td><b>'+esc(d.a)+'</b></td><td class="n">'+esc(d.p)+'</td>'
             + '<td><span class="tag '+(d.tone||'')+'">'+esc(d.st)+'</span></td>'
@@ -282,7 +283,9 @@ td.n{font-family:var(--mono);white-space:nowrap}
   }
 
   function people(){
-    return '<div class="h"><div><h1>'+esc((T.sections.find(function(s){return s.id==='people';})||{}).label||'People')+'</h1><p class="sub">Their work and their paperwork on the same card.</p></div></div>'
+    var lbl=(T.sections.find(function(s){return s.id==='people';})||{}).label||'People';
+    var sub=T.peopleSub||'Their work and their paperwork on the same card.';
+    return '<div class="h"><div><h1>'+esc(lbl)+'</h1><p class="sub">'+esc(sub)+'</p></div></div>'
       + '<div class="card"><div class="rows">'
       + T.people.map(function(p){
           return '<div class="r"><div class="m"><div class="t">'+esc(p.n)+'</div><div class="d">'+esc(p.r)+' · '+esc(p.d)+'</div></div>'
@@ -292,16 +295,14 @@ td.n{font-family:var(--mono);white-space:nowrap}
   }
 
   function money(){
-    var k=T.kpis[2]||{v:'—',s:''};
-    return '<div class="h"><div><h1>Commissions</h1><p class="sub">Calculated from the deal, not re-keyed into accounting.</p></div></div>'
-      + '<div class="kpis"><div class="kpi"><div class="k">Owed this cycle</div><div class="v">'+esc(k.v)+'</div><div class="s">'+esc(k.s)+'</div></div>'
-      + '<div class="kpi good"><div class="k">Ready to disburse</div><div class="v">3</div><div class="s">closings cleared</div></div>'
-      + '<div class="kpi"><div class="k">Held in escrow</div><div class="v">$61,200</div><div class="s">4 files</div></div>'
-      + '<div class="kpi warn"><div class="k">Missing paperwork</div><div class="v">1</div><div class="s">blocks disbursement</div></div></div>'
-      + '<div class="card"><h3>This cycle</h3><p class="cs">Each line traces back to the deal it came from — one click, no reconciliation.</p><div class="rows">'
-      + T.people.filter(function(p){return /agent/i.test(p.r);}).map(function(p,i){
-          var amts=['$74,200','$61,800','$52,400','$60,000'];
-          return '<div class="r"><div class="m"><div class="t">'+esc(p.n)+'</div><div class="d">'+esc(p.d)+'</div></div><div class="rt">'+amts[i%amts.length]+'</div></div>';
+    var M = T.money || { h1:'Money', sub:'Calculated from the work, not re-keyed into accounting.', kpis:[], listTitle:'This cycle', listSub:'Each line traces back to where it came from.', rows:[] };
+    return '<div class="h"><div><h1>'+esc(M.h1)+'</h1><p class="sub">'+esc(M.sub)+'</p></div></div>'
+      + '<div class="kpis">'+M.kpis.map(function(k){
+          return '<div class="kpi '+(k.tone||'')+'"><div class="k">'+esc(k.k)+'</div><div class="v">'+esc(k.v)+'</div><div class="s">'+esc(k.s)+'</div></div>';
+        }).join('')+'</div>'
+      + '<div class="card"><h3>'+esc(M.listTitle)+'</h3><p class="cs">'+esc(M.listSub)+'</p><div class="rows">'
+      + M.rows.map(function(p){
+          return '<div class="r"><div class="m"><div class="t">'+esc(p.n)+'</div><div class="d">'+esc(p.d)+'</div></div><div class="rt">'+esc(p.v)+'</div></div>';
         }).join('')
       + '</div></div>';
   }
@@ -338,8 +339,27 @@ td.n{font-family:var(--mono);white-space:nowrap}
         + '<a class="btn btn-g" href="mailto:anthonye@aexperiences.studio?subject=' + encodeURIComponent(T.hub + ' — questions') + '">Ask us anything</a></div></div>';
   }
 
-  var VIEWS = { dash:dash, deals:deals, people:people, money:money, stack:stack };
+  function suite(){
+    var items = window.AEShowroom.suiteFor(T);
+    return '<div class="h"><div><h1>Everything inside</h1><p class="sub">Every tool '+esc(T.who)+' runs today — one system, one login, nothing missing.</p></div></div>'
+      + '<div class="kpis" style="grid-template-columns:repeat(2,1fr)">'
+      + '<div class="kpi good"><div class="k">Tools in this hub</div><div class="v">'+items.length+'</div><div class="s">no add-ons, no per-seat fees</div></div>'
+      + '<div class="kpi"><div class="k">Separate vendors needed</div><div class="v">0</div><div class="s">this is the whole stack</div></div></div>'
+      + '<div class="card"><div class="rows">'
+      + items.map(function(x){
+          return '<div class="r"><span class="dot good"></span><div class="m"><div class="t">'+esc(x[0])+'</div><div class="d">'+esc(x[1])+'</div></div><span class="tag good">Included</span></div>';
+        }).join('')
+      + '</div></div>'
+      + '<div class="cta"><h3>Nothing here is an integration</h3>'
+      + '<p>Every line above is the same system reading the same records — which is why the dashboard can know everything at once. Integrations copy data between vendors; this has nothing to copy.</p>'
+      + '<div class="btnrow"><a class="btn btn-p" href="/shop.html#'+esc(T.priceId)+'">See pricing</a>'
+      + '<a class="btn btn-g" href="mailto:anthonye@aexperiences.studio?subject='+encodeURIComponent(T.hub+' — questions')+'">Ask us anything</a></div></div>';
+  }
+
+  var VIEWS = { dash:dash, deals:deals, people:people, money:money, stack:stack, suite:suite };
   function render(){
+    // only sections this trade actually declares — a hash for a tab that doesn't exist here falls back to the dashboard
+    if (!T.sections.some(function(s){ return s.id===section; })) section='dash';
     var fn = VIEWS[section] || dash;
     el('main').innerHTML = fn();
     // pull the live price into the comparison, so this page can never quote a stale number
