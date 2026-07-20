@@ -6,9 +6,9 @@
 <title>ESPOtendency — how are you actually doing?</title>
 <meta name="description" content="A 10-second daily check-in and one tiny win at a time. No ads, no account, no cloud — everything stays on your device. By Accelerated Experiences, LLC.">
 <meta name="theme-color" content="#232946">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon.png">
-<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="/apps/espotendency/manifest.webmanifest">
+<link rel="icon" href="/apps/espotendency/icon.png">
+<link rel="apple-touch-icon" href="/apps/espotendency/icon.png">
 <style>
 :root{
   --bg:#232946; --bg2:#2B3155; --card:#313862; --ink:#EEF0FA; --ink2:#A7ADD1;
@@ -72,7 +72,7 @@ footer{max-width:640px;margin:26px auto 0;padding:0 18px;font-size:12px;color:va
 </head>
 <body>
 <header>
-  <img src="icon.png" alt="">
+  <img src="/apps/espotendency/icon.png" alt="">
   <div class="t">ESPO<b>tendency</b></div>
   <div class="streak" id="streak">—</div>
 </header>
@@ -298,7 +298,7 @@ document.getElementById("wipe").onclick=function(){
   }
 };
 drawStreak();drawMood();
-if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");
+if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/espotendency/sw.js");
 </script>
 </body>
 </html>
