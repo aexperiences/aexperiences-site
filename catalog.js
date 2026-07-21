@@ -147,9 +147,10 @@
       blurb:'Days, stops, one-tap map routes, a budget that splits itself, and a printable one-pager — offline by default.',
       price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — offline, export & print free forever' },
 
-    { id:'esponatlparks', name:'ESPOnatlparks', tag:'National parks guide', genre:'travel', state:'dev',
-      acc:'#173428', mark:M+'esponatlparks.svg', family:'ESPOtravel',
-      blurb:'Every park, offline — trails, hours and a plan for the day you lose signal.' },
+    { id:'esponatlparks', name:'ESPOnatlparks', tag:'Park passport', genre:'travel', state:'live',
+      acc:'#173428', mark:M+'esponatlparks.svg', family:'ESPOtravel', url:'/apps/esponatlparks/',
+      blurb:'All 63 National Parks in a passport that stamps OFFLINE — one tap logs the visit, no signal required, never lost.',
+      price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — the 63, your stamps & export free forever' },
 
     { id:'esposign', name:'ESPOsign', tag:'Sign it yourself', genre:'money', state:'live',
       acc:'#2A1A4A', mark:M+'esposign.svg', family:'ESPO Genius', url:'/apps/esposign/',
