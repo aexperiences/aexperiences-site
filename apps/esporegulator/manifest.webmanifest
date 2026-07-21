@@ -5,8 +5,8 @@
   "start_url": "/apps/esporegulator/",
   "scope": "/apps/esporegulator/",
   "display": "standalone",
-  "background_color": "#2B2350",
-  "theme_color": "#2B2350",
+  "background_color": "#F7EDDC",
+  "theme_color": "#F7E5C4",
   "icons": [
     { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
     { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
