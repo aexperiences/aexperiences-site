@@ -76,7 +76,7 @@
       ] },
 
     { id:'espo-learning', name:'ESPO Learning', tag:'Kids · early skills', genre:'learning', state:'live',
-      acc:'#5c8a5f', url:'https://espolearning.com/', img:'/logo-learning.png',
+      acc:'#5c8a5f', url:'https://espolearning.com/', img:'/logo-learning.png', mark:'/marks/espolearning-icon.png',
       blurb:'Handwriting, reading, math and writing for young kids. No fail states, no red marks, nothing collected.',
       price:'Free to try', priceNote:'Paid plans not switched on yet' },
 
