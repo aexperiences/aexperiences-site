@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Gallery — Accelerated Experiences, LLC</title>
+<meta name="description" content="The artwork of the Accelerated Experiences, LLC app family — a swiping book of marks. Nothing to tap; just the art.">
+<meta name="theme-color" content="#2a1810">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:linear-gradient(180deg,#1c1208 0%,#2a1810 40%,#1c3d22 130%);min-height:100vh;font-family:Outfit,sans-serif;color:#f4eede;overflow-x:hidden}
+header{padding:calc(26px + env(safe-area-inset-top)) 22px 6px;text-align:center}
+h1{font-family:Fraunces,serif;font-weight:400;font-size:clamp(26px,6vw,40px);letter-spacing:-.01em}
+h1 i{color:#e0a83a}
+.sub{color:#c9b896;font-size:13.5px;margin-top:8px;letter-spacing:.04em}
+.book{display:flex;gap:26px;overflow-x:auto;scroll-snap-type:x mandatory;padding:38px max(8vw,26px) 56px;perspective:1200px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.book::-webkit-scrollbar{display:none}
+.pg{flex:0 0 min(74vw,340px);scroll-snap-align:center;pointer-events:none;user-select:none;transition:transform .35s ease,opacity .35s ease;will-change:transform}
+.pane{position:relative;aspect-ratio:3/4;border-radius:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:26px;overflow:hidden;
+ background:linear-gradient(160deg,rgba(255,250,238,.10),rgba(224,168,58,.05) 55%,rgba(255,250,238,.03));
+ border:1px solid rgba(244,238,222,.22);backdrop-filter:blur(18px) saturate(1.2);-webkit-backdrop-filter:blur(18px) saturate(1.2);
+ box-shadow:0 24px 60px -30px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.18)}
+.pane::after{content:"";position:absolute;top:0;bottom:0;width:44%;left:-60%;
+ background:linear-gradient(105deg,transparent,rgba(255,255,255,.10) 48%,rgba(255,255,255,.2) 52%,transparent);animation:glint 9s ease-in-out infinite}
+@keyframes glint{0%,70%{left:-60%}92%,100%{left:130%}}
+.pane img{width:72%;max-height:62%;object-fit:contain;opacity:.94;filter:drop-shadow(0 14px 30px rgba(0,0,0,.5))}
+figcaption{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:#d8c8a4;opacity:.85}
+.hint{text-align:center;color:#a08c66;font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding-bottom:12px}
+footer{padding:10px 22px calc(30px + env(safe-area-inset-bottom));text-align:center;color:#c9b896;font-size:12px;line-height:1.7}
+footer img{width:40px;height:40px;display:block;margin:0 auto 8px;filter:drop-shadow(0 3px 10px rgba(0,0,0,.4))}
+@media (prefers-reduced-motion: reduce){.pane::after{animation:none}.pg{transition:none}}
+</style></head>
+<body>
+<header><h1>The <i>Gallery</i></h1><div class="sub">The artwork of the family. Nothing to tap — just swipe, like pages in a book.</div></header>
+<div class="book" id="book">
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/apps/espohystory/icon.png" alt=""><figcaption>ESPOhystory</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/apps/esponatlparks/icon.png" alt=""><figcaption>ESPOnatlparks</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/apps/esponest/icon.png" alt=""><figcaption>ESPOnest</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/apps/esporacket/icon.png" alt=""><figcaption>ESPOracket</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/apps/esporegulator/icon.png" alt=""><figcaption>ESPOregulator</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/apps/esposign/icon.png" alt=""><figcaption>ESPOsign</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/apps/espotendency/icon.png" alt=""><figcaption>ESPOtendency</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/apps/espotrek/icon.png" alt=""><figcaption>ESPOtrek</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/apps/espovineyard/icon.png" alt=""><figcaption>ESPOvineyard</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/apps/espovocab/icon.png" alt=""><figcaption>ESPOvocab</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/logo-curriculum.png" alt=""><figcaption>ESPO Curriculum</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/logo-drama.png" alt=""><figcaption>ESPO Drama</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/logo-genius.png" alt=""><figcaption>ESPO Genius</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/logo-learning.png" alt=""><figcaption>ESPO Learning</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/logo-music.png" alt=""><figcaption>ESPO Music</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/logo-narcs.png" alt=""><figcaption>The Narcs</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/logo-nd.png" alt=""><figcaption>Neuro Divulge</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/logo-social.png" alt=""><figcaption>ESPO Social</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/marks/family-espocenter.svg" alt=""><figcaption>the ESPO center family</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/marks/family-espofam.svg" alt=""><figcaption>the ESPO fam family</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/marks/family-espograduate.svg" alt=""><figcaption>the ESPO graduate family</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/marks/family-espomindpeace.svg" alt=""><figcaption>the ESPO mindpeace family</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/marks/family-esposavor.svg" alt=""><figcaption>the ESPO savor family</figcaption></div></figure>
+  <figure class="pg" aria-hidden="true"><div class="pane"><img src="/marks/family-espotravel.svg" alt=""><figcaption>the ESPO travel family</figcaption></div></figure>
+</div>
+<div class="hint">⟵ swipe ⟶</div>
+<p style="text-align:center;padding:6px 22px 8px"><a href="/products.html" style="display:inline-block;background:#e0a83a;color:#2a1810;font-weight:600;padding:13px 22px;border-radius:12px;text-decoration:none;font-size:14.5px">All of these live in the AE App Shop — walk in and use them →</a></p>
+<footer><img src="/ae-mark.png" alt="Accelerated Experiences">Accelerated Experiences, LLC — Post Falls, Idaho.</footer>
+<script>
+var book=document.getElementById("book"),pages=[].slice.call(document.querySelectorAll(".pg"));
+function turn(){var mid=book.scrollLeft+book.clientWidth/2;
+ pages.forEach(function(p){var c=p.offsetLeft+p.offsetWidth/2,d=(c-mid)/book.clientWidth;
+  var r=Math.max(-1,Math.min(1,d));
+  p.style.transform="rotateY("+(r*-24)+"deg) scale("+(1-Math.abs(r)*.12)+")";
+  p.style.opacity=String(1-Math.abs(r)*.35);});}
+book.addEventListener("scroll",function(){window.requestAnimationFrame(turn)},{passive:true});
+window.addEventListener("resize",turn);turn();
+</script>
+</body></html>

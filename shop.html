@@ -168,11 +168,30 @@ main{padding:24px 0 40px}
 .notify input::placeholder{color:var(--mute)}
 .notify input:focus{outline:none;border-color:var(--gold)}
 
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:70;background:rgba(12,29,16,.97);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;padding-bottom:var(--safe-b)}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:70;display:flex;justify-content:center;pointer-events:none;
+ padding:0 10px calc(10px + env(safe-area-inset-bottom))}
 @media(min-width:900px){ .tabbar{display:none} }
-.tabbar a,.tabbar button{flex:1;min-height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;font-weight:700;color:var(--mute);text-decoration:none}
-.tabbar .cur{color:var(--gold)}
-.tabbar svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dock{pointer-events:auto;position:relative;display:flex;width:100%;max-width:560px;justify-content:space-between;gap:2px;
+ padding:6px;border-radius:24px;overflow:hidden;
+ background:linear-gradient(180deg,rgba(24,48,32,.78),rgba(9,22,13,.86));
+ backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);
+ border:1px solid rgba(196,232,205,.28);
+ box-shadow:0 14px 40px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.2), inset 0 -1px 0 rgba(0,0,0,.3)}
+.dock::after{content:"";position:absolute;top:0;bottom:0;width:46%;left:-60%;pointer-events:none;
+ background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.14) 45%,rgba(255,255,255,.3) 50%,rgba(255,255,255,.14) 55%,transparent 100%);
+ animation:iceglint 6.5s ease-in-out infinite}
+@keyframes iceglint{0%,64%{left:-60%}88%,100%{left:120%}}
+.dock a,.dock button{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+ padding:9px 2px;border:0;background:none;border-radius:18px;cursor:pointer;text-decoration:none;
+ color:rgba(235,245,238,.72);font-size:10px;font-weight:800;letter-spacing:.05em;
+ transition:transform .16s ease,background .2s ease,color .2s ease,box-shadow .2s ease}
+.dock a:active,.dock button:active{transform:scale(.93)}
+.dock svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dock .on{background:linear-gradient(165deg,#F7FCF8 0%,#D9EEDF 55%,#B8D9C2 100%);color:#0E2416;
+ transform:translateY(-3px);
+ box-shadow:0 6px 18px rgba(130,200,155,.45), 0 1px 0 rgba(255,255,255,.9) inset, 0 -6px 14px -8px rgba(14,36,22,.5) inset}
+.dock .roll{animation:diceroll .5s ease}
+@keyframes diceroll{0%{transform:rotate(0)}40%{transform:rotate(-14deg) scale(1.08)}
 
 footer{background:var(--forest-dd);color:var(--mute);padding:32px 0 40px;font-size:13.5px;line-height:1.7;border-top:1px solid var(--line)}
 footer a{color:var(--cream-2)}
@@ -240,11 +259,14 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
 
 <main id="shelves"><div class="wrap" id="shelfHost"></div></main>
 
-<nav class="tabbar" aria-label="Quick links">
+<nav class="tabbar" aria-label="Shop dock">
+ <div class="dock">
   <a href="/"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home</a>
-  <a href="/shop.html" class="cur" aria-current="page"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>Shop</a>
-  <button id="tabSearch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>Search</button>
-  <a href="mailto:anthonye@aexperiences.studio?subject=App%20Shop"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Contact</a>
+  <button id="dkBiz"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>Business</button>
+  <button id="dkMe" class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>Personal</button>
+  <button id="dkFind"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>Search</button>
+  <button id="dkLucky"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="9" cy="9" r="1.3" fill="currentColor"/><circle cx="15" cy="9" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="9" cy="15" r="1.3" fill="currentColor"/><circle cx="15" cy="15" r="1.3" fill="currentColor"/></svg>Surprise</button>
+ </div>
 </nav>
 
 <footer>
@@ -472,6 +494,33 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
      resolves — it renders from the baked-in copy first, so a slow or dead pricing
      service costs freshness, never the whole shop. */
   C.refreshPrices().then(function(){ render(); });
+})();
+</script>
+<script>
+(function(){
+ function buzz(n){if(navigator.vibrate)navigator.vibrate(n||8)}
+ function segClick(a){var b=document.querySelector('#seg [data-aisle="'+a+'"]');if(b)b.click();}
+ function setOn(el){["dkBiz","dkMe"].forEach(function(id){document.getElementById(id).classList.remove("on")});if(el)el.classList.add("on")}
+ var biz=document.getElementById("dkBiz"),me=document.getElementById("dkMe");
+ biz.onclick=function(){buzz();segClick("business");setOn(biz);window.scrollTo({top:document.getElementById("shelves").offsetTop-140,behavior:"smooth"})};
+ me.onclick=function(){buzz();segClick("personal");setOn(me);window.scrollTo({top:document.getElementById("shelves").offsetTop-140,behavior:"smooth"})};
+ document.getElementById("dkFind").onclick=function(){buzz();var q=document.getElementById("q");
+   window.scrollTo({top:0,behavior:"smooth"});setTimeout(function(){q.focus()},350)};
+ document.getElementById("dkLucky").onclick=function(){
+   buzz([10,30,10]);this.classList.remove("roll");void this.offsetWidth;this.classList.add("roll");
+   try{
+     var pool=(window.C&&C.CATALOG?C.CATALOG:window.CATALOG||[]).filter(function(a){return a.state==="live"&&a.url&&a.genre!=="business"});
+     if(!pool.length)return;
+     var pick=pool[Math.floor(Math.random()*pool.length)];
+     var self=this;setTimeout(function(){location.href=pick.url},420);
+   }catch(e){}
+ };
+ /* keep dock in sync if user taps the top segs */
+ var seg=document.getElementById("seg");
+ if(seg)seg.addEventListener("click",function(e){
+   var a=e.target&&e.target.dataset?e.target.dataset.aisle:null;
+   if(a==="business")setOn(biz);else if(a==="personal")setOn(me);else setOn(null);
+ });
 })();
 </script>
 </body>
