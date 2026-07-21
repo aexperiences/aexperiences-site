@@ -5,8 +5,8 @@
   "start_url": "/apps/espotrek/",
   "scope": "/apps/espotrek/",
   "display": "standalone",
-  "background_color": "#12303E",
-  "theme_color": "#12303E",
+  "background_color": "#F7EFDF",
+  "theme_color": "#F6D9A0",
   "icons": [
     { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
     { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }

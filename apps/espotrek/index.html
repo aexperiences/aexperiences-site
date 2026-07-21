@@ -5,74 +5,139 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ESPOtrek — plan the trip, keep the plan</title>
 <meta name="description" content="A fast, calm trip planner: days, stops, one-tap Google Maps routes, a budget that splits itself, a printable one-pager, and free calendar export. Works offline by default — your itinerary lives on your device. By Accelerated Experiences, LLC.">
-<meta name="theme-color" content="#12303E">
+<meta name="theme-color" content="#F6D9A0">
 <link rel="manifest" href="/apps/espotrek/manifest.webmanifest">
 <link rel="icon" href="/apps/espotrek/icon.png">
 <link rel="apple-touch-icon" href="/apps/espotrek/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#12303E; --bg2:#1A3E4F; --card:#204A5D; --ink:#EDF6F9; --ink2:#9FC2CF;
-  --acc:#F0B95E; --sea:#6FC7C0; --line:#2C5A70; --ok:#8BC7A0; --rose:#E8907F;
-  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  /* the golden-hour coast */
+  --bg:#F7EFDF; --bg2:#F0E5CE; --card:#FEFAF0; --ink:#463A28; --ink2:#8F7E62;
+  --acc:#B07F24; --accbtn:#E8B45A; --sea:#3E8278; --seasoft:#9CCFC5; --line:#E8DBBE; --ok:#5E7D4E; --rose:#C9705C;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --serif:"Fraunces","Iowan Old Style",Georgia,serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
   padding-bottom:calc(30px + env(safe-area-inset-bottom))}
-header{padding:calc(14px + env(safe-area-inset-top)) 18px 10px;display:flex;align-items:center;gap:10px;max-width:720px;margin:0 auto}
-header img{width:34px;height:34px;border-radius:9px}
-header .t{font-size:19px;font-weight:700}
-header .t b{color:var(--acc)}
-header .off{margin-left:auto;font-size:12px;color:var(--ink2);background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
-main{max-width:720px;margin:0 auto;padding:6px 18px 24px}
-h2{font-size:22px;margin:14px 0 4px}
-.sub{color:var(--ink2);font-size:14.5px;line-height:1.55;margin-bottom:12px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}
-.card h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:8px}
-button{font-family:var(--sans);cursor:pointer;border:0;border-radius:12px;font-size:15px}
-.b1{background:var(--acc);color:#33260c;padding:13px 18px;font-weight:700;width:100%;margin-top:12px}
-.b2{background:var(--bg2);color:var(--ink);border:1px solid var(--line);padding:11px 14px}
-input,select{background:var(--bg2);border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:15.5px;padding:12px;width:100%}
-input:focus{outline:2px solid var(--acc)}
-label{font-size:13px;color:var(--ink2);display:block;margin:12px 0 5px}
+
+/* ── golden-hour horizon ── */
+header{position:relative;background:linear-gradient(180deg,#F6D9A0 0%,#F0BC7E 55%,#E8A468 78%,#DB9058 100%);
+  padding:calc(16px + env(safe-area-inset-top)) 18px 0;overflow:hidden}
+header .sun{position:absolute;right:70px;bottom:16px;width:42px;height:42px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,#FFF3D6,#F7DC9E);
+  box-shadow:0 0 26px 8px rgba(255,236,190,.55),0 0 70px 22px rgba(255,225,160,.25)}
+.mast{position:relative;max-width:720px;margin:0 auto;display:flex;align-items:center;gap:11px;padding-bottom:34px;z-index:2}
+.mast img{width:36px;height:36px;border-radius:10px;box-shadow:0 2px 10px rgba(70,58,40,.3)}
+.mast .t{font-family:var(--serif);font-size:21px;font-weight:400;color:#4A3218}
+.mast .t b{font-weight:600;font-style:italic;color:#7C4A14}
+.mast .tag{font-size:10px;color:#8A5A24;letter-spacing:.24em;text-transform:uppercase;margin-top:2px}
+.off{margin-left:auto;font-size:11.5px;font-weight:600;color:#6E4515;border:1px solid rgba(110,69,21,.4);
+  background:rgba(255,243,214,.35);border-radius:999px;padding:5px 12px}
+header .sea{display:block;width:calc(100% + 36px);margin:0 -18px;position:relative;z-index:1}
+
+main{max-width:720px;margin:0 auto;padding:8px 18px 24px}
+h2{font-family:var(--serif);font-size:27px;font-weight:500;margin:16px 0 4px;letter-spacing:-.01em}
+.sub{color:var(--ink2);font-size:14.5px;line-height:1.6;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:14px;
+  box-shadow:0 2px 4px rgba(70,58,40,.04),0 14px 34px -24px rgba(70,58,40,.25)}
+.card h3{display:flex;align-items:center;gap:10px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin-bottom:8px;font-weight:700}
+.card h3::after{content:"";flex:1;height:1px;background:var(--line)}
+button{font-family:var(--sans);cursor:pointer;border:0;border-radius:12px;font-size:15px;transition:transform .12s ease,background .15s ease,border-color .15s ease,color .15s ease}
+button:active{transform:scale(.97)}
+.b1{background:var(--accbtn);color:#33260c;padding:13px 18px;font-weight:700;width:100%;margin-top:12px;
+  box-shadow:0 6px 16px -9px rgba(232,180,90,.65)}
+.b1:hover{background:#F2C26C}
+.b2{background:transparent;color:var(--ink);border:1.5px solid var(--line);padding:11px 14px;font-weight:600}
+.b2:hover{border-color:var(--sea);color:var(--sea)}
+input,select{background:#FFFDF6;border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:15.5px;padding:12px;width:100%;font-family:var(--sans)}
+input:focus,select:focus{outline:2px solid var(--accbtn);border-color:transparent}
+::placeholder{color:#B3A382}
+label{font-size:12.5px;color:var(--ink2);display:block;margin:12px 0 5px;font-weight:500}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .hint{font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:10px}
-.empty{color:var(--ink2);font-size:14.5px;text-align:center;padding:26px 10px;line-height:1.6}
+.empty{color:var(--ink2);font-size:15px;text-align:center;padding:26px 12px;line-height:1.65;font-family:var(--serif);font-style:italic}
 
-/* trips list */
-.trip{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px;cursor:pointer}
+/* trips list — postcards */
+.trip{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px;cursor:pointer;
+  transition:transform .15s ease,box-shadow .15s ease}
+.trip:hover{transform:translateY(-1px);box-shadow:0 10px 26px -16px rgba(70,58,40,.35)}
 .trip .e{font-size:28px}
 .trip .m{flex:1}
-.trip .m b{font-size:17px;display:block}
+.trip .m b{font-family:var(--serif);font-size:18px;font-weight:600;display:block}
 .trip .m span{font-size:13px;color:var(--ink2)}
 .trip button{background:none;color:var(--ink2);font-size:13px}
 
 /* day + stops */
-.day{margin-top:20px}
-.day h4{font-size:15px;color:var(--sea);letter-spacing:.06em;display:flex;align-items:center;gap:10px}
-.day h4 .route{margin-left:auto;font-size:12.5px;color:var(--acc);text-decoration:none;background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
-.stop{display:flex;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:8px;align-items:flex-start}
+.day{margin-top:22px}
+.day h4{font-size:12.5px;color:var(--sea);letter-spacing:.16em;text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:10px}
+.day h4 .route{margin-left:auto;font-size:12px;color:#6E4515;text-decoration:none;background:rgba(232,180,90,.2);border:1px solid rgba(176,127,36,.35);border-radius:999px;padding:4px 12px;letter-spacing:0;text-transform:none;font-weight:600}
+.day h4 .route:hover{background:rgba(232,180,90,.35)}
+.stop{display:flex;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:8px;align-items:flex-start;
+  box-shadow:0 2px 4px rgba(70,58,40,.04)}
 .stop .tm{font-size:12.5px;color:var(--acc);min-width:52px;font-weight:700;padding-top:2px}
 .stop .m{flex:1;min-width:0}
 .stop .m b{font-size:15.5px;display:block}
 .stop .m span{font-size:13px;color:var(--ink2);display:block;margin-top:2px}
-.stop .m a{font-size:12.5px;color:var(--sea)}
+.stop .m a{font-size:12.5px;color:var(--sea);font-weight:600}
 .stop .cost{font-size:13px;color:var(--ink2);white-space:nowrap}
 .stop .up,.stop .dn,.stop .rm{background:none;color:var(--ink2);font-size:13px;padding:2px 5px}
+.stop .up:hover,.stop .dn:hover,.stop .rm:hover{color:var(--sea)}
 .addstop{margin-top:8px}
 
 /* budget bar */
 .bud{display:flex;gap:10px;margin-top:12px}
-.bud div{flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
-.bud b{display:block;font-size:19px;color:var(--acc)}
+.bud div{flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:11px;text-align:center}
+.bud b{display:block;font-family:var(--serif);font-size:21px;font-weight:600;color:var(--acc)}
 .bud span{font-size:11.5px;color:var(--ink2)}
 
 .backbar{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .backbar .b2{flex:1;min-width:110px;text-align:center}
 
-footer{max-width:720px;margin:26px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.6}
+footer{max-width:720px;margin:28px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.7;text-align:center}
+footer .fl{color:var(--sea);font-size:13px;margin-bottom:6px;letter-spacing:.5em}
 .toast{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));transform:translateX(-50%);
-  background:var(--acc);color:#33260c;font-size:14px;font-weight:700;border-radius:999px;padding:9px 18px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
-.toast.on{opacity:1}
+  background:var(--accbtn);color:#33260c;font-size:14px;font-weight:700;border-radius:999px;padding:10px 20px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60;
+  box-shadow:0 10px 24px -12px rgba(70,58,40,.4)}
+.toast.on{opacity:1;animation:tpop .4s ease}
+@keyframes tpop{0%{transform:translateX(-50%) scale(.85)}55%{transform:translateX(-50%) scale(1.06)}100%{transform:translateX(-50%) scale(1)}}
+
+
+/* ── trail conditions (offline-first) ── */
+.cxchip{background:rgba(62,130,120,.12);color:var(--sea);border:1px solid rgba(62,130,120,.35);border-radius:999px;
+  font-size:12px;font-weight:700;padding:4px 12px;margin-top:6px;display:inline-block}
+.cxchip:hover{background:rgba(62,130,120,.2)}
+.cx{background:var(--bg2);border:1px solid var(--line);border-radius:0 0 14px 14px;margin:-6px 0 0;padding:14px;
+  border-top:0}
+.cx .age{font-size:11.5px;color:var(--ink2);display:flex;align-items:center;gap:8px}
+.cx .age button{background:none;color:var(--sea);font-size:12px;font-weight:700;padding:2px 6px}
+.cxrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.badge{font-size:12.5px;font-weight:700;border-radius:999px;padding:5px 12px}
+.badge.mud{background:#E9D9BC;color:#6E4A15}
+.badge.dry{background:#DFE9D8;color:#3E5C3D}
+.badge.hot{background:#F2D7C4;color:#8A4A20}
+.badge.wind{background:#DCE6E4;color:#3E6259}
+.badge.closed{background:#F2D0CB;color:#8A2F24}
+.badge.crowd{background:#EFD9E6;color:#7A3560}
+.badge.clear{background:#DFE9D8;color:#3E5C3D}
+.cx .reps{margin-top:10px}
+.cx .rep{display:flex;gap:8px;align-items:baseline;font-size:13.5px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.cx .rep:last-child{border-bottom:0}
+.cx .rep .k{font-weight:700}
+.cx .rep .w{color:var(--ink2);font-size:12px;margin-left:auto;white-space:nowrap}
+.cx .say{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);font-weight:700;margin-top:12px}
+.cx .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.cx .btns button{flex:1;min-width:96px;background:var(--card);border:1.5px solid var(--line);color:var(--ink);
+  border-radius:10px;font-size:13px;font-weight:700;padding:9px 6px}
+.cx .btns button:hover{border-color:var(--sea);color:var(--sea)}
+.cx .fine{font-size:11.5px;color:var(--ink2);line-height:1.5;margin-top:10px}
+.cx .queued{background:#E9D9BC;color:#6E4A15;font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;display:inline-block;margin-top:8px}
+.cx .none{font-family:var(--serif);font-style:italic;color:var(--ink2);font-size:13.5px;padding:6px 0}
+#packBtn{border-color:var(--sea);color:var(--sea)}
+#packBtn:hover{background:rgba(62,130,120,.08)}
 
 /* print: the one-pager */
 @media print{
@@ -90,9 +155,21 @@ footer{max-width:720px;margin:26px auto 0;padding:0 18px;font-size:12px;color:va
 </head>
 <body>
 <header>
-  <img src="/apps/espotrek/icon.png" alt="">
-  <div class="t">ESPO<b>trek</b></div>
-  <div class="off">✈️ Works offline</div>
+  <div class="sun"></div>
+  <div class="mast">
+    <img src="/apps/espotrek/icon.png" alt="">
+    <div>
+      <div class="t">ESPO<b>trek</b></div>
+      <div class="tag">Plan the Trip · Keep the Plan</div>
+    </div>
+    <div class="off">✈️ Works offline</div>
+  </div>
+  <svg class="sea" viewBox="0 0 430 34" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 12 Q 54 4 108 10 T 216 10 T 324 9 T 430 11 V 34 H 0 Z" fill="#3E8278"/>
+    <path d="M0 20 Q 60 13 120 18 T 240 18 T 360 17 T 430 19 V 34 H 0 Z" fill="#356F66" opacity=".9"/>
+    <path d="M300 8 L340 8" stroke="#F7DC9E" stroke-width="2" opacity=".8" stroke-linecap="round"/>
+    <path d="M290 13 L352 13" stroke="#F7DC9E" stroke-width="1.4" opacity=".5" stroke-linecap="round"/>
+  </svg>
 </header>
 
 <main>
@@ -133,16 +210,17 @@ footer{max-width:720px;margin:26px auto 0;padding:0 18px;font-size:12px;color:va
     </div>
     <div id="days"></div>
     <div class="backbar no-print">
+      <button class="b2" id="packBtn">⤓ Trail Pack</button>
       <button class="b2" onclick="window.print()">🖨 Print one-pager</button>
       <button class="b2" id="expCsv">CSV</button>
       <button class="b2" id="expIcs">Calendar (.ics)</button>
       <button class="b2" id="backBtn">← All trips</button>
     </div>
-    <p class="hint no-print">Print and export are free — it's your trip. Map links open Google Maps; the day route strings every stop into one drive.</p>
+    <p class="hint no-print">Print and export are free — it's your trip. Map links open Google Maps; the day route strings every stop into one drive.<br><b>Trail Pack</b> caches every stop's conditions and hiker reports on this phone before you lose signal — scattered forum wisdom, turned into something that works deep in the thicket. While you have bars, it quietly re-checks. (For offline map tiles, use Maps → Download offline area once — Google doesn't let apps cache those.)</p>
   </section>
 </main>
 
-<footer>ESPOtrek · part of the ESPOtravel family · Accelerated Experiences, LLC — Post Falls, Idaho.
+<footer><div class="fl">✈</div>ESPOtrek · part of the ESPOtravel family · Accelerated Experiences, LLC — Post Falls, Idaho.
 No ads. No trackers. Offline by default — your itinerary is yours.</footer>
 <div class="toast" id="toast"></div>
 
@@ -151,7 +229,7 @@ var K="espotrek.v1",S;
 try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
 S.trips=S.trips||[];
 function save(){localStorage.setItem(K,JSON.stringify(S))}
-function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1700)}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.remove("on");void t.offsetWidth;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1700)}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 var cur=-1;
 
@@ -229,9 +307,10 @@ function drawTrip(){
     stops.forEach(function(s){
       h+='<div class="stop"><div class="tm">'+(s.time||'—')+'</div><div class="m"><b>'+esc(s.place)+'</b>'
         +(s.note?'<span>'+esc(s.note)+'</span>':'')
-        +'<a class="no-print" target="_blank" rel="noopener" href="'+mapsQ(s.place)+'">Open in Maps ↗</a></div>'
+        +'<a class="no-print" target="_blank" rel="noopener" href="'+mapsQ(s.place)+'">Open in Maps ↗</a> <button class="cxchip no-print" data-cx="'+s._i+'" data-place="'+esc(s.place)+'">🥾 Conditions</button></div>'
         +(s.cost?'<div class="cost">$'+esc(s.cost)+'</div>':'')
-        +'<button class="rm no-print" data-rm="'+s._i+'">✕</button></div>';
+        +'<button class="rm no-print" data-rm="'+s._i+'">✕</button></div>'
+      h+='<div class="cx no-print" id="cx'+s._i+'" style="display:none" data-place="'+esc(s.place)+'"></div>';
     });
     h+='</div>';
   }
@@ -239,6 +318,7 @@ function drawTrip(){
   el.querySelectorAll("[data-rm]").forEach(function(b){
     b.onclick=function(){S.trips[cur].stops.splice(+b.dataset.rm,1);save();drawTrip()};
   });
+  wireCx();
 }
 document.getElementById("sAdd").onclick=function(){
   var place=document.getElementById("sPlace").value.trim();
@@ -280,8 +360,155 @@ document.getElementById("expIcs").onclick=function(){
   a.download=t.name.replace(/[^a-z0-9]+/gi,"-")+".ics";a.click();
   toast("Calendar exported 📅");
 };
+
+/* ── trail conditions: offline-first, smart cache ── */
+S.cx=S.cx||{geo:{},wx:{},rep:{},q:[]};
+function slugp(p){return String(p).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,80)}
+function ago(t){if(!t)return"never";var m=Math.round((Date.now()-t)/6e4);
+  return m<1?"just now":m<60?m+"m ago":m<1440?Math.round(m/60)+"h ago":Math.round(m/1440)+"d ago"}
+function online(){return typeof navigator.onLine!=="boolean"||navigator.onLine}
+function jfetch(u,opt){return fetch(u,opt).then(function(r){if(!r.ok)throw 0;return r.json()})}
+function getGeo(place){
+  var k=slugp(place);
+  if(S.cx.geo[k])return Promise.resolve(S.cx.geo[k]);
+  if(!online())return Promise.reject(0);
+  return jfetch("https://geocoding-api.open-meteo.com/v1/search?count=1&name="+encodeURIComponent(place))
+    .then(function(j){var r=j.results&&j.results[0];if(!r)throw 0;
+      S.cx.geo[k]={la:r.latitude,lo:r.longitude,n:r.name};save();return S.cx.geo[k]});
+}
+function getWx(place,force){
+  var k=slugp(place),c=S.cx.wx[k];
+  if(c&&!force&&Date.now()-c.at<36e5)return Promise.resolve(c);
+  if(!online())return c?Promise.resolve(c):Promise.reject(0);
+  return getGeo(place).then(function(g){
+    return jfetch("https://api.open-meteo.com/v1/forecast?latitude="+g.la+"&longitude="+g.lo
+      +"&current=temperature_2m,precipitation,wind_gusts_10m&daily=precipitation_sum,temperature_2m_max"
+      +"&past_days=3&forecast_days=2&temperature_unit=fahrenheit&precipitation_unit=inch&wind_speed_unit=mph&timezone=auto");
+  }).then(function(j){
+    var past=0,i;for(i=0;i<3&&j.daily&&j.daily.precipitation_sum;i++)past+=(j.daily.precipitation_sum[i]||0);
+    var w={at:Date.now(),past3:Math.round(past*100)/100,
+      now:j.current?Math.round(j.current.temperature_2m):null,
+      gust:j.current?Math.round(j.current.wind_gusts_10m):null,
+      hi:j.daily&&j.daily.temperature_2m_max?Math.round(j.daily.temperature_2m_max[3]||j.daily.temperature_2m_max[0]):null,
+      rainNow:j.current?j.current.precipitation:0};
+    S.cx.wx[slugp(place)]=w;save();return w;
+  }).catch(function(){if(c)return c;throw 0});
+}
+function getReps(place,force){
+  var k=slugp(place),c=S.cx.rep[k];
+  if(c&&!force&&Date.now()-c.at<6e5)return Promise.resolve(c);
+  if(!online())return c?Promise.resolve(c):Promise.resolve({at:0,en:false,list:[]});
+  return jfetch("/api/trail-reports?place="+k)
+    .then(function(j){var r={at:Date.now(),en:!!j.enabled,list:j.reports||[]};S.cx.rep[k]=r;save();return r})
+    .catch(function(){return c||{at:0,en:false,list:[]}});
+}
+var REPK={muddy:["\U0001F4A7","Muddy","mud"],closed:["⛔","Closed","closed"],crowded:["\U0001F465","Crowded","crowd"],clear:["✓","All clear","clear"]};
+function postRep(place,kind){
+  var item={place:slugp(place),k:kind,t:Date.now()};
+  if(!online()){S.cx.q.push(item);save();toast("No bars — queued, sends when signal returns");renderCxOpen();return}
+  sendRep(item).then(function(ok){
+    toast(ok?"Reported — thanks, hiker \U0001F97E":"Reports aren't switched on yet");
+    return getReps(place,true);
+  }).then(renderCxOpen).catch(function(){S.cx.q.push(item);save();toast("Couldn't send — queued");renderCxOpen()});
+}
+function sendRep(item){
+  return jfetch("/api/trail-reports",{method:"POST",headers:{"content-type":"application/json"},
+    body:JSON.stringify(item)}).then(function(j){return !!j.ok}).catch(function(){throw 0});
+}
+function flushQ(){
+  if(!online()||!S.cx.q.length)return;
+  var q=S.cx.q.slice();S.cx.q=[];save();
+  var chain=Promise.resolve();
+  q.forEach(function(it){chain=chain.then(function(){return sendRep(it).catch(function(){S.cx.q.push(it);save()})})});
+  chain.then(function(){if(q.length&&!S.cx.q.length)toast("Queued reports sent ✓")});
+}
+function mudBadge(w){
+  if(w.past3>=1)return '<span class="badge mud">\U0001F4A7 '+w.past3+'in rain last 3 days — expect mud</span>';
+  if(w.past3>=0.3)return '<span class="badge mud">\U0001F4A7 '+w.past3+'in recent rain — soft spots</span>';
+  return '<span class="badge dry">☀ dry 3 days — firm trail</span>';
+}
+function cxHtml(place){
+  var k=slugp(place),w=S.cx.wx[k],r=S.cx.rep[k],h="";
+  h+='<div class="age">Conditions · checked '+(w?ago(w.at):"never")
+    +(online()?"":" · <b>offline — showing last check</b>")
+    +' <button data-refresh="'+esc(place)+'">↻ refresh</button></div>';
+  if(w){
+    h+='<div class="cxrow">'+mudBadge(w)
+      +(w.now!=null?'<span class="badge '+(w.now>=88?'hot':'wind')+'">\U0001F321 '+w.now+'°F now'+(w.hi?' · high '+w.hi+'°':'')+'</span>':'')
+      +(w.gust>=20?'<span class="badge wind">\U0001F32C gusts '+w.gust+'mph</span>':'')+'</div>';
+  }else{
+    h+='<div class="none">'+(online()?"Tap refresh to pull weather-truth for this stop.":"No cached weather — pack the trail before you lose signal.")+'</div>';
+  }
+  h+='<div class="say">Recent hikers</div><div class="reps">';
+  if(r&&r.list.length){
+    r.list.slice(0,6).forEach(function(x){var d=REPK[x.k]||["•",x.k,"clear"];
+      h+='<div class="rep"><span class="k"><span class="badge '+d[2]+'">'+d[0]+' '+d[1]+'</span></span>'
+        +(x.note?'<span>'+esc(x.note)+'</span>':'')+'<span class="w">'+ago(x.t)+'</span></div>';});
+  }else if(r&&!r.en){
+    h+='<div class="none">Live hiker reports switch on soon — your taps below queue for when they do.</div>';
+  }else{
+    h+='<div class="none">No reports yet — be the first boots on the ground.</div>';
+  }
+  h+='</div><div class="say">What do you see right now?</div><div class="btns">'
+    +'<button data-rep="muddy" data-place="'+esc(place)+'">\U0001F4A7 Muddy</button>'
+    +'<button data-rep="closed" data-place="'+esc(place)+'">⛔ Closed</button>'
+    +'<button data-rep="crowded" data-place="'+esc(place)+'">\U0001F465 Crowded</button>'
+    +'<button data-rep="clear" data-place="'+esc(place)+'">✓ All clear</button></div>';
+  if(S.cx.q.length)h+='<div class="queued">⏳ '+S.cx.q.length+' report'+(S.cx.q.length>1?'s':'')+' queued for signal</div>';
+  h+='<div class="fine">Weather is real (Open-Meteo, last 72h of rain — the mud call is honest math, not vibes). Reports are shared publicly with other ESPOtrek hikers and expire after 7 days. Your itinerary never leaves this device.</div>';
+  return h;
+}
+var cxOpen=null;
+function renderCxOpen(){
+  if(cxOpen==null)return;
+  var el=document.getElementById("cx"+cxOpen);
+  if(el&&el.style.display!=="none")el.innerHTML=cxHtml(el.dataset.place);
+}
+function wireCx(){
+  document.querySelectorAll("[data-cx]").forEach(function(b){
+    b.onclick=function(){
+      var i=b.dataset.cx,el=document.getElementById("cx"+i);
+      if(el.style.display==="none"){el.style.display="block";cxOpen=i;el.innerHTML=cxHtml(el.dataset.place);
+        getWx(el.dataset.place).then(renderCxOpen).catch(function(){});getReps(el.dataset.place).then(renderCxOpen);}
+      else{el.style.display="none";cxOpen=null}
+    };
+  });
+  document.getElementById("days").onclick=function(e){
+    var t=e.target.closest("button");if(!t)return;
+    if(t.dataset.refresh){getWx(t.dataset.refresh,true).then(renderCxOpen).catch(function(){toast("No signal — showing cached")});getReps(t.dataset.refresh,true).then(renderCxOpen)}
+    if(t.dataset.rep)postRep(t.dataset.place,t.dataset.rep);
+  };
+}
+document.getElementById("packBtn").onclick=function(){
+  var t=S.trips[cur];if(!t||!t.stops.length){toast("Add stops first");return}
+  if(!online()){toast("No signal — pack while you still have bars");return}
+  toast("Packing the trail…");
+  var uniq={};t.stops.forEach(function(x){uniq[slugp(x.place)]=x.place});
+  var places=Object.keys(uniq).map(function(k){return uniq[k]});
+  var done=0,chain=Promise.resolve();
+  places.forEach(function(pl){
+    chain=chain.then(function(){return getWx(pl,true).catch(function(){})})
+               .then(function(){return getReps(pl,true)})
+               .then(function(){done++});
+  });
+  chain.then(function(){
+    var reps=0;Object.keys(S.cx.rep).forEach(function(k){reps+=(S.cx.rep[k].list||[]).length});
+    toast("⤓ Trail Pack: "+done+" stops cached · weather + "+reps+" reports — good to go dark");
+    renderCxOpen();
+  });
+};
+/* keep updating as you hike: every 10 min while online, and the moment signal returns */
+setInterval(function(){
+  if(!online()||cur<0)return;
+  var t=S.trips[cur];if(!t)return;
+  var uniq={};t.stops.forEach(function(x){uniq[slugp(x.place)]=x.place});
+  Object.keys(uniq).forEach(function(k){getReps(uniq[k],true).then(renderCxOpen)});
+},6e5);
+window.addEventListener("online",function(){flushQ();renderCxOpen();toast("Signal's back — syncing \U0001F4E1")});
+flushQ();
+
 drawList();
-if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/espotrek/sw.js");
+if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/espotrek/sw.js").catch(function(){});
 </script>
 </body>
 </html>
