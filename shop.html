@@ -294,14 +294,14 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     return '<span class="get">Open</span>';
   }
   function subline(a){
-    if(a.state==='dev') return 'In development' + (a.family?' · '+a.family:'');
+    if(a.state==='dev') return 'In production' + (a.family?' · '+a.family:'');
     return a.price || '';
   }
 
   function rowApp(a){
     var b=document.createElement('button');
     b.className='row-app';
-    b.setAttribute('aria-label', a.name+' — '+(a.state==='dev'?'in development, not for sale yet':'open it'));
+    b.setAttribute('aria-label', a.name+' — '+(a.state==='dev'?'in production, not for sale yet':'open it'));
     b.innerHTML='<div class="icon" style="background:'+esc(a.acc)+'">'+iconHTML(a)+'</div>'
       +'<div class="meta"><div class="nm">'+esc(a.name)+(a.age?'<span class="badge-age">'+esc(a.age)+'</span>':'')+'</div>'
       +'<div class="tg">'+esc(a.tag)+'</div><div class="pr">'+esc(subline(a))+'</div></div>'
@@ -358,7 +358,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
 
     [ shelf(hubHead,'Every one is a live instance — walk in and use it before you talk to anyone.',hubs),
       shelf(appHead,'Tap one and you are inside it — the real app, not a preview.',apps),
-      shelf('In development','Being built now. No price yet and nothing to buy — leave your email and we will tell you the day it opens.',devOnes)
+      shelf('In production','Being built right now. No price yet and nothing to buy — leave your email and we will tell you the day it opens.',devOnes)
     ].forEach(function(s){ if(s) host.appendChild(s); });
 
     if(!shown.length){
