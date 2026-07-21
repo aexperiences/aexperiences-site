@@ -5,81 +5,126 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ESPOnatlparks — your park passport, stamped offline</title>
 <meta name="description" content="All 63 U.S. National Parks in a passport that stamps offline — one tap logs your visit with the date, no signal required, no visit ever lost. Free export, no ads, no trackers. By Accelerated Experiences, LLC.">
-<meta name="theme-color" content="#173428">
+<meta name="theme-color" content="#F2E3C0">
 <link rel="manifest" href="/apps/esponatlparks/manifest.webmanifest">
 <link rel="icon" href="/apps/esponatlparks/icon.png">
 <link rel="apple-touch-icon" href="/apps/esponatlparks/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#173428; --bg2:#1E4233; --card:#254E3D; --ink:#EDF6F0; --ink2:#A3C4B2;
-  --acc:#E8B44C; --pine:#7FC79A; --line:#2F5F4A; --stamp:#C9803A;
-  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  --serif:"Iowan Old Style",Georgia,serif;
+  /* the ranger's passport: kraft + pine + stamp ink */
+  --bg:#F1E6CC; --bg2:#E9DBB9; --card:#F9F1DD; --ink:#2C4032; --ink2:#6E7D64;
+  --acc:#A87828; --accbtn:#DFAE4E; --pine:#3E6247; --stamp:#B45E22; --stampink:#C9803A; --line:#DFCFA6;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --serif:"Fraunces","Iowan Old Style",Georgia,serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
-  padding-bottom:calc(76px + env(safe-area-inset-bottom))}
-header{padding:calc(14px + env(safe-area-inset-top)) 18px 10px;display:flex;align-items:center;gap:10px;max-width:680px;margin:0 auto}
-header img{width:34px;height:34px;border-radius:9px}
-header .t{font-size:19px;font-weight:700}
-header .t b{color:var(--acc)}
-header .cnt{margin-left:auto;font-size:13px;color:var(--ink2);background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
-main{max-width:680px;margin:0 auto;padding:6px 18px 24px}
-.view{display:none}.view.on{display:block;animation:up .25s ease}
-@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-h2{font-size:22px;margin:14px 0 4px}
-.sub{color:var(--ink2);font-size:14.5px;line-height:1.55;margin-bottom:12px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}
-button{font-family:var(--sans);cursor:pointer;border:0;border-radius:12px;font-size:15px}
-.b1{background:var(--acc);color:#33260c;padding:13px 18px;font-weight:700;width:100%;margin-top:12px}
-.b2{background:var(--bg2);color:var(--ink);border:1px solid var(--line);padding:12px 16px;width:100%;margin-top:10px}
-input,select{background:var(--bg2);border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:15.5px;padding:12px;width:100%}
-input:focus,select:focus{outline:2px solid var(--acc)}
-.hint{font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:10px}
+  padding-bottom:calc(80px + env(safe-area-inset-bottom));position:relative}
+/* kraft grain */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.4;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='130'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .33 0 0 0 0 .2 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='130' height='130' filter='url(%23n)'/%3E%3C/svg%3E")}
+header,main,nav,footer,.toast{position:relative;z-index:1}
+
+/* ── WPA poster masthead ── */
+header{position:relative;background:linear-gradient(180deg,#F2E3C0 0%,#EDD9A8 60%,#E8CE96 100%);
+  padding:calc(16px + env(safe-area-inset-top)) 18px 0;overflow:hidden}
+.mast{position:relative;max-width:680px;margin:0 auto;display:flex;align-items:center;gap:11px;padding-bottom:40px;z-index:2}
+.mast img{width:36px;height:36px;border-radius:10px;box-shadow:0 2px 10px rgba(44,64,50,.3)}
+.mast .t{font-family:var(--serif);font-size:21px;font-weight:400;color:#2C4032}
+.mast .t b{font-weight:600;font-style:italic;color:#5A3D14}
+.mast .tag{font-size:10px;color:#7A6430;letter-spacing:.24em;text-transform:uppercase;margin-top:2px}
+.cnt{margin-left:auto;font-size:12px;font-weight:700;color:#5A3D14;border:1px solid rgba(90,61,20,.4);
+  background:rgba(249,241,221,.4);border-radius:999px;padding:5px 12px}
+header .sun{position:absolute;right:64px;top:14px;width:38px;height:38px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,#FBEECB,#EFC96B);box-shadow:0 0 22px 6px rgba(239,201,107,.5)}
+header .ridge{display:block;width:calc(100% + 36px);margin:0 -18px;position:relative;z-index:1}
+
+main{max-width:680px;margin:0 auto;padding:8px 18px 24px}
+.view{display:none}.view.on{display:block;animation:up .3s ease}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+h2{font-family:var(--serif);font-size:27px;font-weight:500;margin:16px 0 4px;letter-spacing:-.01em}
+.sub{color:var(--ink2);font-size:14.5px;line-height:1.6;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:14px;
+  box-shadow:0 2px 4px rgba(44,64,50,.05),0 14px 34px -24px rgba(44,64,50,.3)}
+button{font-family:var(--sans);cursor:pointer;border:0;border-radius:12px;font-size:15px;transition:transform .12s ease,background .15s ease,border-color .15s ease,color .15s ease}
+button:active{transform:scale(.97)}
+.b1{background:var(--accbtn);color:#33260c;padding:13px 18px;font-weight:700;width:100%;margin-top:12px;
+  box-shadow:0 6px 16px -9px rgba(223,174,78,.65)}
+.b1:hover{background:#EABB5F}
+.b2{background:transparent;color:var(--pine);border:1.5px solid var(--pine);padding:12px 16px;width:100%;margin-top:10px;font-weight:600}
+.b2:hover{background:rgba(62,98,71,.07)}
+input,select{background:#FDF8EA;border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:15.5px;padding:12px;width:100%;font-family:var(--sans)}
+input:focus,select:focus{outline:2px solid var(--accbtn);border-color:transparent}
+::placeholder{color:#AB9C77}
+.hint{font-size:12.5px;color:var(--ink2);line-height:1.6;margin-top:10px}
 .filters{display:flex;gap:8px;margin-top:12px}
 .filters input{flex:2}.filters select{flex:1}
 
 /* park rows */
-.park{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:8px;cursor:pointer}
-.park .st{width:44px;height:44px;border-radius:50%;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:800;color:var(--ink2);flex-shrink:0;text-align:center;line-height:1}
-.park.visited .st{border:2px solid var(--stamp);color:var(--stamp);transform:rotate(-8deg);font-family:var(--serif)}
+.park{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:15px;padding:12px 14px;margin-top:8px;cursor:pointer;
+  transition:transform .15s ease,box-shadow .15s ease}
+.park:hover{transform:translateY(-1px);box-shadow:0 8px 22px -14px rgba(44,64,50,.35)}
+.park .st{width:46px;height:46px;border-radius:50%;border:2px dashed #C4B48A;display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:#A39366;flex-shrink:0;text-align:center;line-height:1}
+.park.visited .st{border:2.5px solid var(--stamp);color:var(--stamp);transform:rotate(-8deg);font-family:var(--serif);
+  box-shadow:inset 0 0 0 1.5px rgba(180,94,34,.25)}
 .park .m{flex:1;min-width:0}
 .park .m b{font-size:15.5px;display:block}
 .park .m span{font-size:12.5px;color:var(--ink2)}
 .park .tick{font-size:18px;color:var(--pine)}
+/* THE THUNK */
+@keyframes thunk{0%{transform:scale(2.6) rotate(-26deg);opacity:0}
+  55%{transform:scale(.9) rotate(-6deg);opacity:1}
+  72%{transform:scale(1.08) rotate(-9deg)}
+  100%{transform:scale(1) rotate(-8deg)}}
+.park .st.thunk{animation:thunk .38s cubic-bezier(.2,.8,.3,1)}
+@keyframes pageshake{0%,100%{transform:none}30%{transform:translateY(2px)}60%{transform:translateY(-1px)}}
+#parkList.shake{animation:pageshake .3s ease}
 
-/* passport grid */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:10px;margin-top:14px}
-.stampcell{aspect-ratio:1;border-radius:50%;border:2px dashed var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;
-  font-size:10px;color:var(--ink2);text-align:center;padding:4px;line-height:1.15}
+/* passport grid — the passport page */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:10px;margin-top:14px;
+  background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;
+  box-shadow:inset 0 0 0 4px var(--bg),inset 0 0 0 5px var(--line)}
+.stampcell{aspect-ratio:1;border-radius:50%;border:2px dashed #C4B48A;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:10px;color:#A39366;text-align:center;padding:4px;line-height:1.15}
 .stampcell b{font-size:13px;font-family:var(--serif)}
-.stampcell.on{border:2px solid var(--stamp);color:var(--stamp);transform:rotate(-7deg)}
+.stampcell.on{border:2.5px solid var(--stamp);color:var(--stamp);transform:rotate(-7deg);
+  box-shadow:inset 0 0 0 1.5px rgba(180,94,34,.25)}
 .stampcell.on small{font-size:8.5px;display:block;margin-top:2px}
 .bignum{text-align:center;padding:8px 0 2px}
-.bignum b{font-size:44px;color:var(--acc)}
+.bignum b{font-family:var(--serif);font-size:48px;font-weight:600;color:var(--stamp)}
 .bignum span{display:block;font-size:13px;color:var(--ink2)}
 
 /* modal */
-#modal{display:none;position:fixed;inset:0;background:rgba(13,26,20,.85);z-index:50;align-items:flex-end;justify-content:center}
+#modal{display:none;position:fixed;inset:0;background:rgba(30,42,28,.6);z-index:50;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)}
 #modal.on{display:flex}
-#mBox{background:var(--card);border:1px solid var(--line);border-radius:22px 22px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));width:100%;max-width:680px}
-#mBox h3{font-size:20px}
-#mBox .where{font-size:13px;color:var(--pine);margin-bottom:10px}
+#mBox{background:var(--card);border:1px solid var(--line);border-radius:22px 22px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));width:100%;max-width:680px;
+  box-shadow:0 -14px 44px rgba(44,64,50,.3)}
+#mBox h3{font-family:var(--serif);font-size:22px;font-weight:600}
+#mBox .where{font-size:12px;color:var(--pine);letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin-bottom:10px}
 #mVisits{margin-top:10px}
-#mVisits div{font-size:13.5px;color:var(--ink2);padding:5px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}
+#mVisits div{font-size:13.5px;color:var(--ink2);padding:6px 0;border-bottom:1px dashed var(--line);display:flex;justify-content:space-between}
 #mVisits button{background:none;color:var(--ink2);font-size:12px}
+#mVisits button:hover{color:var(--stamp)}
 
-nav{position:fixed;left:0;right:0;bottom:0;background:rgba(23,52,40,.96);backdrop-filter:blur(10px);
-  border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
-nav button{background:none;color:var(--ink2);font-size:11.5px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px}
-nav button.on{color:var(--acc)}
+nav{position:fixed;left:0;right:0;bottom:0;background:rgba(249,241,221,.92);backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:5}
+nav button{background:none;color:var(--ink2);font-size:11.5px;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px}
+nav button.on{color:var(--pine)}
+nav button.on::after{content:"";width:4px;height:4px;border-radius:50%;background:var(--accbtn);margin-top:1px}
 nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-footer{max-width:680px;margin:26px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.6}
-.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);
-  background:var(--acc);color:#33260c;font-size:14px;font-weight:700;border-radius:999px;padding:9px 18px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
-.toast.on{opacity:1}
-.empty{color:var(--ink2);font-size:14.5px;text-align:center;padding:26px 10px;line-height:1.6}
+footer{max-width:680px;margin:28px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.7;text-align:center}
+footer .fl{color:var(--pine);font-size:11px;margin-bottom:6px;letter-spacing:.6em}
+.toast{position:fixed;left:50%;bottom:calc(94px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--accbtn);color:#33260c;font-size:14px;font-weight:700;border-radius:999px;padding:10px 20px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60;
+  box-shadow:0 10px 24px -12px rgba(44,64,50,.45)}
+.toast.on{opacity:1;animation:tpop .4s ease}
+@keyframes tpop{0%{transform:translateX(-50%) scale(.85)}55%{transform:translateX(-50%) scale(1.06)}100%{transform:translateX(-50%) scale(1)}}
+.empty{color:var(--ink2);font-size:15px;text-align:center;padding:26px 12px;line-height:1.65;font-family:var(--serif);font-style:italic}
+@media (prefers-reduced-motion: reduce){.park .st.thunk,#parkList.shake{animation:none}}
 @media print{
   body{background:#fff;color:#111}
   header,nav,footer,.no-print,.toast{display:none!important}
@@ -92,9 +137,20 @@ footer{max-width:680px;margin:26px auto 0;padding:0 18px;font-size:12px;color:va
 </head>
 <body>
 <header>
-  <img src="/apps/esponatlparks/icon.png" alt="">
-  <div class="t">ESPO<b>natlparks</b></div>
-  <div class="cnt" id="cnt">—</div>
+  <div class="sun"></div>
+  <div class="mast">
+    <img src="/apps/esponatlparks/icon.png" alt="">
+    <div>
+      <div class="t">ESPO<b>natlparks</b></div>
+      <div class="tag">63 Parks · Stamped Offline</div>
+    </div>
+    <div class="cnt" id="cnt">—</div>
+  </div>
+  <svg class="ridge" viewBox="0 0 430 44" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 30 L48 14 L92 26 L150 8 L205 28 L258 12 L312 26 L368 10 L430 24 V44 H0 Z" fill="#6E8A58" opacity=".55"/>
+    <path d="M0 36 L60 22 L118 34 L180 16 L240 34 L300 20 L360 32 L430 18 V44 H0 Z" fill="#4A6B4C" opacity=".8"/>
+    <path d="M0 42 L70 30 L140 40 L215 26 L290 40 L360 30 L430 36 V44 H0 Z" fill="#2E4A36"/>
+  </svg>
 </header>
 
 <main>
@@ -153,7 +209,7 @@ footer{max-width:680px;margin:26px auto 0;padding:0 18px;font-size:12px;color:va
   </div>
 </div>
 
-<footer>ESPOnatlparks · part of the ESPOtravel family · Accelerated Experiences, LLC — Post Falls, Idaho.
+<footer><div class="fl">▲ ▲ ▲</div>ESPOnatlparks · part of the ESPOtravel family · Accelerated Experiences, LLC — Post Falls, Idaho.
 No ads. No trackers. Offline stamps — your visits are yours. Not affiliated with the National Park Service.</footer>
 <div class="toast" id="toast"></div>
 
@@ -179,7 +235,7 @@ var K="esponatlparks.v1",S;
 try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
 S.visits=S.visits||{}; // {parkIndex:[{d,note}]}
 function save(){localStorage.setItem(K,JSON.stringify(S))}
-function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1800)}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.remove("on");void t.offsetWidth;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1800)}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function initials(n){return n.split(/[\s-]+/).slice(0,2).map(function(w){return w[0]}).join("").toUpperCase()}
 function visitedCount(){return Object.keys(S.visits).filter(function(k){return S.visits[k]&&S.visits[k].length}).length}
@@ -233,6 +289,11 @@ document.getElementById("mStamp").onclick=function(){
   var d=document.getElementById("mDate").value||new Date().toISOString().slice(0,10);
   (S.visits[cur]=S.visits[cur]||[]).push({d:d,note:document.getElementById("mNote").value.trim()});
   save();drawVisits();drawParks();drawCnt();
+  var st=document.querySelector('.park[data-i="'+cur+'"] .st');
+  if(st){st.classList.add("thunk");setTimeout(function(){st.classList.remove("thunk")},460)}
+  var pl=document.getElementById("parkList");
+  if(pl){pl.classList.add("shake");setTimeout(function(){pl.classList.remove("shake")},340)}
+  if(navigator.vibrate)navigator.vibrate(20);
   toast("Stamped 🏞 — saved on this device, no signal needed");
 };
 document.getElementById("mClose").onclick=function(){document.getElementById("modal").classList.remove("on")};
@@ -273,7 +334,7 @@ document.querySelectorAll("nav button").forEach(function(b){
   };
 });
 drawParks();drawCnt();
-if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/esponatlparks/sw.js");
+if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/esponatlparks/sw.js").catch(function(){});
 </script>
 
 <nav>
