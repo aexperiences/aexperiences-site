@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESPOnatlparks — your park passport, stamped offline</title>
+<meta name="description" content="All 63 U.S. National Parks in a passport that stamps offline — one tap logs your visit with the date, no signal required, no visit ever lost. Free export, no ads, no trackers. By Accelerated Experiences, LLC.">
+<meta name="theme-color" content="#173428">
+<link rel="manifest" href="/apps/esponatlparks/manifest.webmanifest">
+<link rel="icon" href="/apps/esponatlparks/icon.png">
+<link rel="apple-touch-icon" href="/apps/esponatlparks/icon.png">
+<style>
+:root{
+  --bg:#173428; --bg2:#1E4233; --card:#254E3D; --ink:#EDF6F0; --ink2:#A3C4B2;
+  --acc:#E8B44C; --pine:#7FC79A; --line:#2F5F4A; --stamp:#C9803A;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --serif:"Iowan Old Style",Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
+  padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+header{padding:calc(14px + env(safe-area-inset-top)) 18px 10px;display:flex;align-items:center;gap:10px;max-width:680px;margin:0 auto}
+header img{width:34px;height:34px;border-radius:9px}
+header .t{font-size:19px;font-weight:700}
+header .t b{color:var(--acc)}
+header .cnt{margin-left:auto;font-size:13px;color:var(--ink2);background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+main{max-width:680px;margin:0 auto;padding:6px 18px 24px}
+.view{display:none}.view.on{display:block;animation:up .25s ease}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h2{font-size:22px;margin:14px 0 4px}
+.sub{color:var(--ink2);font-size:14.5px;line-height:1.55;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}
+button{font-family:var(--sans);cursor:pointer;border:0;border-radius:12px;font-size:15px}
+.b1{background:var(--acc);color:#33260c;padding:13px 18px;font-weight:700;width:100%;margin-top:12px}
+.b2{background:var(--bg2);color:var(--ink);border:1px solid var(--line);padding:12px 16px;width:100%;margin-top:10px}
+input,select{background:var(--bg2);border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:15.5px;padding:12px;width:100%}
+input:focus,select:focus{outline:2px solid var(--acc)}
+.hint{font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:10px}
+.filters{display:flex;gap:8px;margin-top:12px}
+.filters input{flex:2}.filters select{flex:1}
+
+/* park rows */
+.park{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:8px;cursor:pointer}
+.park .st{width:44px;height:44px;border-radius:50%;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:var(--ink2);flex-shrink:0;text-align:center;line-height:1}
+.park.visited .st{border:2px solid var(--stamp);color:var(--stamp);transform:rotate(-8deg);font-family:var(--serif)}
+.park .m{flex:1;min-width:0}
+.park .m b{font-size:15.5px;display:block}
+.park .m span{font-size:12.5px;color:var(--ink2)}
+.park .tick{font-size:18px;color:var(--pine)}
+
+/* passport grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:10px;margin-top:14px}
+.stampcell{aspect-ratio:1;border-radius:50%;border:2px dashed var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:10px;color:var(--ink2);text-align:center;padding:4px;line-height:1.15}
+.stampcell b{font-size:13px;font-family:var(--serif)}
+.stampcell.on{border:2px solid var(--stamp);color:var(--stamp);transform:rotate(-7deg)}
+.stampcell.on small{font-size:8.5px;display:block;margin-top:2px}
+.bignum{text-align:center;padding:8px 0 2px}
+.bignum b{font-size:44px;color:var(--acc)}
+.bignum span{display:block;font-size:13px;color:var(--ink2)}
+
+/* modal */
+#modal{display:none;position:fixed;inset:0;background:rgba(13,26,20,.85);z-index:50;align-items:flex-end;justify-content:center}
+#modal.on{display:flex}
+#mBox{background:var(--card);border:1px solid var(--line);border-radius:22px 22px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));width:100%;max-width:680px}
+#mBox h3{font-size:20px}
+#mBox .where{font-size:13px;color:var(--pine);margin-bottom:10px}
+#mVisits{margin-top:10px}
+#mVisits div{font-size:13.5px;color:var(--ink2);padding:5px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}
+#mVisits button{background:none;color:var(--ink2);font-size:12px}
+
+nav{position:fixed;left:0;right:0;bottom:0;background:rgba(23,52,40,.96);backdrop-filter:blur(10px);
+  border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
+nav button{background:none;color:var(--ink2);font-size:11.5px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px}
+nav button.on{color:var(--acc)}
+nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+footer{max-width:680px;margin:26px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.6}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--acc);color:#33260c;font-size:14px;font-weight:700;border-radius:999px;padding:9px 18px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
+.toast.on{opacity:1}
+.empty{color:var(--ink2);font-size:14.5px;text-align:center;padding:26px 10px;line-height:1.6}
+@media print{
+  body{background:#fff;color:#111}
+  header,nav,footer,.no-print,.toast{display:none!important}
+  .stampcell{color:#666;border-color:#bbb}
+  .stampcell.on{color:#a5622a;border-color:#a5622a}
+  .bignum b{color:#111}.bignum span{color:#444}
+  h2,.sub{color:#111}
+}
+</style>
+</head>
+<body>
+<header>
+  <img src="/apps/esponatlparks/icon.png" alt="">
+  <div class="t">ESPO<b>natlparks</b></div>
+  <div class="cnt" id="cnt">—</div>
+</header>
+
+<main>
+  <!-- PARKS -->
+  <section class="view on" id="v-parks">
+    <h2>The 63</h2>
+    <p class="sub">Every U.S. National Park. Tap one to stamp your visit — it saves instantly on this device,
+    signal or not. A visit can never be lost to a dead zone.</p>
+    <div class="filters no-print">
+      <input id="q" type="text" placeholder="Search parks…">
+      <select id="stateF"><option value="">All states</option></select>
+    </div>
+    <div id="parkList"></div>
+  </section>
+
+  <!-- PASSPORT -->
+  <section class="view" id="v-pass">
+    <h2>Your passport</h2>
+    <div class="bignum"><b id="passN">0</b><span>of 63 National Parks stamped</span></div>
+    <div class="grid" id="passGrid"></div>
+    <div class="no-print">
+      <button class="b2" onclick="window.print()">🖨 Print your passport page</button>
+      <button class="b2" id="expBtn">Export visits (.csv — always free)</button>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="view" id="v-set">
+    <h2>Settings</h2>
+    <div class="card">
+      <h3 style="color:var(--acc);font-size:12px;letter-spacing:.12em">YOUR DATA</h3>
+      <p class="hint">Every stamp lives on this device — no account, no cloud, no ads, no trackers.
+      Check-ins never need signal, because they never leave your phone. Export is free forever.</p>
+      <button class="b2" id="wipe">Erase everything</button>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--acc);font-size:12px;letter-spacing:.12em">COMING WITH PLUS</h3>
+      <p class="hint">The full National Park System — 400+ sites: monuments, historic sites, seashores, battlefields —
+      fed by the National Park Service's public data. The 63, your stamps and your export stay free forever.</p>
+    </div>
+  </section>
+</main>
+
+<!-- CHECK-IN MODAL -->
+<div id="modal">
+  <div id="mBox">
+    <h3 id="mName"></h3>
+    <div class="where" id="mState"></div>
+    <label style="font-size:13px;color:var(--ink2);display:block;margin:8px 0 5px">Visit date</label>
+    <input type="date" id="mDate">
+    <label style="font-size:13px;color:var(--ink2);display:block;margin:12px 0 5px">Note (optional)</label>
+    <input type="text" id="mNote" placeholder="saw a moose · hiked the rim · kids' first park">
+    <button class="b1" id="mStamp">🏞 Stamp it</button>
+    <div id="mVisits"></div>
+    <button class="b2" id="mClose">Close</button>
+  </div>
+</div>
+
+<footer>ESPOnatlparks · part of the ESPOtravel family · Accelerated Experiences, LLC — Post Falls, Idaho.
+No ads. No trackers. Offline stamps — your visits are yours. Not affiliated with the National Park Service.</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* The 63 U.S. National Parks — name + state(s) */
+var PARKS=[["Acadia","ME"],["American Samoa","AS"],["Arches","UT"],["Badlands","SD"],["Big Bend","TX"],
+["Biscayne","FL"],["Black Canyon of the Gunnison","CO"],["Bryce Canyon","UT"],["Canyonlands","UT"],
+["Capitol Reef","UT"],["Carlsbad Caverns","NM"],["Channel Islands","CA"],["Congaree","SC"],
+["Crater Lake","OR"],["Cuyahoga Valley","OH"],["Death Valley","CA/NV"],["Denali","AK"],
+["Dry Tortugas","FL"],["Everglades","FL"],["Gates of the Arctic","AK"],["Gateway Arch","MO"],
+["Glacier","MT"],["Glacier Bay","AK"],["Grand Canyon","AZ"],["Grand Teton","WY"],["Great Basin","NV"],
+["Great Sand Dunes","CO"],["Great Smoky Mountains","TN/NC"],["Guadalupe Mountains","TX"],
+["Haleakala","HI"],["Hawaii Volcanoes","HI"],["Hot Springs","AR"],["Indiana Dunes","IN"],
+["Isle Royale","MI"],["Joshua Tree","CA"],["Katmai","AK"],["Kenai Fjords","AK"],["Kings Canyon","CA"],
+["Kobuk Valley","AK"],["Lake Clark","AK"],["Lassen Volcanic","CA"],["Mammoth Cave","KY"],
+["Mesa Verde","CO"],["Mount Rainier","WA"],["New River Gorge","WV"],["North Cascades","WA"],
+["Olympic","WA"],["Petrified Forest","AZ"],["Pinnacles","CA"],["Redwood","CA"],["Rocky Mountain","CO"],
+["Saguaro","AZ"],["Sequoia","CA"],["Shenandoah","VA"],["Theodore Roosevelt","ND"],["Virgin Islands","VI"],
+["Voyageurs","MN"],["White Sands","NM"],["Wind Cave","SD"],["Wrangell-St. Elias","AK"],
+["Yellowstone","WY/MT/ID"],["Yosemite","CA"],["Zion","UT"]];
+
+var K="esponatlparks.v1",S;
+try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
+S.visits=S.visits||{}; // {parkIndex:[{d,note}]}
+function save(){localStorage.setItem(K,JSON.stringify(S))}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1800)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function initials(n){return n.split(/[\s-]+/).slice(0,2).map(function(w){return w[0]}).join("").toUpperCase()}
+function visitedCount(){return Object.keys(S.visits).filter(function(k){return S.visits[k]&&S.visits[k].length}).length}
+function drawCnt(){document.getElementById("cnt").textContent="🏞 "+visitedCount()+" / 63"}
+
+/* state filter options */
+var states=[...new Set(PARKS.flatMap(function(p){return p[1].split("/")}))].sort();
+var sf=document.getElementById("stateF");
+states.forEach(function(s){var o=document.createElement("option");o.value=s;o.textContent=s;sf.appendChild(o)});
+
+/* park list */
+function drawParks(){
+  var q=(document.getElementById("q").value||"").toLowerCase(),st=sf.value;
+  var el=document.getElementById("parkList"),h="";
+  PARKS.forEach(function(p,i){
+    if(q&&p[0].toLowerCase().indexOf(q)<0)return;
+    if(st&&p[1].split("/").indexOf(st)<0)return;
+    var v=S.visits[i]&&S.visits[i].length;
+    h+='<div class="park'+(v?' visited':'')+'" data-i="'+i+'">'
+      +'<div class="st">'+initials(p[0])+'</div>'
+      +'<div class="m"><b>'+esc(p[0])+'</b><span>'+esc(p[1])+(v?' · '+S.visits[i].length+' visit'+(S.visits[i].length>1?'s':''):'')+'</span></div>'
+      +(v?'<div class="tick">✓</div>':'')+'</div>';
+  });
+  el.innerHTML=h||'<div class="empty">No parks match — loosen the search.</div>';
+  el.querySelectorAll(".park").forEach(function(x){x.onclick=function(){openPark(+x.dataset.i)}});
+}
+document.getElementById("q").oninput=drawParks;
+sf.onchange=drawParks;
+
+/* modal */
+var cur=-1;
+function openPark(i){
+  cur=i;
+  document.getElementById("mName").textContent=PARKS[i][0]+" National Park";
+  document.getElementById("mState").textContent=PARKS[i][1];
+  document.getElementById("mDate").value=new Date().toISOString().slice(0,10);
+  document.getElementById("mNote").value="";
+  drawVisits();
+  document.getElementById("modal").classList.add("on");
+}
+function drawVisits(){
+  var el=document.getElementById("mVisits"),vs=S.visits[cur]||[];
+  el.innerHTML=vs.map(function(v,j){
+    return '<div><span>🏞 '+v.d+(v.note?' — '+esc(v.note):'')+'</span><button data-j="'+j+'">remove</button></div>';
+  }).join("");
+  el.querySelectorAll("button").forEach(function(b){
+    b.onclick=function(){S.visits[cur].splice(+b.dataset.j,1);save();drawVisits();drawParks();drawCnt()};
+  });
+}
+document.getElementById("mStamp").onclick=function(){
+  var d=document.getElementById("mDate").value||new Date().toISOString().slice(0,10);
+  (S.visits[cur]=S.visits[cur]||[]).push({d:d,note:document.getElementById("mNote").value.trim()});
+  save();drawVisits();drawParks();drawCnt();
+  toast("Stamped 🏞 — saved on this device, no signal needed");
+};
+document.getElementById("mClose").onclick=function(){document.getElementById("modal").classList.remove("on")};
+document.getElementById("modal").onclick=function(e){if(e.target===this)this.classList.remove("on")};
+
+/* passport */
+function drawPass(){
+  document.getElementById("passN").textContent=visitedCount();
+  var g=document.getElementById("passGrid");
+  g.innerHTML=PARKS.map(function(p,i){
+    var vs=S.visits[i]||[];
+    var first=vs.length?vs.slice().sort(function(a,b){return a.d<b.d?-1:1})[0].d:null;
+    return '<div class="stampcell'+(vs.length?' on':'')+'"><b>'+initials(p[0])+'</b>'+esc(p[0].split(" ")[0])
+      +(first?'<small>'+first+'</small>':'')+'</div>';
+  }).join("");
+}
+document.getElementById("expBtn").onclick=function(){
+  var rows=[["park","states","date","note"]];
+  PARKS.forEach(function(p,i){(S.visits[i]||[]).forEach(function(v){rows.push([p[0],p[1],v.d,v.note||""])})});
+  var c=rows.map(function(r){return r.map(function(v){return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'}).join(",")}).join("\n");
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([c],{type:"text/csv"}));
+  a.download="esponatlparks-passport.csv";a.click();
+  toast("Exported — your visits are yours");
+};
+document.getElementById("wipe").onclick=function(){
+  if(confirm("Erase every stamp and note from this device? There is no cloud copy — that's the point.")){
+    localStorage.removeItem(K);location.reload();
+  }
+};
+
+/* nav */
+document.querySelectorAll("nav button").forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll("nav button").forEach(function(x){x.classList.remove("on")});
+    document.querySelectorAll(".view").forEach(function(x){x.classList.remove("on")});
+    b.classList.add("on");document.getElementById("v-"+b.dataset.v).classList.add("on");
+    if(b.dataset.v==="pass")drawPass();
+  };
+});
+drawParks();drawCnt();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/esponatlparks/sw.js");
+</script>
+
+<nav>
+  <button data-v="parks" class="on"><svg viewBox="0 0 24 24"><path d="M12 3l7 14H5z"/><path d="M8 17l4-8 4 8"/></svg>Parks</button>
+  <button data-v="pass"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M8 17h8"/></svg>Passport</button>
+  <button data-v="set"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>Settings</button>
+</nav>
+</body>
+</html>

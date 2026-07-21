@@ -1,0 +1,14 @@
+{
+  "name": "ESPOnatlparks",
+  "short_name": "ESPOnatlparks",
+  "description": "Your national park passport — stamped offline, never lost. By Accelerated Experiences, LLC.",
+  "start_url": "/apps/esponatlparks/",
+  "scope": "/apps/esponatlparks/",
+  "display": "standalone",
+  "background_color": "#173428",
+  "theme_color": "#173428",
+  "icons": [
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
+  ]
+}
