@@ -5,8 +5,8 @@
   "start_url": "/apps/espotendency/",
   "scope": "/apps/espotendency/",
   "display": "standalone",
-  "background_color": "#232946",
-  "theme_color": "#232946",
+  "background_color": "#F8EEDE",
+  "theme_color": "#F2D8A8",
   "icons": [
     { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
     { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
