@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESPOracket — film the match, find the moments</title>
+<meta name="description" content="Tennis & pickleball match review: load your match video, tag every point, tap a tag to jump the film to that moment, see honest stats. Your footage never leaves your device — works on any phone, tablet or laptop. By Accelerated Experiences, LLC.">
+<meta name="theme-color" content="#101C2C">
+<link rel="manifest" href="/apps/esporacket/manifest.webmanifest">
+<link rel="icon" href="/apps/esporacket/icon.png">
+<link rel="apple-touch-icon" href="/apps/esporacket/icon.png">
+<style>
+:root{
+  --bg:#101C2C; --bg2:#16283C; --card:#1C3049; --ink:#EFF5FA; --ink2:#9FB6C9;
+  --ball:#DFF34C; --courtA:#5FA8E8; --courtB:#E8907F; --line:#28425E; --ok:#8BC7A0;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
+  padding-bottom:calc(30px + env(safe-area-inset-bottom));
+  background-image:linear-gradient(90deg, transparent 0 calc(50% - 1px), rgba(223,243,76,.05) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px));}
+header{padding:calc(14px + env(safe-area-inset-top)) 18px 10px;display:flex;align-items:center;gap:10px;max-width:860px;margin:0 auto}
+header img{width:34px;height:34px;border-radius:9px}
+header .t{font-size:19px;font-weight:700}
+header .t b{color:var(--ball)}
+header .priv{margin-left:auto;font-size:12px;color:var(--ink2);background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+main{max-width:860px;margin:0 auto;padding:6px 18px 24px}
+h2{font-size:22px;margin:14px 0 4px}
+.sub{color:var(--ink2);font-size:14.5px;line-height:1.55;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}
+.card h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ball);margin-bottom:8px}
+button{font-family:var(--sans);cursor:pointer;border:0;border-radius:12px;font-size:15px}
+.b1{background:var(--ball);color:#232a08;padding:13px 18px;font-weight:800;width:100%;margin-top:12px}
+.b2{background:var(--bg2);color:var(--ink);border:1px solid var(--line);padding:11px 14px}
+input{background:var(--bg2);border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:15.5px;padding:12px;width:100%}
+input:focus{outline:2px solid var(--ball)}
+.hint{font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:10px}
+
+/* drop */
+#drop{border:2px dashed var(--line);border-radius:18px;padding:46px 20px;text-align:center;margin-top:14px;cursor:pointer}
+#drop.hot{border-color:var(--ball)}
+#drop .ico{font-size:42px}
+#drop .big{font-size:19px;font-weight:800;margin-top:10px}
+#drop p{color:var(--ink2);font-size:14px;margin-top:8px;line-height:1.5}
+
+/* review */
+#review{display:none}
+video{width:100%;border-radius:14px;background:#000;display:block;margin-top:14px}
+.players{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.players input{text-align:center;font-weight:700}
+.players .pa{border-top:3px solid var(--courtA)}
+.players .pb{border-top:3px solid var(--courtB)}
+
+/* tag pads */
+.pads{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.pad{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px}
+.pad h4{font-size:14px;margin-bottom:8px;text-align:center}
+.pad.pa h4{color:var(--courtA)}.pad.pb h4{color:var(--courtB)}
+.pad .tags{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pad .tags button{padding:12px 6px;font-size:13.5px;font-weight:700;background:var(--bg2);color:var(--ink);border:1px solid var(--line)}
+.pad .tags button:active{transform:scale(.96)}
+.pad.pa .tags button:hover{border-color:var(--courtA)}
+.pad.pb .tags button:hover{border-color:var(--courtB)}
+
+/* score strip */
+.score{display:flex;gap:10px;margin-top:12px}
+.score div{flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.score b{display:block;font-size:26px}
+.score .a b{color:var(--courtA)}.score .b b{color:var(--courtB)}
+.score span{font-size:11.5px;color:var(--ink2)}
+
+/* point log */
+.pt{display:flex;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 12px;margin-top:6px}
+.pt .chip{font-size:12.5px;font-weight:800;background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer;white-space:nowrap}
+.pt .chip:hover{border-color:var(--ball);color:var(--ball)}
+.pt .who{font-size:14px;flex:1}
+.pt .who.a{color:var(--courtA)}.pt .who.b{color:var(--courtB)}
+.pt button{background:none;color:var(--ink2);font-size:12px}
+.empty{color:var(--ink2);font-size:14.5px;text-align:center;padding:22px 10px;line-height:1.6}
+
+/* stat bars */
+.statrow{margin-top:10px}
+.statrow .lbl{display:flex;justify-content:space-between;font-size:13px;color:var(--ink2);margin-bottom:4px}
+.statrow .bar{height:10px;border-radius:6px;background:var(--bg2);overflow:hidden;display:flex}
+.statrow .bar i{display:block;height:100%}
+.statrow .bar .ia{background:var(--courtA)}.statrow .bar .ib{background:var(--courtB)}
+
+.rowbtns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.rowbtns .b2{flex:1;min-width:120px;text-align:center}
+footer{max-width:860px;margin:26px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.6}
+.toast{position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--ball);color:#232a08;font-size:14px;font-weight:800;border-radius:999px;padding:9px 18px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
+.toast.on{opacity:1}
+.note{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:14px}
+</style>
+</head>
+<body>
+<header>
+  <img src="/apps/esporacket/icon.png" alt="">
+  <div class="t">ESPO<b>racket</b></div>
+  <div class="priv">🔒 Film never uploaded</div>
+</header>
+
+<main>
+  <!-- PICK -->
+  <section id="pick">
+    <div id="drop">
+      <div class="ico">🎾</div>
+      <div class="big">Drop your match video, or tap to choose</div>
+      <p>Tennis or pickleball, filmed from any phone.<br>
+      The footage plays right here — it is never uploaded anywhere.</p>
+      <input type="file" id="file" accept="video/*" hidden>
+    </div>
+    <div class="card">
+      <h3>How it works</h3>
+      <p class="sub" style="margin:0">1 — Load the film. &nbsp;2 — Tag each point as you watch: winner, ace, error. &nbsp;3 — Tap any tag to jump the film straight to that moment. &nbsp;4 — Read the honest stats. Works on any phone, tablet or laptop — including Android.</p>
+    </div>
+    <div class="note">ESPOracket is match review, honestly scoped: you tag, it remembers, the film obeys.
+    No AI umpire, no auto-scoring promises — the moments are found by the person who was there.</div>
+  </section>
+
+  <!-- REVIEW -->
+  <section id="review">
+    <video id="vid" controls playsinline></video>
+    <div class="players">
+      <input class="pa" id="pA" placeholder="Player / Team A" value="A">
+      <input class="pb" id="pB" placeholder="Player / Team B" value="B">
+    </div>
+    <div class="score">
+      <div class="a"><b id="scA">0</b><span id="scAn">points — A</span></div>
+      <div class="b"><b id="scB">0</b><span id="scBn">points — B</span></div>
+      <div><b id="scT">0</b><span>points tagged</span></div>
+    </div>
+    <div class="pads">
+      <div class="pad pa"><h4 id="padAn">A</h4><div class="tags" data-p="A">
+        <button data-tag="Winner">🏆 Winner</button><button data-tag="Ace">🎯 Ace</button>
+        <button data-tag="Forced err">↔️ Forced err</button><button data-tag="Unforced err">💨 Unforced</button>
+        <button data-tag="Double fault" style="grid-column:1/3">⛔ Double fault</button>
+      </div></div>
+      <div class="pad pb"><h4 id="padBn">B</h4><div class="tags" data-p="B">
+        <button data-tag="Winner">🏆 Winner</button><button data-tag="Ace">🎯 Ace</button>
+        <button data-tag="Forced err">↔️ Forced err</button><button data-tag="Unforced err">💨 Unforced</button>
+        <button data-tag="Double fault" style="grid-column:1/3">⛔ Double fault</button>
+      </div></div>
+    </div>
+    <p class="hint">Tag at the moment it happens — the timestamp is saved automatically. Winners and aces score for that side; errors and double faults give the point to the other side.</p>
+
+    <div class="card">
+      <h3>The match, in stats</h3>
+      <div id="stats"></div>
+    </div>
+
+    <div class="card">
+      <h3>Point log — tap a time to relive it</h3>
+      <div id="ptLog"></div>
+    </div>
+
+    <div class="rowbtns">
+      <button class="b2" id="expBtn">Export tags (.csv — always free)</button>
+      <button class="b2" id="clearBtn">Clear this match's tags</button>
+      <button class="b2" id="newBtn">Load a different video</button>
+    </div>
+  </section>
+</main>
+
+<footer>ESPOracket · part of the ESPOcenter family · Accelerated Experiences, LLC — Post Falls, Idaho.
+No upload. No account. No AI umpire promises — just your match, found fast.</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+var K="esporacket.v1",S;
+try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
+S.sessions=S.sessions||{}; // key: filename|size -> {a,b,tags:[{t,p,tag}]}
+function save(){localStorage.setItem(K,JSON.stringify(S))}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1700)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function fmt(t){var m=Math.floor(t/60),s=Math.floor(t%60);return m+":"+String(s).padStart(2,"0")}
+
+var vid=document.getElementById("vid"),sess=null,skey="";
+
+/* load video */
+var drop=document.getElementById("drop"),file=document.getElementById("file");
+drop.onclick=function(){file.click()};
+drop.ondragover=function(e){e.preventDefault();drop.classList.add("hot")};
+drop.ondragleave=function(){drop.classList.remove("hot")};
+drop.ondrop=function(e){e.preventDefault();drop.classList.remove("hot");if(e.dataTransfer.files[0])load(e.dataTransfer.files[0])};
+file.onchange=function(){if(file.files[0])load(file.files[0])};
+function load(f){
+  if(f.type.indexOf("video")!==0){toast("That's not a video");return}
+  skey=f.name+"|"+f.size;
+  sess=S.sessions[skey]=S.sessions[skey]||{a:"A",b:"B",tags:[]};
+  vid.src=URL.createObjectURL(f);
+  document.getElementById("pA").value=sess.a;
+  document.getElementById("pB").value=sess.b;
+  document.getElementById("pick").style.display="none";
+  document.getElementById("review").style.display="block";
+  drawAll();
+  toast(sess.tags.length?"Welcome back — "+sess.tags.length+" tags restored 🎾":"Film loaded — nothing was uploaded 🎾");
+}
+document.getElementById("newBtn").onclick=function(){location.reload()};
+
+/* names */
+["pA","pB"].forEach(function(id){
+  document.getElementById(id).oninput=function(){
+    sess[id==="pA"?"a":"b"]=this.value.trim()||( id==="pA"?"A":"B");save();drawAll();
+  };
+});
+
+/* tagging */
+document.querySelectorAll(".pad .tags").forEach(function(pad){
+  pad.querySelectorAll("button").forEach(function(b){
+    b.onclick=function(){
+      if(!sess)return;
+      sess.tags.push({t:vid.currentTime,p:pad.dataset.p,tag:b.dataset.tag});
+      sess.tags.sort(function(x,y){return x.t-y.t});
+      save();drawAll();
+      toast(b.dataset.tag+" @ "+fmt(vid.currentTime));
+    };
+  });
+});
+function pointTo(tag,p){ // which side wins the point
+  var self = (tag==="Winner"||tag==="Ace");
+  return self ? p : (p==="A"?"B":"A");
+}
+function drawAll(){
+  var a=sess.a,b=sess.b;
+  document.getElementById("padAn").textContent=a;
+  document.getElementById("padBn").textContent=b;
+  document.getElementById("scAn").textContent="points — "+a;
+  document.getElementById("scBn").textContent="points — "+b;
+  var winA=0,winB=0;
+  var counts={A:{},B:{}};
+  sess.tags.forEach(function(g){
+    counts[g.p][g.tag]=(counts[g.p][g.tag]||0)+1;
+    if(pointTo(g.tag,g.p)==="A")winA++;else winB++;
+  });
+  document.getElementById("scA").textContent=winA;
+  document.getElementById("scB").textContent=winB;
+  document.getElementById("scT").textContent=sess.tags.length;
+  /* stats bars */
+  var TAGS=["Winner","Ace","Forced err","Unforced err","Double fault"];
+  document.getElementById("stats").innerHTML = sess.tags.length ? TAGS.map(function(t){
+    var ca=counts.A[t]||0,cb=counts.B[t]||0,tot=ca+cb||1;
+    return '<div class="statrow"><div class="lbl"><span>'+esc(a)+' '+ca+'</span><span>'+t+'</span><span>'+cb+' '+esc(b)+'</span></div>'
+      +'<div class="bar"><i class="ia" style="width:'+(ca/tot*100)+'%"></i><i class="ib" style="width:'+(cb/tot*100)+'%"></i></div></div>';
+  }).join("") : '<div class="empty">Tag your first point and the story of the match starts writing itself.</div>';
+  /* log */
+  var log=document.getElementById("ptLog");
+  log.innerHTML = sess.tags.length ? sess.tags.map(function(g,i){
+    var winner=pointTo(g.tag,g.p)==="A"?a:b;
+    return '<div class="pt"><span class="chip" data-t="'+g.t+'">▶ '+fmt(g.t)+'</span>'
+      +'<span class="who '+(g.p==="A"?'a':'b')+'">'+esc(g.p==="A"?a:b)+' — '+g.tag+'</span>'
+      +'<span style="font-size:12px;color:var(--ink2)">point: '+esc(winner)+'</span>'
+      +'<button data-i="'+i+'">✕</button></div>';
+  }).join("") : '<div class="empty">No points tagged yet. Play the film and tap as it happens.</div>';
+  log.querySelectorAll(".chip").forEach(function(c){
+    c.onclick=function(){vid.currentTime=Math.max(0,+c.dataset.t-4);vid.play()};
+  });
+  log.querySelectorAll("button[data-i]").forEach(function(x){
+    x.onclick=function(){sess.tags.splice(+x.dataset.i,1);save();drawAll()};
+  });
+}
+
+/* export / clear */
+document.getElementById("expBtn").onclick=function(){
+  var rows=[["time","seconds","player","tag","point_to"]];
+  sess.tags.forEach(function(g){rows.push([fmt(g.t),g.t.toFixed(1),g.p==="A"?sess.a:sess.b,g.tag,pointTo(g.tag,g.p)==="A"?sess.a:sess.b])});
+  var c=rows.map(function(r){return r.map(function(v){return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'}).join(",")}).join("\n");
+  var x=document.createElement("a");x.href=URL.createObjectURL(new Blob([c],{type:"text/csv"}));
+  x.download="esporacket-match.csv";x.click();
+  toast("Exported — your match is yours");
+};
+document.getElementById("clearBtn").onclick=function(){
+  if(confirm("Clear all tags for this video? The video itself is untouched.")){sess.tags=[];save();drawAll()}
+};
+if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/esporacket/sw.js");
+</script>
+</body>
+</html>

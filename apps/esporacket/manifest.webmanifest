@@ -1,0 +1,14 @@
+{
+  "name": "ESPOracket",
+  "short_name": "ESPOracket",
+  "description": "Film the match, find the moments — tennis & pickleball review on any device. By Accelerated Experiences, LLC.",
+  "start_url": "/apps/esporacket/",
+  "scope": "/apps/esporacket/",
+  "display": "standalone",
+  "background_color": "#101C2C",
+  "theme_color": "#101C2C",
+  "icons": [
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
+  ]
+}
