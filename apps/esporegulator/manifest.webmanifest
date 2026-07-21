@@ -1,0 +1,14 @@
+{
+  "name": "ESPOregulator",
+  "short_name": "ESPOregulator",
+  "description": "Five-minute practice for anger, stress and anxiety — skills, not affirmations. By Accelerated Experiences, LLC.",
+  "start_url": "/apps/esporegulator/",
+  "scope": "/apps/esporegulator/",
+  "display": "standalone",
+  "background_color": "#2B2350",
+  "theme_color": "#2B2350",
+  "icons": [
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
+  ]
+}

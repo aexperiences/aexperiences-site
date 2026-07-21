@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESPOregulator — skills, not affirmations</title>
+<meta name="description" content="Five-minute practice for anger, stress and anxiety — a real skills ladder plus right-now SOS tools like guided breathing and grounding. No account, no cloud, everything stays on your device. By Accelerated Experiences, LLC.">
+<meta name="theme-color" content="#2B2350">
+<link rel="manifest" href="/apps/esporegulator/manifest.webmanifest">
+<link rel="icon" href="/apps/esporegulator/icon.png">
+<link rel="apple-touch-icon" href="/apps/esporegulator/icon.png">
+<style>
+:root{
+  --bg:#2B2350; --bg2:#352B60; --card:#3D3270; --ink:#F0EDFA; --ink2:#AFA6D6;
+  --acc:#EFB960; --calm:#8FD0C3; --line:#4A3E85; --ok:#8BC7A0; --sos:#E8907F;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
+  padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+header{padding:calc(14px + env(safe-area-inset-top)) 18px 10px;display:flex;align-items:center;gap:10px}
+header img{width:34px;height:34px;border-radius:9px}
+header .t{font-size:19px;font-weight:700}
+header .t b{color:var(--acc)}
+.streak{margin-left:auto;font-size:13px;color:var(--ink2);background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+main{max-width:640px;margin:0 auto;padding:6px 18px 24px}
+.view{display:none}.view.on{display:block;animation:up .25s ease}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h2{font-size:22px;margin:14px 0 4px}
+.sub{color:var(--ink2);font-size:14.5px;line-height:1.55;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}
+.card h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:8px}
+button{font-family:var(--sans);cursor:pointer;border:0;border-radius:12px;font-size:15px}
+.b1{background:var(--acc);color:#332508;padding:13px 18px;font-weight:700;width:100%;margin-top:12px}
+.b2{background:var(--bg2);color:var(--ink);border:1px solid var(--line);padding:12px 16px;width:100%;margin-top:10px}
+.hint{font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:10px}
+.note{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:14px}
+
+/* lesson list */
+.track{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--calm);margin:20px 0 4px}
+.les{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-top:8px;cursor:pointer}
+.les .n{width:34px;height:34px;border-radius:10px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--ink2);flex-shrink:0}
+.les.done .n{background:var(--ok);color:#1c3324}
+.les .m{flex:1}
+.les .m b{font-size:15.5px;display:block}
+.les .m span{font-size:12.5px;color:var(--ink2)}
+
+/* lesson view */
+#lesson .step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:12px}
+#lesson .step b{color:var(--acc);display:block;margin-bottom:6px;font-size:14px}
+#lesson .step p{font-size:15.5px;line-height:1.6}
+#lesson h2 span{color:var(--calm);font-size:14px;display:block;margin-top:2px}
+
+/* breath circle */
+.breathWrap{display:flex;flex-direction:column;align-items:center;padding:20px 0 6px}
+#bCircle{width:170px;height:170px;border-radius:50%;background:radial-gradient(circle at 35% 30%, #4A3E85, #352B60);
+  border:3px solid var(--calm);display:flex;align-items:center;justify-content:center;
+  transition:transform 3.8s ease-in-out;transform:scale(.72)}
+#bCircle.grow{transform:scale(1)}
+#bPhase{font-size:17px;font-weight:700;text-align:center}
+#bCount{font-size:13px;color:var(--ink2);text-align:center;margin-top:8px}
+
+/* SOS */
+.sosBtn{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px;cursor:pointer;width:100%;text-align:left;color:var(--ink)}
+.sosBtn .e{font-size:28px}
+.sosBtn b{display:block;font-size:16px}
+.sosBtn span{font-size:13px;color:var(--ink2)}
+#groundSteps p{font-size:17px;line-height:1.6;text-align:center;padding:18px 6px}
+
+nav{position:fixed;left:0;right:0;bottom:0;background:rgba(43,35,80,.96);backdrop-filter:blur(10px);
+  border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
+nav button{background:none;color:var(--ink2);font-size:11.5px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px}
+nav button.on{color:var(--acc)}
+nav button.sos{color:var(--sos)}
+nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+footer{max-width:640px;margin:26px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.6}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--acc);color:#332508;font-size:14px;font-weight:700;border-radius:999px;padding:9px 18px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<header>
+  <img src="/apps/esporegulator/icon.png" alt="">
+  <div class="t">ESPO<b>regulator</b></div>
+  <div class="streak" id="streak">—</div>
+</header>
+
+<main>
+  <!-- TODAY -->
+  <section class="view on" id="v-today">
+    <h2 id="greet">Five minutes of practice.</h2>
+    <p class="sub">Skills, not affirmations. One short lesson a day builds the muscle you reach for on the bad days.</p>
+    <div class="card" id="nextCard"></div>
+    <div class="card">
+      <h3>Having a moment right now?</h3>
+      <p class="sub" style="margin-bottom:0">Skip the lesson. The SOS tab has the right-now tools — breathing, grounding, the STOP card.</p>
+      <button class="b2" onclick="goto('sos')">Open SOS →</button>
+    </div>
+    <div class="note">ESPOregulator is skills practice, not therapy or medical care, and it makes no health claims.
+    If you're struggling, a professional is the right next step — in the U.S. you can call or text <b>988</b> anytime.</div>
+  </section>
+
+  <!-- SOS -->
+  <section class="view" id="v-sos">
+    <h2>Right now</h2>
+    <p class="sub">Pick one. Sixty seconds. Nothing to read, nothing to buy.</p>
+    <button class="sosBtn" onclick="startBreath('box')"><span class="e">🫁</span><div><b>Box breathing</b><span>In 4 · hold 4 · out 4 · hold 4 — four rounds</span></div></button>
+    <button class="sosBtn" onclick="startBreath('sigh')"><span class="e">😮‍💨</span><div><b>The long exhale</b><span>Two quick sniffs in, one slow sigh out — three rounds</span></div></button>
+    <button class="sosBtn" onclick="startGround()"><span class="e">🖐️</span><div><b>5-4-3-2-1 grounding</b><span>Come back to the room through your senses</span></div></button>
+    <button class="sosBtn" onclick="showStop()"><span class="e">✋</span><div><b>The STOP card</b><span>Stop · Take a breath · Observe · Proceed</span></div></button>
+    <div class="card" id="sosStage" style="display:none">
+      <div class="breathWrap" id="breathUI" style="display:none">
+        <div id="bCircle"><div id="bPhase">Ready</div></div>
+        <div id="bCount"></div>
+      </div>
+      <div id="groundSteps" style="display:none"><p></p><button class="b1" id="gNext">Next</button></div>
+      <div id="stopCard" style="display:none">
+        <h3 style="color:var(--acc);font-size:13px;letter-spacing:.1em">THE STOP CARD</h3>
+        <p style="font-size:16px;line-height:1.8;margin-top:8px">
+        <b>S</b> — Stop. Don't act yet. Feet still.<br>
+        <b>T</b> — Take one slow breath. Just one.<br>
+        <b>O</b> — Observe. What's happening in your body? What's actually true here?<br>
+        <b>P</b> — Proceed. Choose the next move on purpose.</p>
+      </div>
+      <button class="b2" id="sosDone">Done — I'm steadier</button>
+    </div>
+  </section>
+
+  <!-- COURSE -->
+  <section class="view" id="v-course">
+    <h2>The ladder</h2>
+    <p class="sub">Three tracks, three rungs each per level. Week six will not feel like week one — that's the whole design.</p>
+    <div id="courseList"></div>
+  </section>
+
+  <!-- LESSON (opened from course/today) -->
+  <section class="view" id="v-lesson">
+    <div id="lesson"></div>
+    <button class="b1" id="lesDone">✓ Practiced it — mark complete</button>
+    <button class="b2" onclick="goto('course')">Back to the ladder</button>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="view" id="v-set">
+    <h2>Settings</h2>
+    <div class="card">
+      <h3>Your data</h3>
+      <p class="hint">Progress and streaks live on this device. No account, no cloud, no ads, no trackers. Erasing really erases.</p>
+      <button class="b2" id="wipe">Erase everything</button>
+    </div>
+    <div class="note">These are widely-taught self-regulation practices, offered as practice — not as treatment for any condition.
+    If anger, stress or anxiety is disrupting your life, a professional can do what an app can't. In the U.S.: call or text <b>988</b>.</div>
+  </section>
+</main>
+
+<nav>
+  <button data-v="today" class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Today</button>
+  <button data-v="sos" class="sos"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17.5v.5"/></svg>SOS</button>
+  <button data-v="course"><svg viewBox="0 0 24 24"><path d="M4 20h16M6 20V10m6 10V4m6 16v-7"/></svg>Ladder</button>
+  <button data-v="set"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>Settings</button>
+</nav>
+
+<footer>ESPOregulator · part of the ESPOmindpeace family · Accelerated Experiences, LLC — Post Falls, Idaho.
+No ads. No trackers. Not therapy — practice.</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─── the ladder: 3 tracks × 6 lessons (L1 free forever; L2-3 arrive with Plus) ─── */
+var COURSE=[
+{track:"Anger — cool the fire",lessons:[
+ {t:"The 90-second wave",s:"Feelings crest and pass",steps:[
+  ["Why it works","The chemical surge of a strong emotion moves through the body fast — the crest usually passes within a couple of minutes IF you don't refuel it with more angry thoughts. Your only job at the peak: don't act, don't rehearse the comeback. Ride it."],
+  ["The practice","Next time heat rises, silently name it — 'wave' — and count slowly toward ninety. Feet flat, jaw loose. You're not suppressing it; you're letting it finish."],
+  ["Try it now","Sit for ninety quiet seconds and just notice your body settle. That's the skill — boring on a calm day, priceless on a bad one."]]},
+ {t:"Name it to tame it",s:"Labeling lowers the heat",steps:[
+  ["Why it works","Putting a feeling into words engages the thinking brain and takes intensity off the alarm system. 'I'm furious and embarrassed' hurts less than the unnamed storm."],
+  ["The practice","Finish this sentence, out loud or on paper: 'I'm feeling ___ because ___.' Be specific — 'disrespected,' not just 'mad.'"],
+  ["Try it now","Name the strongest feeling you've had today. One word. Then one sentence for the because."]]},
+ {t:"The STOP card",s:"Four moves between you and regret",steps:[
+  ["The skill","Stop — feet still, mouth closed. Take one slow breath. Observe — body, facts, what's actually true. Proceed — choose the next move on purpose. Four beats between trigger and action is usually all it takes."],
+  ["The practice","The card lives in the SOS tab. Practice it on small irritations — a slow line, a dropped call — so it's automatic when it's big."],
+  ["Try it now","Run STOP on nothing at all, just to feel the rhythm. Stop. Breathe. Observe. Proceed."]]},
+ {t:"Cool the body first",s:"Anger is physical before it's verbal",steps:[
+  ["Why it works","An angry body — clenched jaw, tight fists, high shoulders — keeps feeding the angry mind. Change the body and the mind follows."],
+  ["The practice","Unclench the jaw. Open the hands flat. Drop the shoulders away from the ears. Cold water on the wrists or face if you can get to a sink."],
+  ["Try it now","Do the three releases right now — jaw, hands, shoulders. Notice the half-step down."]]},
+ {t:"The time-out, done right",s:"Leaving isn't losing",steps:[
+  ["Why it works","Walking away mid-conflict fails when it looks like slamming the door. It works when it's announced with a return time — that's regulation, not retreat."],
+  ["The practice","The script: 'I'm too heated to do this well. I need twenty minutes, then I want to finish this conversation.' Then actually come back."],
+  ["Try it now","Say the script out loud twice, so the words are there when you need them."]]},
+ {t:"The repair",s:"After the blow-up",steps:[
+  ["Why it works","Everyone loses it sometimes. What protects relationships isn't never blowing up — it's repairing well: specific, no 'but,' no re-arguing."],
+  ["The practice","The template: 'I was wrong to ___. That must have felt ___. Next time I'll ___.' Full stop — no 'but you…'"],
+  ["Try it now","Think of one repair you owe. Draft it with the template. Sending it is your call."]]}]},
+{track:"Stress — lower the load",lessons:[
+ {t:"Box breathing",s:"The steady square",steps:[
+  ["Why it works","Slow, even breathing with holds signals the nervous system that the emergency is over. Four counts a side, four sides, four rounds — a minute of it changes your gauges."],
+  ["The practice","In for 4 · hold 4 · out for 4 · hold 4. The guided circle is in the SOS tab whenever you want it."],
+  ["Try it now","Open SOS → Box breathing and do four rounds with the circle."]]},
+ {t:"The long exhale",s:"Two sniffs in, one sigh out",steps:[
+  ["Why it works","A double inhale through the nose followed by a long slow exhale is one of the fastest ways to downshift — the extended out-breath does the calming work."],
+  ["The practice","Sniff, top-up sniff, then a slow sigh out through the mouth like fogging a mirror. Three rounds."],
+  ["Try it now","SOS → The long exhale. Three rounds, guided."]]},
+ {t:"One thing at a time",s:"Switching is the tax",steps:[
+  ["Why it works","Half the crush of a stressful day is task-switching — every jump costs focus and adds hum. One deliberate task at a time feels slower and finishes faster."],
+  ["The practice","Ask: 'What is the ONE next action?' Write it down. Do only that. Then ask again."],
+  ["Try it now","Write your one next action for after this lesson. Just one."]]},
+ {t:"The worry dump",s:"Paper holds it so you don't",steps:[
+  ["Why it works","Loops keep looping because the mind is afraid of dropping them. Written down, a worry stops needing rehearsal."],
+  ["The practice","Two minutes: dump every open loop onto paper — chores, dreads, maybes. Don't solve, just list. Pick ONE to act on today; the rest are safely parked."],
+  ["Try it now","Do a 10-item dump. Notice the exhale that comes around item seven."]]},
+ {t:"Shrink the day",s:"You only need the next hour",steps:[
+  ["Why it works","Overwhelm is usually the whole week landing at once. You never live a week at a time — you live an hour at a time."],
+  ["The practice","When it's all too much, plan only the next hour. One task, one kindness to your body (water, food, air), nothing else exists yet."],
+  ["Try it now","Sketch your next hour: one task, one kindness."]]},
+ {t:"Rest is a skill",s:"Micro-breaks count",steps:[
+  ["Why it works","Stress accumulates when the day has no seams. Tiny real breaks — two minutes, no screen — let pressure bleed off before it stacks."],
+  ["The practice","Between tasks: stand, look at something farther than the screen, breathe slow. Two minutes. No phone — that's a different kind of busy."],
+  ["Try it now","Two minutes, screen down, eyes far. The timer in your head is fine."]]}]},
+{track:"Anxiety — steady the ground",lessons:[
+ {t:"5-4-3-2-1 grounding",s:"Back through your senses",steps:[
+  ["Why it works","Anxiety lives in imagined futures. The senses only work in the present — walking through them pulls you back into the room."],
+  ["The practice","Name 5 things you can see, 4 you can feel, 3 you can hear, 2 you can smell, 1 you can taste. Slowly. The guided version is in SOS."],
+  ["Try it now","SOS → 5-4-3-2-1. Take it at half speed."]]},
+ {t:"Thoughts aren't facts",s:"The noticing trick",steps:[
+  ["Why it works","'Everything is ruined' feels like a report; it's a thought. Adding 'I'm having the thought that…' in front of it restores the gap between you and it."],
+  ["The practice","Catch one anxious line and re-say it: 'I'm having the thought that everything is ruined.' Feel the inch of distance that opens."],
+  ["Try it now","Rewrite today's loudest worry with the prefix."]]},
+ {t:"The maybe habit",s:"Making peace with unknowns",steps:[
+  ["Why it works","Anxiety demands certainty the world can't give. Practicing 'maybe, maybe not' — without rushing to reassurance — builds tolerance for not knowing."],
+  ["The practice","To the question your mind keeps asking, answer honestly: 'Maybe. Maybe not. I can handle finding out.' Then return to what you were doing."],
+  ["Try it now","Give one open question the maybe treatment."]]},
+ {t:"Do it scared (tiny)",s:"Avoidance feeds the loop",steps:[
+  ["Why it works","Every avoided thing teaches the brain it was truly dangerous. Tiny approaches teach the opposite — and shrink the anxiety faster than any amount of thinking about it."],
+  ["The practice","Pick the smallest version of an avoided thing — the two-line email, the 30-second call, opening the envelope. Do it scared. Small counts double."],
+  ["Try it now","Name your tiny brave step for today. Smaller than that. Good."]]},
+ {t:"The body checklist",s:"Sometimes it's chemistry",steps:[
+  ["Why it works","Caffeine, skipped meals, short sleep and zero movement all impersonate anxiety. Sometimes the fix isn't mental at all."],
+  ["The practice","Before believing an anxious hour, run the check: Caffeine? Eaten? Slept? Moved today? Fix the flagged one first, then reassess."],
+  ["Try it now","Run the four checks on right-now you."]]},
+ {t:"Worry vs problem",s:"Sort, then act or ground",steps:[
+  ["Why it works","A problem has a next step; a worry doesn't. Treating worries like problems means endless solving of the unsolvable."],
+  ["The practice","Take one loop and ask: is there an action I can take this week? Yes → write the step, schedule it, close the loop. No → it's weather; ground and let it pass."],
+  ["Try it now","Sort today's biggest loop. Step or weather?"]]}]}
+];
+
+var K="esporegulator.v1",S;
+try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
+S.done=S.done||{}; S.visits=S.visits||[];
+function save(){localStorage.setItem(K,JSON.stringify(S))}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1800)}
+function dkey(){var d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
+if(S.visits.indexOf(dkey())<0){S.visits.push(dkey());if(S.visits.length>400)S.visits=S.visits.slice(-400);save()}
+function streak(){var n=0,d=new Date();for(;;){var k=d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();if(S.visits.indexOf(k)>=0){n++;d.setDate(d.getDate()-1)}else break}return n}
+document.getElementById("streak").textContent=streak()>1?"🌱 "+streak()+" days":"Welcome";
+
+/* nav */
+function goto(v){
+  document.querySelectorAll("nav button").forEach(function(x){x.classList.toggle("on",x.dataset.v===v)});
+  document.querySelectorAll(".view").forEach(function(x){x.classList.remove("on")});
+  document.getElementById("v-"+v).classList.add("on");
+  if(v==="course")drawCourse();
+  if(v==="today")drawNext();
+  stopBreath();
+}
+document.querySelectorAll("nav button").forEach(function(b){b.onclick=function(){goto(b.dataset.v)}});
+
+/* course */
+var cur=null;
+function lid(t,l){return t+"-"+l}
+function drawCourse(){
+  var el=document.getElementById("courseList");
+  el.innerHTML=COURSE.map(function(tr,ti){
+    return '<div class="track">'+tr.track+' · Level 1</div>'+tr.lessons.map(function(le,li){
+      var d=S.done[lid(ti,li)];
+      return '<div class="les'+(d?' done':'')+'" data-t="'+ti+'" data-l="'+li+'"><div class="n">'+(d?'✓':(li+1))+'</div><div class="m"><b>'+le.t+'</b><span>'+le.s+'</span></div></div>';
+    }).join("");
+  }).join("")+'<p class="hint">Levels 2 and 3 — deeper practice on every track — arrive with Plus. Level 1 and every SOS tool stay free forever.</p>';
+  el.querySelectorAll(".les").forEach(function(x){
+    x.onclick=function(){openLesson(+x.dataset.t,+x.dataset.l)};
+  });
+}
+function openLesson(t,l){
+  cur=[t,l];
+  var le=COURSE[t].lessons[l];
+  document.getElementById("lesson").innerHTML='<h2>'+le.t+'<span>'+COURSE[t].track+' · lesson '+(l+1)+' of 6</span></h2>'
+    +le.steps.map(function(s){return '<div class="step"><b>'+s[0]+'</b><p>'+s[1]+'</p></div>'}).join("");
+  document.querySelectorAll(".view").forEach(function(x){x.classList.remove("on")});
+  document.getElementById("v-lesson").classList.add("on");
+  window.scrollTo(0,0);
+}
+document.getElementById("lesDone").onclick=function(){
+  if(!cur)return;
+  S.done[lid(cur[0],cur[1])]=Date.now();save();
+  toast("Practiced ✓ That's how the muscle grows.");
+  goto("course");
+};
+function nextLesson(){
+  for(var t=0;t<COURSE.length;t++)for(var l=0;l<COURSE[t].lessons.length;l++)
+    if(!S.done[lid(t,l)])return[t,l];
+  return null;
+}
+function drawNext(){
+  var n=nextLesson(),el=document.getElementById("nextCard");
+  var total=18,doneN=Object.keys(S.done).length;
+  if(!n){el.innerHTML='<h3>Level 1 complete</h3><p class="sub" style="margin:0">All 18 lessons practiced. Repeat the ones that landed — repetition is the point — and Levels 2–3 arrive with Plus.</p>';return}
+  var le=COURSE[n[0]].lessons[n[1]];
+  el.innerHTML='<h3>Next up · '+doneN+' of '+total+' practiced</h3>'
+    +'<b style="font-size:19px;display:block;margin:4px 0 2px">'+le.t+'</b>'
+    +'<span class="sub" style="display:block;margin-bottom:0">'+COURSE[n[0]].track+' — '+le.s+'</span>'
+    +'<button class="b1" id="goNext">Start the 5 minutes</button>';
+  document.getElementById("goNext").onclick=function(){openLesson(n[0],n[1])};
+}
+
+/* ─── SOS: breathing ─── */
+var bTimer=null;
+function showStage(which){
+  document.getElementById("sosStage").style.display="block";
+  ["breathUI","groundSteps","stopCard"].forEach(function(id){document.getElementById(id).style.display=id===which?"block":"none"});
+  document.getElementById("sosStage").scrollIntoView({behavior:"smooth"});
+}
+function startBreath(kind){
+  showStage("breathUI");
+  var phases = kind==="box"
+    ? [["Breathe in",4,true],["Hold",4,null],["Breathe out",4,false],["Hold",4,null]]
+    : [["Sniff in",1.2,true],["Top-up sniff",1.2,true],["Long sigh out…",6,false]];
+  var rounds = kind==="box"?4:3, r=0, p=0;
+  var circle=document.getElementById("bCircle"),phaseEl=document.getElementById("bPhase"),count=document.getElementById("bCount");
+  stopBreath();
+  function step(){
+    if(r>=rounds){phaseEl.textContent="Steadier.";count.textContent="Well done.";circle.className="";return}
+    var ph=phases[p];
+    phaseEl.textContent=ph[0];
+    count.textContent="Round "+(r+1)+" of "+rounds;
+    if(ph[2]===true)circle.className="grow";
+    if(ph[2]===false)circle.className="";
+    bTimer=setTimeout(function(){
+      p++;if(p>=phases.length){p=0;r++}
+      step();
+    },ph[1]*1000);
+  }
+  step();
+}
+function stopBreath(){if(bTimer){clearTimeout(bTimer);bTimer=null}}
+
+/* SOS: grounding */
+var G=["Look around. Name 5 things you can see. Slowly — actually look at each one.",
+"Now 4 things you can physically feel. The chair. Your feet. Fabric. Air.",
+"3 things you can hear. Near ones and far ones.",
+"2 things you can smell — or two smells you like remembering.",
+"1 thing you can taste.",
+"You're here. The room is real, and so are you."];
+var gi=0;
+function startGround(){
+  gi=0;showStage("groundSteps");
+  document.querySelector("#groundSteps p").textContent=G[0];
+}
+document.getElementById("gNext").onclick=function(){
+  gi++;
+  if(gi>=G.length){document.getElementById("sosStage").style.display="none";toast("Back in the room 🖐️");return}
+  document.querySelector("#groundSteps p").textContent=G[gi];
+  if(gi===G.length-1)this.textContent="Finish";else this.textContent="Next";
+};
+function showStop(){showStage("stopCard")}
+document.getElementById("sosDone").onclick=function(){
+  document.getElementById("sosStage").style.display="none";stopBreath();toast("Steadier ✓");
+};
+
+/* settings */
+document.getElementById("wipe").onclick=function(){
+  if(confirm("Erase your progress and streaks from this device? There is no cloud copy — that's the point.")){
+    localStorage.removeItem(K);location.reload();
+  }
+};
+var h=new Date().getHours();
+document.getElementById("greet").textContent = h<12?"Five minutes of morning practice.":h<18?"Five minutes of practice.":"Five quiet minutes before the day ends.";
+drawNext();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/esporegulator/sw.js");
+</script>
+</body>
+</html>
