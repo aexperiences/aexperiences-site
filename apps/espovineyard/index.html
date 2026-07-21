@@ -5,97 +5,167 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ESPOvineyard — a cellar that is actually yours</title>
 <meta name="description" content="A calm wine journal for adults 21+: remember every bottle with a photo, rating and tasting note, keep a cellar with your own drinking windows, and read the Wine Country Notebook — real features on real wineries. No ads, no marketplace, nothing leaves your device. By Accelerated Experiences, LLC.">
-<meta name="theme-color" content="#2E0D19">
+<meta name="theme-color" content="#1D0F2B">
 <link rel="manifest" href="/apps/espovineyard/manifest.webmanifest">
 <link rel="icon" href="/apps/espovineyard/icon.png">
 <link rel="apple-touch-icon" href="/apps/espovineyard/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#2E0D19; --bg2:#3C1524; --card:#451A2B; --ink:#F7EEF0; --ink2:#C9A8B2;
-  --dusk:#E0A075; --rose:#C97B8E; --gold:#D8B45A; --line:#5A2438; --ok:#8BC7A0;
-  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  --serif:"Iowan Old Style",Georgia,"Times New Roman",serif;
+  /* linen daylight */
+  --paper:#F6EEE1; --paper2:#EFE4D2; --card:#FCF7EC; --field:#FFFDF6;
+  --ink:#33131F; --ink2:#7C5A66; --line:#E3D2B9; --hair:#D9C5A8;
+  /* wine dusk */
+  --wine:#6B1F35; --winedeep:#471323; --rose:#C97B8E; --dusk:#D97A4E; --gold:#C9A227;
+  --ok-bg:#DFE9D8; --ok-ink:#3E5C3D;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --serif:"Fraunces","Iowan Old Style",Georgia,serif;
+  /* the dusk sky */
+  --sky:linear-gradient(180deg,#1D0F2B 0%,#3A1230 34%,#6E203B 62%,#A84A5C 82%,#E08A5A 100%);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
-  padding-bottom:calc(76px + env(safe-area-inset-bottom))}
-header{padding:calc(14px + env(safe-area-inset-top)) 18px 10px;display:flex;align-items:center;gap:10px}
-header img{width:34px;height:34px;border-radius:9px}
-header .t{font-family:var(--serif);font-size:19px;font-weight:600}
-header .t b{color:var(--dusk);font-weight:600}
-.age{margin-left:auto;font-size:12px;color:var(--ink2);background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
-main{max-width:680px;margin:0 auto;padding:6px 18px 24px}
-.view{display:none}.view.on{display:block;animation:up .25s ease}
-@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-h2{font-family:var(--serif);font-size:23px;margin:14px 0 4px}
-.sub{color:var(--ink2);font-size:14.5px;line-height:1.55;margin-bottom:12px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}
-.card h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--dusk);margin-bottom:8px}
-button{font-family:var(--sans);cursor:pointer;border:0;border-radius:12px;font-size:15px}
-.b1{background:var(--dusk);color:#3a1c0e;padding:13px 18px;font-weight:700;width:100%;margin-top:12px}
-.b2{background:var(--bg2);color:var(--ink);border:1px solid var(--line);padding:12px 16px;width:100%;margin-top:10px}
-input,select,textarea{background:var(--bg2);border:1px solid var(--line);border-radius:12px;color:var(--ink);
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);min-height:100vh;
+  padding-bottom:calc(80px + env(safe-area-inset-bottom));position:relative}
+/* linen weave */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.5;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .35 0 0 0 0 .25 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+header,main,nav,footer{position:relative;z-index:1}
+
+/* ── masthead: dusk over the vine rows ── */
+header{background:var(--sky);padding:calc(16px + env(safe-area-inset-top)) 18px 0;overflow:hidden}
+.mast{max-width:680px;margin:0 auto;display:flex;align-items:center;gap:11px;padding-bottom:44px}
+.mast img{width:38px;height:38px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.35)}
+.mast .t{font-family:var(--serif);font-size:22px;font-weight:400;color:#F7EEF0;letter-spacing:.01em}
+.mast .t b{font-weight:600;font-style:italic;color:#F2C8A8}
+.mast .tag{font-size:10.5px;color:#DBAF9E;letter-spacing:.22em;text-transform:uppercase;margin-top:2px}
+.age{margin-left:auto;font-size:11px;font-weight:600;letter-spacing:.08em;color:#F2C8A8;
+  border:1px solid rgba(242,200,168,.45);border-radius:999px;padding:5px 12px;backdrop-filter:blur(2px)}
+.hills{display:block;width:100%;margin:0 -18px -1px;width:calc(100% + 36px)}
+
+/* ── views ── */
+main{max-width:680px;margin:0 auto;padding:10px 18px 24px}
+.view{display:none}.view.on{display:block;animation:up .3s ease}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+h2{font-family:var(--serif);font-size:31px;font-weight:500;letter-spacing:-.01em;margin:20px 0 2px}
+h2::after{content:"";display:block;width:44px;height:3px;background:var(--dusk);border-radius:2px;margin-top:8px}
+.sub{color:var(--ink2);font-size:14.5px;line-height:1.6;margin:10px 0 12px}
+
+/* cards = cream paper */
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:14px;
+  box-shadow:0 1px 2px rgba(51,19,31,.05),0 8px 24px -18px rgba(51,19,31,.25)}
+.card h3{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--wine);margin-bottom:8px;font-weight:700}
+button{font-family:var(--sans);cursor:pointer;border:0;border-radius:12px;font-size:15px;transition:transform .12s ease,background .15s ease}
+button:active{transform:scale(.97)}
+.b1{background:var(--wine);color:#F9EFE3;padding:14px 18px;font-weight:600;width:100%;margin-top:14px;letter-spacing:.01em;
+  box-shadow:0 6px 16px -8px rgba(107,31,53,.55)}
+.b1:hover{background:var(--winedeep)}
+.b2{background:transparent;color:var(--wine);border:1.5px solid var(--wine);padding:12px 16px;width:100%;margin-top:12px;font-weight:600}
+.b2:hover{background:rgba(107,31,53,.06)}
+input,select,textarea{background:var(--field);border:1px solid var(--hair);border-radius:12px;color:var(--ink);
   font-family:var(--sans);font-size:15.5px;padding:12px;width:100%}
-input:focus,select:focus,textarea:focus{outline:2px solid var(--dusk)}
-label{font-size:13px;color:var(--ink2);display:block;margin:12px 0 5px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--dusk);border-color:transparent}
+::placeholder{color:#B7A08E}
+label{font-size:12.5px;color:var(--ink2);display:block;margin:12px 0 5px;font-weight:500;letter-spacing:.02em}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.hint{font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:10px}
+.hint{font-size:12.5px;color:var(--ink2);line-height:1.6;margin-top:10px}
 
-/* glasses rating */
-.glasses{display:flex;gap:6px;margin-top:4px}
-.glasses button{background:none;font-size:30px;padding:2px;filter:grayscale(1) opacity(.45)}
-.glasses button.on{filter:none}
+/* glasses rating — the pour */
+.glasses{display:flex;gap:8px;margin-top:4px}
+.glasses button{background:none;font-size:31px;padding:2px;filter:grayscale(1) opacity(.35);transition:filter .2s}
+.glasses button.on{filter:none;animation:pour .35s ease}
+@keyframes pour{0%{transform:scale(1)}45%{transform:scale(1.22) rotate(-7deg)}100%{transform:scale(1)}}
 
-/* journal list */
-.jcard{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin-top:12px}
-.jcard img{width:64px;height:64px;object-fit:cover;border-radius:10px;background:var(--bg2)}
-.jcard .ph{width:64px;height:64px;border-radius:10px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:26px}
+/* journal & cellar entries */
+.jcard{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px;margin-top:12px;
+  box-shadow:0 1px 2px rgba(51,19,31,.05)}
+.jcard img{width:64px;height:64px;object-fit:cover;border-radius:10px;background:var(--paper2)}
+.jcard .ph{width:64px;height:64px;border-radius:10px;background:var(--paper2);display:flex;align-items:center;justify-content:center;font-size:26px}
 .jcard .m{flex:1;min-width:0}
-.jcard .m b{font-family:var(--serif);font-size:17px;display:block}
-.jcard .m span{font-size:13px;color:var(--ink2);display:block;margin-top:2px}
-.jcard .m p{font-size:13.5px;color:var(--ink);margin-top:6px;line-height:1.45}
-.jcard .r{font-size:14px;white-space:nowrap}
+.jcard .m b{font-family:var(--serif);font-size:17.5px;font-weight:600;display:block}
+.jcard .m span{font-size:12.5px;color:var(--ink2);display:block;margin-top:2px}
+.jcard .m p{font-size:13.5px;color:var(--ink);margin-top:6px;line-height:1.5}
+.jcard .r{font-size:13px;white-space:nowrap}
 .jcard button{background:none;color:var(--ink2);font-size:12px;padding:2px 6px;align-self:flex-start}
-.empty{color:var(--ink2);font-size:14.5px;text-align:center;padding:28px 10px;line-height:1.6}
+.empty{color:var(--ink2);font-size:14.5px;text-align:center;padding:30px 12px;line-height:1.65;font-family:var(--serif);font-style:italic}
 
-/* cellar */
-.badge{display:inline-block;font-size:11px;font-weight:700;border-radius:999px;padding:3px 10px;margin-left:8px}
-.badge.ready{background:var(--ok);color:#1c3324}
-.badge.hold{background:var(--gold);color:#3a2d10}
-.badge.past{background:var(--rose);color:#3a1220}
+.badge{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.06em;border-radius:999px;padding:3px 10px;margin-left:0}
+.badge.ready{background:var(--ok-bg);color:var(--ok-ink)}
+.badge.hold{background:#F1E3BC;color:#6E5716}
+.badge.past{background:#F2D7DC;color:#7C2740}
 
-/* notebook */
-.region{font-family:var(--serif);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);margin:22px 0 2px}
-.piece{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:10px}
-.piece h4{font-family:var(--serif);font-size:20px;margin-bottom:2px}
-.piece .where{font-size:12.5px;color:var(--dusk);margin-bottom:8px}
-.piece p{font-family:var(--serif);font-size:15.5px;line-height:1.65;color:var(--ink)}
-.nb-intro{font-family:var(--serif);font-size:15.5px;line-height:1.65;color:var(--ink2);font-style:italic;margin-top:8px}
+/* ── the Notebook: open magazine pages ── */
+.nb-intro{font-family:var(--serif);font-size:16px;line-height:1.7;color:var(--ink2);font-style:italic;margin-top:10px}
+.region{display:flex;align-items:center;gap:14px;margin:34px 0 6px;color:var(--wine);
+  font-family:var(--serif);font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;text-align:center}
+.region::before,.region::after{content:"";flex:1;height:1px;background:var(--hair)}
+.piece{padding:16px 2px 6px;margin-top:2px;border-bottom:1px solid var(--paper2)}
+.piece:last-of-type{border-bottom:0}
+.piece h4{font-family:var(--serif);font-size:23px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px}
+.piece .where{font-size:11.5px;color:var(--dusk);letter-spacing:.14em;text-transform:uppercase;font-weight:600;margin-bottom:10px}
+.piece p{font-family:var(--serif);font-size:16.5px;line-height:1.72;color:var(--ink)}
+.piece p::first-letter{font-family:var(--serif);font-weight:600;font-size:3.1em;float:left;line-height:.82;padding:4px 8px 0 0;color:var(--wine)}
+.fleuron{text-align:center;color:var(--rose);font-size:15px;margin:16px 0 2px;letter-spacing:.5em}
 
-/* nav */
-nav{position:fixed;left:0;right:0;bottom:0;background:rgba(46,13,25,.96);backdrop-filter:blur(10px);
-  border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
-nav button{background:none;color:var(--ink2);font-size:11.5px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px}
-nav button.on{color:var(--dusk)}
+/* reveal on scroll */
+.rv{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+.rv.vis{opacity:1;transform:none}
+
+/* ── nav ── */
+nav{position:fixed;left:0;right:0;bottom:0;background:rgba(252,247,236,.92);backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:5}
+nav button{background:none;color:var(--ink2);font-size:11.5px;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px}
+nav button.on{color:var(--wine)}
+nav button.on::after{content:"";width:4px;height:4px;border-radius:50%;background:var(--dusk);margin-top:1px}
 nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-footer{max-width:680px;margin:26px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.6}
-.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);
-  background:var(--dusk);color:#3a1c0e;font-size:14px;font-weight:700;border-radius:999px;padding:9px 18px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
-.toast.on{opacity:1}
+footer{max-width:680px;margin:30px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.7;text-align:center}
+footer .fl{color:var(--rose);font-size:14px;margin-bottom:6px}
+.toast{position:fixed;left:50%;bottom:calc(94px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--wine);color:#F9EFE3;font-size:14px;font-weight:600;border-radius:999px;padding:10px 20px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60;
+  box-shadow:0 10px 24px -10px rgba(71,19,35,.6)}
+.toast.on{opacity:1;animation:tpop .4s ease}
+@keyframes tpop{0%{transform:translateX(-50%) scale(.85)}55%{transform:translateX(-50%) scale(1.06)}100%{transform:translateX(-50%) scale(1)}}
+/* the cork */
+#cork{position:fixed;left:50%;bottom:calc(120px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  font-size:30px;opacity:0;pointer-events:none;z-index:61}
+#cork.fly{animation:cork .8s cubic-bezier(.2,.6,.3,1)}
+@keyframes cork{0%{opacity:1;transform:translate(-50%,0) rotate(0)}
+  60%{opacity:1;transform:translate(-10%,-110px) rotate(38deg)}
+  100%{opacity:0;transform:translate(20%,-150px) rotate(60deg)}}
 
-/* 21+ gate */
-#gate{position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
-#gate .in{max-width:420px;text-align:center}
-#gate img{width:96px;height:96px;border-radius:22px;margin-bottom:18px}
-#gate h1{font-family:var(--serif);font-size:30px}
-#gate p{color:var(--ink2);font-size:15px;line-height:1.6;margin:14px 0 20px}
+/* ── 21+ gate: dusk over the vineyard ── */
+#gate{position:fixed;inset:0;background:var(--sky);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;overflow:hidden}
+#gate .scene{position:absolute;left:0;right:0;bottom:0;pointer-events:none}
+#gate .in{max-width:420px;text-align:center;position:relative;z-index:2;margin-bottom:12vh}
+#gate img{width:92px;height:92px;border-radius:22px;margin-bottom:18px;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+#gate h1{font-family:var(--serif);font-size:34px;font-weight:400;color:#F7EEF0}
+#gate h1 i{font-weight:600;color:#F2C8A8}
+#gate .gt{font-size:10.5px;color:#DBAF9E;letter-spacing:.3em;text-transform:uppercase;margin-top:6px}
+#gate p{color:#E8CFC3;font-size:15px;line-height:1.65;margin:16px 0 22px}
+#gate .b1{background:var(--dusk);color:#33131F;font-weight:700;box-shadow:0 8px 24px -8px rgba(0,0,0,.5)}
+#gate .b1:hover{background:#E08A5A}
 </style>
 </head>
 <body>
 <div id="gate" style="display:none">
+  <svg class="scene" viewBox="0 0 430 240" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <circle cx="326" cy="96" r="34" fill="#F2C8A8" opacity=".95"/>
+    <circle cx="326" cy="96" r="52" fill="#F2C8A8" opacity=".18"/>
+    <path d="M0 150 Q 110 108 215 138 T 430 128 V 240 H 0 Z" fill="#3A1230" opacity=".85"/>
+    <path d="M0 176 Q 130 140 250 166 T 430 158 V 240 H 0 Z" fill="#2A0E24" opacity=".95"/>
+    <path d="M0 205 Q 120 178 240 196 T 430 190 V 240 H 0 Z" fill="#1B0713"/>
+    <g stroke="#4A1630" stroke-width="2" opacity=".65">
+      <path d="M30 240 L52 206"/><path d="M78 240 L96 208"/><path d="M126 240 L140 210"/>
+      <path d="M176 240 L186 212"/><path d="M226 240 L232 212"/><path d="M276 240 L278 212"/>
+      <path d="M326 240 L324 210"/><path d="M376 240 L368 208"/><path d="M418 240 L406 206"/>
+    </g>
+  </svg>
   <div class="in">
     <img src="/apps/espovineyard/icon.png" alt="">
-    <h1>ESPO<span style="color:var(--dusk)">vineyard</span></h1>
+    <h1>ESPO<i>vineyard</i></h1>
+    <div class="gt">A Wine Country Journal</div>
     <p>A quiet journal for wine. This app is for adults of legal drinking age — 21+ in the United States.
     Please enjoy responsibly.</p>
     <button class="b1" id="gateYes">I'm 21 or older — come in</button>
@@ -103,9 +173,18 @@ footer{max-width:680px;margin:26px auto 0;padding:0 18px;font-size:12px;color:va
 </div>
 
 <header>
-  <img src="/apps/espovineyard/icon.png" alt="">
-  <div class="t">ESPO<b>vineyard</b></div>
-  <div class="age">21+</div>
+  <div class="mast">
+    <img src="/apps/espovineyard/icon.png" alt="">
+    <div>
+      <div class="t">ESPO<b>vineyard</b></div>
+      <div class="tag">A Wine Country Journal</div>
+    </div>
+    <div class="age">21+</div>
+  </div>
+  <svg class="hills" viewBox="0 0 430 46" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 26 Q 110 6 215 20 T 430 14 V 46 H 0 Z" fill="#2A0E24" opacity=".8"/>
+    <path d="M0 34 Q 130 18 250 30 T 430 26 V 46 H 0 Z" fill="#F6EEE1"/>
+  </svg>
 </header>
 
 <main>
@@ -161,7 +240,8 @@ footer{max-width:680px;margin:26px auto 0;padding:0 18px;font-size:12px;color:va
     <p class="nb-intro">Real places, real wineries, written the way a wine country magazine would have it —
     starting where the Russian River runs through the redwoods, and wandering out from there.</p>
     <div id="nb"></div>
-    <p class="hint" style="text-align:left">Every fact above is verified against the wineries' own histories and regional records.
+    <div class="fleuron">❦</div>
+    <p class="hint" style="text-align:center">Every fact above is verified against the wineries' own histories and regional records.
     More regions join the Notebook over time. Suggest one from Settings.</p>
   </section>
 
@@ -194,9 +274,10 @@ footer{max-width:680px;margin:26px auto 0;padding:0 18px;font-size:12px;color:va
   <button data-v="set"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>Settings</button>
 </nav>
 
-<footer>ESPOvineyard · part of the ESPOsavor family · Accelerated Experiences, LLC — Post Falls, Idaho.
+<footer><div class="fl">❦</div>ESPOvineyard · part of the ESPOsavor family · Accelerated Experiences, LLC — Post Falls, Idaho.
 21+ · No ads. No marketplace. Your cellar is actually yours.</footer>
 <div class="toast" id="toast"></div>
+<div id="cork">🍾</div>
 
 <script>
 /* ─── Wine Country Notebook — every fact verified Jul 2026 (sources in the AE research file) ─── */
@@ -230,7 +311,8 @@ var K="espovineyard.v1",S;
 try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
 S.journal=S.journal||[]; S.cellar=S.cellar||[];
 function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){toast("Storage full — export & remove old photos")}}
-function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1800)}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.remove("on");void t.offsetWidth;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1800)}
+function corkPop(){var c=document.getElementById("cork");c.classList.remove("fly");void c.offsetWidth;c.classList.add("fly")}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 
 /* 21+ gate */
@@ -296,7 +378,7 @@ document.getElementById("cSave").onclick=function(){
     qty:document.getElementById("cQty").value.trim()||"1",vintage:document.getElementById("cVintage").value.trim(),
     from:document.getElementById("cFrom").value.trim(),to:document.getElementById("cTo").value.trim(),t:Date.now()});
   save();["cName","cWinery","cQty","cVintage","cFrom","cTo"].forEach(function(id){document.getElementById(id).value=""});
-  drawC();toast("In the cellar 🍾");
+  drawC();corkPop();toast("In the cellar 🍾");
 };
 function windowBadge(c){
   var y=new Date().getFullYear(),f=parseInt(c.from),to=parseInt(c.to);
@@ -327,7 +409,7 @@ function drawC(){
       document.getElementById("bName").value=c.name;
       document.getElementById("bWinery").value=c.winery||"";
       document.getElementById("bVintage").value=c.vintage||"";
-      save();drawC();toast("Popped 🍾 — write it down while it's fresh");
+      save();drawC();corkPop();toast("Popped 🍾 — write it down while it's fresh");
       window.scrollTo({top:0,behavior:"smooth"});
     };
   });
@@ -335,10 +417,20 @@ function drawC(){
 
 /* notebook */
 document.getElementById("nb").innerHTML=NB.map(function(r){
-  return '<div class="region">'+r.region+'</div>'+r.pieces.map(function(p){
-    return '<div class="piece"><h4>'+p.t+'</h4><div class="where">'+p.w+'</div><p>'+p.p+'</p></div>';
+  return '<div class="region rv">'+r.region+'</div>'+r.pieces.map(function(p){
+    return '<div class="piece rv"><h4>'+p.t+'</h4><div class="where">'+p.w+'</div><p>'+p.p+'</p></div>';
   }).join("");
 }).join("");
+
+/* reveal on scroll */
+if("IntersectionObserver" in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("vis");io.unobserve(e.target)}});
+  },{threshold:.08});
+  document.querySelectorAll(".rv").forEach(function(el){io.observe(el)});
+}else{
+  document.querySelectorAll(".rv").forEach(function(el){el.classList.add("vis")});
+}
 
 /* export */
 function csv(rows,name){
@@ -370,7 +462,7 @@ document.querySelectorAll("nav button").forEach(function(b){
   };
 });
 drawJ();drawC();
-if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/espovineyard/sw.js");
+if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/espovineyard/sw.js").catch(function(){});
 </script>
 </body>
 </html>
