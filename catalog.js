@@ -142,9 +142,10 @@
       blurb:'Five-minute practice for anger, stress and anxiety — a real skills ladder plus right-now SOS tools. Skills, not affirmations.',
       price:'Free right now', priceNote:'Plus coming: $1.99/mo · $19.99/yr — Level 1 + every SOS tool free forever' },
 
-    { id:'espotrek', name:'ESPOtrek', tag:'Trip planner', genre:'travel', state:'dev',
-      acc:'#12303E', mark:M+'espotrek.svg', family:'ESPOtravel',
-      blurb:'Plan the trip, split the budget, map the drive — without six tabs and a group chat.' },
+    { id:'espotrek', name:'ESPOtrek', tag:'Trip planner', genre:'travel', state:'live',
+      acc:'#12303E', mark:M+'espotrek.svg', family:'ESPOtravel', url:'/apps/espotrek/',
+      blurb:'Days, stops, one-tap map routes, a budget that splits itself, and a printable one-pager — offline by default.',
+      price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — offline, export & print free forever' },
 
     { id:'esponatlparks', name:'ESPOnatlparks', tag:'National parks guide', genre:'travel', state:'dev',
       acc:'#173428', mark:M+'esponatlparks.svg', family:'ESPOtravel',
