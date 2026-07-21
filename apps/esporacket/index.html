@@ -5,47 +5,73 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ESPOracket — film the match, find the moments</title>
 <meta name="description" content="Tennis & pickleball match review: load your match video, tag every point, tap a tag to jump the film to that moment, see honest stats. Your footage never leaves your device — works on any phone, tablet or laptop. By Accelerated Experiences, LLC.">
-<meta name="theme-color" content="#101C2C">
+<meta name="theme-color" content="#8A4526">
 <link rel="manifest" href="/apps/esporacket/manifest.webmanifest">
 <link rel="icon" href="/apps/esporacket/icon.png">
 <link rel="apple-touch-icon" href="/apps/esporacket/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#101C2C; --bg2:#16283C; --card:#1C3049; --ink:#EFF5FA; --ink2:#9FB6C9;
-  --ball:#DFF34C; --courtA:#5FA8E8; --courtB:#E8907F; --line:#28425E; --ok:#8BC7A0;
-  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  /* the clay court club: warm espresso-clay felt + chalk + optic ball */
+  --bg:#33221A; --bg2:#3F2B20; --card:#48331F; --ink:#F7F0E6; --ink2:#C9B49E;
+  --ball:#DFF34C; --clay:#C9703F; --chalk:#F2E7D5; --courtA:#7FB3D9; --courtB:#E8907F; --line:#5A4230; --ok:#8BC7A0;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --serif:"Fraunces","Iowan Old Style",Georgia,serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
-  padding-bottom:calc(30px + env(safe-area-inset-bottom));
-  background-image:linear-gradient(90deg, transparent 0 calc(50% - 1px), rgba(223,243,76,.05) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px));}
-header{padding:calc(14px + env(safe-area-inset-top)) 18px 10px;display:flex;align-items:center;gap:10px;max-width:860px;margin:0 auto}
-header img{width:34px;height:34px;border-radius:9px}
-header .t{font-size:19px;font-weight:700}
-header .t b{color:var(--ball)}
-header .priv{margin-left:auto;font-size:12px;color:var(--ink2);background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
-main{max-width:860px;margin:0 auto;padding:6px 18px 24px}
-h2{font-size:22px;margin:14px 0 4px}
-.sub{color:var(--ink2);font-size:14.5px;line-height:1.55;margin-bottom:12px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}
-.card h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ball);margin-bottom:8px}
-button{font-family:var(--sans);cursor:pointer;border:0;border-radius:12px;font-size:15px}
-.b1{background:var(--ball);color:#232a08;padding:13px 18px;font-weight:800;width:100%;margin-top:12px}
-.b2{background:var(--bg2);color:var(--ink);border:1px solid var(--line);padding:11px 14px}
-input{background:var(--bg2);border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:15.5px;padding:12px;width:100%}
-input:focus{outline:2px solid var(--ball)}
-.hint{font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:10px}
+  padding-bottom:calc(30px + env(safe-area-inset-bottom));position:relative}
+/* felt nap */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.5;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .32 0 0 0 0 .2 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+header,main,footer,.toast{position:relative;z-index:1}
 
-/* drop */
-#drop{border:2px dashed var(--line);border-radius:18px;padding:46px 20px;text-align:center;margin-top:14px;cursor:pointer}
-#drop.hot{border-color:var(--ball)}
-#drop .ico{font-size:42px}
-#drop .big{font-size:19px;font-weight:800;margin-top:10px}
-#drop p{color:var(--ink2);font-size:14px;margin-top:8px;line-height:1.5}
+/* ── clay court masthead ── */
+header{position:relative;background:linear-gradient(180deg,#8A4526 0%,#A2542E 60%,#B35E33 100%);
+  border-bottom:2px solid var(--chalk);padding:calc(16px + env(safe-area-inset-top)) 18px 16px;overflow:hidden}
+header::before{content:"";position:absolute;left:8%;right:8%;top:58%;height:2px;background:rgba(242,231,213,.55)}
+header::after{content:"";position:absolute;left:50%;top:38%;bottom:0;width:2px;background:rgba(242,231,213,.4)}
+.mast{position:relative;max-width:860px;margin:0 auto;display:flex;align-items:center;gap:11px;z-index:2}
+.mast img{width:36px;height:36px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.35)}
+.mast .t{font-family:var(--serif);font-size:21px;font-weight:400;color:#FBEFDF}
+.mast .t b{font-weight:600;font-style:italic;color:var(--ball)}
+.mast .tag{font-size:10px;color:#EFC9A8;letter-spacing:.24em;text-transform:uppercase;margin-top:2px}
+.priv{margin-left:auto;font-size:11.5px;font-weight:600;color:#FBEFDF;border:1px solid rgba(242,231,213,.45);
+  background:rgba(242,231,213,.12);border-radius:999px;padding:5px 12px}
+
+main{max-width:860px;margin:0 auto;padding:8px 18px 24px}
+h2{font-family:var(--serif);font-size:26px;font-weight:500;margin:16px 0 4px}
+.sub{color:var(--ink2);font-size:14.5px;line-height:1.6;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px;
+  box-shadow:0 10px 30px -18px rgba(0,0,0,.5)}
+.card h3{display:flex;align-items:center;gap:10px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ball);margin-bottom:8px;font-weight:700}
+.card h3::after{content:"";flex:1;height:1px;background:rgba(223,243,76,.2)}
+button{font-family:var(--sans);cursor:pointer;border:0;border-radius:12px;font-size:15px;transition:transform .12s ease,background .15s ease,border-color .15s ease,color .15s ease}
+button:active{transform:scale(.96)}
+.b1{background:var(--ball);color:#232a08;padding:13px 18px;font-weight:800;width:100%;margin-top:12px;
+  box-shadow:0 6px 18px -9px rgba(223,243,76,.5)}
+.b1:hover{background:#E9FA6A}
+.b2{background:transparent;color:var(--ink);border:1.5px solid var(--line);padding:11px 14px;font-weight:600}
+.b2:hover{border-color:var(--ball);color:var(--ball)}
+input{background:var(--bg2);border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:15.5px;padding:12px;width:100%;font-family:var(--sans)}
+input:focus{outline:2px solid var(--ball)}
+::placeholder{color:#9A8368}
+.hint{font-size:12.5px;color:var(--ink2);line-height:1.6;margin-top:10px}
+
+/* drop = the service box */
+#drop{border:2px dashed rgba(242,231,213,.45);border-radius:18px;padding:46px 20px;text-align:center;margin-top:14px;cursor:pointer;
+  background:rgba(63,43,32,.5);transition:border-color .2s,background .2s}
+#drop:hover,#drop.hot{border-color:var(--ball);background:rgba(223,243,76,.05)}
+#drop .ico{font-size:42px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.3))}
+#drop .big{font-family:var(--serif);font-size:21px;font-weight:600;margin-top:10px}
+#drop p{color:var(--ink2);font-size:14px;margin-top:8px;line-height:1.55}
 
 /* review */
 #review{display:none}
-video{width:100%;border-radius:14px;background:#000;display:block;margin-top:14px}
+video{width:100%;border-radius:14px;background:#000;display:block;margin-top:14px;
+  box-shadow:0 14px 40px -16px rgba(0,0,0,.6);border:1px solid var(--line)}
 .players{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 .players input{text-align:center;font-weight:700}
 .players .pa{border-top:3px solid var(--courtA)}
@@ -54,18 +80,20 @@ video{width:100%;border-radius:14px;background:#000;display:block;margin-top:14p
 /* tag pads */
 .pads{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
 .pad{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px}
-.pad h4{font-size:14px;margin-bottom:8px;text-align:center}
+.pad h4{font-family:var(--serif);font-size:15px;font-weight:600;margin-bottom:8px;text-align:center}
 .pad.pa h4{color:var(--courtA)}.pad.pb h4{color:var(--courtB)}
 .pad .tags{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .pad .tags button{padding:12px 6px;font-size:13.5px;font-weight:700;background:var(--bg2);color:var(--ink);border:1px solid var(--line)}
-.pad .tags button:active{transform:scale(.96)}
+.pad .tags button:active{transform:scale(.94)}
 .pad.pa .tags button:hover{border-color:var(--courtA)}
 .pad.pb .tags button:hover{border-color:var(--courtB)}
+@keyframes tagbounce{0%{transform:scale(1)}40%{transform:scale(.9)}70%{transform:scale(1.06)}100%{transform:scale(1)}}
+.pad .tags button.hit{animation:tagbounce .3s ease}
 
 /* score strip */
 .score{display:flex;gap:10px;margin-top:12px}
-.score div{flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
-.score b{display:block;font-size:26px}
+.score div{flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center}
+.score b{display:block;font-family:var(--serif);font-size:28px;font-weight:600}
 .score .a b{color:var(--courtA)}.score .b b{color:var(--courtB)}
 .score span{font-size:11.5px;color:var(--ink2)}
 
@@ -76,7 +104,7 @@ video{width:100%;border-radius:14px;background:#000;display:block;margin-top:14p
 .pt .who{font-size:14px;flex:1}
 .pt .who.a{color:var(--courtA)}.pt .who.b{color:var(--courtB)}
 .pt button{background:none;color:var(--ink2);font-size:12px}
-.empty{color:var(--ink2);font-size:14.5px;text-align:center;padding:22px 10px;line-height:1.6}
+.empty{color:var(--ink2);font-size:15px;text-align:center;padding:22px 12px;line-height:1.65;font-family:var(--serif);font-style:italic}
 
 /* stat bars */
 .statrow{margin-top:10px}
@@ -87,18 +115,32 @@ video{width:100%;border-radius:14px;background:#000;display:block;margin-top:14p
 
 .rowbtns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
 .rowbtns .b2{flex:1;min-width:120px;text-align:center}
-footer{max-width:860px;margin:26px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.6}
+footer{max-width:860px;margin:28px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.7;text-align:center}
+footer .fl{color:var(--clay);font-size:13px;margin-bottom:6px;letter-spacing:.5em}
 .toast{position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom));transform:translateX(-50%);
-  background:var(--ball);color:#232a08;font-size:14px;font-weight:800;border-radius:999px;padding:9px 18px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
-.toast.on{opacity:1}
-.note{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:14px}
+  background:var(--ball);color:#232a08;font-size:14px;font-weight:800;border-radius:999px;padding:10px 20px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60;
+  box-shadow:0 10px 24px -12px rgba(0,0,0,.5)}
+.toast.on{opacity:1;animation:tpop .4s ease}
+@keyframes tpop{0%{transform:translateX(-50%) scale(.85)}55%{transform:translateX(-50%) scale(1.06)}100%{transform:translateX(-50%) scale(1)}}
+/* the ball pops on a tag */
+#tagball{position:fixed;left:50%;bottom:calc(60px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  font-size:26px;opacity:0;pointer-events:none;z-index:61}
+#tagball.fly{animation:ballfly .55s cubic-bezier(.2,.7,.3,1)}
+@keyframes ballfly{0%{opacity:1;transform:translate(-50%,0)}55%{opacity:1;transform:translate(-30%,-70px) rotate(90deg)}100%{opacity:0;transform:translate(-12%,-96px) rotate(150deg)}}
+.note{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12.5px;color:var(--ink2);line-height:1.6;margin-top:14px}
+@media (prefers-reduced-motion: reduce){#tagball.fly,.pad .tags button.hit{animation:none}}
 </style>
 </head>
 <body>
 <header>
-  <img src="/apps/esporacket/icon.png" alt="">
-  <div class="t">ESPO<b>racket</b></div>
-  <div class="priv">🔒 Film never uploaded</div>
+  <div class="mast">
+    <img src="/apps/esporacket/icon.png" alt="">
+    <div>
+      <div class="t">ESPO<b>racket</b></div>
+      <div class="tag">Film the Match · Find the Moments</div>
+    </div>
+    <div class="priv">🔒 Film never uploaded</div>
+  </div>
 </header>
 
 <main>
@@ -163,8 +205,9 @@ footer{max-width:860px;margin:26px auto 0;padding:0 18px;font-size:12px;color:va
   </section>
 </main>
 
-<footer>ESPOracket · part of the ESPOcenter family · Accelerated Experiences, LLC — Post Falls, Idaho.
+<footer><div class="fl">● ● ●</div>ESPOracket · part of the ESPOcenter family · Accelerated Experiences, LLC — Post Falls, Idaho.
 No upload. No account. No AI umpire promises — just your match, found fast.</footer>
+<div id="tagball">🎾</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -172,7 +215,7 @@ var K="esporacket.v1",S;
 try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
 S.sessions=S.sessions||{}; // key: filename|size -> {a,b,tags:[{t,p,tag}]}
 function save(){localStorage.setItem(K,JSON.stringify(S))}
-function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1700)}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.remove("on");void t.offsetWidth;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1700)}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function fmt(t){var m=Math.floor(t/60),s=Math.floor(t%60);return m+":"+String(s).padStart(2,"0")}
 
@@ -214,6 +257,9 @@ document.querySelectorAll(".pad .tags").forEach(function(pad){
       sess.tags.push({t:vid.currentTime,p:pad.dataset.p,tag:b.dataset.tag});
       sess.tags.sort(function(x,y){return x.t-y.t});
       save();drawAll();
+      b.classList.add("hit");setTimeout(function(){b.classList.remove("hit")},320);
+      var tb=document.getElementById("tagball");tb.classList.remove("fly");void tb.offsetWidth;tb.classList.add("fly");
+      if(navigator.vibrate)navigator.vibrate(12);
       toast(b.dataset.tag+" @ "+fmt(vid.currentTime));
     };
   });
@@ -273,7 +319,7 @@ document.getElementById("expBtn").onclick=function(){
 document.getElementById("clearBtn").onclick=function(){
   if(confirm("Clear all tags for this video? The video itself is untouched.")){sess.tags=[];save();drawAll()}
 };
-if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/esporacket/sw.js");
+if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/esporacket/sw.js").catch(function(){});
 </script>
 </body>
 </html>

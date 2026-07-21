@@ -1,7 +1,8 @@
 /* ESPOracket service worker — offline-first app shell (the video itself is local anyway).
    Accelerated Experiences, LLC */
-var C = "esporacket-v1";
-var ASSETS = ["./", "./index.html", "./icon.png", "./manifest.webmanifest"];
+var C = "esporacket-v2";
+var ASSETS = ["./", "./index.html", "./icon.png", "./manifest.webmanifest",
+  "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700;800&display=swap"];
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(C).then(function (c) { return c.addAll(ASSETS); }).then(function(){ return self.skipWaiting(); }));
 });

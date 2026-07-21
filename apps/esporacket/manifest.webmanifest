@@ -5,8 +5,8 @@
   "start_url": "/apps/esporacket/",
   "scope": "/apps/esporacket/",
   "display": "standalone",
-  "background_color": "#101C2C",
-  "theme_color": "#101C2C",
+  "background_color": "#33221A",
+  "theme_color": "#8A4526",
   "icons": [
     { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
     { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
