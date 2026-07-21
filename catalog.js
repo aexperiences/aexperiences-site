@@ -162,9 +162,10 @@
       blurb:'A calm wine journal with a real Wine Country Notebook inside — no ads, no marketplace, a cellar that is actually yours.',
       price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — journal, cellar & Notebook stay free' },
 
-    { id:'esporacket', name:'ESPOracket', tag:'Tennis & pickleball', genre:'sport', state:'dev',
-      acc:'#101C2C', mark:M+'esporacket.svg', family:'ESPOcenter',
-      blurb:'Film the match, tag the points, see what your game actually does.' }
+    { id:'esporacket', name:'ESPOracket', tag:'Tennis & pickleball', genre:'sport', state:'live',
+      acc:'#101C2C', mark:M+'esporacket.svg', family:'ESPOcenter', url:'/apps/esporacket/',
+      blurb:'Load your match film, tag every point, tap a tag to jump straight to the moment — on any device, footage never uploaded.',
+      price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — every price on the page, no hidden tiers' }
   ];
 
   var GENRES = [
