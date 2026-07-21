@@ -137,9 +137,10 @@
 
     /* ─────────── IN DEVELOPMENT — no price, no buy path, notify-me only ─────────── */
 
-    { id:'esporegulator', name:'ESPOregulator', tag:'Emotional skills', genre:'mind', state:'dev',
-      acc:'#2B2350', mark:M+'esporegulator.svg', family:'ESPOmindpeace',
-      blurb:'Short, practical training for anger, stress and anxiety — skills, not affirmations.' },
+    { id:'esporegulator', name:'ESPOregulator', tag:'Emotional skills', genre:'mind', state:'live',
+      acc:'#2B2350', mark:M+'esporegulator.svg', family:'ESPOmindpeace', url:'/apps/esporegulator/',
+      blurb:'Five-minute practice for anger, stress and anxiety — a real skills ladder plus right-now SOS tools. Skills, not affirmations.',
+      price:'Free right now', priceNote:'Plus coming: $1.99/mo · $19.99/yr — Level 1 + every SOS tool free forever' },
 
     { id:'espotrek', name:'ESPOtrek', tag:'Trip planner', genre:'travel', state:'dev',
       acc:'#12303E', mark:M+'espotrek.svg', family:'ESPOtravel',
