@@ -1,11 +1,12 @@
 /* ESPOsign service worker — offline-first, caches the PDF libraries too.
    Accelerated Experiences, LLC */
-var C = "esposign-v1";
+var C = "esposign-v2";
 var ASSETS = [
   "./", "./index.html", "./icon.png", "./manifest.webmanifest",
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js",
-  "https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js",
+  "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700&display=swap"
 ];
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(C).then(function (c) { return c.addAll(ASSETS); }).then(function(){ return self.skipWaiting(); }));

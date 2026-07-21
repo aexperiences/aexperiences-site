@@ -5,8 +5,8 @@
   "start_url": "/apps/esposign/",
   "scope": "/apps/esposign/",
   "display": "standalone",
-  "background_color": "#2A1A4A",
-  "theme_color": "#2A1A4A",
+  "background_color": "#241543",
+  "theme_color": "#1C0F38",
   "icons": [
     { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
     { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
