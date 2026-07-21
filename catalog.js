@@ -56,6 +56,30 @@
       price:'$400/mo', priceNote:'3 tiers · annual $4,000/yr (2 months free)',
       svg:'<circle cx="24" cy="24" r="15"/><path d="M24 9v30M9 24h30"/><path d="M13 13l22 22M35 13L13 35"/>' },
 
+    { id:'showroom', name:'Showroom Hub', tag:'Used-car dealers', genre:'business', state:'live',
+      acc:'#1c5568', url:'/showroom.html?trade=showroom', pricing:'/hubs/showroom.html',
+      blurb:'Inventory, sales desk, leads and recon for independent and boutique used-car dealers.',
+      price:'$450/mo', priceNote:'3 tiers · annual $4,500/yr (2 months free)',
+      svg:'<path d="M6 32V24l4-10a4 4 0 0 1 4-2.6h20A4 4 0 0 1 38 14l4 10v8"/><path d="M6 32h6M42 32h-6"/><circle cx="15" cy="32" r="4"/><circle cx="33" cy="32" r="4"/>' },
+
+    { id:'driveline', name:'Driveline Hub', tag:'Franchise dealerships', genre:'business', state:'live',
+      acc:'#24507e', url:'/showroom.html?trade=driveline', pricing:'/hubs/driveline.html',
+      blurb:'Sales, service and parts for a franchise dealership — one dealership OS instead of six.',
+      price:'$950/mo', priceNote:'3 tiers · annual $9,500/yr (2 months free)',
+      svg:'<path d="M6 32V24l4-10a4 4 0 0 1 4-2.6h20A4 4 0 0 1 38 14l4 10v8"/><path d="M6 32h6M42 32h-6"/><circle cx="15" cy="32" r="4"/><circle cx="33" cy="32" r="4"/>' },
+
+    { id:'motorcade', name:'Motorcade Hub', tag:'Dealer groups & national online', genre:'business', state:'live',
+      acc:'#182f4d', url:'/showroom.html?trade=motorcade', pricing:'/hubs/motorcade.html',
+      blurb:'Multi-rooftop inventory, group desk, service and online sales — one command center.',
+      price:'$1,200/mo', priceNote:'3 tiers · annual $12,000/yr (2 months free)',
+      svg:'<path d="M6 32V24l4-10a4 4 0 0 1 4-2.6h20A4 4 0 0 1 38 14l4 10v8"/><path d="M6 32h6M42 32h-6"/><circle cx="15" cy="32" r="4"/><circle cx="33" cy="32" r="4"/>' },
+
+    { id:'targeted', name:'Targeted Hub', tag:'Marketing agencies & studios', genre:'business', state:'live',
+      acc:'#d97a2e', url:'/showroom.html?trade=targeted', pricing:'/hubs/targeted.html',
+      blurb:'CRM, pipeline, estimator and campaigns for a marketing agency or studio — on one branded hub.',
+      price:'$450/mo', priceNote:'3 tiers · annual $4,500/yr (2 months free)',
+      svg:'<circle cx="24" cy="24" r="15"/><circle cx="24" cy="24" r="9"/><circle cx="24" cy="24" r="3"/>' },
+
     /* ─────────── ESPO FAMILY — live today ─────────── */
     { id:'espo-music', name:'ESPO Music', tag:'Instrument coaching', genre:'arts', state:'live',
       acc:'#e0a83a', url:'https://espomusic.com/fret', img:'/logo-music.png',

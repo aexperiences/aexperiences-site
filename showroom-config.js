@@ -502,7 +502,200 @@
         { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' },
         { id:'stack', label:'What this replaces', icon:'M3 6h18M3 12h18M3 18h18' }
       ]
+    },
+
+    showroom: {
+      id:'showroom', hub:'Showroom Hub', trade:'Used-car dealer',
+      acc:'#1c5568', acc2:'#123f4f',
+      firm:'Ridgeline Auto Sales', firmSub:'1 lot · 22 units on ground · Coeur d\'Alene, Idaho',
+      who:'a single-lot used-car dealer', priceId:'showroom',
+      kpis:[
+        { k:'Units on the lot', v:'22', s:'5 arrived this week', tone:'' },
+        { k:'Deals this month', v:'14', s:'$186,400 gross', tone:'good' },
+        { k:'Leads working', v:'31', s:'9 new today', tone:'' },
+        { k:'Recon in progress', v:'4', s:'2 ready for photos', tone:'warn' }
+      ],
+      chart:{ title:'Units sold', unit:'units', months:['Feb','Mar','Apr','May','Jun','Jul'], vals:[9,11,10,13,12,14] },
+      funnel:[ {s:'New leads',n:58}, {s:'Working',n:34}, {s:'Test drive',n:19}, {s:'Financing',n:15}, {s:'Sold',n:14} ],
+      funnelTitle:'Where every deal stands', funnelSub:'Lead to delivered, one pipeline.',
+      today:[
+        { t:'Recon done — ready for photos', w:'2019 Ford F-150', when:'Today', tone:'good' },
+        { t:'Trade appraisal due', w:'2021 Honda Civic', when:'Today, 3:00pm', tone:'warn' },
+        { t:'Financing approval pending', w:'3 deals', when:'This week', tone:'warn' },
+        { t:'Lot walk with lender rep', w:'Monthly review', when:'Friday', tone:'' }
+      ],
+      peopleSub:'Sales and recon on the same board — nothing sits without an owner.',
+      people:[
+        { n:'M. Reyes', r:'Sales', d:'5 deals this month', flag:'' },
+        { n:'D. Kowalski', r:'Sales', d:'4 deals this month', flag:'' },
+        { n:'T. Nakamura', r:'Recon / detail', d:'4 units in shop', flag:'Backlog: 2 units' },
+        { n:'Front desk', r:'F&I', d:'14 deals financed', flag:'' }
+      ],
+      dealsMeta:{ h1:'Deals', sub:'Every unit and every deal, one list.', cols:['Unit','Price','Stage','Rep','Next'] },
+      deals:[
+        { a:'2019 Ford F-150', p:'$28,900', st:'Financing', ag:'M. Reyes', d:'Funds Fri', tone:'warn' },
+        { a:'2021 Honda Civic', p:'$19,500', st:'Test drive', ag:'D. Kowalski', d:'—', tone:'' },
+        { a:'2018 Jeep Wrangler', p:'$24,200', st:'Sold', ag:'M. Reyes', d:'Delivered', tone:'good' },
+        { a:'2020 Toyota Camry', p:'$21,800', st:'New lead', ag:'unassigned', d:'—', tone:'' },
+        { a:'2017 Chevrolet Silverado', p:'$26,500', st:'Recon', ag:'T. Nakamura', d:'Photos pending', tone:'warn' }
+      ],
+      money:{ h1:'F&I &amp; Gross', sub:'Front and back gross tied to the deal, not re-keyed into a spreadsheet.',
+        kpis:[ {k:'Gross this month',v:'$186,400',s:'14 deals',tone:'good'}, {k:'Ready to fund',v:'3',s:'closings cleared',tone:'good'}, {k:'F&I income',v:'$22,100',s:'this month'}, {k:'Missing paperwork',v:'1',s:'blocks funding',tone:'warn'} ],
+        listTitle:'This cycle', listSub:'Each line traces back to the deal it came from.',
+        rows:[ {n:'M. Reyes',d:'5 deals · sales',v:'$71,200'}, {n:'D. Kowalski',d:'4 deals · sales',v:'$58,900'}, {n:'T. Nakamura',d:'recon bonus pool',v:'$3,200'}, {n:'F&I income',d:'14 deals financed',v:'$22,100'} ] },
+      sections:[
+        { id:'dash', label:'Dashboard', icon:'M3 13h8V3H3zM13 21h8v-10h-8zM13 3v6h8V3zM3 21h8v-6H3z' },
+        { id:'deals', label:'Deals', icon:'M3 7h18v13H3zM3 7l3-4h12l3 4M9 12h6' },
+        { id:'people', label:'Team', icon:'M16 20v-2a4 4 0 0 0-8 0v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8' },
+        { id:'money', label:'F&I &amp; Gross', icon:'M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
+        { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' }
+      ]
+    },
+
+    driveline: {
+      id:'driveline', hub:'Driveline Hub', trade:'Franchise dealership',
+      acc:'#24507e', acc2:'#132c45',
+      firm:'Timberline Ford', firmSub:'1 rooftop · 48 units on ground · Spokane Valley, Washington',
+      who:'a single-point franchise dealership', priceId:'driveline',
+      kpis:[
+        { k:'Units on ground', v:'48', s:'12 arrived this week', tone:'' },
+        { k:'Deals this month', v:'31', s:'$1.1M volume', tone:'good' },
+        { k:'Service bays booked', v:'86%', s:'6 bays', tone:'' },
+        { k:'Parts backorders', v:'5', s:'2 hold a repair order', tone:'warn' }
+      ],
+      chart:{ title:'Units sold', unit:'units', months:['Feb','Mar','Apr','May','Jun','Jul'], vals:[24,27,25,30,28,31] },
+      funnel:[ {s:'New leads',n:96}, {s:'Working',n:61}, {s:'Test drive',n:40}, {s:'Financing',n:34}, {s:'Delivered',n:31} ],
+      funnelTitle:'Where every deal stands', funnelSub:'Lead to delivery, sales and service on one spine.',
+      today:[
+        { t:'Loaner needed', w:'RO #4482', when:'Today', tone:'warn' },
+        { t:'Parts backorder — ETA slipped', w:'3 repair orders waiting', when:'This week', tone:'warn' },
+        { t:'Delivery scheduled', w:'2026 F-150 Lariat', when:'Today, 4:00pm', tone:'good' },
+        { t:'OEM incentive expiring', w:'Certified pre-owned bonus', when:'Fri', tone:'warn' }
+      ],
+      peopleSub:'Sales, service and parts on the same board.',
+      people:[
+        { n:'R. Ferraro', r:'Sales manager', d:'9 deals this month', flag:'' },
+        { n:'K. Whitmore', r:'Service manager', d:'6 bays · 86% booked', flag:'' },
+        { n:'A. Delgado', r:'Parts manager', d:'5 backorders', flag:'2 hold repair orders' },
+        { n:'S. Bianchi', r:'F&I manager', d:'31 deals financed', flag:'' }
+      ],
+      dealsMeta:{ h1:'Deals', sub:'Every unit and every deal, one list.', cols:['Unit','Price','Stage','Rep','Next'] },
+      deals:[
+        { a:'2026 Ford F-150 Lariat', p:'$54,900', st:'Delivering', ag:'R. Ferraro', d:'Today 4pm', tone:'good' },
+        { a:'2025 Explorer ST', p:'$48,200', st:'Financing', ag:'R. Ferraro', d:'Funds Thu', tone:'warn' },
+        { a:'2024 Certified Escape', p:'$27,600', st:'Test drive', ag:'sales floor', d:'—', tone:'' },
+        { a:'2026 Bronco Sport', p:'$34,100', st:'New lead', ag:'unassigned', d:'—', tone:'' },
+        { a:'2025 Super Duty', p:'$61,400', st:'Sold', ag:'R. Ferraro', d:'Delivered', tone:'good' }
+      ],
+      money:{ h1:'Sales &amp; Service Revenue', sub:'Front-end gross, back-end gross, and shop revenue on one ledger.',
+        kpis:[ {k:'Sales gross',v:'$412,000',s:'31 deals',tone:'good'}, {k:'Service revenue',v:'$98,600',s:'this month'}, {k:'Parts revenue',v:'$61,200',s:'this month'}, {k:'Backorders',v:'5',s:'delaying ROs',tone:'warn'} ],
+        listTitle:'This cycle', listSub:'Each line traces back to the deal or repair order it came from.',
+        rows:[ {n:'R. Ferraro',d:'9 deals · sales',v:'$121,400'}, {n:'Service dept',d:'6 bays','v':'$98,600'}, {n:'Parts dept',d:'5 open backorders',v:'$61,200'}, {n:'F&I income',d:'31 deals financed',v:'$34,900'} ] },
+      sections:[
+        { id:'dash', label:'Dashboard', icon:'M3 13h8V3H3zM13 21h8v-10h-8zM13 3v6h8V3zM3 21h8v-6H3z' },
+        { id:'deals', label:'Deals', icon:'M3 7h18v13H3zM3 7l3-4h12l3 4M9 12h6' },
+        { id:'people', label:'Team', icon:'M16 20v-2a4 4 0 0 0-8 0v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8' },
+        { id:'money', label:'Revenue', icon:'M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
+        { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' }
+      ]
+    },
+
+    motorcade: {
+      id:'motorcade', hub:'Motorcade Hub', trade:'Dealer group',
+      acc:'#182f4d', acc2:'#0e1c2e',
+      firm:'Cascade Auto Group', firmSub:'6 rooftops · 312 units group-wide · Pacific Northwest',
+      who:'a six-rooftop dealer group', priceId:'motorcade',
+      kpis:[
+        { k:'Units group-wide', v:'312', s:'across 6 rooftops', tone:'' },
+        { k:'Deals this month', v:'187', s:'$6.4M volume', tone:'good' },
+        { k:'Online / national leads', v:'240', s:'38% of pipeline', tone:'' },
+        { k:'Rooftops needing attention', v:'2', s:'inventory imbalance', tone:'warn' }
+      ],
+      chart:{ title:'Group units sold', unit:'units', months:['Feb','Mar','Apr','May','Jun','Jul'], vals:[140,152,148,171,165,187] },
+      funnel:[ {s:'New leads',n:420}, {s:'Working',n:260}, {s:'Test drive',n:210}, {s:'Financing',n:195}, {s:'Delivered',n:187} ],
+      funnelTitle:'Where every deal stands, group-wide', funnelSub:'Every rooftop rolled into one pipeline.',
+      today:[
+        { t:'Inventory imbalance — transfer suggested', w:'Rooftop 3 → Rooftop 5', when:'Today', tone:'warn' },
+        { t:'National online order', w:'Ships to Rooftop 2', when:'Today', tone:'good' },
+        { t:'GM review — Rooftop 4', w:'Below plan 2 months running', when:'This week', tone:'warn' },
+        { t:'Group marketing spend review', w:'Monthly', when:'Fri', tone:'' }
+      ],
+      peopleSub:'Every rooftop GM and every number, on one card.',
+      people:[
+        { n:'J. Okafor', r:'GM · Rooftop 1', d:'34 deals · $1.1M', flag:'' },
+        { n:'L. Marchetti', r:'GM · Rooftop 2', d:'29 deals · $980K', flag:'' },
+        { n:'P. Novak', r:'GM · Rooftop 3', d:'31 deals · $1.0M', flag:'Inventory imbalance' },
+        { n:'R. Adeyemi', r:'GM · Rooftop 4', d:'22 deals · $740K', flag:'Below plan 2 months' }
+      ],
+      dealsMeta:{ h1:'Rooftops', sub:'Every rooftop, every number, one view.', cols:['Rooftop','Volume','Stage','GM','Next'] },
+      deals:[
+        { a:'Rooftop 1 — Ford', p:'$1.1M', st:'On plan', ag:'J. Okafor', d:'—', tone:'good' },
+        { a:'Rooftop 2 — Toyota', p:'$980K', st:'On plan', ag:'L. Marchetti', d:'—', tone:'good' },
+        { a:'Rooftop 3 — Chevrolet', p:'$1.0M', st:'Needs transfer', ag:'P. Novak', d:'Transfer pending', tone:'warn' },
+        { a:'Rooftop 4 — Honda', p:'$740K', st:'Below plan', ag:'R. Adeyemi', d:'GM review Thu', tone:'warn' },
+        { a:'National online', p:'$2.6M', st:'Growing', ag:'group desk', d:'—', tone:'good' }
+      ],
+      money:{ h1:'Group Revenue', sub:'Every rooftop’s gross rolled up, without a spreadsheet in between.',
+        kpis:[ {k:'Group gross',v:'$2.1M',s:'187 deals',tone:'good'}, {k:'Service &amp; parts',v:'$680,000',s:'group-wide'}, {k:'National online',v:'$2.6M',s:'46 units'}, {k:'Rooftops below plan',v:'2',s:'of 6',tone:'warn'} ],
+        listTitle:'This cycle', listSub:'Every rooftop’s number traces back to its own deals.',
+        rows:[ {n:'Rooftop 1',d:'34 deals',v:'$1.1M'}, {n:'Rooftop 2',d:'29 deals',v:'$980K'}, {n:'National online desk',d:'46 units',v:'$2.6M'}, {n:'Group service &amp; parts',d:'6 rooftops',v:'$680,000'} ] },
+      sections:[
+        { id:'dash', label:'Dashboard', icon:'M3 13h8V3H3zM13 21h8v-10h-8zM13 3v6h8V3zM3 21h8v-6H3z' },
+        { id:'deals', label:'Rooftops', icon:'M3 7h18v13H3zM3 7l3-4h12l3 4M9 12h6' },
+        { id:'people', label:'GMs', icon:'M16 20v-2a4 4 0 0 0-8 0v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8' },
+        { id:'money', label:'Revenue', icon:'M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
+        { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' }
+      ]
+    },
+
+    targeted: {
+      id:'targeted', hub:'Targeted Hub', trade:'Marketing agency',
+      acc:'#d97a2e', acc2:'#a8461f',
+      firm:'North Loop Creative', firmSub:'9 people · Boise, Idaho',
+      who:'a nine-person marketing agency', priceId:'targeted',
+      kpis:[
+        { k:'Active clients', v:'18', s:'3 onboarding', tone:'' },
+        { k:'Campaigns live', v:'24', s:'6 launching this week', tone:'good' },
+        { k:'Pipeline value', v:'$340,000', s:'11 proposals out', tone:'' },
+        { k:'Invoices overdue', v:'2', s:'$8,400 outstanding', tone:'warn' }
+      ],
+      chart:{ title:'Billed revenue', unit:'$k', months:['Feb','Mar','Apr','May','Jun','Jul'], vals:[38,41,39,46,44,49] },
+      funnel:[ {s:'New leads',n:22}, {s:'Discovery call',n:14}, {s:'Proposal sent',n:11}, {s:'Contract signed',n:8}, {s:'Onboarded',n:6} ],
+      funnelTitle:'Where every account stands', funnelSub:'Lead to onboarded, one pipeline instead of a shared inbox.',
+      today:[
+        { t:'Proposal due', w:'Meridian Dental — full-funnel', when:'Today, 5:00pm', tone:'warn' },
+        { t:'Campaign launches', w:'Fall push — 3 clients', when:'Today', tone:'good' },
+        { t:'Invoice overdue', w:'2 clients, $8,400', when:'This week', tone:'warn' },
+        { t:'Quarterly client check-in', w:'North Bench Realty', when:'Fri', tone:'' }
+      ],
+      peopleSub:'Account load and campaign count on the same card.',
+      people:[
+        { n:'C. Alvarado', r:'Account manager', d:'5 clients · 7 campaigns', flag:'' },
+        { n:'H. Okumura', r:'Designer', d:'9 active projects', flag:'' },
+        { n:'B. Solstad', r:'Media buyer', d:'12 campaigns live', flag:'' },
+        { n:'Front desk / ops', r:'Billing &amp; scheduling', d:'18 clients', flag:'2 invoices overdue' }
+      ],
+      dealsMeta:{ h1:'Pipeline', sub:'Every account and every campaign, one list.', cols:['Client','Value','Stage','Owner','Next'] },
+      deals:[
+        { a:'Meridian Dental', p:'$4,200/mo', st:'Proposal sent', ag:'C. Alvarado', d:'Due today', tone:'warn' },
+        { a:'North Bench Realty', p:'$2,800/mo', st:'Active', ag:'C. Alvarado', d:'Check-in Fri', tone:'good' },
+        { a:'Timberline Outfitters', p:'$3,600/mo', st:'Discovery call', ag:'B. Solstad', d:'—', tone:'' },
+        { a:'Coeur Creamery', p:'$1,900/mo', st:'New lead', ag:'unassigned', d:'—', tone:'' },
+        { a:'Ridgeline Dental Group', p:'$5,100/mo', st:'Onboarded', ag:'H. Okumura', d:'Launched', tone:'good' }
+      ],
+      money:{ h1:'Billing', sub:'Retainers and project invoices tied to the work, not a separate ledger.',
+        kpis:[ {k:'Billed this month',v:'$49,000',s:'18 clients',tone:'good'}, {k:'Overdue',v:'$8,400',s:'2 clients',tone:'warn'}, {k:'Retainer clients',v:'14',s:'of 18'}, {k:'Project invoices',v:'4',s:'this month'} ],
+        listTitle:'This cycle', listSub:'Each line traces back to the client and campaign it came from.',
+        rows:[ {n:'C. Alvarado book',d:'5 clients',v:'$14,800'}, {n:'B. Solstad book',d:'media spend + fees',v:'$16,200'}, {n:'H. Okumura projects',d:'4 project invoices',v:'$9,600'}, {n:'Overdue — 2 clients',d:'follow-up sent',v:'$8,400'} ] },
+      sections:[
+        { id:'dash', label:'Dashboard', icon:'M3 13h8V3H3zM13 21h8v-10h-8zM13 3v6h8V3zM3 21h8v-6H3z' },
+        { id:'deals', label:'Pipeline', icon:'M3 7h18v13H3zM3 7l3-4h12l3 4M9 12h6' },
+        { id:'people', label:'Team', icon:'M16 20v-2a4 4 0 0 0-8 0v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8' },
+        { id:'money', label:'Billing', icon:'M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
+        { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' }
+      ]
     }
+
   };
 
   /* THE FULL SUITE — every tool category a business of this kind runs, in one system.
@@ -516,7 +709,11 @@
       theater:     [ ['Box office & seat map','your real house, reserved seating'], ['Season & production board','rights, budgets, casts'], ['Volunteer & crew roster','house crews fill themselves'], ['Donor & patron records','giving history beside ticket history'] ],
       cinema:      [ ['Showtimes & seat maps','every screen, every seat'], ['Distributor settlement','splits computed off real grosses'], ['Membership engine','perks, renewals, member nights'], ['Concessions tracking','per-head, per-show'] ],
       concerts:    [ ['Ticketing — GA & reserved','holds, presales, comps'], ['Artist settlement builder','from actual counts and expenses'], ['Advance sheets','riders, input lists, day-of'], ['Bar & merch reconciliation','per-show, automatic'] ],
-      kidsgym:     [ ['Class scheduling & rosters','spots, waitlists, make-ups'], ['Enrollment & waivers','signed before first class, enforced'], ['Tuition autopay','prorates and sibling discounts'], ['Parent portal & messaging','one place parents actually check'] ]
+      kidsgym:     [ ['Class scheduling & rosters','spots, waitlists, make-ups'], ['Enrollment & waivers','signed before first class, enforced'], ['Tuition autopay','prorates and sibling discounts'], ['Parent portal & messaging','one place parents actually check'] ],
+      showroom:    [ ['Inventory & VIN decoding','every unit, photos, condition'], ['Sales desk','deal structuring, trade values'], ['Recon & service tracking','in, worked, ready for photos'], ['F&I menu','financing and aftermarket, on the deal'] ],
+      driveline:   [ ['Sales desk','deal structuring across the rooftop'], ['Service scheduling','bays, loaners, ROs'], ['Parts tracking','on hand, on order, backordered'], ['OEM incentive tracking','current programs on every deal'] ],
+      motorcade:   [ ['Multi-rooftop inventory','stock and transfers across rooftops'], ['Group sales desk','every rooftop, one pipeline'], ['National online desk','online-first sales, any rooftop'], ['Group reporting','every rooftop, one rollup'] ],
+      targeted:    [ ['Client & pipeline CRM','every account, every stage'], ['Campaign tracking','live status per client, per channel'], ['Proposals & estimator','scoped and quoted fast'], ['Agent org / team roles','who owns what, at a glance'] ]
     };
     var core = [
       ['CRM & pipeline','every contact, every stage'],
