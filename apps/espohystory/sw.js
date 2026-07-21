@@ -12,6 +12,11 @@ self.addEventListener("activate", function (e) {
 });
 self.addEventListener("fetch", function (e) {
   if (e.request.method !== "GET") return;
+  // Audio files: never intercept. HTMLMediaElement + service-worker-mediated
+  // Range requests is a known Chromium gotcha (element stalls at readyState 0
+  // even though a plain fetch() for the same URL/Range succeeds) — verified
+  // live Jul 21 2026. Let these hit the network directly, untouched.
+  if (e.request.url.indexOf("/audio/") !== -1) return;
   e.respondWith(
     caches.match(e.request).then(function (hit) {
       var net = fetch(e.request).then(function (res) {
