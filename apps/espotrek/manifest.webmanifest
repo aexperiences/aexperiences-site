@@ -1,0 +1,14 @@
+{
+  "name": "ESPOtrek",
+  "short_name": "ESPOtrek",
+  "description": "Plan the trip, keep the plan — offline by default. By Accelerated Experiences, LLC.",
+  "start_url": "/apps/espotrek/",
+  "scope": "/apps/espotrek/",
+  "display": "standalone",
+  "background_color": "#12303E",
+  "theme_color": "#12303E",
+  "icons": [
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
+  ]
+}

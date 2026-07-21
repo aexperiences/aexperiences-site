@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESPOtrek — plan the trip, keep the plan</title>
+<meta name="description" content="A fast, calm trip planner: days, stops, one-tap Google Maps routes, a budget that splits itself, a printable one-pager, and free calendar export. Works offline by default — your itinerary lives on your device. By Accelerated Experiences, LLC.">
+<meta name="theme-color" content="#12303E">
+<link rel="manifest" href="/apps/espotrek/manifest.webmanifest">
+<link rel="icon" href="/apps/espotrek/icon.png">
+<link rel="apple-touch-icon" href="/apps/espotrek/icon.png">
+<style>
+:root{
+  --bg:#12303E; --bg2:#1A3E4F; --card:#204A5D; --ink:#EDF6F9; --ink2:#9FC2CF;
+  --acc:#F0B95E; --sea:#6FC7C0; --line:#2C5A70; --ok:#8BC7A0; --rose:#E8907F;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
+  padding-bottom:calc(30px + env(safe-area-inset-bottom))}
+header{padding:calc(14px + env(safe-area-inset-top)) 18px 10px;display:flex;align-items:center;gap:10px;max-width:720px;margin:0 auto}
+header img{width:34px;height:34px;border-radius:9px}
+header .t{font-size:19px;font-weight:700}
+header .t b{color:var(--acc)}
+header .off{margin-left:auto;font-size:12px;color:var(--ink2);background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+main{max-width:720px;margin:0 auto;padding:6px 18px 24px}
+h2{font-size:22px;margin:14px 0 4px}
+.sub{color:var(--ink2);font-size:14.5px;line-height:1.55;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}
+.card h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:8px}
+button{font-family:var(--sans);cursor:pointer;border:0;border-radius:12px;font-size:15px}
+.b1{background:var(--acc);color:#33260c;padding:13px 18px;font-weight:700;width:100%;margin-top:12px}
+.b2{background:var(--bg2);color:var(--ink);border:1px solid var(--line);padding:11px 14px}
+input,select{background:var(--bg2);border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:15.5px;padding:12px;width:100%}
+input:focus{outline:2px solid var(--acc)}
+label{font-size:13px;color:var(--ink2);display:block;margin:12px 0 5px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hint{font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:10px}
+.empty{color:var(--ink2);font-size:14.5px;text-align:center;padding:26px 10px;line-height:1.6}
+
+/* trips list */
+.trip{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px;cursor:pointer}
+.trip .e{font-size:28px}
+.trip .m{flex:1}
+.trip .m b{font-size:17px;display:block}
+.trip .m span{font-size:13px;color:var(--ink2)}
+.trip button{background:none;color:var(--ink2);font-size:13px}
+
+/* day + stops */
+.day{margin-top:20px}
+.day h4{font-size:15px;color:var(--sea);letter-spacing:.06em;display:flex;align-items:center;gap:10px}
+.day h4 .route{margin-left:auto;font-size:12.5px;color:var(--acc);text-decoration:none;background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+.stop{display:flex;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:8px;align-items:flex-start}
+.stop .tm{font-size:12.5px;color:var(--acc);min-width:52px;font-weight:700;padding-top:2px}
+.stop .m{flex:1;min-width:0}
+.stop .m b{font-size:15.5px;display:block}
+.stop .m span{font-size:13px;color:var(--ink2);display:block;margin-top:2px}
+.stop .m a{font-size:12.5px;color:var(--sea)}
+.stop .cost{font-size:13px;color:var(--ink2);white-space:nowrap}
+.stop .up,.stop .dn,.stop .rm{background:none;color:var(--ink2);font-size:13px;padding:2px 5px}
+.addstop{margin-top:8px}
+
+/* budget bar */
+.bud{display:flex;gap:10px;margin-top:12px}
+.bud div{flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.bud b{display:block;font-size:19px;color:var(--acc)}
+.bud span{font-size:11.5px;color:var(--ink2)}
+
+.backbar{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.backbar .b2{flex:1;min-width:110px;text-align:center}
+
+footer{max-width:720px;margin:26px auto 0;padding:0 18px;font-size:12px;color:var(--ink2);line-height:1.6}
+.toast{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--acc);color:#33260c;font-size:14px;font-weight:700;border-radius:999px;padding:9px 18px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
+.toast.on{opacity:1}
+
+/* print: the one-pager */
+@media print{
+  body{background:#fff;color:#111;padding:0}
+  header,.no-print,footer,.toast{display:none!important}
+  main{max-width:100%;padding:0}
+  .card,.stop{background:#fff;border:1px solid #ccc;color:#111}
+  .stop .m b{color:#111}.stop .m span,.stop .cost{color:#444}
+  .day h4{color:#111}.day h4 .route{display:none}
+  h2,.sub{color:#111}
+  .bud div{background:#fff;border:1px solid #ccc}.bud b{color:#111}.bud span{color:#444}
+  .stop .up,.stop .dn,.stop .rm{display:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <img src="/apps/espotrek/icon.png" alt="">
+  <div class="t">ESPO<b>trek</b></div>
+  <div class="off">✈️ Works offline</div>
+</header>
+
+<main>
+  <!-- TRIP LIST -->
+  <section id="v-list">
+    <h2>Your trips</h2>
+    <p class="sub">Plan on the couch, use it in the car. Everything stays on this device and works with zero bars.</p>
+    <div class="card no-print">
+      <h3>New trip</h3>
+      <div class="grid2">
+        <div><label for="tName">Where to?</label><input id="tName" type="text" placeholder="e.g. Russian River weekend"></div>
+        <div><label for="tDays">Days</label><input id="tDays" type="text" inputmode="numeric" placeholder="3"></div>
+        <div><label for="tStart">Start date (optional)</label><input id="tStart" type="date"></div>
+        <div><label for="tPeople">Travelers (for the split)</label><input id="tPeople" type="text" inputmode="numeric" placeholder="2"></div>
+      </div>
+      <button class="b1" id="tCreate">Create trip</button>
+    </div>
+    <div id="tripList"></div>
+  </section>
+
+  <!-- TRIP VIEW -->
+  <section id="v-trip" style="display:none">
+    <h2 id="tvName"></h2>
+    <p class="sub" id="tvMeta"></p>
+    <div class="bud" id="tvBud"></div>
+    <div class="card no-print">
+      <h3>Add a stop</h3>
+      <div class="grid2">
+        <div><label for="sDay">Day</label><select id="sDay"></select></div>
+        <div><label for="sTime">Time (optional)</label><input id="sTime" type="time"></div>
+      </div>
+      <label for="sPlace">Place</label><input id="sPlace" type="text" placeholder="e.g. Korbel Champagne Cellars, Guerneville">
+      <div class="grid2">
+        <div><label for="sNote">Note (optional)</label><input id="sNote" type="text" placeholder="tasting at 2pm · ask for the garden tour"></div>
+        <div><label for="sCost">Cost $ (optional)</label><input id="sCost" type="text" inputmode="decimal" placeholder="35"></div>
+      </div>
+      <button class="b1" id="sAdd">Add stop</button>
+    </div>
+    <div id="days"></div>
+    <div class="backbar no-print">
+      <button class="b2" onclick="window.print()">🖨 Print one-pager</button>
+      <button class="b2" id="expCsv">CSV</button>
+      <button class="b2" id="expIcs">Calendar (.ics)</button>
+      <button class="b2" id="backBtn">← All trips</button>
+    </div>
+    <p class="hint no-print">Print and export are free — it's your trip. Map links open Google Maps; the day route strings every stop into one drive.</p>
+  </section>
+</main>
+
+<footer>ESPOtrek · part of the ESPOtravel family · Accelerated Experiences, LLC — Post Falls, Idaho.
+No ads. No trackers. Offline by default — your itinerary is yours.</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+var K="espotrek.v1",S;
+try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
+S.trips=S.trips||[];
+function save(){localStorage.setItem(K,JSON.stringify(S))}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1700)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+var cur=-1;
+
+/* create trip */
+document.getElementById("tCreate").onclick=function(){
+  var name=document.getElementById("tName").value.trim();
+  var days=Math.max(1,Math.min(30,parseInt(document.getElementById("tDays").value)||1));
+  if(!name){toast("Give the trip a name");return}
+  S.trips.unshift({name:name,days:days,start:document.getElementById("tStart").value||"",
+    people:Math.max(1,parseInt(document.getElementById("tPeople").value)||1),stops:[],t:Date.now()});
+  save();
+  ["tName","tDays","tStart","tPeople"].forEach(function(id){document.getElementById(id).value=""});
+  drawList();toast("Trip created ✈️");
+};
+function drawList(){
+  var el=document.getElementById("tripList");
+  if(!S.trips.length){el.innerHTML='<div class="empty">No trips yet. The next adventure starts with a name and a number of days.</div>';return}
+  el.innerHTML=S.trips.map(function(t,i){
+    var total=t.stops.reduce(function(a,s){return a+(parseFloat(s.cost)||0)},0);
+    return '<div class="trip" data-i="'+i+'"><div class="e">🧭</div><div class="m"><b>'+esc(t.name)+'</b>'
+      +'<span>'+t.days+' day'+(t.days>1?'s':'')+(t.start?' · from '+t.start:'')+' · '+t.stops.length+' stops'+(total?' · $'+total.toFixed(0):'')+'</span></div>'
+      +'<button data-del="'+i+'">✕</button></div>';
+  }).join("");
+  el.querySelectorAll(".trip").forEach(function(x){
+    x.onclick=function(e){
+      if(e.target.dataset.del!==undefined){
+        if(confirm("Delete this whole trip?")){S.trips.splice(+e.target.dataset.del,1);save();drawList()}
+        return;
+      }
+      openTrip(+x.dataset.i);
+    };
+  });
+}
+
+/* trip view */
+function openTrip(i){
+  cur=i;
+  document.getElementById("v-list").style.display="none";
+  document.getElementById("v-trip").style.display="block";
+  var t=S.trips[i];
+  var sel=document.getElementById("sDay");sel.innerHTML="";
+  for(var d=1;d<=t.days;d++){var o=document.createElement("option");o.value=d;o.textContent="Day "+d;sel.appendChild(o)}
+  drawTrip();window.scrollTo(0,0);
+}
+document.getElementById("backBtn").onclick=function(){
+  document.getElementById("v-trip").style.display="none";
+  document.getElementById("v-list").style.display="block";
+  drawList();cur=-1;
+};
+function dayDate(t,d){
+  if(!t.start)return"";
+  var dt=new Date(t.start+"T00:00");dt.setDate(dt.getDate()+d-1);
+  return dt.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
+}
+function mapsQ(p){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(p)}
+function mapsRoute(stops){
+  return "https://www.google.com/maps/dir/"+stops.map(function(s){return encodeURIComponent(s.place)}).join("/");
+}
+function drawTrip(){
+  var t=S.trips[cur];
+  document.getElementById("tvName").textContent=t.name;
+  document.getElementById("tvMeta").textContent=t.days+" days"+(t.start?" · starts "+t.start:"")+" · "+t.people+" traveler"+(t.people>1?"s":"");
+  var total=t.stops.reduce(function(a,s){return a+(parseFloat(s.cost)||0)},0);
+  document.getElementById("tvBud").innerHTML=
+    '<div><b>$'+total.toFixed(0)+'</b><span>trip total</span></div>'
+    +'<div><b>$'+(total/t.people).toFixed(0)+'</b><span>each ('+t.people+'-way split)</span></div>'
+    +'<div><b>'+t.stops.length+'</b><span>stops planned</span></div>';
+  var el=document.getElementById("days"),h="";
+  for(var d=1;d<=t.days;d++){
+    var stops=t.stops.map(function(s,si){s._i=si;return s}).filter(function(s){return s.day===d})
+      .sort(function(a,b){return (a.time||"99:99")<(b.time||"99:99")?-1:1});
+    h+='<div class="day"><h4>DAY '+d+(dayDate(t,d)?' · '+dayDate(t,d):'')
+      +(stops.length>1?'<a class="route no-print" target="_blank" rel="noopener" href="'+mapsRoute(stops)+'">🗺 Day route</a>':'')+'</h4>';
+    if(!stops.length)h+='<div class="empty" style="padding:12px">Nothing planned — add a stop above.</div>';
+    stops.forEach(function(s){
+      h+='<div class="stop"><div class="tm">'+(s.time||'—')+'</div><div class="m"><b>'+esc(s.place)+'</b>'
+        +(s.note?'<span>'+esc(s.note)+'</span>':'')
+        +'<a class="no-print" target="_blank" rel="noopener" href="'+mapsQ(s.place)+'">Open in Maps ↗</a></div>'
+        +(s.cost?'<div class="cost">$'+esc(s.cost)+'</div>':'')
+        +'<button class="rm no-print" data-rm="'+s._i+'">✕</button></div>';
+    });
+    h+='</div>';
+  }
+  el.innerHTML=h;
+  el.querySelectorAll("[data-rm]").forEach(function(b){
+    b.onclick=function(){S.trips[cur].stops.splice(+b.dataset.rm,1);save();drawTrip()};
+  });
+}
+document.getElementById("sAdd").onclick=function(){
+  var place=document.getElementById("sPlace").value.trim();
+  if(!place){toast("Where's the stop?");return}
+  S.trips[cur].stops.push({day:+document.getElementById("sDay").value,time:document.getElementById("sTime").value,
+    place:place,note:document.getElementById("sNote").value.trim(),cost:document.getElementById("sCost").value.trim()});
+  save();
+  ["sPlace","sNote","sCost","sTime"].forEach(function(id){document.getElementById(id).value=""});
+  drawTrip();toast("Stop added 📍");
+};
+
+/* exports — always free */
+document.getElementById("expCsv").onclick=function(){
+  var t=S.trips[cur],rows=[["day","date","time","place","note","cost"]];
+  t.stops.slice().sort(function(a,b){return a.day-b.day||((a.time||"")<(b.time||"")?-1:1)})
+    .forEach(function(s){rows.push([s.day,dayDate(t,s.day),s.time||"",s.place,s.note||"",s.cost||""])});
+  var c=rows.map(function(r){return r.map(function(v){return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'}).join(",")}).join("\n");
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([c],{type:"text/csv"}));
+  a.download=t.name.replace(/[^a-z0-9]+/gi,"-")+"-itinerary.csv";a.click();
+  toast("Exported — your trip is yours");
+};
+document.getElementById("expIcs").onclick=function(){
+  var t=S.trips[cur];
+  if(!t.start){toast("Set a start date to export calendar events");return}
+  function icsDate(d,time){
+    var dt=new Date(t.start+"T00:00");dt.setDate(dt.getDate()+d-1);
+    var y=dt.getFullYear(),m=String(dt.getMonth()+1).padStart(2,"0"),day=String(dt.getDate()).padStart(2,"0");
+    if(!time)return{allday:true,v:y+m+day};
+    return{allday:false,v:y+m+day+"T"+time.replace(":","")+"00"};
+  }
+  var ev=t.stops.map(function(s,i){
+    var d=icsDate(s.day,s.time);
+    return "BEGIN:VEVENT\r\nUID:espotrek-"+t.t+"-"+i+"@aexperiences.com\r\nSUMMARY:"+s.place.replace(/[,;]/g," ")
+      +(d.allday?"\r\nDTSTART;VALUE=DATE:"+d.v:"\r\nDTSTART:"+d.v)
+      +(s.note?"\r\nDESCRIPTION:"+s.note.replace(/[,;]/g," "):"")+"\r\nEND:VEVENT";
+  }).join("\r\n");
+  var ics="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Accelerated Experiences LLC//ESPOtrek//EN\r\n"+ev+"\r\nEND:VCALENDAR";
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));
+  a.download=t.name.replace(/[^a-z0-9]+/gi,"-")+".ics";a.click();
+  toast("Calendar exported 📅");
+};
+drawList();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/espotrek/sw.js");
+</script>
+</body>
+</html>
