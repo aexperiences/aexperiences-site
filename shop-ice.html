@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#122a18">
+<title>AE App Shop — Accelerated Experiences, LLC</title>
+<meta name="description" content="Every app and business hub built by Accelerated Experiences, LLC. Walk in and use the real thing — no demo, no sales call, no download.">
+<link rel="canonical" href="https://www.aexperiences.com/shop.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The AE App Shop — Accelerated Experiences, LLC">
+<meta property="og:description" content="Every app and business hub we build, in one place. Tap any app and you walk straight into the real thing.">
+<meta property="og:image" content="https://www.aexperiences.com/ae-disc.png">
+<meta property="og:url" content="https://www.aexperiences.com/shop.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/ae-disc.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Forest base — AE's dark green, deepened for a store that runs dark */
+  --forest:#1c3d22; --forest-d:#122a18; --forest-dd:#0c1d10; --forest-l:#25502d;
+  --clay:#c8794f; --clay-d:#a85f38; --gold:#e0a83a;
+  --cream:#f4eede; --cream-2:#d8cfb8; --mute:#9db09f;
+  --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.16);
+  --card:#1a3a21;
+  --good:#6fc98a;
+  --sans:'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'Space Grotesk',ui-monospace,monospace;
+  --wrap:1140px; --tap:48px; --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;background:var(--forest-d)}
+body{font-family:var(--sans);color:var(--cream);background:var(--forest-d);overflow-x:hidden;
+  padding-bottom:calc(78px + var(--safe-b))}
+@media(min-width:900px){ body{padding-bottom:0} }
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:8px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 16px}
+@media(min-width:700px){ .wrap{padding:0 24px} }
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--gold);color:#231a06;padding:12px 18px;font-weight:700}
+.skip:focus{left:0}
+
+/* ── bar ─────────────────────────────────────────────── */
+.bar{position:sticky;top:0;z-index:60;background:rgba(18,42,24,.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:14px;min-height:58px}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex:none}
+.logo img{width:31px;height:31px;object-fit:contain}
+.logo-text{font-weight:800;font-size:13.5px;line-height:1.05;letter-spacing:-.01em;display:none}
+.logo-text b{display:block;font-size:9px;font-weight:600;color:var(--mute);letter-spacing:.15em;text-transform:uppercase}
+@media(min-width:560px){ .logo-text{display:block} }
+.bar nav{margin-left:auto;display:none;align-items:center;gap:4px}
+@media(min-width:900px){ .bar nav{display:flex} }
+.navlink{text-decoration:none;font-size:14px;font-weight:600;color:var(--mute);padding:9px 11px;border-radius:9px}
+.navlink:hover{color:var(--cream);background:rgba(255,255,255,.07)}
+.navlink[aria-current]{color:var(--gold)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:var(--tap);padding:0 18px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;transition:transform .12s,filter .12s}
+.btn:active{transform:scale(.975)}
+.btn-primary{background:linear-gradient(180deg,var(--clay),var(--clay-d));color:#fff;box-shadow:0 6px 20px rgba(168,95,56,.35)}
+.btn-ghost{background:rgba(255,255,255,.06);color:var(--cream);border:1.5px solid var(--line-2)}
+.btn-block{width:100%}
+
+/* ── hero ────────────────────────────────────────────── */
+.hero{background:radial-gradient(120% 100% at 50% 0%,var(--forest-l) 0%,var(--forest) 45%,var(--forest-d) 100%);padding:32px 0 28px;border-bottom:1px solid var(--line)}
+@media(min-width:700px){ .hero{padding:54px 0 44px} }
+.hero h1{margin:0;font-size:clamp(31px,8.6vw,58px);line-height:1.02;font-weight:900;letter-spacing:-.033em}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{margin:12px 0 0;font-size:clamp(15px,3.9vw,19px);line-height:1.5;color:var(--cream-2);max-width:52ch}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.fact{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#ecd9b0;background:rgba(255,255,255,.08);border:1px solid var(--line-2);padding:7px 11px;border-radius:20px}
+
+/* the two doors — the first and only decision on the page */
+.doors{display:grid;grid-template-columns:1fr;gap:11px;margin-top:22px}
+@media(min-width:620px){ .doors{grid-template-columns:1fr 1fr;gap:14px} }
+.door{text-align:left;background:rgba(255,255,255,.07);border:1.5px solid var(--line-2);border-radius:16px;padding:16px 17px;display:flex;flex-direction:column;gap:4px;transition:transform .13s,border-color .13s,background .13s}
+.door:hover{border-color:var(--gold);background:rgba(255,255,255,.11)}
+.door:active{transform:scale(.985)}
+.door .dl{font-size:18px;font-weight:800;letter-spacing:-.015em;color:var(--cream)}
+.door .dd{font-size:13.5px;color:var(--cream-2);line-height:1.45}
+.door .dn{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-top:5px}
+
+/* segmented aisle switch — stays with you as you scroll */
+.seg{display:flex;gap:4px;background:rgba(255,255,255,.06);border:1px solid var(--line-2);border-radius:12px;padding:4px;margin-bottom:11px}
+.seg button{flex:1;min-height:38px;border-radius:9px;font-size:14px;font-weight:700;color:var(--cream-2);white-space:nowrap}
+.seg button[aria-selected="true"]{background:var(--gold);color:#231a06}
+.aisle-note{font-size:13.5px;color:var(--mute);line-height:1.5;margin:0 0 16px;max-width:60ch}
+.pricesrc{font-family:var(--mono);font-size:11px;color:var(--mute);margin-left:8px}
+
+/* ── search + genre rail ─────────────────────────────── */
+.tools{position:sticky;top:58px;z-index:50;background:rgba(18,42,24,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:11px 0 0}
+.search{position:relative;display:flex;align-items:center}
+.search svg{position:absolute;left:14px;width:19px;height:19px;stroke:var(--mute);fill:none;stroke-width:2;pointer-events:none}
+.search input{width:100%;min-height:var(--tap);padding:0 44px 0 42px;border-radius:13px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.06);font-size:16px;font-family:var(--sans);color:var(--cream)}
+.search input::placeholder{color:var(--mute)}
+.search input:focus{outline:none;border-color:var(--gold);background:rgba(255,255,255,.09)}
+.search .clr{position:absolute;right:6px;width:36px;height:36px;border-radius:50%;font-size:19px;color:var(--mute);display:none;align-items:center;justify-content:center}
+.search .clr.on{display:flex}
+.rail{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;margin:0 -16px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+.rail::-webkit-scrollbar{display:none}
+@media(min-width:700px){ .rail{margin:0 -24px;padding:12px 24px;flex-wrap:wrap;overflow:visible} }
+.chip{flex:none;scroll-snap-align:start;min-height:40px;padding:0 15px;border-radius:20px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.05);font-size:14px;font-weight:600;color:var(--cream-2);white-space:nowrap;display:inline-flex;align-items:center}
+.chip[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#231a06}
+.count{font-size:12.5px;color:var(--mute);padding:0 0 11px;font-family:var(--mono)}
+
+/* ── shelves ─────────────────────────────────────────── */
+main{padding:24px 0 40px}
+.shelf{margin:0 0 34px}
+.shelf h2{margin:0 0 3px;font-size:clamp(19px,4.6vw,25px);font-weight:800;letter-spacing:-.02em}
+.shelf .sub{margin:0 0 14px;font-size:14px;color:var(--mute);line-height:1.45;max-width:60ch}
+.grid{display:grid;grid-template-columns:1fr;gap:0}
+@media(min-width:760px){ .grid{grid-template-columns:repeat(2,1fr);gap:0 30px} }
+
+/* THE APP STORE ROW: icon · name/subtitle · action pill */
+.row-app{display:flex;align-items:center;gap:13px;width:100%;text-align:left;padding:13px 0;border-bottom:1px solid var(--line);background:none}
+.row-app:last-child{border-bottom:none}
+.row-app:active{opacity:.65}
+.icon{width:62px;height:62px;border-radius:14px;flex:none;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.13),0 3px 10px rgba(0,0,0,.28)}
+.icon img{width:100%;height:100%;object-fit:cover}
+.icon svg{width:33px;height:33px;stroke:#fff;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+.meta{min-width:0;flex:1}
+.meta .nm{font-weight:700;font-size:16px;letter-spacing:-.012em;line-height:1.22;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta .tg{font-size:12.5px;color:var(--mute);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta .pr{font-family:var(--mono);font-size:11.5px;color:var(--cream-2);margin-top:5px;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* the GET pill — the App Store move, except ours opens the real app */
+.get{flex:none;min-width:74px;height:33px;padding:0 15px;border-radius:17px;background:rgba(255,255,255,.13);color:var(--cream);font-weight:800;font-size:13.5px;letter-spacing:.03em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;font-family:var(--sans)}
+.row-app:hover .get{background:var(--gold);color:#231a06}
+.get.soon{background:transparent;border:1.5px solid var(--line-2);color:var(--mute);font-size:11.5px;letter-spacing:.05em}
+.badge-age{font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 7px;border-radius:9px;background:rgba(255,255,255,.12);color:var(--cream-2);margin-left:6px;font-family:var(--mono)}
+.empty{text-align:center;color:var(--mute);padding:48px 16px;font-size:15px;line-height:1.6}
+
+/* ── product sheet ───────────────────────────────────── */
+.scrim{position:fixed;inset:0;z-index:90;background:rgba(4,12,6,.72);opacity:0;pointer-events:none;transition:opacity .22s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:91;background:var(--forest);border-radius:22px 22px 0 0;box-shadow:0 -20px 70px rgba(0,0,0,.6);max-height:93vh;display:flex;flex-direction:column;transform:translateY(101%);transition:transform .27s cubic-bezier(.32,.72,0,1);padding-bottom:var(--safe-b)}
+.sheet.on{transform:none}
+@media(min-width:760px){
+  .sheet{left:50%;right:auto;bottom:auto;top:50%;width:640px;max-height:88vh;border-radius:20px;transform:translate(-50%,-46%) scale(.97);opacity:0;transition:transform .2s,opacity .2s}
+  .sheet.on{transform:translate(-50%,-50%);opacity:1}
+}
+.grab{padding:9px 0 3px;display:flex;justify-content:center;flex:none}
+.grab i{width:38px;height:4px;border-radius:3px;background:var(--line-2);display:block}
+@media(min-width:760px){ .grab{display:none} }
+.sh-x{position:absolute;top:13px;right:13px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.13);display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;z-index:3}
+/* sheet header mirrors the store row, bigger — the App Store product page */
+.sh-head{display:flex;gap:15px;align-items:center;padding:12px 18px 18px;flex:none;border-bottom:1px solid var(--line)}
+.sh-head .icon{width:88px;height:88px;border-radius:20px}
+.sh-head .nm{font-weight:800;font-size:21px;letter-spacing:-.02em;line-height:1.15}
+.sh-head .tg{font-size:13px;color:var(--mute);margin-top:3px}
+.sh-head .get{margin-top:10px;height:36px;font-size:14px}
+.sh-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px;flex:1}
+.sh-body h4{margin:0 0 8px;font-size:11.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--mute);font-family:var(--mono)}
+.sh-body p{margin:0 0 20px;font-size:15.5px;line-height:1.6;color:var(--cream)}
+.rows{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:20px;background:rgba(255,255,255,.04)}
+.rw{display:flex;justify-content:space-between;gap:14px;padding:13px 15px;font-size:14.5px;border-bottom:1px solid var(--line)}
+.rw:last-child{border-bottom:none}
+.rw span:first-child{color:var(--mute)}
+.rw span:last-child{font-weight:700;text-align:right}
+.note{background:rgba(224,168,58,.11);border:1px solid rgba(224,168,58,.34);border-radius:14px;padding:13px 15px;font-size:14px;line-height:1.55;color:#f0dcb0;margin-bottom:20px}
+.sh-foot{flex:none;padding:14px 18px calc(16px + var(--safe-b));border-top:1px solid var(--line);background:var(--forest-d);display:flex;flex-direction:column;gap:9px}
+@media(min-width:760px){ .sh-foot{flex-direction:row}.sh-foot .btn{flex:1} }
+.notify{display:flex;flex-direction:column;gap:9px;width:100%}
+.notify input{min-height:var(--tap);padding:0 14px;border-radius:12px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.07);font-size:16px;font-family:var(--sans);color:var(--cream)}
+.notify input::placeholder{color:var(--mute)}
+.notify input:focus{outline:none;border-color:var(--gold)}
+
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:70;display:flex;justify-content:center;pointer-events:none;
+ padding:0 10px calc(10px + env(safe-area-inset-bottom))}
+@media(min-width:900px){ .tabbar{display:none} }
+.dock{pointer-events:auto;position:relative;display:flex;width:100%;max-width:560px;justify-content:space-between;gap:2px;
+ padding:6px;border-radius:24px;overflow:hidden;
+ background:linear-gradient(180deg,rgba(24,48,32,.78),rgba(9,22,13,.86));
+ backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);
+ border:1px solid rgba(196,232,205,.28);
+ box-shadow:0 14px 40px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.2), inset 0 -1px 0 rgba(0,0,0,.3)}
+.dock::after{content:"";position:absolute;top:0;bottom:0;width:46%;left:-60%;pointer-events:none;
+ background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.14) 45%,rgba(255,255,255,.3) 50%,rgba(255,255,255,.14) 55%,transparent 100%);
+ animation:iceglint 6.5s ease-in-out infinite}
+@keyframes iceglint{0%,64%{left:-60%}88%,100%{left:120%}}
+.dock a,.dock button{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+ padding:9px 2px;border:0;background:none;border-radius:18px;cursor:pointer;text-decoration:none;
+ color:rgba(235,245,238,.72);font-size:10px;font-weight:800;letter-spacing:.05em;
+ transition:transform .16s ease,background .2s ease,color .2s ease,box-shadow .2s ease}
+.dock a:active,.dock button:active{transform:scale(.93)}
+.dock svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dock .on{background:linear-gradient(165deg,#F7FCF8 0%,#D9EEDF 55%,#B8D9C2 100%);color:#0E2416;
+ transform:translateY(-3px);
+ box-shadow:0 6px 18px rgba(130,200,155,.45), 0 1px 0 rgba(255,255,255,.9) inset, 0 -6px 14px -8px rgba(14,36,22,.5) inset}
+.dock .roll{animation:diceroll .5s ease}
+@keyframes diceroll{0%{transform:rotate(0)}40%{transform:rotate(-14deg) scale(1.08)}75%{transform:rotate(10deg)}100%{transform:rotate(0)}}
+
+footer{background:var(--forest-dd);color:var(--mute);padding:32px 0 40px;font-size:13.5px;line-height:1.7;border-top:1px solid var(--line)}
+footer a{color:var(--cream-2)}
+footer .fwrap{display:flex;flex-direction:column;gap:8px}
+</style>
+</head>
+<body>
+<a class="skip" href="#shelves">Skip to the apps</a>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="logo" href="/#top" aria-label="Accelerated Experiences, LLC — home">
+      <img src="/ae-disc.png" alt="">
+      <span class="logo-text">Accelerated Experiences<b>LLC</b></span>
+    </a>
+    <nav>
+      <a class="navlink" href="/#work">How we work</a>
+      <a class="navlink" href="/#aehub">AEHub</a>
+      <a class="navlink" href="/shop.html" aria-current="page">AE App Shop</a>
+      <a class="navlink" href="/#services">Services</a>
+      <a class="btn btn-primary" href="mailto:anthonye@aexperiences.studio?subject=Invent%20an%20App">Invent an App</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <h1>The <em>AE App Shop</em></h1>
+    <p>Everything we build, in one place. Tap anything and you walk straight into the real thing — no demo, no sales call, no download.</p>
+
+    <!-- The one choice that matters. Made first, made big, so nobody has to work out
+         whether a "hub" and an "app" are the same thing. They are not. -->
+    <div class="doors" role="group" aria-label="What are you here for?">
+      <button class="door" data-aisle="business">
+        <span class="dl">For your business</span>
+        <span class="dd">Run your whole company on one system</span>
+        <span class="dn" id="dnBiz"></span>
+      </button>
+      <button class="door" data-aisle="personal">
+        <span class="dl">For you</span>
+        <span class="dd">Apps for one person, most free to try</span>
+        <span class="dn" id="dnPers"></span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="tools">
+  <div class="wrap">
+    <div class="seg" id="seg" role="tablist" aria-label="Which part of the shop">
+      <button role="tab" data-aisle="business">Business</button>
+      <button role="tab" data-aisle="personal">Personal</button>
+      <button role="tab" data-aisle="all">Everything</button>
+    </div>
+    <div class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+      <label class="sr" for="q">Search the shop</label>
+      <input id="q" type="search" placeholder="Search…" autocomplete="off" enterkeyhint="search">
+      <button class="clr" id="clr" aria-label="Clear search">×</button>
+    </div>
+    <div class="rail" id="rail" role="group" aria-label="Filter by category"></div>
+    <div class="count" id="count"></div>
+  </div>
+</section>
+
+<main id="shelves"><div class="wrap" id="shelfHost"></div></main>
+
+<nav class="tabbar" aria-label="Shop dock">
+ <div class="dock">
+  <a href="/"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home</a>
+  <button id="dkBiz"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>Business</button>
+  <button id="dkMe" class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>Personal</button>
+  <button id="dkFind"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>Search</button>
+  <button id="dkLucky"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="9" cy="9" r="1.3" fill="currentColor"/><circle cx="15" cy="9" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="9" cy="15" r="1.3" fill="currentColor"/><circle cx="15" cy="15" r="1.3" fill="currentColor"/></svg>Surprise</button>
+ </div>
+</nav>
+
+<footer>
+  <div class="wrap fwrap">
+    <div><strong>Accelerated Experiences, LLC</strong> · Post Falls, Idaho</div>
+    <div>Every product here is real software you can open right now. Anything still being built says so.</div>
+    <div><a href="mailto:anthonye@aexperiences.studio">anthonye@aexperiences.studio</a></div>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shName" hidden>
+  <div class="grab"><i></i></div>
+  <button class="sh-x" id="shX" aria-label="Close">×</button>
+  <div class="sh-head">
+    <div class="icon" id="shIcon"></div>
+    <div class="meta">
+      <div class="nm" id="shName"></div>
+      <div class="tg" id="shTag"></div>
+      <div id="shPr"></div>
+    </div>
+  </div>
+  <div class="sh-body" id="shBody"></div>
+  <div class="sh-foot" id="shFoot"></div>
+</aside>
+
+<script src="/catalog.js"></script>
+<script>
+(function(){
+  var C=window.AEShop, host=document.getElementById('shelfHost');
+  var q=document.getElementById('q'), clr=document.getElementById('clr');
+  var rail=document.getElementById('rail'), countEl=document.getElementById('count');
+  var genre='all', term='', aisle='all';
+  var seg=document.getElementById('seg');
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function iconHTML(a){
+    if(a.mark) return '<img src="'+a.mark+'" alt="">';
+    if(a.img)  return '<img src="'+a.img+'" alt="">';
+    if(a.svg)  return '<svg viewBox="0 0 48 48" aria-hidden="true">'+a.svg+'</svg>';
+    return '<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="10" width="28" height="28" rx="7"/></svg>';
+  }
+  // The App Store verb — but ours means "walk in", not "download".
+  function verb(a){
+    if(a.state==='dev') return '<span class="get soon">Soon</span>';
+    return '<span class="get">Open</span>';
+  }
+  function subline(a){
+    if(a.state==='dev') return 'In development' + (a.family?' · '+a.family:'');
+    return a.price || '';
+  }
+
+  function rowApp(a){
+    var b=document.createElement('button');
+    b.className='row-app';
+    b.setAttribute('aria-label', a.name+' — '+(a.state==='dev'?'in development, not for sale yet':'open it'));
+    b.innerHTML='<div class="icon" style="background:'+esc(a.acc)+'">'+iconHTML(a)+'</div>'
+      +'<div class="meta"><div class="nm">'+esc(a.name)+(a.age?'<span class="badge-age">'+esc(a.age)+'</span>':'')+'</div>'
+      +'<div class="tg">'+esc(a.tag)+'</div><div class="pr">'+esc(subline(a))+'</div></div>'
+      +verb(a);
+    b.addEventListener('click',function(){ open(a.id); });
+    return b;
+  }
+
+  function matches(a){
+    if(aisle!=='all' && C.aisleOf(a)!==aisle) return false;
+    if(genre!=='all' && a.genre!==genre) return false;
+    if(!term) return true;
+    return (a.name+' '+a.tag+' '+a.blurb+' '+(a.family||'')).toLowerCase().indexOf(term)>-1;
+  }
+
+  /* Say the difference once, in the plainest words available, at the top of whichever
+     aisle you are standing in. Nobody should have to infer what a "hub" is. */
+  function aisleNote(){
+    if(aisle==='business') return 'A hub is software that runs your whole company — your team, your clients, your money, all in one place. There is a one-time setup fee to make it yours, then a flat monthly. It never charges per person, so hiring does not cost you more.';
+    if(aisle==='personal') return 'These are apps for one person. Open any of them right now — most are free to try, and none of them need an account to look around.';
+    return 'Two kinds of thing in here. <b>Business hubs</b> run a whole company — setup fee, then a flat monthly. <b>Apps</b> are for one person, and most are free to try.';
+  }
+
+  function setAisle(next, scroll){
+    aisle = next; genre = 'all';
+    [].forEach.call(seg.children, function(b){ b.setAttribute('aria-selected', b.dataset.aisle===aisle); });
+    buildRail();
+    render();
+    if(history.replaceState) history.replaceState(null,'', aisle==='all' ? location.pathname : location.pathname+'#'+aisle);
+    if(scroll) document.getElementById('shelves').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function shelf(title,sub,items){
+    if(!items.length) return null;
+    var s=document.createElement('section'); s.className='shelf';
+    s.innerHTML='<h2>'+esc(title)+'</h2><p class="sub">'+esc(sub)+'</p>';
+    var g=document.createElement('div'); g.className='grid';
+    items.forEach(function(a){ g.appendChild(rowApp(a)); });
+    s.appendChild(g); return s;
+  }
+  function render(){
+    host.innerHTML='';
+    var note=document.createElement('p'); note.className='aisle-note'; note.innerHTML=aisleNote();
+    host.appendChild(note);
+
+    var shown=C.CATALOG.filter(matches);
+    var liveOnes=shown.filter(function(a){return a.state==='live';});
+    var devOnes=shown.filter(function(a){return a.state==='dev';});
+    var hubs=liveOnes.filter(function(a){return a.genre==='business';});
+    var apps=liveOnes.filter(function(a){return a.genre!=='business';});
+
+    // In a single aisle there is no need to repeat the aisle's own name as a heading.
+    var hubHead = aisle==='business' ? 'Pick your trade' : 'Business hubs';
+    var appHead = aisle==='personal' ? 'All apps' : 'Apps';
+
+    [ shelf(hubHead,'Every one is a live instance — walk in and use it before you talk to anyone.',hubs),
+      shelf(appHead,'Tap one and you are inside it — the real app, not a preview.',apps),
+      shelf('In development','Being built now. No price yet and nothing to buy — leave your email and we will tell you the day it opens.',devOnes)
+    ].forEach(function(s){ if(s) host.appendChild(s); });
+
+    if(!shown.length){
+      var e=document.createElement('p'); e.className='empty';
+      e.innerHTML='Nothing matches that.<br>Try another word, or tap <b>Everything</b> above.';
+      host.appendChild(e);
+    }
+    countEl.innerHTML = shown.length+(shown.length===1?' product':' products')
+      + (liveOnes.length?' · '+liveOnes.length+' you can open today':'')
+      + (C.priceSource==='live' ? '<span class="pricesrc">live pricing</span>' : '');
+  }
+
+  // genres are rebuilt per aisle — never offer a filter that would empty the page
+  function buildRail(){
+    rail.innerHTML='';
+    var pool = aisle==='all' ? C.CATALOG : C.CATALOG.filter(function(a){ return C.aisleOf(a)===aisle; });
+    var gs = C.GENRES.filter(function(g){
+      return g.id==='all' || pool.some(function(a){ return a.genre===g.id; });
+    });
+    if(gs.length<=2){ rail.style.display='none'; return; }
+    rail.style.display='';
+    gs.forEach(function(g){
+      var c=document.createElement('button');
+      c.className='chip'; c.textContent=g.label; c.setAttribute('aria-pressed', g.id===genre);
+      c.addEventListener('click',function(){
+        genre=g.id;
+        [].forEach.call(rail.children,function(x){ x.setAttribute('aria-pressed', x===c); });
+        render();
+        document.getElementById('shelves').scrollIntoView({behavior:'smooth',block:'start'});
+      });
+      rail.appendChild(c);
+    });
+  }
+
+  // the two doors in the hero, and the segmented switch
+  document.getElementById('dnBiz').textContent  = C.inAisle('business').filter(function(a){return a.state==='live';}).length + ' hubs, all live';
+  document.getElementById('dnPers').textContent = C.inAisle('personal').filter(function(a){return a.state==='live';}).length + ' apps you can open now';
+  [].forEach.call(document.querySelectorAll('.door'), function(d){
+    d.addEventListener('click', function(){ setAisle(d.dataset.aisle, true); });
+  });
+  [].forEach.call(seg.children, function(b){
+    b.addEventListener('click', function(){ setAisle(b.dataset.aisle, true); });
+  });
+
+  q.addEventListener('input',function(){ term=q.value.trim().toLowerCase(); clr.classList.toggle('on',!!term); render(); });
+  clr.addEventListener('click',function(){ q.value=''; term=''; clr.classList.remove('on'); render(); q.focus(); });
+  document.getElementById('tabSearch').addEventListener('click',function(){
+    window.scrollTo({top:0,behavior:'smooth'}); setTimeout(function(){ q.focus(); },260);
+  });
+
+  var sheet=document.getElementById('sheet'), scrim=document.getElementById('scrim'), lastFocus=null;
+  function open(id){
+    var a=C.byId(id); if(!a) return;
+    lastFocus=document.activeElement;
+    var ic=document.getElementById('shIcon'); ic.style.background=a.acc; ic.innerHTML=iconHTML(a);
+    document.getElementById('shName').innerHTML=esc(a.name)+(a.age?'<span class="badge-age">'+esc(a.age)+'</span>':'');
+    document.getElementById('shTag').textContent=a.tag+(a.family?' · '+a.family:'');
+    document.getElementById('shPr').innerHTML=verb(a);
+
+    var body='<h4>What it is</h4><p>'+esc(a.blurb)+'</p>';
+    if(a.state==='live'){
+      body+='<div class="rows"><div class="rw"><span>Price</span><span>'+esc(a.price||'—')+'</span></div>'
+        +(a.priceNote?'<div class="rw"><span>Details</span><span>'+esc(a.priceNote)+'</span></div>':'')
+        +'<div class="rw"><span>Status</span><span>Live — open it today</span></div></div>';
+      if(/not switched on/i.test(a.priceNote||''))
+        body+='<div class="note">Free to use right now. Paid plans are not switched on yet — when they are, the price shows up here first.</div>';
+    } else {
+      body+='<div class="note"><b>This app is being built.</b> There is no price yet and nothing to buy. Leave your email and you will hear from us the day it opens — nothing else, ever.</div>';
+    }
+    document.getElementById('shBody').innerHTML=body;
+
+    var foot=document.getElementById('shFoot');
+    if(a.state==='live'){
+      foot.innerHTML='<a class="btn btn-primary btn-block" href="'+esc(a.url)+'" target="_blank" rel="noopener">Open '+esc(a.name)+' →</a>'
+        +(a.pricing?'<a class="btn btn-ghost btn-block" href="'+esc(a.pricing)+'">See full pricing</a>':'');
+    } else {
+      foot.innerHTML='<form class="notify" action="https://formsubmit.co/anthonye@aexperiences.studio" method="POST">'
+        +'<input type="hidden" name="_subject" value="App Shop notify-me: '+esc(a.name)+'">'
+        +'<input type="hidden" name="app" value="'+esc(a.name)+'">'
+        +'<input type="hidden" name="_captcha" value="false">'
+        +'<label class="sr" for="nEmail">Your email</label>'
+        +'<input id="nEmail" type="email" name="email" required placeholder="you@email.com" autocomplete="email" inputmode="email">'
+        +'<button class="btn btn-primary btn-block" type="submit">Tell me when it opens</button></form>';
+    }
+    sheet.hidden=false;
+    requestAnimationFrame(function(){ sheet.classList.add('on'); scrim.classList.add('on'); });
+    document.body.style.overflow='hidden';
+    document.getElementById('shX').focus();
+    if(history.replaceState) history.replaceState(null,'','#'+a.id);
+  }
+  function close(){
+    sheet.classList.remove('on'); scrim.classList.remove('on');
+    document.body.style.overflow='';
+    setTimeout(function(){ sheet.hidden=true; },270);
+    if(history.replaceState) history.replaceState(null,'',location.pathname);
+    if(lastFocus) lastFocus.focus();
+  }
+  document.getElementById('shX').addEventListener('click',close);
+  scrim.addEventListener('click',close);
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!sheet.hidden) close(); });
+
+  // deep links: #business / #personal open an aisle, #<product-id> opens a product
+  var h=location.hash.replace('#','');
+  if(h==='business'||h==='personal'||h==='hubs'){ aisle = (h==='hubs'?'business':h); }
+  [].forEach.call(seg.children,function(b){ b.setAttribute('aria-selected', b.dataset.aisle===aisle); });
+  buildRail();
+  render();
+  if(h && C.byId(h)) open(h);
+
+  /* Pull Anthony's live prices, then redraw. The page is already usable before this
+     resolves — it renders from the baked-in copy first, so a slow or dead pricing
+     service costs freshness, never the whole shop. */
+  C.refreshPrices().then(function(){ render(); });
+})();
+</script>
+<script>
+(function(){
+ function buzz(n){if(navigator.vibrate)navigator.vibrate(n||8)}
+ function segClick(a){var b=document.querySelector('#seg [data-aisle="'+a+'"]');if(b)b.click();}
+ function setOn(el){["dkBiz","dkMe"].forEach(function(id){document.getElementById(id).classList.remove("on")});if(el)el.classList.add("on")}
+ var biz=document.getElementById("dkBiz"),me=document.getElementById("dkMe");
+ biz.onclick=function(){buzz();segClick("business");setOn(biz);window.scrollTo({top:document.getElementById("shelves").offsetTop-140,behavior:"smooth"})};
+ me.onclick=function(){buzz();segClick("personal");setOn(me);window.scrollTo({top:document.getElementById("shelves").offsetTop-140,behavior:"smooth"})};
+ document.getElementById("dkFind").onclick=function(){buzz();var q=document.getElementById("q");
+   window.scrollTo({top:0,behavior:"smooth"});setTimeout(function(){q.focus()},350)};
+ document.getElementById("dkLucky").onclick=function(){
+   buzz([10,30,10]);this.classList.remove("roll");void this.offsetWidth;this.classList.add("roll");
+   try{
+     var pool=(window.C&&C.CATALOG?C.CATALOG:window.CATALOG||[]).filter(function(a){return a.state==="live"&&a.url&&a.genre!=="business"});
+     if(!pool.length)return;
+     var pick=pool[Math.floor(Math.random()*pool.length)];
+     var self=this;setTimeout(function(){location.href=pick.url},420);
+   }catch(e){}
+ };
+ /* keep dock in sync if user taps the top segs */
+ var seg=document.getElementById("seg");
+ if(seg)seg.addEventListener("click",function(e){
+   var a=e.target&&e.target.dataset?e.target.dataset.aisle:null;
+   if(a==="business")setOn(biz);else if(a==="personal")setOn(me);else setOn(null);
+ });
+})();
+</script>
+</body>
+</html>
