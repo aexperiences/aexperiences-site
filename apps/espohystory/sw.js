@@ -1,6 +1,6 @@
 /* ESPOhystory service worker — offline-first, stale-while-revalidate.
    Accelerated Experiences, LLC */
-var C = "espohystory-v1";
+var C = "espohystory-v2";
 var ASSETS = ["./", "./index.html", "./icon.png", "./manifest.webmanifest"];
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(C).then(function (c) { return c.addAll(ASSETS); }).then(function(){ return self.skipWaiting(); }));
