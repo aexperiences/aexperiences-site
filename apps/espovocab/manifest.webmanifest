@@ -5,8 +5,8 @@
   "start_url": "/apps/espovocab/",
   "scope": "/apps/espovocab/",
   "display": "standalone",
-  "background_color": "#1E2A24",
-  "theme_color": "#1E2A24",
+  "background_color": "#F8F3E6",
+  "theme_color": "#1A3122",
   "icons": [
     { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
     { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
