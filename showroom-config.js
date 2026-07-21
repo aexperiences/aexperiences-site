@@ -539,7 +539,7 @@
         { a:'2020 Toyota Camry', p:'$21,800', st:'New lead', ag:'unassigned', d:'—', tone:'' },
         { a:'2017 Chevrolet Silverado', p:'$26,500', st:'Recon', ag:'T. Nakamura', d:'Photos pending', tone:'warn' }
       ],
-      money:{ h1:'F&I &amp; Gross', sub:'Front and back gross tied to the deal, not re-keyed into a spreadsheet.',
+      money:{ h1:'F&I & Gross', sub:'Front and back gross tied to the deal, not re-keyed into a spreadsheet.',
         kpis:[ {k:'Gross this month',v:'$186,400',s:'14 deals',tone:'good'}, {k:'Ready to fund',v:'3',s:'closings cleared',tone:'good'}, {k:'F&I income',v:'$22,100',s:'this month'}, {k:'Missing paperwork',v:'1',s:'blocks funding',tone:'warn'} ],
         listTitle:'This cycle', listSub:'Each line traces back to the deal it came from.',
         rows:[ {n:'M. Reyes',d:'5 deals · sales',v:'$71,200'}, {n:'D. Kowalski',d:'4 deals · sales',v:'$58,900'}, {n:'T. Nakamura',d:'recon bonus pool',v:'$3,200'}, {n:'F&I income',d:'14 deals financed',v:'$22,100'} ] },
@@ -547,7 +547,7 @@
         { id:'dash', label:'Dashboard', icon:'M3 13h8V3H3zM13 21h8v-10h-8zM13 3v6h8V3zM3 21h8v-6H3z' },
         { id:'deals', label:'Deals', icon:'M3 7h18v13H3zM3 7l3-4h12l3 4M9 12h6' },
         { id:'people', label:'Team', icon:'M16 20v-2a4 4 0 0 0-8 0v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8' },
-        { id:'money', label:'F&I &amp; Gross', icon:'M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
+        { id:'money', label:'F&I & Gross', icon:'M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
         { id:'suite', label:'Everything inside', icon:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' }
       ]
     },
@@ -587,7 +587,7 @@
         { a:'2026 Bronco Sport', p:'$34,100', st:'New lead', ag:'unassigned', d:'—', tone:'' },
         { a:'2025 Super Duty', p:'$61,400', st:'Sold', ag:'R. Ferraro', d:'Delivered', tone:'good' }
       ],
-      money:{ h1:'Sales &amp; Service Revenue', sub:'Front-end gross, back-end gross, and shop revenue on one ledger.',
+      money:{ h1:'Sales & Service Revenue', sub:'Front-end gross, back-end gross, and shop revenue on one ledger.',
         kpis:[ {k:'Sales gross',v:'$412,000',s:'31 deals',tone:'good'}, {k:'Service revenue',v:'$98,600',s:'this month'}, {k:'Parts revenue',v:'$61,200',s:'this month'}, {k:'Backorders',v:'5',s:'delaying ROs',tone:'warn'} ],
         listTitle:'This cycle', listSub:'Each line traces back to the deal or repair order it came from.',
         rows:[ {n:'R. Ferraro',d:'9 deals · sales',v:'$121,400'}, {n:'Service dept',d:'6 bays','v':'$98,600'}, {n:'Parts dept',d:'5 open backorders',v:'$61,200'}, {n:'F&I income',d:'31 deals financed',v:'$34,900'} ] },
@@ -636,9 +636,9 @@
         { a:'National online', p:'$2.6M', st:'Growing', ag:'group desk', d:'—', tone:'good' }
       ],
       money:{ h1:'Group Revenue', sub:'Every rooftop’s gross rolled up, without a spreadsheet in between.',
-        kpis:[ {k:'Group gross',v:'$2.1M',s:'187 deals',tone:'good'}, {k:'Service &amp; parts',v:'$680,000',s:'group-wide'}, {k:'National online',v:'$2.6M',s:'46 units'}, {k:'Rooftops below plan',v:'2',s:'of 6',tone:'warn'} ],
+        kpis:[ {k:'Group gross',v:'$2.1M',s:'187 deals',tone:'good'}, {k:'Service & parts',v:'$680,000',s:'group-wide'}, {k:'National online',v:'$2.6M',s:'46 units'}, {k:'Rooftops below plan',v:'2',s:'of 6',tone:'warn'} ],
         listTitle:'This cycle', listSub:'Every rooftop’s number traces back to its own deals.',
-        rows:[ {n:'Rooftop 1',d:'34 deals',v:'$1.1M'}, {n:'Rooftop 2',d:'29 deals',v:'$980K'}, {n:'National online desk',d:'46 units',v:'$2.6M'}, {n:'Group service &amp; parts',d:'6 rooftops',v:'$680,000'} ] },
+        rows:[ {n:'Rooftop 1',d:'34 deals',v:'$1.1M'}, {n:'Rooftop 2',d:'29 deals',v:'$980K'}, {n:'National online desk',d:'46 units',v:'$2.6M'}, {n:'Group service & parts',d:'6 rooftops',v:'$680,000'} ] },
       sections:[
         { id:'dash', label:'Dashboard', icon:'M3 13h8V3H3zM13 21h8v-10h-8zM13 3v6h8V3zM3 21h8v-6H3z' },
         { id:'deals', label:'Rooftops', icon:'M3 7h18v13H3zM3 7l3-4h12l3 4M9 12h6' },
@@ -673,7 +673,7 @@
         { n:'C. Alvarado', r:'Account manager', d:'5 clients · 7 campaigns', flag:'' },
         { n:'H. Okumura', r:'Designer', d:'9 active projects', flag:'' },
         { n:'B. Solstad', r:'Media buyer', d:'12 campaigns live', flag:'' },
-        { n:'Front desk / ops', r:'Billing &amp; scheduling', d:'18 clients', flag:'2 invoices overdue' }
+        { n:'Front desk / ops', r:'Billing & scheduling', d:'18 clients', flag:'2 invoices overdue' }
       ],
       dealsMeta:{ h1:'Pipeline', sub:'Every account and every campaign, one list.', cols:['Client','Value','Stage','Owner','Next'] },
       deals:[
