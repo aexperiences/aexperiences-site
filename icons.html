@@ -199,9 +199,8 @@
     try{ stage.scrollTo({left:target, behavior:smooth?'smooth':'auto'}); }catch(e){ stage.scrollLeft=target; }
     setFocus(i);
   }
-  // as the user swipes/scrolls, keep the centred icon lit (recompute every frame — cheap for 18)
-  var ticking=false;
-  stage.addEventListener('scroll',function(){ if(ticking) return; ticking=true; requestAnimationFrame(function(){ ticking=false; setFocus(nearest()); }); }, {passive:true});
+  // as the user swipes/scrolls, keep the centred icon lit (direct — cheap for 18, works even when tab is backgrounded)
+  stage.addEventListener('scroll',function(){ setFocus(nearest()); }, {passive:true});
 
   // mouse drag-to-scroll (touch swipes natively)
   var down=false, sx=0, sl=0, moved=false;
