@@ -1,0 +1,64 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FDF6E7"/>
+      <stop offset="1" stop-color="#F3E3C2"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFDF6"/>
+      <stop offset="1" stop-color="#F6ECD6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- tile -->
+  <rect width="1024" height="1024" rx="224" fill="url(#bg)"/>
+  <rect x="26" y="26" width="972" height="972" rx="204" fill="none" stroke="#C9603B" stroke-width="14" opacity=".25"/>
+
+  <!-- scroll body -->
+  <g>
+    <rect x="262" y="268" width="500" height="536" rx="36" fill="url(#paper)" stroke="#3A2E22" stroke-width="18"/>
+    <!-- top roll -->
+    <rect x="212" y="212" width="600" height="116" rx="58" fill="#EDDDBB" stroke="#3A2E22" stroke-width="18"/>
+    <circle cx="212" cy="270" r="58" fill="#D9C294" stroke="#3A2E22" stroke-width="18"/>
+    <circle cx="812" cy="270" r="58" fill="#D9C294" stroke="#3A2E22" stroke-width="18"/>
+    <!-- bottom roll -->
+    <rect x="212" y="748" width="600" height="116" rx="58" fill="#EDDDBB" stroke="#3A2E22" stroke-width="18"/>
+    <circle cx="212" cy="806" r="58" fill="#D9C294" stroke="#3A2E22" stroke-width="18"/>
+    <circle cx="812" cy="806" r="58" fill="#D9C294" stroke="#3A2E22" stroke-width="18"/>
+  </g>
+
+  <!-- laughing face -->
+  <g stroke="#3A2E22" stroke-width="26" stroke-linecap="round" fill="none">
+    <!-- happy closed eyes -->
+    <path d="M382 468 q40 -44 80 0"/>
+    <path d="M562 468 q40 -44 80 0"/>
+  </g>
+  <!-- big open laugh -->
+  <path d="M380 560 q132 150 264 0 q-24 128 -132 128 q-108 0 -132 -128z" fill="#3A2E22"/>
+  <path d="M436 648 q76 52 152 0 q-30 46 -76 46 q-46 0 -76 -46z" fill="#C9603B"/>
+
+  <!-- blush -->
+  <circle cx="352" cy="548" r="26" fill="#C9603B" opacity=".45"/>
+  <circle cx="672" cy="548" r="26" fill="#C9603B" opacity=".45"/>
+
+  <!-- tilted laurel crown resting on the scroll -->
+  <g transform="rotate(-8 512 270)">
+    <path d="M312 302 q90 -88 200 -88 q110 0 200 88" fill="none" stroke="#4E7A52" stroke-width="30" stroke-linecap="round"/>
+    <g fill="#5E8C61" stroke="#4E7A52" stroke-width="8">
+      <ellipse cx="330" cy="286" rx="52" ry="24" transform="rotate(-44 330 286)"/>
+      <ellipse cx="396" cy="244" rx="52" ry="24" transform="rotate(-30 396 244)"/>
+      <ellipse cx="470" cy="220" rx="52" ry="24" transform="rotate(-12 470 220)"/>
+      <ellipse cx="554" cy="220" rx="52" ry="24" transform="rotate(12 554 220)"/>
+      <ellipse cx="628" cy="244" rx="52" ry="24" transform="rotate(30 628 244)"/>
+      <ellipse cx="694" cy="286" rx="52" ry="24" transform="rotate(44 694 286)"/>
+    </g>
+    <circle cx="308" cy="312" r="24" fill="#E0A63C" stroke="#3A2E22" stroke-width="10"/>
+    <circle cx="716" cy="312" r="24" fill="#E0A63C" stroke="#3A2E22" stroke-width="10"/>
+  </g>
+
+  <!-- HA! sparks -->
+  <g fill="#C9603B" font-family="Georgia,serif" font-weight="bold" text-anchor="middle">
+    <text x="200" y="560" font-size="96" transform="rotate(-14 200 560)">HA!</text>
+    <text x="836" y="640" font-size="80" transform="rotate(12 836 640)">HA!</text>
+  </g>
+</svg>
