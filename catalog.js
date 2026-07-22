@@ -1,4 +1,5 @@
-/*   Both the store grid (products.html) and the product sheet (app.html) read this file.
+/* catalog.js — the ONE product catalog for the AE App Shop.
+   Both the store grid (products.html) and the product sheet (app.html) read this file.
    Adding a product later = one entry here. Nothing else to touch.
 
    HONESTY RULES baked into the shape of the data (Accelerated Experiences, LLC):
@@ -31,6 +32,7 @@
       price:'$650/mo', priceNote:'3 tiers · annual $6,500/yr (2 months free)',
       svg:'<path d="M6 40 24 9l18 31zM6 40h36"/><path d="M24 9 16 40M24 9l8 31M13 30h22"/>' },
 
+    { id:'marquee', name:'Marquee Hub', tag:'Live theater', genre:'business', state:'live',
       acc:'#e0b24a', url:'https://ae-theater-hub.vercel.app', pricing:'/hubs/theater.html',
       blurb:'Box office, seasons, casts, crews and volunteers — the whole theater, running on one spine.',
       price:'$650/mo', priceNote:'3 tiers · annual $6,500/yr (2 months free)',
@@ -73,7 +75,7 @@
       svg:'<path d="M6 32V24l4-10a4 4 0 0 1 4-2.6h20A4 4 0 0 1 38 14l4 10v8"/><path d="M6 32h6M42 32h-6"/><circle cx="15" cy="32" r="4"/><circle cx="33" cy="32" r="4"/>' },
 
     { id:'targeted', name:'Targeted Hub', tag:'Marketing agencies & studios', genre:'business', state:'live',
-      acc:'#d97a2e', url:'https://ae-targeted-showroom.vercel.app', pricing:'/hubs/targeted.html',
+      acc:'#d97a2e', url:'https://ae-targeted-showroom.vercel.app/dashboard', pricing:'/hubs/targeted.html',
       blurb:'CRM, pipeline, estimator and campaigns for a marketing agency or studio — on one branded hub.',
       price:'$450/mo', priceNote:'3 tiers · annual $4,500/yr (2 months free)',
       svg:'<circle cx="24" cy="24" r="15"/><circle cx="24" cy="24" r="9"/><circle cx="24" cy="24" r="3"/>' },
