@@ -1,5 +1,4 @@
-/* catalog.js — the ONE product catalog for the AE App Shop.
-   Both the store grid (products.html) and the product sheet (app.html) read this file.
+/*   Both the store grid (products.html) and the product sheet (app.html) read this file.
    Adding a product later = one entry here. Nothing else to touch.
 
    HONESTY RULES baked into the shape of the data (Accelerated Experiences, LLC):
