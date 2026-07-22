@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#122a18">
+<meta name="theme-color" content="#f4eede">
 <title>AE App Shop — Accelerated Experiences, LLC</title>
 <meta name="description" content="Every app and business hub built by Accelerated Experiences, LLC. Walk in and use the real thing — no demo, no sales call, no download.">
 <link rel="canonical" href="https://www.aexperiences.com/shop.html">
@@ -21,10 +21,11 @@
 :root{
   /* Forest base — AE's dark green, deepened for a store that runs dark */
   --forest:#1c3d22; --forest-d:#122a18; --forest-dd:#0c1d10; --forest-l:#25502d;
+--ink:#2e2317;
   --clay:#c8794f; --clay-d:#a85f38; --gold:#e0a83a;
-  --cream:#f4eede; --cream-2:#d8cfb8; --mute:#9db09f;
-  --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.16);
-  --card:#1a3a21;
+  --cream:#f4eede; --cream-2:#d8cfb8; --mute:#8a7c68;
+  --line:rgba(40,30,20,.14); --line-2:rgba(40,30,20,.20);
+  --card:#fffdf7;
   --good:#6fc98a;
   --sans:'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   --mono:'Space Grotesk',ui-monospace,monospace;
@@ -32,8 +33,8 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-html{-webkit-text-size-adjust:100%;background:var(--forest-d)}
-body{font-family:var(--sans);color:var(--cream);background:var(--forest-d);overflow-x:hidden;
+html{-webkit-text-size-adjust:100%;background:var(--cream)}
+body{font-family:var(--sans);color:var(--ink);background:var(--cream);overflow-x:hidden;
   padding-bottom:calc(78px + var(--safe-b))}
 @media(min-width:900px){ body{padding-bottom:0} }
 img{max-width:100%;display:block}
@@ -47,7 +48,7 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 .skip:focus{left:0}
 
 /* ── bar ─────────────────────────────────────────────── */
-.bar{position:sticky;top:0;z-index:60;background:rgba(18,42,24,.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.bar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.86);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);box-shadow:0 1px 0 rgba(40,30,20,.04)}
 .bar .wrap{display:flex;align-items:center;gap:14px;min-height:58px}
 .logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex:none}
 .logo img{width:31px;height:31px;object-fit:contain}
@@ -57,7 +58,7 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 .bar nav{margin-left:auto;display:none;align-items:center;gap:4px}
 @media(min-width:900px){ .bar nav{display:flex} }
 .navlink{text-decoration:none;font-size:14px;font-weight:600;color:var(--mute);padding:9px 11px;border-radius:9px}
-.navlink:hover{color:var(--cream);background:rgba(255,255,255,.07)}
+.navlink:hover{color:var(--ink);background:rgba(40,30,20,.06)}
 .navlink[aria-current]{color:var(--gold)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:var(--tap);padding:0 18px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;transition:transform .12s,filter .12s}
 .btn:active{transform:scale(.975)}
@@ -66,7 +67,7 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 .btn-block{width:100%}
 
 /* ── hero ────────────────────────────────────────────── */
-.hero{background:radial-gradient(120% 100% at 50% 0%,var(--forest-l) 0%,var(--forest) 45%,var(--forest-d) 100%);padding:32px 0 28px;border-bottom:1px solid var(--line)}
+.hero{--line:rgba(255,255,255,.10);--line-2:rgba(255,255,255,.16);color:var(--cream);background:radial-gradient(120% 100% at 50% 0%,var(--forest-l) 0%,var(--forest) 45%,var(--forest-d) 100%);padding:32px 0 28px;border-bottom:1px solid var(--line)}
 @media(min-width:700px){ .hero{padding:54px 0 44px} }
 .hero h1{margin:0;font-size:clamp(31px,8.6vw,58px);line-height:1.02;font-weight:900;letter-spacing:-.033em}
 .hero h1 em{font-style:normal;color:var(--gold)}
@@ -85,25 +86,25 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 .door .dn{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-top:5px}
 
 /* segmented aisle switch — stays with you as you scroll */
-.seg{display:flex;gap:4px;background:rgba(255,255,255,.06);border:1px solid var(--line-2);border-radius:12px;padding:4px;margin-bottom:11px}
-.seg button{flex:1;min-height:38px;border-radius:9px;font-size:14px;font-weight:700;color:var(--cream-2);white-space:nowrap}
+.seg{display:flex;gap:4px;background:rgba(40,30,20,.04);border:1px solid var(--line-2);border-radius:12px;padding:4px;margin-bottom:11px}
+.seg button{flex:1;min-height:38px;border-radius:9px;font-size:14px;font-weight:700;color:var(--mute);white-space:nowrap}
 .seg button[aria-selected="true"]{background:var(--gold);color:#231a06}
 .aisle-note{font-size:13.5px;color:var(--mute);line-height:1.5;margin:0 0 16px;max-width:60ch}
 .pricesrc{font-family:var(--mono);font-size:11px;color:var(--mute);margin-left:8px}
 
 /* ── search + genre rail ─────────────────────────────── */
-.tools{position:sticky;top:58px;z-index:50;background:rgba(18,42,24,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:11px 0 0}
+.tools{position:sticky;top:58px;z-index:50;background:rgba(244,238,222,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:11px 0 0}
 .search{position:relative;display:flex;align-items:center}
 .search svg{position:absolute;left:14px;width:19px;height:19px;stroke:var(--mute);fill:none;stroke-width:2;pointer-events:none}
-.search input{width:100%;min-height:var(--tap);padding:0 44px 0 42px;border-radius:13px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.06);font-size:16px;font-family:var(--sans);color:var(--cream)}
+.search input{width:100%;min-height:var(--tap);padding:0 44px 0 42px;border-radius:13px;border:1.5px solid var(--line-2);background:rgba(40,30,20,.045);font-size:16px;font-family:var(--sans);color:var(--ink)}
 .search input::placeholder{color:var(--mute)}
-.search input:focus{outline:none;border-color:var(--gold);background:rgba(255,255,255,.09)}
+.search input:focus{outline:none;border-color:var(--gold);background:#fff}
 .search .clr{position:absolute;right:6px;width:36px;height:36px;border-radius:50%;font-size:19px;color:var(--mute);display:none;align-items:center;justify-content:center}
 .search .clr.on{display:flex}
 .rail{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;margin:0 -16px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
 .rail::-webkit-scrollbar{display:none}
 @media(min-width:700px){ .rail{margin:0 -24px;padding:12px 24px;flex-wrap:wrap;overflow:visible} }
-.chip{flex:none;scroll-snap-align:start;min-height:40px;padding:0 15px;border-radius:20px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.05);font-size:14px;font-weight:600;color:var(--cream-2);white-space:nowrap;display:inline-flex;align-items:center}
+.chip{flex:none;scroll-snap-align:start;min-height:40px;padding:0 15px;border-radius:20px;border:1.5px solid var(--line-2);background:rgba(40,30,20,.035);font-size:14px;font-weight:600;color:var(--mute);white-space:nowrap;display:inline-flex;align-items:center}
 .chip[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#231a06}
 .count{font-size:12.5px;color:var(--mute);padding:0 0 11px;font-family:var(--mono)}
 
@@ -125,18 +126,18 @@ main{padding:24px 0 40px}
 .meta{min-width:0;flex:1}
 .meta .nm{font-weight:700;font-size:16px;letter-spacing:-.012em;line-height:1.22;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .meta .tg{font-size:12.5px;color:var(--mute);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.meta .pr{font-family:var(--mono);font-size:11.5px;color:var(--cream-2);margin-top:5px;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta .pr{font-family:var(--mono);font-size:11.5px;color:var(--clay-d);margin-top:5px;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* the GET pill — the App Store move, except ours opens the real app */
-.get{flex:none;min-width:74px;height:33px;padding:0 15px;border-radius:17px;background:rgba(255,255,255,.13);color:var(--cream);font-weight:800;font-size:13.5px;letter-spacing:.03em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;font-family:var(--sans)}
+.get{flex:none;min-width:74px;height:33px;padding:0 15px;border-radius:17px;background:rgba(40,30,20,.07);color:var(--ink);font-weight:800;font-size:13.5px;letter-spacing:.03em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;font-family:var(--sans)}
 .row-app:hover .get{background:var(--gold);color:#231a06}
 .get.soon{background:transparent;border:1.5px solid var(--line-2);color:var(--mute);font-size:11.5px;letter-spacing:.05em}
-.badge-age{font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 7px;border-radius:9px;background:rgba(255,255,255,.12);color:var(--cream-2);margin-left:6px;font-family:var(--mono)}
+.badge-age{font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 7px;border-radius:9px;background:rgba(40,30,20,.07);color:var(--mute);margin-left:6px;font-family:var(--mono)}
 .empty{text-align:center;color:var(--mute);padding:48px 16px;font-size:15px;line-height:1.6}
 
 /* ── product sheet ───────────────────────────────────── */
 .scrim{position:fixed;inset:0;z-index:90;background:rgba(4,12,6,.72);opacity:0;pointer-events:none;transition:opacity .22s}
 .scrim.on{opacity:1;pointer-events:auto}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:91;background:var(--forest);border-radius:22px 22px 0 0;box-shadow:0 -20px 70px rgba(0,0,0,.6);max-height:93vh;display:flex;flex-direction:column;transform:translateY(101%);transition:transform .27s cubic-bezier(.32,.72,0,1);padding-bottom:var(--safe-b)}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:91;background:var(--card);color:var(--ink);border-radius:22px 22px 0 0;box-shadow:0 -20px 70px rgba(0,0,0,.35);max-height:93vh;display:flex;flex-direction:column;transform:translateY(101%);transition:transform .27s cubic-bezier(.32,.72,0,1);padding-bottom:var(--safe-b)}
 .sheet.on{transform:none}
 @media(min-width:760px){
   .sheet{left:50%;right:auto;bottom:auto;top:50%;width:640px;max-height:88vh;border-radius:20px;transform:translate(-50%,-46%) scale(.97);opacity:0;transition:transform .2s,opacity .2s}
@@ -154,17 +155,17 @@ main{padding:24px 0 40px}
 .sh-head .get{margin-top:10px;height:36px;font-size:14px}
 .sh-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px;flex:1}
 .sh-body h4{margin:0 0 8px;font-size:11.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--mute);font-family:var(--mono)}
-.sh-body p{margin:0 0 20px;font-size:15.5px;line-height:1.6;color:var(--cream)}
-.rows{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:20px;background:rgba(255,255,255,.04)}
+.sh-body p{margin:0 0 20px;font-size:15.5px;line-height:1.6;color:var(--ink)}
+.rows{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:20px;background:rgba(40,30,20,.025)}
 .rw{display:flex;justify-content:space-between;gap:14px;padding:13px 15px;font-size:14.5px;border-bottom:1px solid var(--line)}
 .rw:last-child{border-bottom:none}
 .rw span:first-child{color:var(--mute)}
 .rw span:last-child{font-weight:700;text-align:right}
-.note{background:rgba(224,168,58,.11);border:1px solid rgba(224,168,58,.34);border-radius:14px;padding:13px 15px;font-size:14px;line-height:1.55;color:#f0dcb0;margin-bottom:20px}
-.sh-foot{flex:none;padding:14px 18px calc(16px + var(--safe-b));border-top:1px solid var(--line);background:var(--forest-d);display:flex;flex-direction:column;gap:9px}
+.note{background:rgba(224,168,58,.14);border:1px solid rgba(224,168,58,.4);border-radius:14px;padding:13px 15px;font-size:14px;line-height:1.55;color:#6b4a12;margin-bottom:20px}
+.sh-foot{flex:none;padding:14px 18px calc(16px + var(--safe-b));border-top:1px solid var(--line);background:var(--cream);display:flex;flex-direction:column;gap:9px}
 @media(min-width:760px){ .sh-foot{flex-direction:row}.sh-foot .btn{flex:1} }
 .notify{display:flex;flex-direction:column;gap:9px;width:100%}
-.notify input{min-height:var(--tap);padding:0 14px;border-radius:12px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.07);font-size:16px;font-family:var(--sans);color:var(--cream)}
+.notify input{min-height:var(--tap);padding:0 14px;border-radius:12px;border:1.5px solid var(--line-2);background:rgba(40,30,20,.05);font-size:16px;font-family:var(--sans);color:var(--ink)}
 .notify input::placeholder{color:var(--mute)}
 .notify input:focus{outline:none;border-color:var(--gold)}
 
@@ -193,8 +194,8 @@ main{padding:24px 0 40px}
 .dock .roll{animation:diceroll .5s ease}
 @keyframes diceroll{0%{transform:rotate(0)}40%{transform:rotate(-14deg) scale(1.08)}
 
-footer{background:var(--forest-dd);color:var(--mute);padding:32px 0 40px;font-size:13.5px;line-height:1.7;border-top:1px solid var(--line)}
-footer a{color:var(--cream-2)}
+footer{background:var(--cream-2);color:var(--mute);padding:32px 0 40px;font-size:13.5px;line-height:1.7;border-top:1px solid var(--line)}
+footer a{color:var(--clay-d)}
 footer .fwrap{display:flex;flex-direction:column;gap:8px}
 </style>
 </head>
