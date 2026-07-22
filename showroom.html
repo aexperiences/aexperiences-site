@@ -206,7 +206,7 @@ td.n{font-family:var(--mono);white-space:nowrap}
 
 <nav class="mbar" id="mbar" aria-label="Sections"></nav>
 
-<script src="/showroom-config.js"></script>
+<script src="/showroom-config.js"></script><script src="/showroom-org.js"></script>
 <script>
 (function(){
   var qs = new URLSearchParams(location.search);
@@ -401,7 +401,7 @@ td.n{font-family:var(--mono);white-space:nowrap}
       + '<a class="btn btn-g" href="mailto:anthonye@aexperiences.studio?subject='+encodeURIComponent(T.hub+' — questions')+'">Ask us anything</a></div></div>';
   }
 
-  var VIEWS = { dash:dash, deals:deals, people:people, money:money, stack:stack, suite:suite };
+  var VIEWS = { dash:dash, deals:deals, people:people, money:money, stack:stack, suite:suite, org:function(){ return (window.AEOrg&&window.AEOrg.render)?window.AEOrg.render(T):dash(); } };
   function render(){
     // only sections this trade actually declares — a hash for a tab that doesn't exist here falls back to the dashboard
     if (!T.sections.some(function(s){ return s.id===section; })) section='dash';
