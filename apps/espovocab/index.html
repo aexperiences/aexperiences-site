@@ -61,7 +61,15 @@ main{max-width:640px;margin:0 auto;padding:8px 18px 24px}
   60%{opacity:1;filter:blur(0)}
   80%{transform:translateY(1px) scale(.996)}
   100%{opacity:1;transform:none;filter:blur(0)}}
-.pr{color:var(--gold);font-family:var(--serif);font-style:italic;font-size:17px;margin-top:8px}
+.pr{color:var(--gold);font-family:var(--serif);font-style:italic;font-size:17px}
+.prline{display:flex;align-items:center;gap:10px;margin-top:8px}
+.say{flex:0 0 auto;width:34px;height:34px;border-radius:50%;padding:0;background:transparent;
+  border:1.5px solid var(--gold);color:var(--green);display:inline-flex;align-items:center;justify-content:center}
+.say:hover{background:rgba(166,127,30,.09)}
+.say.speaking{background:var(--green);color:#F1EAD5;border-color:var(--green)}
+.say.speaking svg{animation:pulse .6s ease-in-out infinite alternate}
+@keyframes pulse{from{opacity:.55}to{opacity:1}}
+.say svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .pos{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
   color:var(--green);border:1.5px solid var(--green);border-radius:4px;padding:3px 10px;margin:14px 0 4px}
 .def{font-family:var(--serif);font-size:21.5px;line-height:1.55;margin-top:10px}
@@ -144,7 +152,12 @@ footer .fl{color:var(--gold);font-size:15px;margin-bottom:6px}
   <section class="view on" id="v-today">
     <div class="date" id="tDate"></div>
     <div class="word" id="tWord"></div>
-    <div class="pr" id="tPr"></div>
+    <div class="prline">
+      <div class="pr" id="tPr"></div>
+      <button class="say" id="tSay" aria-label="Hear it spoken" title="Hear it spoken">
+        <svg viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>
+      </button>
+    </div>
     <div><span class="pos" id="tPos"></span></div>
     <p class="def" id="tDef"></p>
     <div class="sec"><h3>Where it comes from</h3><p id="tEty"></p></div>
@@ -406,6 +419,29 @@ document.getElementById("tKeep").onclick=function(){
   save();drawToday();
 };
 document.getElementById("tAnother").onclick=function(){S.extra++;save();pick()};
+/* ─── hear it — on-device, nothing leaves the phone ─── */
+function bestVoice(){
+  var vs=(window.speechSynthesis&&speechSynthesis.getVoices())||[];
+  return vs.find(function(v){return /en[-_]US/i.test(v.lang)&&/(Samantha|Google US English|Aria|Jenny|Microsoft)/i.test(v.name)})
+      || vs.find(function(v){return /en[-_]US/i.test(v.lang)})
+      || vs.find(function(v){return /^en/i.test(v.lang)}) || null;
+}
+if(window.speechSynthesis){try{speechSynthesis.onvoiceschanged=function(){};speechSynthesis.getVoices();}catch(e){}}
+function speakWord(){
+  var btn=document.getElementById("tSay");
+  if(!("speechSynthesis" in window)){toast("This device can't read aloud");return}
+  try{
+    speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(W.w);
+    u.lang="en-US"; u.rate=.9; u.pitch=1;
+    var v=bestVoice(); if(v)u.voice=v;
+    u.onstart=function(){btn.classList.add("speaking")};
+    u.onend=function(){btn.classList.remove("speaking")};
+    u.onerror=function(){btn.classList.remove("speaking")};
+    speechSynthesis.speak(u);
+  }catch(e){btn.classList.remove("speaking");toast("Couldn't play audio")}
+}
+document.getElementById("tSay").onclick=speakWord;
 document.getElementById("tSaveNote").onclick=function(){
   var v=document.getElementById("tNote").value.trim();if(!v){toast("Write a line first");return}
   S.journal.unshift({w:W.w,note:v,t:Date.now()});save();
