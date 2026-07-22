@@ -168,60 +168,60 @@
   ICONS.forEach(function(it,i){
     var f=document.createElement('div'); f.className='frame'; f.dataset.i=i; f.style.setProperty('--g',it.g);
     var art=document.createElement('div'); art.className='art';
-    var img=document.createElement('img'); img.src=it.f; img.alt=it.n+' — app icon'; img.draggable=false; img.loading='lazy';
+    var img=document.createElement('img'); img.src=it.f; img.alt=it.n+' — app icon'; img.draggable=false; img.decoding='async';
     art.appendChild(img);
     var cap=document.createElement('div'); cap.className='cap'; cap.textContent=it.n;
     f.appendChild(art); f.appendChild(cap); stage.appendChild(f);
-    var d=document.createElement('div'); d.className='dot'; d.dataset.i=i;
-    d.addEventListener('click',function(){ centerOn(i,true); }); dotsEl.appendChild(d);
+    var d=document.createElement('div'); d.className='dot'; d.dataset.i=i; dotsEl.appendChild(d);
   });
   var frames=[].slice.call(stage.querySelectorAll('.frame'));
   var dots=[].slice.call(dotsEl.querySelectorAll('.dot'));
   var current=-1;
 
   function setFocus(i){
-    if(i===current) return; current=i;
-    frames.forEach(function(f,k){ f.classList.toggle('focus', k===i); });
-    dots.forEach(function(d,k){ d.classList.toggle('on', k===i); });
+    if(i<0 || i>=frames.length || i===current) return; current=i;
+    for(var k=0;k<frames.length;k++){ frames[k].classList.toggle('focus', k===i); }
+    for(var d=0;d<dots.length;d++){ dots[d].classList.toggle('on', d===i); }
     var g=ICONS[i].g;
     document.documentElement.style.setProperty('--accent', g);
     ambient.style.setProperty('--accent', g);
   }
-  // find the frame nearest the horizontal centre of the viewport
+  function centerX(f){ var r=f.getBoundingClientRect(); return r.left + r.width/2; }
   function nearest(){
     var cx=window.innerWidth/2, best=0, bestD=1e9;
-    frames.forEach(function(f,k){ var r=f.getBoundingClientRect(); var c=r.left+r.width/2; var d=Math.abs(c-cx); if(d<bestD){bestD=d;best=k;} });
+    for(var k=0;k<frames.length;k++){ var d=Math.abs(centerX(frames[k])-cx); if(d<bestD){ bestD=d; best=k; } }
     return best;
   }
-  function centerOn(i,smooth){
-    var f=frames[i]; if(!f) return;
-    f.scrollIntoView({behavior:smooth?'smooth':'auto', inline:'center', block:'nearest'});
+  // scroll the rail so frame i sits dead centre, AND light it up immediately (don't wait on the scroll event)
+  function goTo(i,smooth){
+    i=Math.max(0,Math.min(frames.length-1,i)); var f=frames[i]; if(!f) return;
+    var target=f.offsetLeft-(stage.clientWidth-f.offsetWidth)/2;
+    try{ stage.scrollTo({left:target, behavior:smooth?'smooth':'auto'}); }catch(e){ stage.scrollLeft=target; }
+    setFocus(i);
   }
-  var raf=null;
-  stage.addEventListener('scroll',function(){ if(raf) return; raf=requestAnimationFrame(function(){ raf=null; setFocus(nearest()); }); }, {passive:true});
+  // as the user swipes/scrolls, keep the centred icon lit (recompute every frame — cheap for 18)
+  var ticking=false;
+  stage.addEventListener('scroll',function(){ if(ticking) return; ticking=true; requestAnimationFrame(function(){ ticking=false; setFocus(nearest()); }); }, {passive:true});
 
-  // drag-to-scroll (mouse); touch is native
+  // mouse drag-to-scroll (touch swipes natively)
   var down=false, sx=0, sl=0, moved=false;
-  stage.addEventListener('pointerdown',function(e){ if(e.pointerType==='touch') return; down=true; moved=false; sx=e.clientX; sl=stage.scrollLeft; stage.classList.add('drag'); stage.setPointerCapture(e.pointerId); });
-  stage.addEventListener('pointermove',function(e){ if(!down) return; var dx=e.clientX-sx; if(Math.abs(dx)>3) moved=true; stage.scrollLeft=sl-dx; });
-  function endDrag(e){ if(!down) return; down=false; stage.classList.remove('drag'); if(moved) centerOn(nearest(),true); }
+  stage.addEventListener('pointerdown',function(e){ if(e.pointerType==='touch') return; down=true; moved=false; sx=e.clientX; sl=stage.scrollLeft; stage.classList.add('drag'); try{ stage.setPointerCapture(e.pointerId); }catch(_){}} );
+  stage.addEventListener('pointermove',function(e){ if(!down) return; var dx=e.clientX-sx; if(Math.abs(dx)>3) moved=true; stage.scrollLeft=sl-dx; setFocus(nearest()); });
+  function endDrag(){ if(!down) return; down=false; stage.classList.remove('drag'); if(moved) goTo(nearest(),true); }
   stage.addEventListener('pointerup',endDrag); stage.addEventListener('pointercancel',endDrag); stage.addEventListener('pointerleave',endDrag);
-  // wheel: let vertical wheel move the rail horizontally for desktop trackpads/mice
+  // vertical wheel / trackpad moves the rail sideways
   stage.addEventListener('wheel',function(e){ if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){ stage.scrollLeft+=e.deltaY; e.preventDefault(); } },{passive:false});
 
-  document.getElementById('prev').addEventListener('click',function(){ centerOn(Math.max(0,nearest()-1),true); });
-  document.getElementById('next').addEventListener('click',function(){ centerOn(Math.min(frames.length-1,nearest()+1),true); });
+  document.getElementById('prev').addEventListener('click',function(){ goTo(current-1,true); });
+  document.getElementById('next').addEventListener('click',function(){ goTo(current+1,true); });
   document.addEventListener('keydown',function(e){
-    if(e.key==='ArrowRight'){ centerOn(Math.min(frames.length-1,nearest()+1),true); e.preventDefault(); }
-    if(e.key==='ArrowLeft'){ centerOn(Math.max(0,nearest()-1),true); e.preventDefault(); }
+    if(e.key==='ArrowRight'){ goTo(current+1,true); e.preventDefault(); }
+    if(e.key==='ArrowLeft'){ goTo(current-1,true); e.preventDefault(); }
   });
+  dots.forEach(function(d,i){ d.addEventListener('click',function(){ goTo(i,true); }); });
 
-  // start on the first icon, centred
-  window.addEventListener('load',function(){
-    centerOn(0,false);
-    setTimeout(function(){ setFocus(nearest()); if(window.innerWidth<760){ hint.style.display='block'; setTimeout(function(){hint.style.opacity='0';},2600);} },60);
-  });
-  setFocus(0);
+  function boot(){ goTo(0,false); setFocus(0); if(window.innerWidth<760 && hint){ hint.style.display='block'; setTimeout(function(){ hint.style.opacity='0'; },2600); } }
+  if(document.readyState==='complete') boot(); else window.addEventListener('load',boot);
 })();
 </script>
 </body>
