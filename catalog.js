@@ -31,7 +31,6 @@
       price:'$650/mo', priceNote:'3 tiers · annual $6,500/yr (2 months free)',
       svg:'<path d="M6 40 24 9l18 31zM6 40h36"/><path d="M24 9 16 40M24 9l8 31M13 30h22"/>' },
 
-    { id:'marquee', name:'Marquee Hub', tag:'Live theater', genre:'business', state:'live',
       acc:'#e0b24a', url:'https://ae-theater-hub.vercel.app', pricing:'/hubs/theater.html',
       blurb:'Box office, seasons, casts, crews and volunteers — the whole theater, running on one spine.',
       price:'$650/mo', priceNote:'3 tiers · annual $6,500/yr (2 months free)',
