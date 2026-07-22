@@ -437,7 +437,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
 
   q.addEventListener('input',function(){ term=q.value.trim().toLowerCase(); clr.classList.toggle('on',!!term); render(); });
   clr.addEventListener('click',function(){ q.value=''; term=''; clr.classList.remove('on'); render(); q.focus(); });
-  document.getElementById('tabSearch').addEventListener('click',function(){
+  var tabSearch=document.getElementById('tabSearch'); if(tabSearch) tabSearch.addEventListener('click',function(){
     window.scrollTo({top:0,behavior:'smooth'}); setTimeout(function(){ q.focus(); },260);
   });
 
