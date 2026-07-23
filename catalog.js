@@ -97,7 +97,7 @@
       blurb:'The forms and fine print nobody explains — IEPs, benefits, care paperwork — translated into plain English.',
       price:'Free right now', priceNote:'Paid plans not switched on yet' },
 
-    { id:'espo-drama', name:'ESPO Drama', tag:'Theater & dramatic arts', genre:'arts', state:'dev',
+    { id:'espo-drama', name:'ESPO Drama', tag:'Theater & dramatic arts', genre:'arts', state:'live',
       acc:'#c8794f', url:'https://espodrama.com/', img:'/logo-drama.png',
       blurb:'Scene study, monologue work and a stage full of games — for drama students and the teachers who run the room.',
       price:'Free right now', priceNote:'Paid plans not switched on yet' },
