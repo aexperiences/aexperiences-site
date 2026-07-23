@@ -13,70 +13,58 @@
 
   var CATALOG = [
 
-    /* ─────────── BUSINESS HUBS — live, sold as a subscription ─────────── */
-    { id:'homestead', name:'Homestead Hub', tag:'Real estate', genre:'business', state:'live',
+    /* ─────────── BUSINESS OPERATING SYSTEMS — live, sold as a subscription ─────────── */
+    { id:'homestead', name:'Abode OS', tag:'Real estate', genre:'business', state:'live',
       acc:'#c8794f', url:'https://ae-realestate-hub.vercel.app', pricing:'/hubs/real-estate.html',
       blurb:'Run a real-estate practice from one place — listings, clients, calendar, and the paperwork that follows a deal.',
       price:'$450/mo', priceNote:'3 tiers · annual $4,500/yr (2 months free)',
       svg:'<path d="M7 22 24 8l17 14"/><path d="M11 20v19h26V20"/><circle cx="24" cy="29" r="3.2"/><path d="M24 32.2V37"/>' },
 
-    { id:'draftline', name:'Draftline Hub', tag:'Architecture', genre:'business', state:'live',
+    { id:'draftline', name:'Buttress OS', tag:'Architecture', genre:'business', state:'live',
       acc:'#5c8a5f', url:'https://ae-architecture-hub.vercel.app', pricing:'/hubs/architecture.html',
-      blurb:'Projects, drawing sets, consultants and clients in one studio hub — built around how a practice actually runs.',
+      blurb:'Projects, drawing sets, consultants and clients in one studio OS — built around how a practice actually runs.',
       price:'$550/mo', priceNote:'3 tiers · annual $5,500/yr (2 months free)',
       svg:'<path d="M24 7 11 41M24 7l13 34"/><circle cx="24" cy="7" r="2.6"/><path d="M24 7v11"/><path d="M16 30h16"/>' },
 
-    { id:'datum', name:'Datum Hub', tag:'Engineering', genre:'business', state:'live',
+    { id:'datum', name:'Truss OS', tag:'Engineering', genre:'business', state:'live',
       acc:'#18b0ba', url:'https://ae-engineering-hub.vercel.app', pricing:'/hubs/engineering.html',
       blurb:'Job tracking, submittals, field notes and billing for an engineering firm — one system instead of six.',
       price:'$650/mo', priceNote:'3 tiers · annual $6,500/yr (2 months free)',
       svg:'<path d="M6 40 24 9l18 31zM6 40h36"/><path d="M24 9 16 40M24 9l8 31M13 30h22"/>' },
 
-    { id:'marquee', name:'Marquee Hub', tag:'Live theater', genre:'business', state:'live',
+    { id:'marquee', name:'Musical OS', tag:'Live theater', genre:'business', state:'live',
       acc:'#e0b24a', url:'https://ae-theater-hub.vercel.app', pricing:'/hubs/theater.html',
       blurb:'Box office, seasons, casts, crews and volunteers — the whole theater, running on one spine.',
       price:'$650/mo', priceNote:'3 tiers · annual $6,500/yr (2 months free)',
       svg:'<path d="M9 17h30l-3 22H12z"/><path d="M9 17 24 7l15 10"/><circle cx="19" cy="27" r="2"/><circle cx="29" cy="27" r="2"/>' },
 
-    { id:'reel', name:'Reel Hub', tag:'Film & production', genre:'business', state:'live',
+    { id:'reel', name:'8mm OS', tag:'Film & production', genre:'business', state:'live',
       acc:'#8a6fd6', url:'https://ae-cinema-hub.vercel.app', pricing:'/hubs/cinema.html',
       blurb:'Productions, crew, call sheets, gear and post — from greenlight to delivery.',
       price:'$500/mo', priceNote:'3 tiers · annual $5,000/yr (2 months free)',
       svg:'<rect x="7" y="14" width="24" height="20" rx="3"/><path d="M31 22l10-6v16l-10-6z"/>' },
 
-    { id:'encore', name:'Encore Hub', tag:'Concerts & venues', genre:'business', state:'live',
+    { id:'encore', name:'Amphitheater OS', tag:'Concerts & venues', genre:'business', state:'live',
       acc:'#d65f8a', url:'https://ae-concert-hub.vercel.app', pricing:'/hubs/concerts.html',
       blurb:'Shows, ticketing, artists, riders and settlement — the venue back office in one place.',
       price:'$600/mo', priceNote:'3 tiers · annual $6,000/yr (2 months free)',
       svg:'<path d="M18 34V12l18-4v22"/><circle cx="14" cy="34" r="4.5"/><circle cx="32" cy="30" r="4.5"/>' },
 
-    { id:'cartwheel', name:'Cartwheel Hub', tag:'Kids gyms & programs', genre:'business', state:'live',
+    { id:'cartwheel', name:'LilNinja OS', tag:'Kids gyms & programs', genre:'business', state:'live',
       acc:'#4aa3d6', url:'https://ae-gym-hub.vercel.app', pricing:'/hubs/kids-gym.html',
       blurb:'Classes, enrollment, waivers, parents and payments — for gyms, camps and kids programs.',
       price:'$400/mo', priceNote:'3 tiers · annual $4,000/yr (2 months free)',
       svg:'<circle cx="24" cy="24" r="15"/><path d="M24 9v30M9 24h30"/><path d="M13 13l22 22M35 13L13 35"/>' },
 
-    { id:'showroom', name:'Showroom Hub', tag:'Used-car dealers', genre:'business', state:'live',
+    { id:'showroom', name:'4barrel OS', tag:'Used-car dealers', genre:'business', state:'live',
       acc:'#1c5568', url:'https://ae-showroom-hub.vercel.app', pricing:'/hubs/showroom.html',
       blurb:'Inventory, sales desk, leads and recon for independent and boutique used-car dealers.',
       price:'$450/mo', priceNote:'3 tiers · annual $4,500/yr (2 months free)',
       svg:'<path d="M6 32V24l4-10a4 4 0 0 1 4-2.6h20A4 4 0 0 1 38 14l4 10v8"/><path d="M6 32h6M42 32h-6"/><circle cx="15" cy="32" r="4"/><circle cx="33" cy="32" r="4"/>' },
 
-    { id:'driveline', name:'Driveline Hub', tag:'Franchise dealerships', genre:'business', state:'live',
-      acc:'#24507e', url:'https://ae-bigauto-hub.vercel.app', pricing:'/hubs/driveline.html',
-      blurb:'Sales, service and parts for a franchise dealership — one dealership OS instead of six.',
-      price:'$950/mo', priceNote:'3 tiers · annual $9,500/yr (2 months free)',
-      svg:'<path d="M6 32V24l4-10a4 4 0 0 1 4-2.6h20A4 4 0 0 1 38 14l4 10v8"/><path d="M6 32h6M42 32h-6"/><circle cx="15" cy="32" r="4"/><circle cx="33" cy="32" r="4"/>' },
-
-    { id:'motorcade', name:'Motorcade Hub', tag:'Dealer groups & national online', genre:'business', state:'live',
-      acc:'#182f4d', url:'https://ae-motorcade-hub.vercel.app', pricing:'/hubs/motorcade.html',
-      blurb:'Multi-rooftop inventory, group desk, service and online sales — one command center.',
-      price:'$1,200/mo', priceNote:'3 tiers · annual $12,000/yr (2 months free)',
-      svg:'<path d="M6 32V24l4-10a4 4 0 0 1 4-2.6h20A4 4 0 0 1 38 14l4 10v8"/><path d="M6 32h6M42 32h-6"/><circle cx="15" cy="32" r="4"/><circle cx="33" cy="32" r="4"/>' },
-
-    { id:'targeted', name:'Targeted Hub', tag:'Marketing agencies & studios', genre:'business', state:'live',
-      acc:'#d97a2e', url:'https://ae-targeted-showroom.vercel.app/dashboard', pricing:'/hubs/targeted.html',
-      blurb:'CRM, pipeline, estimator and campaigns for a marketing agency or studio — on one branded hub.',
+    { id:'targeted', name:'Targeted OS', tag:'Marketing agencies & studios', genre:'business', state:'live',
+      acc:'#d97a2e', url:'/showroom.html?trade=targeted', pricing:'/hubs/targeted.html',
+      blurb:'CRM, pipeline, estimator and campaigns for a marketing agency or studio — on one branded OS.',
       price:'$450/mo', priceNote:'3 tiers · annual $4,500/yr (2 months free)',
       svg:'<circle cx="24" cy="24" r="15"/><circle cx="24" cy="24" r="9"/><circle cx="24" cy="24" r="3"/>' },
 
@@ -109,9 +97,9 @@
       blurb:'The forms and fine print nobody explains — IEPs, benefits, care paperwork — translated into plain English.',
       price:'Free right now', priceNote:'Paid plans not switched on yet' },
 
-    { id:'espo-drama', name:'ESPO Drama', tag:'Theater & dramatic arts', genre:'arts', state:'live',
+    { id:'espo-drama', name:'ESPO Drama', tag:'Theater & dramatic arts', genre:'arts', state:'dev',
       acc:'#c8794f', url:'https://espodrama.com/', img:'/logo-drama.png',
-      blurb:'Write with Roz your coach, run lines from a real play library, scan your own script, warm up, and learn every job in the room — for actors, writers and theater teachers, ages 5 to 90.',
+      blurb:'Scene study, monologue work and a stage full of games — for drama students and the teachers who run the room.',
       price:'Free right now', priceNote:'Paid plans not switched on yet' },
 
     { id:'esposocial', name:'ESPOsocial', tag:'Private groups & video', genre:'social', state:'dev',
@@ -194,7 +182,7 @@
 
   var GENRES = [
     { id:'all',      label:'All' },
-    { id:'business', label:'Business hubs' },
+    { id:'business', label:'Business systems' },
     { id:'learning', label:'Learning' },
     { id:'mind',     label:'Mind & mood' },
     { id:'family',   label:'Family' },
