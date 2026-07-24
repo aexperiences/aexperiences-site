@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Draftline Hub — Architecture white-label hub · Accelerated Experiences</title>
-<meta name="description" content="Draftline Hub — a native, fully-branded architecture operating hub. Every commission, phase, RFI &amp; drawing in one studio OS. From $550/mo. Replace your software stack and keep 100% of your fees.">
+<title>Buttress OS — Architecture white-label hub · Accelerated Experiences</title>
+<meta name="description" content="Buttress OS — a native, fully-branded architecture operating hub. Every commission, phase, RFI &amp; drawing in one studio OS. From $550/mo. Replace your software stack and keep 100% of your fees.">
 <meta name="theme-color" content="#1c3d22">
 <link rel="icon" href="/ae-disc.png">
-<meta property="og:title" content="Draftline Hub — Architecture hub by Accelerated Experiences">
+<meta property="og:title" content="Buttress OS — Architecture hub by Accelerated Experiences">
 <meta property="og:description" content="Every commission, phase, RFI &amp; drawing in one studio OS. From $550/mo, on your brand and domain.">
   <meta property="og:image" content="https://www.aexperiences.com/og-hub-architecture.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Draftline Hub — Architecture hub by Accelerated Experiences">
+  <meta name="twitter:title" content="Buttress OS — Architecture hub by Accelerated Experiences">
   <meta name="twitter:description" content="Every commission, phase, RFI &amp; drawing in one studio OS. From $550/mo, on your brand and domain.">
   <meta name="twitter:image" content="https://www.aexperiences.com/og-hub-architecture.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,7 +41,7 @@
       <div class="reveal">
         <div class="vic"><svg viewBox="0 0 48 48"><path d="M24 7 11 41M24 7l13 34"/><circle cx="24" cy="7" r="2.6"/><path d="M24 7v11"/><path d="M16 30h16"/></svg></div>
         <div class="eyebrow onh">Architecture · White-label hub</div>
-        <h1>Draftline Hub</h1>
+        <h1>Buttress OS</h1>
         <p class="tagline">Every commission, phase, RFI &amp; drawing in one studio OS.</p>
         <p class="who"><b>Who it’s for:</b> Small-to-mid architecture studios — principals, PMs, drafters, admin.</p>
         <div class="cta">
@@ -146,7 +146,7 @@
   <div class="wrap start-grid">
     <div class="reveal">
       <div class="eyebrow onh">Sell now · book your build</div>
-      <h2 class="onh">Let’s stand up your Draftline Hub.</h2>
+      <h2 class="onh">Let’s stand up your Buttress OS.</h2>
       <p class="lede onh">Tell us about your architecture operation and which tier fits. We’ll follow up with a tailored quote and a live demo — usually within a day. Every engagement is custom-built and quoted; these prices set the floor and the logic.</p>
       <ul class="assure">
         <li>A real demo of the hub, on your brand</li>
@@ -155,7 +155,7 @@
       </ul>
     </div>
     <form class="leadform reveal" id="leadForm" novalidate>
-      <input type="hidden" name="vertical" value="Draftline Hub">
+      <input type="hidden" name="vertical" value="Buttress OS">
       <input type="hidden" name="source" value="aexperiences.com/hubs/architecture">
       <label>Name<input name="name" required autocomplete="name"></label>
       <label>Email<input name="email" type="email" required autocomplete="email"></label>
@@ -198,10 +198,10 @@
     var btn=f.querySelector('button'); btn.disabled=true; btn.textContent='Sending…';
     fetch('https://aexperiences.studio/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)})
       .then(function(r){return r.ok?r.json():Promise.reject();})
-      .then(function(){ f.innerHTML='<div class="lf-done"><b>Thank you, '+(d.name.split(' ')[0]||'')+'.</b><br>Your request for the Draftline Hub is in — we’ll be in touch shortly with a demo and a tailored quote.</div>'; })
+      .then(function(){ f.innerHTML='<div class="lf-done"><b>Thank you, '+(d.name.split(' ')[0]||'')+'.</b><br>Your request for the Buttress OS is in — we’ll be in touch shortly with a demo and a tailored quote.</div>'; })
       .catch(function(){
-        var body=encodeURIComponent('Hi Anthony,\n\nI\'m interested in the Draftline Hub.\n\nName: '+(d.name||'')+'\nEmail: '+(d.email||'')+'\nPhone: '+(d.phone||'')+'\nOrg: '+(d.org||'')+'\nTier: '+(d.tier||'')+'\nNotes: '+(d.note||''));
-        note.innerHTML='Couldn’t reach the server — <a href="mailto:anthonye@aexperiences.studio?subject=Draftline%20Hub%20inquiry&body='+body+'">click to email us instead →</a>'; note.className='lf-note err';
+        var body=encodeURIComponent('Hi Anthony,\n\nI\'m interested in the Buttress OS.\n\nName: '+(d.name||'')+'\nEmail: '+(d.email||'')+'\nPhone: '+(d.phone||'')+'\nOrg: '+(d.org||'')+'\nTier: '+(d.tier||'')+'\nNotes: '+(d.note||''));
+        note.innerHTML='Couldn’t reach the server — <a href="mailto:anthonye@aexperiences.studio?subject=Buttress OS%20Hub%20inquiry&body='+body+'">click to email us instead →</a>'; note.className='lf-note err';
         btn.disabled=false; btn.textContent='Book my demo →';
       });
   });
