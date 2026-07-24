@@ -13,7 +13,7 @@
 
   var CATALOG = [
 
-    /* ─────────── BUSINESS OPERATING SYSTEMS — live, sold as a subscription ─────────── */
+    /* ─────────── BUSINESS HUBS — live, sold as a subscription ─────────── */
     { id:'homestead', name:'Abode OS', tag:'Real estate', genre:'business', state:'live',
       acc:'#c8794f', url:'https://ae-realestate-hub.vercel.app', pricing:'/hubs/real-estate.html',
       blurb:'Run a real-estate practice from one place — listings, clients, calendar, and the paperwork that follows a deal.',
@@ -22,7 +22,7 @@
 
     { id:'draftline', name:'Buttress OS', tag:'Architecture', genre:'business', state:'live',
       acc:'#5c8a5f', url:'https://ae-architecture-hub.vercel.app', pricing:'/hubs/architecture.html',
-      blurb:'Projects, drawing sets, consultants and clients in one studio OS — built around how a practice actually runs.',
+      blurb:'Projects, drawing sets, consultants and clients in one studio hub — built around how a practice actually runs.',
       price:'$550/mo', priceNote:'3 tiers · annual $5,500/yr (2 months free)',
       svg:'<path d="M24 7 11 41M24 7l13 34"/><circle cx="24" cy="7" r="2.6"/><path d="M24 7v11"/><path d="M16 30h16"/>' },
 
@@ -63,8 +63,8 @@
       svg:'<path d="M6 32V24l4-10a4 4 0 0 1 4-2.6h20A4 4 0 0 1 38 14l4 10v8"/><path d="M6 32h6M42 32h-6"/><circle cx="15" cy="32" r="4"/><circle cx="33" cy="32" r="4"/>' },
 
     { id:'targeted', name:'Targeted OS', tag:'Marketing agencies & studios', genre:'business', state:'live',
-      acc:'#d97a2e', url:'/showroom.html?trade=targeted', pricing:'/hubs/targeted.html',
-      blurb:'CRM, pipeline, estimator and campaigns for a marketing agency or studio — on one branded OS.',
+      acc:'#d97a2e', url:'https://ae-targeted-showroom.vercel.app/dashboard', pricing:'/hubs/targeted.html',
+      blurb:'CRM, pipeline, estimator and campaigns for a marketing agency or studio — on one branded hub.',
       price:'$450/mo', priceNote:'3 tiers · annual $4,500/yr (2 months free)',
       svg:'<circle cx="24" cy="24" r="15"/><circle cx="24" cy="24" r="9"/><circle cx="24" cy="24" r="3"/>' },
 
@@ -99,7 +99,7 @@
 
     { id:'espo-drama', name:'ESPO Drama', tag:'Theater & dramatic arts', genre:'arts', state:'live',
       acc:'#c8794f', url:'https://espodrama.com/', img:'/logo-drama.png',
-      blurb:'Scene study, monologue work and a stage full of games — for drama students and the teachers who run the room.',
+      blurb:'Write with Roz your coach, run lines from a real play library, scan your own script, warm up, and learn every job in the room — for actors, writers and theater teachers, ages 5 to 90.',
       price:'Free right now', priceNote:'Paid plans not switched on yet' },
 
     { id:'esposocial', name:'ESPOsocial', tag:'Private groups & video', genre:'social', state:'dev',
@@ -182,7 +182,7 @@
 
   var GENRES = [
     { id:'all',      label:'All' },
-    { id:'business', label:'Business systems' },
+    { id:'business', label:'Business hubs' },
     { id:'learning', label:'Learning' },
     { id:'mind',     label:'Mind & mood' },
     { id:'family',   label:'Family' },

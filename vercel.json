@@ -9,6 +9,16 @@
       "source": "/products",
       "destination": "/shop.html",
       "permanent": true
+    },
+    {
+      "source": "/hubs/driveline.html",
+      "destination": "/shop.html",
+      "permanent": true
+    },
+    {
+      "source": "/hubs/motorcade.html",
+      "destination": "/shop.html",
+      "permanent": true
     }
   ]
 }
