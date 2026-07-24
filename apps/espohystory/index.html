@@ -120,7 +120,6 @@ footer{max-width:720px;margin:26px auto 0;padding:0 18px calc(8px + env(safe-are
       <button class="bsm" id="bEasy" title="Bigger spaces between letters and words">Easy-read: off</button>
     </div>
     <div class="stext" id="sText"></div>
-    <audio id="narrAudio" preload="none" style="display:none"></audio>
     <div class="facts"><h3>The true bits (really!)</h3><ul id="sFacts"></ul></div>
     <div class="facts"><h3>Talk about it</h3><p id="sTalk" style="font-size:14.5px;line-height:1.6"></p></div>
     <div class="done" id="sDone"><div class="big">⭐</div><p id="doneMsg"></p></div>
@@ -865,7 +864,6 @@ function drawShelf(){
 
 /* ================= STORY VIEW ================= */
 var cur=null, tokens=[], paraTokens=[];
-var narr={on:false,words:null,flat:null,audio:null};
 function openStory(i){
   stopSpeech();
   cur=STORIES[i];
@@ -893,20 +891,6 @@ function openStory(i){
     host.appendChild(el);
     paraTokens.push(list);
   });
-  narr.on=false; narr.words=null; narr.flat=null;
-  if(narr.audio){narr.audio.pause();try{narr.audio.removeAttribute("src");narr.audio.load()}catch(e){}}
-  voiceSel.style.display="";
-  var flat=[];
-  paraTokens.forEach(function(list,pi){list.forEach(function(t,wi){flat.push([pi,wi])})});
-  var openedId=cur.id;
-  fetch("/apps/espohystory/audio/"+openedId+".json").then(function(r){return r.ok?r.json():null}).catch(function(){return null}).then(function(data){
-    if(!cur||cur.id!==openedId)return;
-    if(data&&data.v===1&&Array.isArray(data.words)&&data.words.length===flat.length){
-      narr.words=data.words; narr.flat=flat; narr.on=true;
-      if(narr.audio){narr.audio.src="/apps/espohystory/audio/"+openedId+".mp3";narr.audio.playbackRate=parseFloat(S.rate)||0.95}
-      voiceSel.style.display="none";
-    }
-  });
   document.getElementById("sFacts").innerHTML=cur.facts.map(function(f){return "<li>"+esc(f)+"</li>"}).join("");
   document.getElementById("sTalk").textContent=cur.talk||"What was the funniest part — and which part surprised you the most?";
   P.pi=0;P.wi=0;setPlayBtn(false);
@@ -933,20 +917,6 @@ function loadVoices(){
   if(S.voice){for(var i=0;i<voices.length;i++)if(voices[i].name===S.voice){voiceSel.value=i;break}}
 }
 if(window.speechSynthesis){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
-narr.audio=document.getElementById("narrAudio");
-function flatIndexOf(pi,wi){var idx=0;for(var p=0;p<pi;p++)idx+=(paraTokens[p]?paraTokens[p].length:0);return idx+wi}
-narr.audio.addEventListener("timeupdate",function(){
-  if(!narr.on||!P.playing||!narr.words)return;
-  var t=narr.audio.currentTime;
-  var words=narr.words,lo=0,hi=words.length-1,ans=0;
-  while(lo<=hi){var mid=(lo+hi)>>1;if(words[mid][0]<=t){ans=mid;lo=mid+1}else{hi=mid-1}}
-  var pw=narr.flat[ans];
-  if(pw){P.pi=pw[0];P.wi=pw[1];hl(P.pi,P.wi)}
-});
-narr.audio.addEventListener("ended",function(){
-  if(!narr.on)return;
-  finishStory();
-});
 voiceSel.onchange=function(){
   if(voices[voiceSel.value]){S.voice=voices[voiceSel.value].name;save()}
   if(P.playing){pauseSpeech();playFromCurrent()}
@@ -971,13 +941,11 @@ function stopEst(){if(P.est){clearTimeout(P.est);P.est=null}}
 function stopSpeech(){
   P.playing=false;stopEst();
   if(window.speechSynthesis)speechSynthesis.cancel();
-  if(narr.audio)narr.audio.pause();
   clearHl();setPlayBtn(false);
 }
 function pauseSpeech(){
   P.playing=false;stopEst();
   if(window.speechSynthesis)speechSynthesis.cancel();
-  if(narr.audio)narr.audio.pause();
   setPlayBtn(false);
 }
 function estimateStep(list,idx,offsetWi){
@@ -991,17 +959,8 @@ function estimateStep(list,idx,offsetWi){
   P.est=setTimeout(function(){estimateStep(list,idx+1,offsetWi)},ms);
 }
 function playFromCurrent(){
-  if(!cur)return;
-  if(narr.on&&narr.audio){
-    var idx=flatIndexOf(P.pi,P.wi);
-    var startT=(narr.words[idx]||[0,0])[0];
-    if(Math.abs(narr.audio.currentTime-startT)>0.25)narr.audio.currentTime=startT;
-    narr.audio.playbackRate=parseFloat(S.rate)||0.95;
-    P.playing=true;setPlayBtn(true);
-    narr.audio.play().catch(function(){});
-    return;
-  }
   if(!window.speechSynthesis){toast("This browser can't read aloud — but you can still read together!");return}
+  if(!cur)return;
   var list=paraTokens[P.pi];
   if(!list){finishStory();return}
   var startTok=list[P.wi]||list[0];
@@ -1048,26 +1007,6 @@ function finishStory(){
   document.getElementById("sDone").scrollIntoView({block:"center",behavior:"smooth"});
 }
 function sayWord(word,el){
-  var pi=+el.dataset.pi,wi=+el.dataset.wi;
-  if(narr.on&&narr.audio&&narr.words){
-    var wasPlaying=P.playing;
-    pauseSpeech();
-    clearHl();el.classList.add("hl");
-    P.pi=pi;P.wi=wi;
-    var idx=flatIndexOf(pi,wi);
-    var seg=narr.words[idx];
-    if(seg){
-      narr.audio.currentTime=seg[0];
-      narr.audio.playbackRate=1;
-      narr.audio.play().catch(function(){});
-      var dur=Math.max(150,(seg[1]-seg[0])*1000+60);
-      setTimeout(function(){
-        narr.audio.pause();
-        if(wasPlaying){P.playing=true;setPlayBtn(true);playFromCurrent()}
-      },dur);
-    }
-    return;
-  }
   if(!window.speechSynthesis)return;
   var wasPlaying=P.playing;
   pauseSpeech();
@@ -1076,7 +1015,7 @@ function sayWord(word,el){
   u.rate=0.8;u.pitch=1.05;
   if(voices[voiceSel.value])u.voice=voices[voiceSel.value];
   speechSynthesis.speak(u);
-  P.pi=pi;P.wi=wi;
+  P.pi=+el.dataset.pi;P.wi=+el.dataset.wi;
   if(wasPlaying)u.onend=function(){P.playing=true;setPlayBtn(true);playFromCurrent()};
 }
 
@@ -1094,7 +1033,6 @@ var rateSel=document.getElementById("selRate");
 rateSel.value=S.rate;
 rateSel.onchange=function(){
   S.rate=rateSel.value;save();
-  if(narr.audio)narr.audio.playbackRate=parseFloat(S.rate)||0.95;
   if(P.playing){pauseSpeech();playFromCurrent()}
 };
 var bEasy=document.getElementById("bEasy");
@@ -1103,6 +1041,91 @@ bEasy.onclick=function(){S.easy=!S.easy;save();drawEasy();toast(S.easy?"Bigger, 
 drawEasy();
 drawShelf();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/espohystory/sw.js");
+</script>
+
+<!-- ===== phone bottom navigation (frosted, thumb-reachable, contextual) ===== -->
+<style id="hh-nav-css">
+#hhNav{position:fixed;left:0;right:0;bottom:0;z-index:9000;display:none;gap:6px;
+  padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+  background:color-mix(in srgb,var(--card,#FFFDF6) 84%,transparent);
+  -webkit-backdrop-filter:blur(16px) saturate(1.15);backdrop-filter:blur(16px) saturate(1.15);
+  border-top:1px solid var(--line,#E5D5B8);box-shadow:0 -6px 22px rgba(58,46,34,.13)}
+#hhNav button{flex:1;min-width:0;border:0;background:transparent;cursor:pointer;font-family:var(--sans);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  padding:7px 2px;border-radius:14px;color:var(--ink2,#8A7760);font-size:11px;font-weight:700;line-height:1.1}
+#hhNav button .ic{font-size:21px;line-height:1}
+#hhNav button.on{color:var(--accent,#C9603B)}
+#hhNav button.pri{color:#fff;background:var(--accent,#C9603B);box-shadow:0 3px 12px rgba(201,96,59,.38)}
+#hhNav button:active{transform:translateY(1px)}
+#hhSheet{position:fixed;inset:0;z-index:9001;display:none;background:rgba(58,46,34,.42)}
+#hhSheet.on{display:block}
+#hhSheet .card{position:absolute;left:0;right:0;bottom:0;background:var(--card,#FFFDF6);
+  border-radius:20px 20px 0 0;padding:14px 16px calc(20px + env(safe-area-inset-bottom));box-shadow:0 -12px 40px rgba(58,46,34,.3)}
+#hhSheet .grip{width:40px;height:4px;border-radius:99px;background:var(--line,#E5D5B8);margin:2px auto 12px}
+#hhSheet h4{font-family:var(--serif);font-size:18px;color:var(--navy,#2C4763);margin-bottom:10px}
+#hhSheet .chips{display:flex;flex-wrap:wrap;gap:8px}
+#hhSheet .chips button{border:1px solid var(--line,#E5D5B8);background:var(--bg2,#F3E7CF);color:var(--ink,#3A2E22);
+  border-radius:12px;padding:13px 14px;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;flex:1 0 40%}
+@media(max-width:820px){
+  body{padding-bottom:calc(78px + env(safe-area-inset-bottom))!important}
+  #hhNav{display:flex}
+}
+</style>
+<script>
+(function(){
+  var bar=document.createElement("nav"); bar.id="hhNav"; document.body.appendChild(bar);
+  var sheet=document.createElement("div"); sheet.id="hhSheet";
+  sheet.innerHTML='<div class="card"><div class="grip"></div><h4>Jump to a grade</h4><div class="chips" id="hhChips"></div></div>';
+  document.body.appendChild(sheet);
+  sheet.addEventListener("click",function(e){ if(e.target===sheet) sheet.classList.remove("on"); });
+
+  function btn(ic,label,cls){ return '<button class="'+(cls||"")+'"><span class="ic">'+ic+'</span><span>'+label+'</span></button>'; }
+  function click(id){ var e=document.getElementById(id); if(e) e.click(); }
+
+  function openSheet(){
+    var chips=document.getElementById("hhChips"); chips.innerHTML="";
+    [].slice.call(document.querySelectorAll("#shelf .gsec")).forEach(function(sec){
+      var gh=sec.querySelector(".gh"); if(!gh) return;
+      var name=((gh.childNodes[0]&&gh.childNodes[0].textContent)||gh.textContent).trim();
+      var b=document.createElement("button"); b.textContent=name;
+      b.onclick=function(){ sheet.classList.remove("on"); sec.scrollIntoView({behavior:"smooth",block:"start"}); };
+      chips.appendChild(b);
+    });
+    sheet.classList.add("on");
+  }
+
+  function syncRead(on){
+    if(bar.dataset.view!=="story") return;
+    var rb=bar.children[1]; if(!rb) return;
+    rb.querySelector(".ic").textContent = on?"⏸":"▶";
+    var lbl=rb.querySelector("span:not(.ic)"); if(lbl) lbl.textContent = on?"Pause":"Read";
+  }
+
+  function renderBar(view){
+    bar.dataset.view=view;
+    if(view==="story"){
+      bar.innerHTML = btn("📚","Stories","")+btn("▶","Read","pri")+btn("↺","Over","")+btn("🅰","Size","");
+      bar.children[0].onclick=function(){ click("bBack"); };
+      bar.children[1].onclick=function(){ click("bPlay"); };
+      bar.children[2].onclick=function(){ click("bRestart"); };
+      bar.children[3].onclick=function(){ click("bEasy"); };
+      syncRead(typeof P!=="undefined" && P.playing);
+    } else {
+      bar.innerHTML = btn("📚","Stories","on")+btn("🎓","Grades","")+btn("🎲","Surprise","");
+      bar.children[0].onclick=function(){ window.scrollTo({top:0,behavior:"smooth"}); };
+      bar.children[1].onclick=openSheet;
+      bar.children[2].onclick=function(){ if(typeof STORIES!=="undefined") openStory(Math.floor(Math.random()*STORIES.length)); };
+    }
+  }
+  window.__hhRenderBar=renderBar;
+
+  // hook the app: entering a story -> story bar; going back -> shelf bar; play state -> Read label
+  try{ var _open=openStory; openStory=function(i){ _open(i); renderBar("story"); }; }catch(e){}
+  var bk=document.getElementById("bBack"); if(bk) bk.addEventListener("click",function(){ renderBar("shelf"); });
+  try{ var _spb=setPlayBtn; setPlayBtn=function(on){ _spb(on); syncRead(on); }; }catch(e){}
+
+  renderBar("shelf");
+})();
 </script>
 </body>
 </html>
