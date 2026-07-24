@@ -101,6 +101,10 @@ label{font-size:12.5px;color:var(--ink2);display:block;margin:12px 0 5px;font-we
 .region{display:flex;align-items:center;gap:14px;margin:34px 0 6px;color:var(--wine);
   font-family:var(--serif);font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;text-align:center}
 .region::before,.region::after{content:"";flex:1;height:1px;background:var(--hair)}
+.state{font-family:var(--serif);font-size:27px;font-weight:600;color:var(--ink);margin:46px 0 0;letter-spacing:-.015em}
+.state:first-of-type{margin-top:14px}
+.state-rule{height:2px;background:var(--wine);opacity:.3;margin:7px 0 2px;border-radius:2px}
+.visit{font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--ink2);margin-top:10px;padding-left:11px;border-left:2px solid var(--rose)}
 .piece{padding:16px 2px 6px;margin-top:2px;border-bottom:1px solid var(--paper2)}
 .piece:last-of-type{border-bottom:0}
 .piece h4{font-family:var(--serif);font-size:23px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px}
@@ -198,7 +202,7 @@ footer .fl{color:var(--rose);font-size:14px;margin-bottom:6px}
       <input type="file" id="bPhoto" accept="image/*" capture="environment">
       <div class="grid2">
         <div><label for="bName">Wine</label><input id="bName" type="text" placeholder="e.g. Estate Pinot Noir"></div>
-        <div><label for="bWinery">Winery</label><input id="bWinery" type="text" placeholder="e.g. Rodney Strong"></div>
+                <div><label for="bWinery">Winery</label><input id="bWinery" type="text" placeholder="e.g. Smith-Madrone"></div>
         <div><label for="bVintage">Vintage</label><input id="bVintage" type="text" inputmode="numeric" placeholder="2021"></div>
         <div><label for="bVarietal">Varietal / style</label><input id="bVarietal" type="text" placeholder="Pinot Noir"></div>
       </div>
@@ -237,8 +241,8 @@ footer .fl{color:var(--rose);font-size:14px;margin-bottom:6px}
   <!-- WINE COUNTRY NOTEBOOK -->
   <section class="view" id="v-notebook">
     <h2>Wine Country Notebook</h2>
-    <p class="nb-intro">Real places, real wineries, written the way a wine country magazine would have it —
-    starting where the Russian River runs through the redwoods, and wandering out from there.</p>
+        <p class="nb-intro">Small, independent, family-run — the ones worth the drive. Organized by state, then by
+    growing region. No corporate labels, no tasting-room factories.</p>
     <div id="nb"></div>
     <div class="fleuron">❦</div>
     <p class="hint" style="text-align:center">Every fact above is verified against the wineries' own histories and regional records.
@@ -282,37 +286,80 @@ footer .fl{color:var(--rose);font-size:14px;margin-bottom:6px}
 <script>
 /* ─── Wine Country Notebook — every fact verified Jul 2026 (sources in the AE research file) ─── */
 var NB=[
+{state:"California",regions:[
 {region:"Russian River Valley — Sonoma County",pieces:[
-{t:"Rodney Strong Vineyards",w:"Healdsburg, CA",
- p:"Before he was a winemaker, Rodney D. Strong was a professional dancer — and in 1959 he traded the stage for Sonoma County soil, founding just the 13th bonded winery in the county. He was among the first to plant seriously in the Russian River Valley, Chalk Hill and Alexander Valley, back when that looked more like faith than strategy. Since 1989 the winery has belonged to the Kleins, a fourth-generation California farming family, and the tasting room on Old Redwood Highway still pours like a house that knows exactly where it came from."},
-{t:"Korbel Champagne Cellars",w:"Guerneville, CA",
- p:"Three Bohemian brothers — Francis, Anton and Joseph Korbel — planted their future among the redwoods on River Road in 1882, and the ivy-covered cellars have been making méthode champenoise sparkling ever since. Korbel is the bottle America actually opens: its California champagne has been poured at ten presidential inaugurations. Come for the history, stay because a cold glass of brut under coast redwoods on a summer afternoon is one of the great inexpensive luxuries in wine country."},
-{t:"Iron Horse Vineyards",w:"Sebastopol, CA — Green Valley",
- p:"Audrey and Barry Sterling first saw the property in pouring February rain in 1976, crested the hill on Ross Station Road, and bought all 300 acres within two weeks. Romantics, clearly — and right. Their estate sparkling from the fog-cooled Green Valley of the Russian River Valley has been served at the White House since 1985, beginning with the Reagan–Gorbachev summit, across seven administrations. The outdoor tasting bar looks over vine rows to Mount St. Helena, and there is no better view in Sonoma County with a flute in your hand."},
-{t:"Monte Rio & the Lower River",w:"Monte Rio → Duncans Mills, CA",
- p:"Monte Rio calls itself Vacation Wonderland on the arch over the road, and the lower Russian River earns it — redwoods to the waterline, beach towns the size of a long exhale. This stretch drinks more wine than it makes: Sophie's Cellars, the lower river's beloved wine merchant and longtime Monte Rio fixture, now pours just downriver in Duncans Mills, stocking small-production Sonoma bottles you won't find in a supermarket. And the town lends its name to Monte Rio Cellars, a winery label carrying the river's easy spirit onto the shelf."}]},
-{region:"Sonoma Valley",pieces:[
-{t:"Chateau St. Jean",w:"Kenwood, CA",
- p:"Since 1973, Chateau St. Jean has made single-vineyard wine the point, not the exception — site-specific bottlings that read like a map of Sonoma. The setting matches the ambition: a 1920s chateau and its gardens at the foot of Sugarloaf Ridge, in the quiet middle of the Valley of the Moon. Kenwood is the unhurried heart of Sonoma Valley, and an afternoon on this lawn explains why nobody who stops here is ever early for their next appointment."},
-{t:"Benziger Family Winery",w:"Glen Ellen, CA",
- p:"Glen Ellen is Jack London's town — the Valley of the Moon he wrote from — and up London Ranch Road, right beside Jack London State Historic Park, the Benziger family farms a volcanic bowl on Sonoma Mountain. Making wine since their first harvest in 1981, the Benzigers became pioneers of biodynamic farming, running the estate as one living ecosystem: sheep, insectaries, cover crops, the works. The tram tour through the vineyard is the single best explain-it-to-me hour in California wine."}]},
+{t:"Joseph Swan Vineyards",w:"Forestville, CA",
+ p:"Joe Swan planted Pinot Noir on thirteen acres here in 1967, sixteen years before anyone drew the Russian River Valley on a map and called it an appellation. He was chasing Burgundy in a place that mostly grew prunes, and he was early enough that the neighbors thought it was a mistake. His son-in-law Rod Berglund has made the wine since 1987 and still works in small lots — vineyard-designated Pinot, old-vine Zinfandel, a little Syrah and Grenache. It remains what it always was: a small family winery at the end of a country lane.",
+ v:"Open weekends, 11–4:30 — no appointment needed."},
+{t:"Porter Creek Vineyards",w:"Healdsburg, CA",
+ p:"Westside Road runs narrow and shaded along the river, and Porter Creek sits up a steep drive off it in a converted barn. George Davis planted here in 1978; his son Alex farms it now, certified organic since 2003 and biodynamic since — well before either word was a marketing decision in this valley. Some of the Pinot Noir blocks went in the ground in 1973, which makes them among the oldest still producing in the AVA. The tasting bar is a plank laid across two barrels.",
+ v:"Daily 10:30–4:30. Booking encouraged, walk-ins as space allows."},
+{t:"J. Rochioli Vineyards & Winery",w:"Healdsburg, CA",
+ p:"The Sauvignon Blanc vines here went in the ground in 1959 and are among the oldest in California; the Pinot Noir followed in 1968, from French cuttings, when almost no one in the state took the grape seriously. In 1987 a Pinot made from Rochioli fruit was named the best in America, and the valley's reputation changed overnight. Four generations of Rochiolis have farmed this ground on Westside Road, and they still sell most of the wine to people standing in front of them.",
+ v:"By appointment, Monday–Saturday. Closed Sundays."}]},
+{region:"Dry Creek Valley — Sonoma County",pieces:[
+{t:"A. Rafanelli Winery",w:"Healdsburg, CA",
+ p:"Alberto and Letizia Rafanelli came from Italy and started making wine near Healdsburg in the early 1900s; their son Americo moved the family up into Dry Creek in the 1950s, and Zinfandel has been the house grape ever since. Some of the vines are dry-farmed and past a hundred and ten years old. Shelly Rafanelli-Fehlman has been head winemaker since 2000 — open-top fermenters, punched down by hand, every grape from this valley. There is no mailing list you can simply join.",
+ v:"By appointment only — call ahead, 707-433-1385."},
+{t:"Preston Farm & Winery",w:"Healdsburg, CA",
+ p:"Lou and Susan Preston did the thing almost nobody does: they made their winery smaller on purpose, down from a peak near thirty thousand cases to a fraction of it, because they wanted a farm instead of a factory. Certified organic in 2002, biodynamic since 2010. There is bread from their own bakery, olive oil pressed since 1994, vegetables from the garden, and a bocce court under the walnut trees. Come for the wine, stay because it is a working farm and it feels like one.",
+ v:"Farm store daily 10–4. Tastings by appointment, six guests max."},
+{t:"Unti Vineyards",w:"Healdsburg, CA",
+ p:"In a valley that runs on Zinfandel and Cabernet, the Untis planted Barbera, Grenache, Montepulciano, Sangiovese, Vermentino and Fiano — Mediterranean grapes for a Mediterranean climate, which is obvious in hindsight and was heresy in 1990. Mick, Danae, George and Linda still own and run all of it, about eight to nine thousand cases off sixty planted acres, farmed organically since 2003. It is the most quietly contrarian address in Dry Creek.",
+ v:"By appointment, weekdays. Reserve through their site."}]},
+{region:"Anderson Valley — Mendocino County",pieces:[
+{t:"Handley Cellars",w:"Philo, CA",
+ p:"In 1982 Milla Handley became the first woman in America to found a winery and make wine under her own name. She died in 2020; her daughter Lulu runs it now with her husband Scott, which is the ending that story deserved. The estate vineyards are certified organic, the sparkling program goes back decades, and the tasting room is hung with the folk art Milla collected on her travels. Deep Enders Road is a long way from anywhere, and that is the point.",
+ v:"Open daily 11–5, last tasting at 4. Walk-ins welcome."},
+{t:"Foursight Wines",w:"Boonville, CA",
+ p:"The Charles family has held this Boonville land since 1950, back when it was a lumber operation, and Bill, Nancy, Kristy and Joseph have been making wine from it since 2006. Everything is estate fruit — every grape grown within sight of the winery. Fermentations run on wild yeast, the Pinot Noirs see partial whole-cluster and go into the bottle unfined and unfiltered, and they were among the first wineries in the country to print the ingredients on the label. About three thousand cases, and they mean it.",
+ v:"Reservations required, Wed–Mon. Closed Tuesdays — call about January and June."},
+{t:"Pennyroyal Farm",w:"Boonville, CA",
+ p:"Sarah Cahn Bennett grew up in Anderson Valley wine and built something adjacent to it: a hundred-acre farmstead where the winery and the creamery share a roof. Sheep and goats graze the vineyard rows and their milk becomes cheese in the same building where the wine is made. It is solar-powered and Fish Friendly certified, the vines went in around 2008, and it is the rare tasting room where lunch is the reason to stay an extra hour.",
+ v:"Open daily 10–5. Farm tours at 11 and 2, reserve ahead."}]},
 {region:"Napa Valley",pieces:[
-{t:"Charles Krug",w:"St. Helena, CA",
- p:"Napa's own story starts at this address. Charles Krug, a political refugee from Prussia, married Carolina Bale in 1860 — her dowry included 540 acres in St. Helena — and in 1861 he planted vines and opened the valley's first commercial winery. He also opened the first public tasting room in California, so nearly every tasting bar in wine country, in a sense, traces back here. The winery stayed in its namesake's hands until his death in 1892; the Mondavi family bought it in 1943 and, five generations on, still pours where Napa began."},
-{t:"Beringer Vineyards",w:"St. Helena, CA",
- p:"Brothers Jacob and Frederick Beringer came from Mainz, Germany, bought a St. Helena vineyard in the 1870s, and crushed their first harvest in 1876 — and the winery has, remarkably, never once stopped since. Napa's oldest continuously operating winery turns 150 in 2026, having outlasted even Prohibition by making sacramental wine, then leading the valley's first public winery tours in 1934. At its heart stands the Rhine House, an 1884 Victorian mansion built as a nod to the brothers' German home, and still one of the most photographed buildings in California wine."},
-{t:"Robert Mondavi Winery",w:"Oakville, CA",
- p:"When Robert Mondavi broke ground in Oakville in 1966, he raised the first major new winery in Napa Valley since Prohibition — and set out, plainly, to make wine fit to stand beside the world's best. He planted his flag at the storied To Kalon vineyard, framed the estate with a low mission-style arch that became a kind of front door to the valley, and preached winery tourism before the phrase existed. History calls him the godfather of California wine, and the world-class Napa he willed into being is, more than anyone's, his."}]},
-{region:"Central Coast — San Luis Obispo & Pismo",pieces:[
-{t:"The SLO Coast Trail",w:"Edna Valley & Arroyo Grande, CA",
- p:"California's coastal fog does its finest quiet work just inland from Pismo Beach. The SLO Coast AVA — designated in March 2022, wrapping Edna Valley and Arroyo Grande — strings 32 wineries along one of the state's longest, coolest growing seasons, and the Chardonnay and Pinot Noir come up bright, saline and unmistakably maritime. Talley Vineyards' 1986 debut was the first Chardonnay and Pinot ever made in the Arroyo Grande Valley; Tolosa and Chamisal anchor Edna Valley. Taste down the trail, then finish with your feet in the sand at Pismo."}]},
-{region:"Walla Walla — Washington",pieces:[
-{t:"Leonetti Cellar & L'Ecole № 41",w:"Walla Walla Valley, WA",
- p:"Walla Walla's wine story starts in a family garage in 1977, when Gary and Nancy Figgins founded Leonetti Cellar — the valley's first commercial winery — and proved Washington could make reds worth waiting years for. Six years later, L'Ecole № 41 opened as just the third winery in the valley, pouring inside a 1915 Frenchtown schoolhouse in Lowden that still wears its name on the label. From two wineries to a few hundred in a generation: no American wine region grew up faster, or kept its small-town manners better."}]},
-{region:"Temecula Valley — Southern California",pieces:[
-{t:"Wilson Creek Winery",w:"Temecula, CA",
- p:"An hour from San Diego, Temecula Valley is Southern California's own wine country — hot-air balloons at sunrise, Rainbow Gap breezes by afternoon. Wilson Creek has been the valley's family-owned favorite for more than 25 years, and its calling card is pure Temecula: an almond sparkling that purists side-eye and everyone else cheerfully finishes. That's the valley's charm in a glass — SoCal doesn't do stuffy, and its wine country never has."}]}
-];
+{t:"Corison Winery",w:"St. Helena, CA",
+ p:"Cathy Corison has been making Cabernet on the Rutherford bench since 1987, and she spent most of the years since refusing to make it bigger. Her wines sit under fourteen percent alcohol on purpose, in a valley that spent two decades chasing the opposite, and time has proven her right — they age like almost nothing else in Napa. Kronos Vineyard, which she bought in 1995, holds some of the oldest Cabernet vines in the valley, dry-farmed and cropped to about a ton and a quarter an acre. Roughly three thousand cases.",
+ v:"By appointment only, daily 10–5. No walk-ins."},
+{t:"Smith-Madrone Vineyards",w:"St. Helena, CA — Spring Mountain District",
+ p:"Stu Smith bought two hundred acres of mountainside at sixteen hundred feet in 1971, on ground first planted in the 1880s and abandoned through Prohibition. He and his brother Charles are still there, and the whole estate is dry-farmed — no irrigation, on a Napa mountain, which is nearly unheard of now. Their Riesling won an international competition in 1979 and they have never stopped making it. A corridor of twenty-two olive trees, some past a hundred and twenty years old, lines the road up.",
+ v:"By appointment — Tuesday, Thursday and Saturday at 10am."},
+{t:"Matthiasson Wines",w:"Napa, CA — Oak Knoll District",
+ p:"Steve Matthiasson spent years as the vineyard consultant other winemakers called before he and Jill made much wine of their own. The farming is the argument here: no tilling, no herbicides, electric tractors, spore traps in the rows instead of a spray calendar. And the plantings are heretical for Napa — Ribolla Gialla, Refosco and Scheurebe growing next to the Cabernet. Around ten thousand cases across three vineyards they own or manage themselves.",
+ v:"By appointment, seven days a week."}]}]},
+{state:"Washington",regions:[
+{region:"Walla Walla Valley",pieces:[
+{t:"Woodward Canyon Winery",w:"Lowden, WA",
+ p:"Rick Small planted Chardonnay on his family's wheat farm in 1977 and bonded the winery in 1981 — the second in modern Washington. Those first blocks still feed the Old Vines Cabernet. Since 1992 every Artist Series bottling has carried a different Northwest artist's work on the label, which has quietly turned into one of the best small art collections in the wine business. Rick and Darcey's children, Jordan and Sager, are co-owners now. About five thousand cases.",
+ v:"Open daily 10–5. Walk-ins welcome; reserve for six or more."},
+{t:"Walla Walla Vintners",w:"Walla Walla, WA",
+ p:"Two home winemakers bonded the valley's eighth winery in 1995 in a red barn in the Mill Creek foothills, and made a reputation on a grape nobody in Washington was betting on: Sangiovese. They still make four of them. Scott and Nici Haladay bought the place in 2017 and did the unfashionable thing — cut the lineup from about thirty wines down to a dozen. The estate vineyard wraps the winery and is sustainably certified.",
+ v:"Open daily 11–5, last seating at 4."},
+{t:"Sleight of Hand Cellars",w:"Walla Walla, WA",
+ p:"Trey Busch started in nine hundred square feet downtown in 2007 and moved out to ten acres on JB George Road in 2011. The tasting room holds more than three thousand vinyl albums and working turntables, and you are expected to put something on — the wines are named for songs, and the Syrah called Off He Goes made Wine Enthusiast's top cellar selections. It is the least reverent serious winery in the valley, and the wine backs up the joke.",
+ v:"Mon and Thu–Sun, 11–5. Walk-ins fine, reservations recommended."}]}]},
+{state:"Oregon",regions:[
+{region:"Willamette Valley — Eola-Amity Hills, Ribbon Ridge & Dundee Hills",pieces:[
+{t:"Walter Scott Wines",w:"Salem, OR — Eola-Amity Hills",
+ p:"Ken Pahlow and Erica Landon emptied their retirement accounts to start this in 2008, which is either reckless or the only way it ever happens. He had come up through St. Innocent and Evening Land with mentorship from Dominique Lafon in Burgundy; she is a sommelier and writer. They make site-driven Chardonnay and Pinot Noir, and the Chardonnays — X Novo, Cuvée Anne — are now among the most chased white wines made in America.",
+ v:"By appointment only. Closed Sundays."},
+{t:"Brick House Vineyards",w:"Newberg, OR — Ribbon Ridge",
+ p:"Doug Tunnell covered wars for CBS News before he came home to Oregon in 1990 and bought forty acres on Ribbon Ridge. He farmed organically from the first year and went Demeter biodynamic around 2005, making this one of the oldest biodynamic estates in the state. He also planted Gamay when essentially no one in America took it seriously, and has been proven right twice over. Estate Pinot Noir, Chardonnay and that Gamay — nothing bought in.",
+ v:"Reservations required. Occasional weekend open houses."},
+{t:"Bergström Wines",w:"Newberg, OR — Dundee Hills & Chehalem Mountains",
+ p:"John and Karen Bergström bought the first vineyard in 1999 and their son Josh, back from studying in Burgundy, has farmed it hard ever since — seventy acres of certified biodynamic estate spread across three separate appellations, which is an unusual amount of ground to farm that way. He is one of the loudest voices for regenerative viticulture in Oregon. The Sigrid Chardonnay is named for his grandmother.",
+ v:"By appointment at the Ekollon tasting house."}]}]},
+{state:"Idaho",regions:[
+{region:"Snake River Valley",pieces:[
+{t:"Cinder Wines",w:"Garden City, ID",
+ p:"Melanie Krause learned the trade in Washington and came home in 2006 to prove Idaho could make serious wine, which in 2006 was a genuinely lonely position. She and Joe Schnerr work out of a converted fruit-and-vegetable warehouse ten minutes from downtown Boise, roll-up doors open in summer. Her dry Viognier is the wine that changed minds, and Cinder was the first Idaho label ever named a hot small brand nationally. Twenty years in this year.",
+ v:"Wed–Sun 1–7. Walk-ins welcome; guided tastings bookable."},
+{t:"Fujishin Estate Winery",w:"Wilder, ID — Sunnyslope",
+ p:"Martin Fujishin and Teresa Moye started in downtown Caldwell in 2009 and opened the estate winery out in the Sunnyslope in late 2019, with the vineyard running right up to the building. The wind comes down off the high desert most afternoons and they have built the whole identity around it. Wine Press Northwest named them Idaho Winery of the Year in 2018, and the Riesling and Viognier are the places to start.",
+ v:"Daily 12–6. Call ahead to confirm — 208-779-2466."},
+{t:"Bitner Vineyards",w:"Caldwell, ID — Sunnyslope",
+ p:"Ron Bitner planted this vineyard in 1981, which makes it one of the oldest continuously farmed sites in modern Idaho wine. He is also a PhD entomologist who studies pollinators for a living, so the place is a certified Bee Friendly Farm and was the first vineyard in the state to earn sustainable certification. Twelve to fifteen hundred cases a year, poured on a patio looking out over the Snake River plain. The smallest producer in this notebook.",
+ v:"Tight window — non-members Fri & Sat only, three seatings, four guests max. Book 24hrs ahead."}]}]}];
 
 var K="espovineyard.v1",S;
 try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
@@ -423,9 +470,11 @@ function drawC(){
 }
 
 /* notebook */
-document.getElementById("nb").innerHTML=NB.map(function(r){
-  return '<div class="region rv">'+r.region+'</div>'+r.pieces.map(function(p){
-    return '<div class="piece rv"><h4>'+p.t+'</h4><div class="where">'+p.w+'</div><p>'+p.p+'</p></div>';
+document.getElementById("nb").innerHTML=NB.map(function(st){
+  return '<div class="state rv">'+st.state+'</div><div class="state-rule rv"></div>'+st.regions.map(function(r){
+    return '<div class="region rv">'+r.region+'</div>'+r.pieces.map(function(p){
+      return '<div class="piece rv"><h4>'+p.t+'</h4><div class="where">'+p.w+'</div><p>'+p.p+'</p>'+(p.v?'<div class="visit">'+p.v+'</div>':'')+'</div>';
+    }).join("");
   }).join("");
 }).join("");
 
