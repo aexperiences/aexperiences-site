@@ -682,6 +682,92 @@ if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/espovine
   if(typeof drawC==="function"){ var _d=drawC; drawC=function(){ _d.apply(this,arguments); cellarStats(); }; }
   cellarStats();
 })();
+
+/* ── photograph a label, get the data ── */
+(function(){
+  var css=document.createElement("style");
+  css.textContent='.scanmsg{font-size:12.5px;line-height:1.5;color:var(--ink2);margin-top:8px;min-height:15px}'
+    +'.scanmsg.err{color:var(--wine)}.scanmsg.busy{font-style:italic}'
+    +'.scanbtn{width:100%;margin-top:10px}';
+  document.head.appendChild(css);
+
+  function shrink(file, cb){
+    var fr=new FileReader();
+    fr.onload=function(){
+      var im=new Image();
+      im.onload=function(){
+        var max=1100, w=im.width, h=im.height;
+        if(w>h && w>max){ h=Math.round(h*max/w); w=max; }
+        else if(h>=w && h>max){ w=Math.round(w*max/h); h=max; }
+        try{
+          var c=document.createElement("canvas"); c.width=w; c.height=h;
+          c.getContext("2d").drawImage(im,0,0,w,h);
+          cb(c.toDataURL("image/jpeg",0.82));
+        }catch(e){ cb(null); }
+      };
+      im.onerror=function(){ cb(null); };
+      im.src=fr.result;
+    };
+    fr.onerror=function(){ cb(null); };
+    fr.readAsDataURL(file);
+  }
+
+  function fill(id,val,got,label){
+    var el=id?document.getElementById(id):null;
+    if(el && val && !el.value){ el.value=val; got.push(label); }
+  }
+
+  function scan(file, msg, map){
+    if(!file) return;
+    msg.className="scanmsg busy"; msg.textContent="Reading the label…";
+    shrink(file, function(url){
+      if(!url){ msg.className="scanmsg err"; msg.textContent="Could not open that image. Type it in — it still saves."; return; }
+      fetch("/api/label",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({image:url})})
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          if(!j||!j.ok){ msg.className="scanmsg err"; msg.textContent="Could not read that label. Type it in — it still saves."; return; }
+          var got=[];
+          fill(map.name,j.wine,got,"wine");
+          fill(map.winery,j.winery,got,"winery");
+          fill(map.vintage,j.vintage,got,"vintage");
+          fill(map.varietal,j.varietal,got,"varietal");
+          msg.className="scanmsg";
+          msg.textContent = got.length
+            ? ("Filled in "+got.join(", ")+". Check it — labels lie and so do machines.")
+            : "Nothing legible there. Type it in — it still saves.";
+        })
+        .catch(function(){ msg.className="scanmsg err"; msg.textContent="Label reading is offline right now. Type it in — it still saves."; });
+    });
+  }
+
+  var NOTE="The photo is sent once to read the label and is not stored. Everything else stays on this device.";
+
+  var bPhoto=document.getElementById("bPhoto");
+  if(bPhoto && bPhoto.parentNode){
+    var m1=document.createElement("div"); m1.className="scanmsg"; m1.textContent=NOTE;
+    bPhoto.parentNode.insertBefore(m1, bPhoto.nextSibling);
+    bPhoto.addEventListener("change", function(){
+      scan(this.files&&this.files[0], m1, {name:"bName",winery:"bWinery",vintage:"bVintage",varietal:"bVarietal"});
+    });
+  }
+
+  var cSave=document.getElementById("cSave");
+  if(cSave && cSave.parentNode){
+    var inp=document.createElement("input");
+    inp.type="file"; inp.accept="image/*"; inp.setAttribute("capture","environment");
+    inp.style.display="none"; inp.id="cPhoto";
+    var btn=document.createElement("button");
+    btn.type="button"; btn.className="b2 scanbtn"; btn.textContent="Scan a label";
+    var m2=document.createElement("div"); m2.className="scanmsg"; m2.textContent=NOTE;
+    cSave.parentNode.insertBefore(inp, cSave);
+    cSave.parentNode.insertBefore(btn, cSave);
+    cSave.parentNode.insertBefore(m2, cSave);
+    btn.addEventListener("click", function(){ inp.click(); });
+    inp.addEventListener("change", function(){
+      scan(this.files&&this.files[0], m2, {name:"cName",winery:"cWinery",vintage:"cVintage"});
+    });
+  }
+})();
 </script>
 </body>
 </html>
