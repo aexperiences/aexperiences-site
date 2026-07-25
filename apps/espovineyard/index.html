@@ -221,7 +221,8 @@ footer .fl{color:var(--rose);font-size:14px;margin-bottom:6px}
   <!-- CELLAR -->
   <section class="view" id="v-cellar">
     <h2>The cellar</h2>
-    <p class="sub">Bottles you're holding, with drinking windows you set. Your call — never gospel.</p>
+        <p class="sub">Everything you actually have, and when to drink it. The Notebook is where to find more — this is what is already yours.</p>
+    <div id="cStats" class="cstats"></div>
     <div class="card">
       <h3>Add to the cellar</h3>
       <div class="grid2">
@@ -648,6 +649,39 @@ document.querySelectorAll("nav button").forEach(function(b){
 });
 drawJ();drawC();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/espovineyard/sw.js").catch(function(){});
+
+/* ── cellar at a glance: what you actually have ── */
+(function(){
+  var css=document.createElement("style");
+  css.textContent='.cstats{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 2px}'
+    +'.cstat{flex:1 1 0;min-width:76px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 8px;text-align:center}'
+    +'.cstat b{display:block;font-family:var(--serif);font-size:23px;font-weight:600;color:var(--ink);line-height:1.05}'
+    +'.cstat span{display:block;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink2);margin-top:4px}'
+    +'.cstat.rdy{border-color:var(--rose)}.cstat.rdy b{color:var(--wine)}';
+  document.head.appendChild(css);
+  function tile(n,l,cls){ return '<div class="cstat'+(cls?" "+cls:"")+'"><b>'+n+'</b><span>'+l+'</span></div>'; }
+  function cellarStats(){
+    var el=document.getElementById("cStats"); if(!el) return;
+    var list=(typeof S!=="undefined"&&S.cellar)?S.cellar:[];
+    var y=new Date().getFullYear(), bottles=0, ready=0, hold=0, past=0;
+    list.forEach(function(c){
+      var q=parseInt(c.qty,10); if(!q||q<0) q=1;
+      var f=parseInt(c.from,10), to=parseInt(c.to,10);
+      bottles+=q;
+      if(f&&y<f) hold+=q;
+      else if(to&&y>to) past+=q;
+      else if(f||to) ready+=q;
+    });
+    if(!bottles){ el.innerHTML=""; return; }
+    el.innerHTML=tile(bottles,bottles===1?"bottle":"bottles")
+      +tile(list.length,list.length===1?"wine":"wines")
+      +(ready?tile(ready,"ready now","rdy"):"")
+      +(hold?tile(hold,"holding"):"")
+      +(past?tile(past,"past window"):"");
+  }
+  if(typeof drawC==="function"){ var _d=drawC; drawC=function(){ _d.apply(this,arguments); cellarStats(); }; }
+  cellarStats();
+})();
 </script>
 </body>
 </html>
