@@ -1,44 +1,80 @@
-// api/label.js — read a wine label photo and return structured fields.
-// Uses ANTHROPIC_API_KEY already provisioned on this project (same as api/brian.js).
-// The photo is used only to read the label. Nothing is stored server-side.
+/*! api/label.js — ESPOvineyard · turn a photo of a wine label into fields
+ *  Accelerated Experiences LLC
+ *
+ *  CREDENTIALS — either one works, and this file does NOT change when you switch:
+ *    ANTHROPIC_API_KEY   → talks to api.anthropic.com directly
+ *    AI_GATEWAY_API_KEY  → talks to Vercel AI Gateway, which speaks the same
+ *                          Anthropic Messages format (model anthropic/claude-haiku-4.5)
+ *  Whichever one is present in the project's environment gets used. If NEITHER is set
+ *  the endpoint answers { ok:false, reason:"no-key" } and the app quietly falls back to
+ *  typing the bottle in by hand. Nothing breaks — it just stays manual.
+ *
+ *  The photo is used for exactly one request and is never stored anywhere.
+ */
 
-module.exports = async (req, res) => {
-  if (req.method !== "POST") { res.status(405).json({ ok: false, reason: "POST only" }); return; }
+var SYSTEM = [
+  "You read wine labels from photographs.",
+  "Return ONLY a JSON object — no prose, no code fences — with exactly these keys:",
+  '{"wine":"","winery":"","vintage":"","varietal":""}',
+  'wine     = the bottling or cuvee name as printed (e.g. "Dry Riesling", "Estate Cabernet Sauvignon").',
+  "winery   = the producer name as printed.",
+  'vintage  = the four-digit year, or "" if the label shows none (non-vintage bottles have none).',
+  'varietal = the grape, if the label states it. Leave "" if it does not.',
+  'Use "" for anything you cannot actually read. An empty field is correct; a guess is not.',
+  "Never invent a producer, a name, or a year that is not visibly printed on the label."
+].join("\n");
 
-  var key = process.env.ANTHROPIC_API_KEY;
-  if (!key) { res.status(200).json({ ok: false, reason: "no-key" }); return; }
+function readBody(req) {
+  if (req.body && typeof req.body === "object") return Promise.resolve(req.body);
+  if (typeof req.body === "string") {
+    try { return Promise.resolve(JSON.parse(req.body)); } catch (e) { return Promise.resolve({}); }
+  }
+  return new Promise(function (resolve) {
+    var raw = "";
+    req.on("data", function (c) { raw += c; });
+    req.on("end", function () { try { resolve(JSON.parse(raw)); } catch (e) { resolve({}); } });
+    req.on("error", function () { resolve({}); });
+  });
+}
+
+function clean(v) { return typeof v === "string" ? v.trim().slice(0, 120) : ""; }
+
+module.exports = async function (req, res) {
+  if (req.method !== "POST") { res.status(405).json({ ok: false, reason: "method" }); return; }
+
+  var direct  = process.env.ANTHROPIC_API_KEY;
+  var gateway = process.env.AI_GATEWAY_API_KEY;
+  var base, key, model, via;
+
+  if (direct) {
+    base = "https://api.anthropic.com";    key = direct;  model = "claude-haiku-4-5-20251001"; via = "anthropic";
+  } else if (gateway) {
+    base = "https://ai-gateway.vercel.sh"; key = gateway; model = "anthropic/claude-haiku-4.5"; via = "gateway";
+  } else {
+    res.status(200).json({ ok: false, reason: "no-key" }); return;
+  }
+
+  var body = await readBody(req);
+  var img = body && body.image;
+  if (!img || typeof img !== "string") { res.status(200).json({ ok: false, reason: "no-image" }); return; }
+
+  var m = /^data:(image\/(?:jpeg|jpg|png|webp));base64,([A-Za-z0-9+\/=]+)$/.exec(img.trim());
+  if (!m) { res.status(200).json({ ok: false, reason: "bad-image" }); return; }
+  var mediaType = m[1] === "image/jpg" ? "image/jpeg" : m[1];
+  var data = m[2];
+  if (data.length > 7000000) { res.status(200).json({ ok: false, reason: "too-big" }); return; }
 
   try {
-    var body = req.body;
-    if (typeof body === "string") { try { body = JSON.parse(body); } catch (e) { body = null; } }
-    var img = (body && body.image) || "";
-    var m = /^data:(image\/(?:jpeg|jpg|png|webp));base64,([A-Za-z0-9+\/=]+)$/.exec(img);
-    if (!m) { res.status(400).json({ ok: false, reason: "bad-image" }); return; }
-
-    var mediaType = m[1] === "image/jpg" ? "image/jpeg" : m[1];
-    var data = m[2];
-    if (data.length > 4000000) { res.status(413).json({ ok: false, reason: "too-large" }); return; }
-
-    var SYSTEM = [
-      "You read wine bottle labels.",
-      "Reply with ONLY a JSON object. No prose, no markdown, no code fence.",
-      "Keys exactly: wine, winery, vintage, varietal.",
-      "wine is the name of the bottling. winery is the producer.",
-      "vintage is a 4-digit year, or empty string if no year is printed.",
-      "varietal is the grape or style if printed, else empty string.",
-      "Use an empty string for anything you cannot read with confidence.",
-      "Never invent a producer, a name, or a year that is not visibly printed on the label."
-    ].join(" ");
-
-    var r = await fetch("https://api.anthropic.com/v1/messages", {
+    var r = await fetch(base + "/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-api-key": key,
+        "authorization": "Bearer " + key,
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
+        model: model,
         max_tokens: 300,
         system: SYSTEM,
         messages: [{
@@ -51,28 +87,50 @@ module.exports = async (req, res) => {
       })
     });
 
-    if (!r.ok) { res.status(200).json({ ok: false, reason: "upstream-" + r.status }); return; }
+    if (!r.ok) {
+      var errText = "";
+      try { errText = await r.text(); } catch (e) {}
+      res.status(200).json({
+        ok: false, reason: "upstream", via: via, status: r.status,
+        detail: String(errText).slice(0, 300)
+      });
+      return;
+    }
 
     var j = await r.json();
-    var txt = (j && j.content && j.content[0] && j.content[0].text) || "";
-    txt = txt.replace(/[`]{3}json/g, "").replace(/[`]{3}/g, "").trim();
+    var text = "";
+    if (j && Array.isArray(j.content)) {
+      for (var i = 0; i < j.content.length; i++) {
+        if (j.content[i] && j.content[i].type === "text") text += j.content[i].text;
+      }
+    }
+    text = String(text).replace(/^\s*```(?:json)?/i, "").replace(/```\s*$/, "").trim();
 
-    var out;
-    try { out = JSON.parse(txt); } catch (e) { res.status(200).json({ ok: false, reason: "unparsed" }); return; }
+    var out = null;
+    try { out = JSON.parse(text); } catch (e) {
+      var g = text.match(/\{[\s\S]*\}/);
+      if (g) { try { out = JSON.parse(g[0]); } catch (e2) { out = null; } }
+    }
+    if (!out || typeof out !== "object") {
+      res.status(200).json({ ok: false, reason: "unreadable", via: via }); return;
+    }
 
-    function clean(s) { return typeof s === "string" ? s.trim().replace(/\s+/g, " ").slice(0, 80) : ""; }
-    var vRaw = String((out && out.vintage) || "").trim();
-    var vintage = /^\d{4}$/.test(vRaw) ? vRaw : "";
+    var vintage = clean(out.vintage);
+    if (!/^\d{4}$/.test(vintage)) vintage = "";
 
-    res.status(200).json({
-      ok: true,
-      wine: clean(out && out.wine),
-      winery: clean(out && out.winery),
+    var fields = {
+      wine: clean(out.wine),
+      winery: clean(out.winery),
       vintage: vintage,
-      varietal: clean(out && out.varietal)
+      varietal: clean(out.varietal)
+    };
+
+    // Answer in both shapes so any caller — old or new — finds what it expects.
+    res.status(200).json({
+      ok: true, via: via, fields: fields,
+      wine: fields.wine, winery: fields.winery, vintage: fields.vintage, varietal: fields.varietal
     });
   } catch (e) {
-    res.status(200).json({ ok: false, reason: "error" });
+    res.status(200).json({ ok: false, reason: "error", detail: String((e && e.message) || e).slice(0, 200) });
   }
 };
-
