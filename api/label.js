@@ -54,6 +54,8 @@ module.exports = async function (req, res) {
     res.status(200).json({ ok: false, reason: "no-key" }); return;
   }
 
+  key = String(key).trim();   // a pasted key often carries a trailing newline
+
   var body = await readBody(req);
   var img = body && body.image;
   if (!img || typeof img !== "string") { res.status(200).json({ ok: false, reason: "no-image" }); return; }
@@ -67,12 +69,9 @@ module.exports = async function (req, res) {
   try {
     var r = await fetch(base + "/v1/messages", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": key,
-        "authorization": "Bearer " + key,
-        "anthropic-version": "2023-06-01"
-      },
+      headers: via === "gateway"
+        ? { "Content-Type": "application/json", "authorization": "Bearer " + key, "anthropic-version": "2023-06-01" }
+        : { "Content-Type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01" },
       body: JSON.stringify({
         model: model,
         max_tokens: 300,
