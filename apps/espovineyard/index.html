@@ -848,6 +848,45 @@ for(var i=0;i<NB.length;i++){
 Array.prototype.push.apply(NB,ADD_STATES);
 })();
 
+/* Notebook expansion, round 4 — Alexander & Knights Valley, Los Carneros,
+   Ballard Canyon & Happy Canyon, Edna Valley & the SLO Coast. */
+(function(){
+var ADD_CA=[
+{region:"Alexander Valley & Knights Valley",pieces:[
+{t:"Hafner Vineyard",w:"Healdsburg, CA — Alexander Valley",p:"Dick and Mary Hafner started this in 1967 and their sons Parke and Scott run it now. There is no public tasting room and there is not going to be one — they sell direct, keep the staff tiny, and have said plainly they would rather stay small than expand distribution. As close to a working family cellar door as this valley still has.",v:"By appointment only. First and third Friday of the month at 2, or call ahead."},
+{t:"Hawkes Wine",w:"Healdsburg, CA — Alexander Valley",p:"Three and a half to four thousand cases off eighty acres the family has farmed for forty years in the southern end of the valley. The Private Reserve tasting runs three slots a day, total — not a pour line.",v:"Daily 10–5. Walk in; reservations only for parties of ten or more. $35."},
+{t:"Robert Young Estate Winery",w:"Geyserville, CA — Alexander Valley",p:"Six generations of Youngs on the same ground. Worth knowing the shape of it: the family has sold fruit to Kendall-Jackson for decades, but that is a grape contract, not an ownership stake — the estate and the winery are still theirs, and the wine is made on the family property rather than in a rented facility.",v:"Daily 11–5, closed Tue. An appointment is preferred."},
+{t:"Stuhlmuller Vineyards",w:"Healdsburg, CA — Alexander Valley",p:"Roger and Carmen Stuhlmuller bought the land in 1982; their son Fritz put the label on it in 1996 and the family still runs it. They signed a national sales partner in 2024 — that is distribution, not a sale, and the ownership has not moved.",v:"Wed–Sun 11–4:30. Walk-ins welcome; reservations appreciated."},
+{t:"Knights Bridge Winery",w:"Knights Valley, CA",p:"About six thousand cases, independently owned, and actually sited in Knights Valley rather than just buying fruit out of it — which is rarer than it sounds in a small, thinly planted appellation that most labels treat as a source rather than a place."}
+]},
+{region:"Los Carneros",pieces:[
+{t:"Ceja Vineyards",w:"Napa & Sonoma, CA — Los Carneros",p:"Pedro and Amelia Ceja and Armando and Martha Ceja came up through vineyard work and started their own label out of it. About seven thousand cases, third generation now, and the estate straddles both the Napa and Sonoma sides of Carneros. The founding story is the operation, not the marketing.",v:"Fri–Sun 11–3, last seating 2:30. Reservations required."},
+{t:"Larson Family Winery",w:"Sonoma, CA — Los Carneros",p:"Five generations on the land along Sonoma Creek. Five thousand cases off a hundred estate acres, sold almost entirely at the winery, through the club, and online rather than into distribution.",v:"Thu–Sun. Seatings at 11, 1 and 3, by appointment."},
+{t:"McKenzie-Mueller Vineyards & Winery",w:"Napa, CA — Los Carneros",p:"Karen McKenzie and Bob Mueller started in 1989; their daughter Samantha runs it now. He sat on the Los Carneros water board and picked the coldest corner of the appellation on purpose. Strictly by appointment, which at this size means you get the actual people.",v:"By appointment, Mon–Sat. No walk-ins."},
+{t:"Madonna Estate",w:"Napa, CA — Los Carneros",p:"Four generations of Bartoluccis farming organically since the 1970s, and about ten thousand cases — the top of what belongs on this page, and worth saying so. In exchange you get the one Carneros room you can genuinely walk into unannounced.",v:"Daily 10–5. Walk in, no appointment."}
+]},
+{region:"Ballard Canyon, Happy Canyon & Santa Ynez Valley",pieces:[
+{t:"Stolpman Vineyards",w:"Los Olivos, CA — Ballard Canyon",p:"Tom Stolpman started it, his son Peter runs it, and the limestone Syrah is what the trade talks about. The other thing worth knowing is La Cuadrilla — a profit-sharing arrangement with the vineyard crew that Forbes covered independently. A story with something actually behind it.",v:"Los Olivos. $25, parties of six maximum. Reservations strongly encouraged; walk-ins limited."},
+{t:"Beckmen Vineyards",w:"Los Olivos, CA — Ballard Canyon",p:"Tom Beckmen founded it; his sons Steve and Jeff run it. Purisima Mountain is certified biodynamic at about 1,250 feet, which is high for this valley and shows in the Rhone varieties. One of the easier good ones to walk into without booking.",v:"Daily 11–5. Reservations recommended; walk-ins welcome as space allows."},
+{t:"Rusack Vineyards",w:"Solvang, CA — Ballard Canyon",p:"Geoffrey and Alison Rusack established this in 1995 on forty-eight acres cut into the canyon hillside. About seventy-five hundred cases. The appointment-only model here is about attention rather than manufactured scarcity.",v:"Thu–Mon 11–5, by appointment. Last reservation 3:30."},
+{t:"Larner Vineyard & Winery",w:"Los Olivos, CA — Ballard Canyon",p:"Stevan and Christine Larner planted in 1997 and the second generation runs it now. Thirty-four planted acres on a hundred and thirty-four-acre ranch — small by construction rather than by choice, and no satellite room anywhere else.",v:"Daily 11–5."},
+{t:"Grassini Family Vineyards",w:"Santa Barbara, CA — Happy Canyon estate",p:"A hundred and four acres in Happy Canyon, planted in 2002 by Larry and Sharon Grassini, run now by their daughter Katie. Happy Canyon is the warm eastern end of this valley and does Bordeaux varieties; this is the family-run version of that. The pour is downtown, not out at the vines.",v:"Santa Barbara. Daily, seatings 12–5, groups up to six. Reservations encouraged."},
+{t:"The Brander Vineyard",w:"Santa Ynez, CA — Santa Ynez Valley",p:"Fred Brander has been making Sauvignon Blanc here for better than forty-five years and was one of the first to argue this valley could do it properly. The Santa Ynez Valley floor stop, as opposed to another canyon estate up the hill.",v:"Daily 11–5, last seating 4:30."}
+]},
+{region:"Edna Valley, Arroyo Grande & the SLO Coast",pieces:[
+{t:"Claiborne & Churchill Vintners",w:"San Luis Obispo, CA — Edna Valley",p:"Clay Thompson and Fredericka Churchill were university instructors before they started this in 1983, and they built it around Alsatian varieties — dry Riesling and Gewürztraminer — which nobody else in this valley was doing then or is doing much of now. About eight thousand cases, forty-plus years, still theirs.",v:"Daily 11–5. Walk in; reserve at peak times or for firepit seating."},
+{t:"Wolff Vineyards",w:"San Luis Obispo, CA — Edna Valley",p:"The estate went in the ground in 1976, four and a half miles from the Pacific — one of the oldest continuously family-farmed sites in the valley. Jean-Pierre and Elke Wolff run it with their sons Clint and Mark.",v:"Daily 11–5. Walk in; reservations only for parties of five or more."},
+{t:"Saucelito Canyon Vineyard & Winery",w:"Arroyo Grande, CA — Arroyo Grande Valley",p:"Dry-farmed old-vine Zinfandel off a historic hillside the Greenough family has worked since the 1970s. Two generations, one grape they are known for, and no irrigation on the old block.",v:"Daily 11–5. Book ahead."},
+{t:"Kynsi Winery",w:"Arroyo Grande, CA — Corbett Canyon",p:"Gwen and Don Othman started it in 1995 and their daughter Kala and her husband Michael are in it now. No second tasting room, no retail push — walk in and you are usually talking to the people who made what is in the glass.",v:"Daily 11–5. Walk in; groups of eight or more book ahead."},
+{t:"Cutruzzola Vineyards",w:"Cambria, CA — SLO Coast",p:"The SLO Coast only became an appellation in 2022 and it runs the ocean side all the way up to San Simeon. Francis and Lisa Cutruzzola pour in Cambria village itself rather than inland, so this is the fog-driven counterweight to a day spent in the warmer valleys east of here.",v:"Wed–Mon 11–5, last tasting 4:30. Walk in; parties of seven or more reserve."}
+]}
+];
+
+for(var i=0;i<NB.length;i++){
+  if(NB[i].state==="California"){ NB[i].regions=NB[i].regions.concat(ADD_CA); }
+}
+})();
+
 document.getElementById("nb").innerHTML=NB.map(function(st){
   return '<div class="state rv">'+st.state+'</div><div class="state-rule rv"></div>'+st.regions.map(function(r){
     return '<div class="region rv">'+r.region+'</div>'+r.pieces.map(function(p){
