@@ -679,6 +679,91 @@ for(var i=0;i<NB.length;i++){ if(NB[i].state==="California"){ NB[i].regions=NB[i
 Array.prototype.push.apply(NB,ADD_STATES);
 })();
 
+/* Notebook expansion, round 2 — coastal California, Southern Oregon, the Willamette
+   sub-AVAs, New Mexico and Missouri. Independent AND small, verified still open. */
+(function(){
+var ADD_CA=[
+{region:"Sonoma Coast & West Sonoma Coast",pieces:[
+{t:"Hirsch Vineyards",w:"Healdsburg, CA — vineyard at Cazadero, Fort Ross-Seaview",p:"David Hirsch planted this ridge above Cazadero in 1978 and farmed it organically decades before anyone was selling that word. About 6,000 to 7,000 cases off 72 estate acres, and his daughter Jasmine runs it now. The single-block bottlings are what critics reach for when they need to describe what Fort Ross-Seaview tastes like. Know before you go: the tasting room is in Healdsburg, 45 minutes from the vines.",v:"Healdsburg, 57 Front St. By appointment, daily. $75."},
+{t:"Peay Vineyards",w:"Cloverdale, CA — estate near Annapolis",p:"Nick and Vanessa Peay planted 53 acres four miles off the Pacific in 1998 — treeless coastal ridge, full ocean wind, genuinely marginal ground for ripening anything. Nick's brother Andy runs the business side. Some bottlings come in under 100 cases. The Syrah and Chardonnay get cited as often as the Pinot.",v:"By appointment only, year round. No walk-ins."},
+{t:"Littorai Wines",w:"Sebastopol, CA",p:"Ted Lemon was one of the first Americans to train properly in Burgundy — he ran Domaine Roulot — and he and Heidi have spent thirty-plus years pushing biodynamic farming on this coast. If you want to understand what a vineyard-designate Pinot from the Sonoma Coast is supposed to mean, this is where the argument starts.",v:"788 Gold Ridge Rd. By appointment, Mon–Sat, six guests or fewer. No drop-ins."},
+{t:"Cobb Wines",w:"Healdsburg, CA — Coastlands Vineyard, Occidental",p:"Ross Cobb worked at Kistler and at Hirsch before taking over his family's Coastlands Vineyard in 2019. About 5,500 cases across eight Sonoma Coast sites. After more than twenty years of mailing-list-only access they finally opened a room the public can book, at the end of 2025 — this is a new door into wines that were hard to get near.",v:"328 Healdsburg Ave. Wed–Sun 10–3, by appointment."},
+{t:"Halleck Vineyard",w:"Sebastopol, CA",p:"Two thousand cases, mostly Pinot Noir, run by Ross Halleck and his family. The tasting is not a bar — it is two seatings a day at one table with food, and the reviews have been running five stars for years without a gap. About as small as a real operation on this coast gets.",v:"3785 Burnside Rd. Seatings 11 and 2, Thu–Sun, reservation required. $70."},
+{t:"Ceritas Wines",w:"Healdsburg, CA — Fort Ross-Seaview & Green Valley fruit",p:"John Raytek and Phoebe Bass make single-vineyard Chardonnay and Pinot Noir in quantities that sometimes come in at 130 cases. That is not a marketing number, it is the whole bottling. Tasting rooms in Healdsburg rather than out on the ridge.",v:"Wed–Sun, by appointment only, eight guests maximum. No walk-ins."},
+{t:"Red Car Wine Co.",w:"Sebastopol, CA",p:"Richard and Alison Crowell have been at this since 2000, and their room is one of the few at this level on the coast where you can still just walk in. Coastal Pinot and Syrah, laid out so you can see exactly which vineyard each glass came from.",v:"8400 Graton Rd. Daily 10–5. Walk in; reservations recommended."}
+]},
+{region:"Santa Lucia Highlands & Monterey County",pieces:[
+{t:"Wrath Wines",w:"Soledad & Carmel, CA",p:"Michael Thomas is an archaeologist. He and his mother Barbara Lemmon bought the defunct San Saba winery in 2007 and turned it into one of the more consistently well-reviewed houses in the Highlands. Individual bottlings run 200 to 700 cases and most of it sells off a mailing list. Two very different visits: the working estate on Foothill Road, or the storefront in Carmel.",v:"Soledad estate Fri–Mon 11–5. Carmel Plaza Fri–Sun 11–6, Mon–Thu 11–5."},
+{t:"Morgan Winery",w:"Carmel, CA — Santa Lucia Highlands fruit",p:"Dan Morgan Lee helped plant some of the vineyards this appellation is now famous for. The second generation of the Lee family runs it, and the fruit comes off Double L, Rosella's and Gary's — names you will see on other people's labels too. Easy to fold into a day in Carmel instead of driving out to Soledad.",v:"Taste Morgan, 204 Crossroads Blvd. Daily 11–6. Walk in or reserve."},
+{t:"Joyce Wine Company",w:"Carmel Valley, CA — Arroyo Seco estate",p:"Russell Joyce bought fruit out of Arroyo Seco for years before he bought the old Ventana Winery property and started farming it himself. Arroyo Seco is older and quieter than Santa Lucia Highlands next door, and he is a good part of why anyone still talks about it.",v:"1 E Carmel Valley Rd. Six days a week, closed Tue, 12–5:30. Walk in."},
+{t:"I. Brand & Family Wines",w:"Carmel Valley, CA",p:"Ian Brand's whole method is digging up overlooked old vineyard sites across Monterey and San Benito rather than working the famous ones. If you want to understand this county past the marquee AVA, sit down with him. The room is small and so is the operation.",v:"19 E Carmel Valley Rd. Thu–Mon 11–5. Reservations recommended, parties of one to four."},
+{t:"Georis Winery",w:"Carmel Valley, CA",p:"A small longtime Carmel Valley estate leaning on Bordeaux varieties, Merlot in particular, run out of a converted historic building by the family of the late Walter Georis. None of the scale or the event-calendar noise of the county's bigger Cabernet operations.",v:"1 Pilot Rd. Wed–Sun 12–6. Call ahead for larger groups."},
+{t:"Comanche Cellars",w:"Monterey, CA",p:"Michael Simons makes what he himself calls tiny amounts, off Santa Lucia Highlands and Santa Cruz Mountains fruit, and pours it in a room on Alvarado Street in downtown Monterey. The rare stop on this page you can walk into at seven on a weeknight without having planned anything.",v:"412 Alvarado St. Mon–Thu 4–8, Fri 3–9, Sat 2–9, Sun 2–6. Walk in."}
+]}
+];
+
+var ADD_OR=[
+{region:"Southern Oregon — Rogue, Applegate & Umpqua",pieces:[
+{t:"Troon Vineyard",w:"Grants Pass, OR — Applegate Valley",p:"Since 2016 this estate has gone all the way over to regenerative biodynamic farming — full replant, wild yeast only, nothing added. It is the sharpest edge of Oregon natural wine outside the Willamette, and they grow Rhone and Mediterranean varieties you will not find elsewhere in the state.",v:"Daily 11–5. Reservations encouraged; walk-ins accepted."},
+{t:"Valley View Winery",w:"Jacksonville, OR — Applegate Valley",p:"Frank and Ann Wisnovsky restored this in 1972 on ground the pioneer Peter Britt was making wine on in the 1850s. Their sons Mark and Michael run it now. Three generations, one family, one piece of the Applegate, and none of the ownership churn that has hit the rest of this valley.",v:"Daily 11–5. Walk in."},
+{t:"Quady North",w:"Jacksonville, OR — Applegate Valley",p:"Herb Quady came up from California in 2003 and went after Rhone and Bordeaux varieties — Syrah, Grenache, Viognier, Cabernet Franc — instead of chasing Pinot Noir like everyone else. Individual bottlings run from 73 cases to a few thousand. Regional critics name his reds first.",v:"Wed–Mon 12–6. Drop-ins welcome; reservations appreciated."},
+{t:"Weisinger Family Winery",w:"Ashland, OR — Rogue Valley",p:"Ashland's oldest continuously family-run winery, going since 1988. Eric Weisinger took it over from his father John in 2011 and is still the one making it. Rhone and Bordeaux blends plus a Tempranillo.",v:"May–Sep daily 12–7. Oct daily 11–6. Nov–Apr Mon & Thu 11–5, Fri–Sun 11–6, closed Tue–Wed."},
+{t:"Reustle-Prayer Rock Vineyards",w:"Roseburg, OR — Umpqua Valley",p:"Stephen Reustle carved these blocks out of raw hillside himself starting in 2001, and everything in the bottle is grown and made on the property — about 7,500 cases. Grüner Veltliner and Syrah, which is not what Oregon is supposed to do. American Vineyard Magazine named it Small Winery of the Year in 2023.",v:"Mon–Sat 10–5. Reservations suggested."},
+{t:"HillCrest Vineyard",w:"Roseburg, OR — Umpqua Valley",p:"Richard Sommer planted this in 1961. Oregon's oldest bonded winery, and the place Oregon Pinot Noir actually started — years before the Willamette Valley was a wine region at all. Dyson and Susan DeMara have owned it since the early 2000s and still work Sommer's original vines.",v:"Daily 11–5. Closed Easter, Thanksgiving, Christmas and New Year's Day."}
+]},
+{region:"Chehalem Mountains & Yamhill-Carlton",pieces:[
+{t:"Lenné Estate",w:"Yamhill, OR — Yamhill-Carlton",p:"Karen and Steve Lutz capped this at two thousand cases a year and then stopped. One vineyard, one grape, a hard ceiling they set themselves instead of growing into. This is the scale where the person pouring is the person who grew it."},
+{t:"Belle Pente Vineyard & Winery",w:"Carlton, OR — Yamhill-Carlton",p:"Jill and Brian O'Donnell planted this in 1994 on an 1840s farmstead and are still the ones running it thirty years on. About 4,500 cases, two thirds Pinot Noir, most of it off their own ground — the production never outgrew what the estate can actually grow."},
+{t:"Alloro Vineyard",w:"Sherwood, OR — Chehalem Mountains",p:"David Nemarnik farms 110 acres of Laurelwood soil and bottles about 3,000 cases of it. The other half of the harvest he sells to other producers rather than expanding his own label, which tells you most of what you need to know about how he runs it."},
+{t:"Compris Vineyard",w:"Newberg, OR — Chehalem Mountains",p:"Started as Vidon Vineyard by a NASA scientist, renamed Compris in 2022, and now in the hands of Dru and Erin Allen — an owner-operator couple rather than a distant investor. A small single-vineyard estate with a stranger history than most."}
+]},
+{region:"McMinnville & the Van Duzer Corridor",pieces:[
+{t:"Johan Vineyards",w:"Rickreall, OR — Van Duzer Corridor",p:"Certified biodynamic since it was founded, capped at about 6,000 cases because that is all the building will do, and everything is estate grown. They bottle Blaufränkisch, which almost nobody in Oregon does. The Van Duzer gap pulls cold ocean air straight through this vineyard and you can taste it.",v:"Wed–Sun 11–5. Reservations encouraged; walk-ins welcome."},
+{t:"Maysara Winery",w:"McMinnville, OR — McMinnville AVA",p:"Moe and Flora Momtazi bought 532 acres of worn-out wheat farm in 1997 and have farmed it biodynamically ever since — one of the largest certified biodynamic vineyards in the state, worked by the family that planted it. McMinnville's marine sedimentary soil is a different animal from the volcanic Dundee Hills next door.",v:"May–Nov daily 11–4:30. Dec–Apr Mon–Sat 11–4:30, closed Sun."},
+{t:"Youngberg Hill",w:"McMinnville, OR — McMinnville AVA",p:"Twenty-three acres on a hilltop, women-owned and operated since Nicolette founded it in 2003, with the tasting room sitting on the working vineyard rather than in a storefront down in town. Wayne Bailey grows and makes it.",v:"Daily 10–4. Walk in for parties of five or fewer — arrive before 3:30."}
+]},
+{region:"Tualatin Hills — Washington County",pieces:[
+{t:"Apolloni Vineyards",w:"Forest Grove, OR — Tualatin Hills",p:"Alfredo Apolloni owns it and makes it. One of very few small independent estates actually inside Tualatin Hills, which is the northernmost and least-visited corner of the Willamette — you will have the road mostly to yourself.",v:"Thu–Mon 11–5. Walk in if there is seating; reservations encouraged. $25 for six, waived on a $50 purchase."}
+]}
+];
+
+var ADD_STATES=[
+{state:"New Mexico",regions:[
+{region:"Dixon & Velarde — outside any AVA",pieces:[
+{t:"La Chiripada Winery",w:"Dixon, NM",p:"Spanish missionaries were making wine in New Mexico in 1629, decades before anyone planted a vine in California — this state is where American winegrowing actually starts. Michael and Patrick Johnson built this by hand out of adobe in 1981 at 6,100 feet, which makes it the highest commercial winery in the country. It sits on the low road to Taos in real orchard and vineyard country.",v:"Daily 11–5 in season. Walk in."},
+{t:"Black Mesa Winery",w:"Velarde, NM",p:"Jerry and Lynda Burd bought this in 2000 and make better than two dozen wines out of a small place on the Rio Grande between Santa Fe and Taos. Lynda designs the labels and teaches a painting class on site. Small-operator in the way that phrase is supposed to mean.",v:"Daily 12–7. Walk in."}
+]},
+{region:"Middle Rio Grande Valley AVA",pieces:[
+{t:"Milagro Vineyards & Winery",w:"Corrales, NM",p:"Rick Hobson was a chemical engineer who set out to prove Corrales could ripen serious wine grapes, started planting in 1985, and went commercial around 1999. Everything is grown on the fifteen-plus plots he and Mitzi farm themselves. The tasting room shuts entirely in August for harvest — that alone tells you this is a working farm and not a storefront.",v:"Farm stand Fri–Sun 3–8. Winery room select weekends only — check the calendar. Closed all August."}
+]},
+{region:"Mimbres Valley AVA",pieces:[
+{t:"Luna Rossa Winery",w:"Deming, NM",p:"Paolo D'Andrea came out of Friuli in 1986 and planted Italian varieties in the Mimbres Valley, and every bottle comes off his own ground. About 8,000 cases, which makes this the biggest name on the New Mexico page — go for the Friuli-in-the-desert story rather than for the smallest possible operation."}
+]},
+{region:"Mesilla Valley AVA",pieces:[
+{t:"La Viña Winery",w:"Anthony, NM",p:"New Mexico's oldest continuously operating winery, on what used to be a jalapeño farm. Ken and Denise Stark took it over in 1993 and turned it into a 44-acre, 24-variety estate — every wine comes off that vineyard, which is unusual this close to El Paso.",v:"Daily 12–5:30 except Tue and Wed. Walk in."}
+]}
+]},
+{state:"Missouri",regions:[
+{region:"Hermann AVA",pieces:[
+{t:"Röbller Vineyard",w:"New Haven, MO",p:"Norton is Missouri's grape, and Missouri vine cuttings are what saved the French wine industry from phylloxera in the 1870s — that is not folklore, it is why European vines still grow on American roots. Robert and Lois Mueller bought this 85 acres on New Year's Eve 1988; their son Jerry makes the wine now. Dry-farmed Norton, Chambourcin, Vignoles and St. Vincent, and a 2022 Norton took a Governor's Cup award in 2026, so the reputation is current and not just historical.",v:"Mon–Thu 10–4, Fri–Sat 10–5, Sun 12–5. Walk in."},
+{t:"OakGlenn Vineyards & Winery",w:"Hermann, MO",p:"Glenn and Carolyn Warnebold bought this bluff over the Missouri River in 1997 and found heritage Norton vines on it — ground originally planted by George Husmann, the nineteenth-century viticulturist who is a large part of why Missouri wine mattered in the first place. They open two days a week. That is a farm schedule, not a hospitality schedule.",v:"Fri–Sat 10–6 only. Walk in."}
+]},
+{region:"Ozark Highlands AVA",pieces:[
+{t:"Eagles' Landing Wine",w:"St. James, MO",p:"Eric Taylor is an Advanced Sommelier making the wine on his maternal grandfather's old property in Rosati, where the family has farmed vines for better than a hundred years. Norton, Chambourcin and Traminette off small family vineyards across the Ozark Highlands rather than bulk juice trucked in from somewhere else.",v:"Fri–Sun 11–6. Walk in."}
+]},
+{region:"Dutzow — outside any AVA",pieces:[
+{t:"Blumenhof Winery",w:"Dutzow, MO",p:"Three generations of Blumenbergs since 1979, and they will tell you plainly that every wine is made from Missouri grapes grown within sixty miles of the door — a claim you can actually check. Worth knowing why this page is short: Augusta, the first AVA in the United States, ahead of Napa by a year, has had most of its independent wineries bought up by a single family office. What is left independent out here is worth finding.",v:"Mon–Thu 11–6, Fri 11–8, Sat–Sun 11–6. Walk in."}
+]}
+]}
+];
+
+for(var i=0;i<NB.length;i++){
+  if(NB[i].state==="California"){ NB[i].regions=NB[i].regions.concat(ADD_CA); }
+  if(NB[i].state==="Oregon"){ NB[i].regions=NB[i].regions.concat(ADD_OR); }
+}
+Array.prototype.push.apply(NB,ADD_STATES);
+})();
+
 document.getElementById("nb").innerHTML=NB.map(function(st){
   return '<div class="state rv">'+st.state+'</div><div class="state-rule rv"></div>'+st.regions.map(function(r){
     return '<div class="region rv">'+r.region+'</div>'+r.pieces.map(function(p){
