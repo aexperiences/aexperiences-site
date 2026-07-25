@@ -887,6 +887,51 @@ for(var i=0;i<NB.length;i++){
 }
 })();
 
+/* Notebook expansion, round 5 — Georgia, Tennessee, Kentucky. */
+(function(){
+var ADD_STATES=[
+{state:"Georgia",regions:[
+{region:"Dahlonega Plateau AVA",pieces:[
+{t:"Frogtown Cellars",w:"Dahlonega, GA",p:"Craig and Cydney Kritzer planted fifty-seven acres in 1998 and put the whole thing on Georgia fruit — grown, produced and bottled in the state, which in the Southeast is a claim most places cannot make. Cabernet Franc is the sensible red for this humidity and it is one of their better ones.",v:"Fri 12–5, Sat 12–6, Sun 12–5. Closed Mon–Thu."},
+{t:"Three Sisters Vineyards",w:"Dahlonega, GA",p:"Sharon and Doug Paul started this in July 1996 — twenty-two years before there was a Dahlonega Plateau appellation to be in. Doug died in 2017 and Sharon still runs it. One of the few in this area whose own materials describe an actual planting program rather than a purchased wine list.",v:"Thu–Sat 11–5, Sun 1–5."},
+{t:"Wolf Mountain Vineyards & Winery",w:"Dahlonega, GA",p:"The Boegner family hand-planted thirty acres in 1999 and Karl's son Brannon farms and makes it now. Just over five thousand cases, all estate. Fair warning on what you will be drinking: the reds are Cabernet, Syrah, Mourvèdre, Tannat and Touriga — a Bordeaux and Rhone program in a humid climate, not the hybrids that usually do best here.",v:"Mar–Dec Thu–Sun 11–5. Jan–Feb Sat–Sun 11–5."}
+]},
+{region:"Upper Hiwassee Highlands AVA — Georgia side",pieces:[
+{t:"Odom Springs Vineyards",w:"Blairsville, GA",p:"The best fruit story in this appellation. Seyval Blanc, Norton, Chambourcin, Vidal Blanc and Chardonel, all estate grown — that is exactly the list this climate rewards, rather than a vinifera program fighting the weather. The muscadine wines are the one exception and they say so.",v:"Farm: Mon 11–3, Wed–Sat 11–5, Sun 1–5, closed Tue. Blairsville Square: Tue–Thu 1–6, Fri–Sat 12–6."},
+{t:"Crane Creek Vineyards",w:"Young Harris, GA",p:"Eric and DeAnne Seifarth moved to the north Georgia mountains in the mid-1990s for a slower life after their son Sam was born with Down syndrome, and planted a vineyard. First harvest was 1997, Seyval Blanc. Their son Peter is head winemaker now — three generations on it.",v:"Stone House: Tue–Fri 1–6, Sat 1–8, Sun 1–5. Farmhouse: Tue–Thu 9–4, Fri 9–8, Sat 9–6, Sun 9–4. Closed Mon."}
+]},
+{region:"Tiger — Rabun County, outside any AVA",pieces:[
+{t:"Tiger Mountain Vineyards",w:"Tiger, GA",p:"Dr. John and Martha Ezzard planted this on the family farm in 1995 and went straight at the varieties that suit the place — Petit Manseng, Cabernet Franc, Norton, Tannat, Viognier. In 2024 the Petit Manseng took Best of Class at the Los Angeles International against a thousand wines from thirteen countries. That is a juried result, not a self-awarded ribbon. Leadership passed to a new proprietor in 2022; the handoff is done and the operation has been steady since.",v:"Fri–Sat 12–7, Sun 12:30–5. Second room in downtown Dahlonega."}
+]}
+]},
+{state:"Tennessee",regions:[
+{region:"Nine Lakes of East Tennessee AVA",pieces:[
+{t:"The Winery at Seven Springs Farm",w:"Maynardville, TN",p:"You are early here — this appellation was only established in March 2026, so almost nothing has been written about it yet. Nikki Riddle planted six or seven acres between 2013 and 2016 with friends and family: Traminette, Chambourcin, Catawba, Concord and two muscadines. Small, single-owner, and the front page is about tasting rather than renting the barn.",v:"Mon–Sat 11–8, Sun 11–6."}
+]},
+{region:"West Tennessee — Jackson & Somerville",pieces:[
+{t:"Century Farm Winery",w:"Jackson, TN",p:"Bart Horton is the sixth generation on land his family has held for close to two hundred years — it carries a Tennessee Century Farm designation, which is a real state program and not a marketing phrase. About sixty-five percent of the fruit is grown on the property: muscadine plus Corot Noir and Cayuga, hybrids bred for exactly this humidity. He and his wife Neka took it over from his mother and stepfather in 2017.",v:"Mon–Thu and Sun 12–6, Fri–Sat 10–8."},
+{t:"De Terra Vineyard & Wines of Somerville",w:"Somerville, TN",p:"Jerry and Teresa Pentz farm thirty-four acres and will tell you exactly which fruit is theirs and which is not — the Chambourcin and muscadine are grown here, the Concord comes from Pennsylvania and New York. That kind of straight answer is rarer in this part of the country than the wine is.",v:"Wed–Sat 10–6, Sun 1–5."}
+]},
+{region:"Middle Tennessee — Centerville & Nashville",pieces:[
+{t:"Grinder's Switch Winery",w:"Centerville, TN",p:"The Chessor family have owned this land since 1982 and three generations work it now — about five thousand cases, with ten estate acres in Chambourcin, Cabernet and Touriga Nacional. Straight answer before you go: opening the Nashville room nearly tripled their volume, so they now also buy fruit and juice from the Finger Lakes, Washington and elsewhere in the Southeast. Ask which wine is which when you are standing there.",v:"Centerville, plus rooms in Nashville's Marathon Village and in Columbia."}
+]}
+]},
+{state:"Kentucky",regions:[
+{region:"Ohio River Valley AVA — Bracken County",pieces:[
+{t:"Baker-Bird Winery",w:"Augusta, KY",p:"The A. Baker Winery ran commercially here from the 1850s until a fungus outbreak and the shift to tobacco killed it off. What survived is the cellar — hand dug ninety feet into the hillside behind fourteen-foot stone walls, room for five thousand barrels, and it sheltered women and children during the Battle of Augusta in 1862. Dr. Dinah Bird bought the site in 2002 and learned winemaking to bring it back. Mostly Kentucky-grown fruit, French-American hybrids.",v:"Their website has been down; call before you drive out. Yelp and a scheduled 2026 event both show it operating."}
+]},
+{region:"Northern Kentucky — Melbourne",pieces:[
+{t:"StoneBrook Winery & Cidery",w:"Melbourne, KY",p:"A working family farm twenty minutes from Cincinnati with the best-documented estate planting in the state: Vidal Blanc, Cayuga White, Norton, Viognier, Cabernet Franc, Maréchal Foch and Concord, on Eden Shale soil. Vidal, Norton and Cab Franc are three of the four things that actually work in this climate. Events are a real part of the business, so expect that.",v:"Fri 5–9, Sat–Sun 1–6. $5 for a flight of five."}
+]},
+{region:"Central Kentucky — Nicholasville & Shepherdsville",pieces:[
+{t:"First Vineyard Winery",w:"Nicholasville, KY",p:"This is the ground. Jean-Jacques Dufour planted America's first commercial vineyard here in 1799 — Henry Clay and George Bibb put money in it, Daniel Boone ran the survey, and the wine reached Jefferson and Madison. Tom Beall found the original terraces still intact on land he had been using for something else and restored it; the site is on the National Register. Go for the history rather than for a verdict on the wine, and note the property was on the market in 2022 before coming off it.",v:"Fri–Sun 1–7. From November, 1–5."},
+{t:"Wight-Meyer Vineyard & Winery",w:"Shepherdsville, KY",p:"Jim and Sandy Wight grow it on sixteen acres and make it there — Bullitt County's first commercial vineyard, working with cold-hardy American varieties like Diamond and Concord. The front page opens with the vineyard and the tasting. No wedding packages, no venue rental pitch. The plainest entry on this page and better for it.",v:"Wed–Thu 11–6, Fri–Sat 11–7, Sun 1–6. Closed Mon–Tue."}
+]}
+]}
+];
+Array.prototype.push.apply(NB,ADD_STATES);
+})();
+
 document.getElementById("nb").innerHTML=NB.map(function(st){
   return '<div class="state rv">'+st.state+'</div><div class="state-rule rv"></div>'+st.regions.map(function(r){
     return '<div class="region rv">'+r.region+'</div>'+r.pieces.map(function(p){
