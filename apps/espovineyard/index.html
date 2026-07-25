@@ -764,6 +764,90 @@ for(var i=0;i<NB.length;i++){
 Array.prototype.push.apply(NB,ADD_STATES);
 })();
 
+/* Notebook expansion, round 3 — Lodi, Livermore, the rest of Virginia, North Carolina,
+   Vermont, Ohio and Pennsylvania. Independent AND small, verified still open. */
+(function(){
+var ADD_CA=[
+{region:"Lodi & the Mokelumne River",pieces:[
+{t:"Harney Lane Winery",w:"Lodi, CA",p:"The Lizzy James Vineyard was planted in 1904 — a hundred and twenty-two years old, own-rooted, registered with the Historic Vineyard Society and picked for the Zinfandel Advocates & Producers Legendary Vineyard series. That is third-party documentation, not a marketing line. Kyle Lerner and the Mettler family have farmed here five generations.",v:"Daily 11–5. Walk in, no reservation."},
+{t:"Klinker Brick Winery",w:"Lodi, CA",p:"The Felten family owns twenty-four separate blocks of old-vine Zinfandel running from forty to a hundred and twenty-two years old, in the deep sand of the Mokelumne River. Most producers chase one showcase parcel. They farm two dozen.",v:"Daily 11–5. Reservations only for groups of eight or more."},
+{t:"The Lucas Winery",w:"Lodi, CA",p:"David Lucas ran grower relations at Robert Mondavi before he started this in 1978, and he and winemaker Heather Pyle-Lucas still run it. The ZinStar block went in the ground in 1933 and is certified organic — planted before almost everything else standing in Lodi today.",v:"Wed–Sun 11–4:30."},
+{t:"Jessie's Grove Winery",w:"Lodi, CA",p:"Joseph Spenker settled this ground in 1868 and put his first vines in by 1888. The estate is tied to the 1886 Bechthold Cinsaut, one of the oldest documented Cinsaut plantings anywhere in the country, and the family has never let go of it.",v:"Sun–Fri 12–5, Sat 11–8. Reservations required Sat and Sun."},
+{t:"McCay Cellars",w:"Woodbridge, CA — Mokelumne River fruit",p:"Michael McCay farmed Lodi for twenty-five years before he started bottling under his own name in 2007, and he works in lots that typically come in under four hundred cases each. Single vineyards, one at a time, rather than one blended house red.",v:"Fri–Sun 12–5, 18911 N. Lower Sacramento Rd. $10; groups of six or more reserve."},
+{t:"St. Amant Winery",w:"Lodi, CA",p:"Tim and Barbara Spencer started this in 1979 and it is still the same family forty-six years on, working out of a post-Prohibition cooperative winery building on the east side of town. Old-vine Zinfandel and Mediterranean varieties.",v:"Thu–Mon 11–4. Tue and Wed by appointment."},
+{t:"Bokisch Vineyards",w:"Lodi, CA — Clements Hills",p:"Markus and Liz Bokisch have been planting Spanish varieties here since 1999 — Albariño, Tempranillo, Graciano — in a place that everyone else treats as Zinfandel country. Worth the stop precisely because it is the argument against the local orthodoxy."}
+]},
+{region:"Livermore Valley",pieces:[
+{t:"The Steven Kent Winery",w:"Livermore, CA",p:"Steven Kent Mirassou comes out of what his family calls the oldest winemaking line in America, going back nearly 170 years — and this is the independent branch of it, not a corporate remnant trading on the name. Bordeaux varieties, Cabernet Franc in particular.",v:"Thu 3–7, Fri–Sun 12–5. Walk in or book."},
+{t:"Page Mill Winery",w:"Livermore, CA",p:"Dick and Ome Stark founded this in the Santa Cruz Mountains in 1976 and moved it to Livermore in 2004 under their son Dane, who makes the wine now. A fifty-year-old label that is older than its own address.",v:"Sat–Sun 12–4:30, some Thursdays. $20."},
+{t:"McGrail Vineyards and Winery",w:"Livermore, CA",p:"Small, family-run, women-owned and operated, and booked rather than walked into — which in a valley being steadily swallowed by Bay Area subdivisions is how the good small ones survive.",v:"Daily 11–5, by reservation only."},
+{t:"Fenestra Winery",w:"Livermore, CA",p:"Founded in 1976 and working out of a brick winery building that went up in 1889 — one of the longest continuously running small labels left in a valley that was planted in the 1880s and has been losing ground to housing ever since.",v:"Fri–Sun 11:30–4:30. $20, waived on two bottles."}
+]}
+];
+
+var ADD_VA=[
+{region:"Shenandoah Valley AVA",pieces:[
+{t:"Muse Vineyards",w:"Woodstock, VA",p:"Robert Muse and Sally Cowal bought this ground along the Shenandoah River in 2003 — he was an international lawyer, she was a US ambassador — and planted about thirty acres to twenty varieties. Their 2009 Clio, a Bordeaux-style red, won the Virginia Governor's Cup in 2015. That is the state's own jury saying it, not the winery.",v:"Sun–Wed 12–6, Thu–Sat 12–8."},
+{t:"Bluestone Vineyard",w:"Bridgewater, VA",p:"Curt and Jackie Hartman started planting in 2003 and opened in 2010 at about five hundred cases. They are near five thousand now, which is still small, and their oaked Chardonnay took a Governor's Cup gold in 2024. Go for the Cabernet Franc and the Vidal Blanc.",v:"Mon–Sat 11–6, Sun 1–6. Walk in."}
+]},
+{region:"Middleburg & Loudoun County",pieces:[
+{t:"Boxwood Estate Winery",w:"Middleburg, VA — Middleburg Virginia AVA",p:"John Kent Cooke and his wife Rita bought Boxwood Farm in 2001 and built the estate around Bordeaux blends off their own ground rather than a long varietal list. Their own team petitioned for the Middleburg AVA. Still the founding family, with their son now running it.",v:"Wed–Sun 11–6. Walk in or reserve."},
+{t:"Fabbioli Cellars",w:"Leesburg, VA — Loudoun County",p:"Doug Fabbioli and Colleen Berg started planting in 2001 and went at Petit Verdot and Tannat while everyone around them planted Chardonnay. Twenty-five working acres and a tasting room with nothing fussy about it.",v:"Mon, Thu–Sun 11–5. Closed Tue and Wed. Groups of six or more reserve."},
+{t:"Doukénie Winery",w:"Hillsboro, VA — Loudoun County",p:"The Bazaco family have run this twenty-three-acre estate under the Blue Ridge for better than forty years. The front page leads with the wine and a music series rather than with weddings, which in Loudoun County is worth saying out loud.",v:"Wed–Thu 12–5, Fri 12–6, Sat 11–8, Sun 11–6. Walk in."}
+]},
+{region:"Front Royal — the northern Blue Ridge",pieces:[
+{t:"Glen Manor Vineyards",w:"Front Royal, VA",p:"Petit Manseng, Cabernet Franc, Petit Verdot and a blend called Hodder Hill — the list is built entirely around what Virginia actually does well instead of what sells easily. No wedding page anywhere on the site, and they cap visiting groups at four with no buses. That is a working vineyard telling you what it is.",v:"Wed–Sun 11–5. Groups of four maximum; no buses or limos."}
+]},
+{region:"Virginia's Eastern Shore — outside any AVA",pieces:[
+{t:"Chatham Vineyards",w:"Machipongo, VA",p:"Jon Wehner is a second-generation winegrower and he and his wife Mills planted this in 1999 on old Eastern Shore farmland, where the maritime air does something to the fruit you do not get inland. Three to five thousand cases. The only estate of real substance out on the Shore.",v:"Daily 10–5. Walk in."}
+]}
+];
+
+var ADD_STATES=[
+{state:"North Carolina",regions:[
+{region:"Swan Creek AVA — Yadkin Valley",pieces:[
+{t:"Raffaldini Vineyards & Winery",w:"Ronda, NC",p:"Jay Raffaldini started planting in 2001 and bet the whole thing on Italian varieties — Sangiovese, Montepulciano, Sagrantino, Vermentino — which almost nobody on the East Coast does seriously. A hundred and two acres, forty-eight thousand vines, about six thousand cases, all estate grown.",v:"Tastings and tours by reservation."},
+{t:"Laurel Gray Vineyards",w:"Hamptonville, NC",p:"Ben and Kim Myers farm this on a slope in Swan Creek, and they lead with dry wines specifically as an argument against the assumption that North Carolina only makes sweet ones. Generations of farming on the same ground before the vines went in."}
+]},
+{region:"Yadkin Valley AVA",pieces:[
+{t:"Grassy Creek Vineyard & Winery",w:"State Road, NC",p:"A converted dairy barn on the old Klondike Farm, twenty years in, with hiking trails and cabins around the tasting room. Open, walk-in, and unhurried in a part of the state where a lot of vineyards are really event businesses.",v:"Thu–Sat 12–6, Sun 1–5, Mon 12–5. Closed Tue and Wed."}
+]}
+]},
+{state:"Vermont",regions:[
+{region:"Vermont — no AVA anywhere in the state",pieces:[
+{t:"La Garagista Farm + Winery",w:"Barnard & West Addison, VT",p:"This is the one that made the rest of the country pay attention to cold-climate hybrids. Deirdre Heekin and Caleb Barber put their first vines in the ground in 2007 and closed their restaurant in 2017 to do this full time — biodynamic, low-intervention, Marquette and its relatives treated as serious wine rather than as a compromise. Heekin wrote the book on it, literally.",v:"By appointment, seasonal."},
+{t:"Ellison Estate Vineyard",w:"Grand Isle & Stowe, VT",p:"Built on what is described as the oldest sustained grapevine planting in Vermont, out on Grand Isle in Lake Champlain. Native yeast, minimal intervention, and small enough that they call it super small batch and mean it.",v:"Stowe Wed–Sun 11:30–6. Grand Isle Fri–Sat 12–5, seasonal — call before a fall visit."},
+{t:"Shelburne Vineyard & Iapetus Wines",w:"Shelburne, VT",p:"Ken Albert planted this in 1998, which makes it one of the oldest estate vineyards in the state, and Iapetus is the experimental natural label made by the same crew off the same handpicked Vermont fruit. Straight answer: it is now one company with the Eden cider brand under a single roof, so expect a combined operation rather than a one-purpose winery.",v:"Mon–Tue 11–7, Wed–Sun 11–8:30. Walk in."},
+{t:"Neshobe River Winery",w:"Brandon, VT",p:"A small estate vineyard topped up with fruit from other Vermont growers — in-state, not bulk juice trucked in from somewhere warmer. Farm-scale, quiet, and not chasing the event business.",v:"Mon–Thu 12–5, Fri–Sat 12–7. Walk in."}
+]}
+]},
+{state:"Ohio",regions:[
+{region:"Grand River Valley AVA",pieces:[
+{t:"Markko Vineyard",w:"Conneaut, OH",p:"Arnie Esterer and Tim Hubbard planted this in 1968 and proved vinifera would ripen on the Lake Erie shore when the accepted wisdom said it would not. The oldest estate vineyard in Ohio, still entirely estate fruit — Chardonnay, Riesling, Cabernet, Pinot Noir.",v:"Fri–Sat only, 12–6. Walk in."},
+{t:"Kosicek Vineyards",w:"Geneva, OH",p:"The Kosiceks have farmed this ground since 1929 and started making wine off it in 2012. Tony and Mauri run it, their children are the fourth generation on the place, and every grape is their own. A farm that became a winery, not a winery that leased a farm.",v:"Sun–Thu 12–6, Fri 12–10, Sat 12–9. Walk in."}
+]},
+{region:"Ohio River Valley AVA",pieces:[
+{t:"Meranda-Nixon Winery",w:"Ripley, OH",p:"Ohio was the biggest wine-producing state in America before the Civil War, on Nicholas Longworth's Catawba along this river. This is a family farm that came off tobacco and grain and went to Cabernet Franc and Norton — the actual agricultural story of the Ohio River Valley, still in progress. Call ahead; they do not post hours."}
+]}
+]},
+{state:"Pennsylvania",regions:[
+{region:"Lehigh Valley AVA",pieces:[
+{t:"Galen Glen Winery",w:"Andreas, PA",p:"Galen Troxell is a sixth-generation farmer, Sarah Troxell makes the wine, and the next generation is already in the business. They were among the first in the country to plant Grüner Veltliner and it is the reason Wine Enthusiast, the Wall Street Journal and the Washington Post have all written them up. The most decorated small winery in Pennsylvania.",v:"Thu–Sun 12–5. Walk in."},
+{t:"Vynecrest Vineyards & Winery",w:"Breinigsville, PA",p:"John and Jan Landis founded this in 1974 and their son Sam came in in 2002. About nine thousand cases off seventy-five acres, roughly eighty-five percent of it estate grown — and they publish both those numbers, which almost nobody does. Fifty years, one family.",v:"Sat–Thu 11–5, Fri 11–7. Walk in."}
+]},
+{region:"Lake Erie AVA — North East",pieces:[
+{t:"Arrowhead Wine Cellars",w:"North East, PA",p:"Nick and Kathy Mobilia are third-generation grape farmers and the fruit comes off their own family farm. Worth knowing what that distinguishes them from: several of the bigger names along this stretch of the lake bring in juice from California, Chile and Italy and sell it as a local experience.",v:"Mon–Sat 10–5, Sun 12–4. Walk in."}
+]}
+]}
+];
+
+for(var i=0;i<NB.length;i++){
+  if(NB[i].state==="California"){ NB[i].regions=NB[i].regions.concat(ADD_CA); }
+  if(NB[i].state==="Virginia"){ NB[i].regions=NB[i].regions.concat(ADD_VA); }
+}
+Array.prototype.push.apply(NB,ADD_STATES);
+})();
+
 document.getElementById("nb").innerHTML=NB.map(function(st){
   return '<div class="state rv">'+st.state+'</div><div class="state-rule rv"></div>'+st.regions.map(function(r){
     return '<div class="region rv">'+r.region+'</div>'+r.pieces.map(function(p){
