@@ -190,7 +190,7 @@
 
   var GENRES = [
     { id:'all',      label:'All' },
-    { id:'business', label:'Business hubs' },
+    { id:'business', label:'Business OS' },
     { id:'learning', label:'Learning' },
     { id:'mind',     label:'Mind & mood' },
     { id:'family',   label:'Family' },
