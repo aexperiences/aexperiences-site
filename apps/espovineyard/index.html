@@ -600,6 +600,85 @@ function drawC(){
 }
 
 /* notebook */
+/* Notebook expansion — added regions & states. Every winery verified independent,
+   small, and still open before it went in. */
+(function(){
+var ADD_CA=[
+{region:"Sta. Rita Hills — Santa Barbara County",pieces:[
+{t:"Fiddlehead Cellars",w:"Lompoc, CA",p:"Kathy Joseph started this in 1989 and still runs it — about 4,000 to 5,000 cases a year, split between Sauvignon Blanc and Pinot Noir. She sold the Fiddlestix vineyard land in 2021 but kept the winery and still contracts the fruit, which is worth knowing before you go, because the estate story on the label reads simpler than it is. Thirty-five years on the same two grapes in the same appellation is the reason to sit down with her.",v:"By appointment only — call or email ahead."},
+{t:"Melville Winery",w:"Lompoc, CA",p:"Ron Melville planted this in 1989 and his son Chad farms it now. Roughly 9,000 cases off 120 estate acres, which makes it the biggest name on this page — but every bottle is grown on the property, and the Pinot Noir and Syrah are bottled by named block: Estate, Terraces, Verna's. One of the houses that made the case this appellation was worth carving out.",v:"Estate tasting room in Lompoc. Sun–Thu 11–4, Fri–Sat 11–5."},
+{t:"Babcock Winery & Vineyards",w:"Lompoc, CA",p:"The Babcocks planted here in 1978, before Sta. Rita Hills was an appellation at all. Mona and Walter started it; their son Bryan makes the wine, his wife Lisa runs the front of house, and their daughter Chloe is on staff now. The Sta. Rita Hills Wine Alliance named Bryan its Vintner of the Year in 2021 — the people who farm next door decided he was the best of them."},
+{t:"Kessler-Haak Wines",w:"Lompoc, CA",p:"Small, appointment-based and vineyard-first. Dan Kessler grows the fruit and makes the Pinot Noir and Chardonnay out of it, and the tasting is a conversation rather than a bar pour — which is what happens when the operation is small enough that the grower is the one pouring.",v:"Fri and Sat, 2–5, by reservation."},
+{t:"Zotovich Vineyards & Winery",w:"Lompoc, CA",p:"A grower who bottles. The Zotovich family has supplied fruit to labels people chase — Paul Lato among them — and keeps a little back for their own wine. This is the short way to taste a vineyard you have already been drinking through somebody else's label."},
+{t:"Alma Rosa Winery & Vineyards",w:"Solvang, CA — vineyards in Sta. Rita Hills",p:"The vines were planted by Richard Sanford, one of the people who put this appellation on the map. Bob and Barb Zorich bought it in 2014 and kept it independent. Winemaker Samra Morris was a Wine Enthusiast Wine Star nominee in 2025. The tasting room sits in Solvang rather than out on the vineyard — come for the wine, not the view.",v:"Solvang. Mon 12–6, Wed–Sun 12–8. Walk-ins welcome."},
+{t:"Dragonette Cellars",w:"Los Olivos, CA — Sta. Rita Hills fruit",p:"Three men — Brandon Sparks-Gillis and the brothers John and Steve Dragonette — making small lots of Sta. Rita Hills Chardonnay and Pinot Noir, including single-vineyard bottlings off Rita's Crown. The trade press keeps using the word restraint about them, which in this appellation is a compliment. The tasting room is up the valley in Los Olivos, not in the hills the fruit comes from.",v:"Los Olivos, daily 11–5. Walk-ins allowed; reservations get priority."}
+]},
+{region:"Santa Cruz Mountains",pieces:[
+{t:"Mount Eden Vineyards",w:"Saratoga, CA",p:"Martin Ray planted this ridge in the 1940s and it has been farmed ever since — one of the oldest continuously worked vineyards in California. Jeffrey and Ellie Patterson have held the majority since 2008 and their children Reid and Sophie run it day to day. Estate Cabernet, Chardonnay and Pinot Noir built to age; the 2022 Estate Chardonnay was 1,283 cases.",v:"By appointment, Mon–Fri, groups of six or fewer. 21 and over."},
+{t:"Rhys Vineyards",w:"Los Gatos, CA",p:"Kevin Harvey's project, and it reads as one man's obsession rather than a company — eight separate mountain vineyards farmed biodynamically and bottled as single sites. Sommeliers built its reputation before the critics got there. The visit is a cave tour and a walk in the vines, not a counter.",v:"By appointment, Wed–Sun, fixed slots, eight guests maximum. $95 a head."},
+{t:"Beauregard Vineyards",w:"Bonny Doon, CA",p:"Fourth-generation growers on Ben Lomond Mountain. Ryan Beauregard started the label in 2000 and makes about 5,000 cases, all of it estate grown — Pinot Noir, Chardonnay, Zinfandel and Cabernet off mountain fruit. Vinous called them the leader of the pack up there."},
+{t:"Windy Oaks Estate",w:"Corralitos, CA",p:"Two thousand cases. That is the whole operation. Jim and Judy Schultze farm the Corralitos bench — colder and lower than the Skyline ridge wineries, and the Pinot Noir tastes like it — and bottle it as nine separate vineyard lots.",v:"By appointment. Call 831-724-9562."},
+{t:"Storrs Winery & Vineyards",w:"Aptos, CA",p:"Stephen Storrs and Pamela Bianchini-Storrs, both trained at Davis, started this in 1988 and are still making the wine. Pinot Noir and Chardonnay off an organically farmed estate vineyard planted in 2007. One of the few genuinely small houses up here you can walk into without an appointment.",v:"Estate in Aptos, Fri–Sun. Santa Cruz room at 303 Potrero St, Thu–Sun 12–5. Walk-ins welcome."},
+{t:"Big Basin Vineyards",w:"Boulder Creek & Santa Cruz, CA",p:"The CZU Lightning Complex fire took Bradley Brown's house, his equipment and the entire 2020 vintage in one night. The winery itself survived and he rebuilt. Rhône varieties — Syrah, Grenache, Mourvèdre — off his own Rattlesnake Rock estate up the mountain. His sister Wendy has co-owned it since 2005.",v:"Santa Cruz room, 525 Pacific Ave. Wed–Thu 4–8, Fri 4–9, Sat 1–9, Sun 1–8. Closed Mon and Tue."}
+]},
+{region:"Shenandoah Valley & Fiddletown — Amador County",pieces:[
+{t:"Domaine de la Terre Rouge & Easton Wines",w:"Plymouth, CA",p:"Bill Easton and Jane O'Riordan have run this since the late 1980s under two labels — Terre Rouge for Rhône varieties, Easton for old-vine Zinfandel — across more than thirty small-lot bottlings. He farms steep Fiddletown ground organically. If one producer explains why the Sierra Foothills deserve a serious look, it is this one."},
+{t:"Sobon Estate",w:"Plymouth, CA",p:"One of the oldest wineries in the Shenandoah Valley — the property includes a nineteenth-century winery building and a small museum. The Sobon family has owned and worked it since 1989 and runs Shenandoah Vineyards nearby as well. Zinfandel is the point here, and the history is not decoration.",v:"10–4:30. Reservations recommended."},
+{t:"Vino Noceto",w:"Plymouth, CA",p:"Suzy and Jim Gullett founded this in 1987 and still run it, and they went all in on Sangiovese — eight different bottlings of it, which almost nobody in California does — plus old-vine Zinfandel. A specialist, in a region where most people plant what sells.",v:"Weekdays 11–4, weekends 11–5. Walk in for groups of seven or fewer."}
+]},
+{region:"El Dorado & Fair Play — El Dorado County",pieces:[
+{t:"Holly's Hill Vineyards",w:"Placerville, CA",p:"Tom and Holly Cooper started this in 1998; their daughter Carrie Bendick and her husband Josh run it now. Rhône varieties — Syrah, Grenache, Mourvèdre, Viognier — in a county that mostly plants Zinfandel. Built around food rather than fruit bombs.",v:"Daily 10–5. No reservation needed for groups under six."},
+{t:"Boeger Winery",w:"Placerville, CA",p:"One of the wineries that restarted El Dorado County after Prohibition emptied it, now past fifty years and still run by the Boegers — Greg and Justin farm it and make it. Eighty acres and thirty-three varieties, heavy on Italian and Spanish grapes you will not find elsewhere in the foothills.",v:"Daily 10–5, except select holidays."},
+{t:"Skinner Vineyards & Winery",w:"Somerset, CA",p:"The Skinner family made wine in this county in the 1860s. Mike and Carey Skinner bought back into it in 2007 and rebuilt on the old ground — a winery put together from recycled steel and run on solar, 36 planted acres of a 129-acre property, small-lot and low-intervention. It came through the 2021 Caldor Fire undamaged.",v:"May–Oct: Fri 2–7, Sat–Sun 12–5. Nov–Apr: Fri–Sun 12–5. Walk-ins fine."},
+{t:"Madroña Vineyards",w:"Camino, CA",p:"Around three thousand feet, which is high for California and shows up in the glass — the whites, Riesling especially, come out cooler and tighter than foothills fruit is supposed to. Three family-owned vineyards make up the estate.",v:"Daily 11–5. Walk in; reserve only if you want a table held."}
+]}
+];
+
+var ADD_STATES=[
+{state:"Texas",regions:[
+{region:"Texas Hill Country",pieces:[
+{t:"Robert Clay Vineyards",w:"Mason, TX",p:"About as owner-poured as it gets. Dan McLaughlin bought the place in 2012, moved his family to Mason and runs it himself, so the person hosting your tasting is the person who grew and made the wine. Twenty acres, hand-farmed. First in Texas to plant Touriga Nacional, alongside Cabernet and Syrah.",v:"By appointment only. Two to three hours, eight guests maximum, $100 a head — waived with three bottles."},
+{t:"Sandy Road Vineyards",w:"Johnson City, TX",p:"Two sisters and their husbands — the Sivadons and the Chagolys — planting vines in 2016 on land their great-grandfather bought in 1924. Small quantities, their own fruit, family ground. Not an investor group with a Texas address.",v:"By reservation."},
+{t:"Spicewood Vineyards",w:"Spicewood, TX",p:"Ron Yates took this over in 2007 and kept it small — the facility tops out a little over 5,000 cases. Spanish varieties from Texas-grown fruit, and enough medals out of Lyon, San Francisco and TEXSOM to settle the argument about whether Texas can do this."},
+{t:"Duchman Family Winery",w:"Driftwood, TX",p:"Two physicians, Stan and Lisa Duchman, who decided in 2004 that Italian grapes belonged in Texas and stuck with it — Vermentino, Sangiovese, Dolcetto, grown here rather than trucked in as juice from somewhere else. That last part matters more in Texas than most places.",v:"Mon 12–6, Tue–Thu 12–7, Fri–Sat 12–8, Sun 12–7. Walk in Mon–Thu; Fri–Sun tastings are reservation-only."},
+{t:"Lost Draw Cellars",w:"Johnson City, TX",p:"Andrew Sides, his uncle Andy Timmons and his father-in-law Troy Ottmers were growing grapes long before they made wine, and started the label in 2012 to use their own. All Texas fruit, off their High Plains and Hill Country vineyards. Unfussy, and better for it.",v:"Walk-in friendly — check hours before you drive, especially holiday weekends."},
+{t:"Pedernales Cellars",w:"Stonewall, TX",p:"Larry and Jeanine Kuhlken planted the vineyard in the early 1990s; their children David and Julie started the winery in 2005. Around 10,000 cases makes this the largest name on this page and it is worth saying plainly — but it is still the family, and the Tempranillo and Viognier are a good part of why Texas gets taken seriously now."}
+]}
+]},
+{state:"Arizona",regions:[
+{region:"Sonoita AVA",pieces:[
+{t:"Callaghan Vineyards",w:"Elgin, AZ",p:"Kent Callaghan planted this with his father in 1990 and has made every wine since. Thirty-five years, one winemaker, one estate — rare anywhere, and almost unheard of in a young wine state. If you only stop once in Arizona, stop here.",v:"Thu–Sun 11–4. Walk in."},
+{t:"Dos Cabezas WineWorks",w:"Sonoita, AZ",p:"A hundred percent estate, off two of the most-cited vineyards in the state — Pronghorn in Sonoita and Cimarron up in Willcox. Al Buhl started it in 1995; Todd Bostock has made the wine since 2002 and his family took over the operation in 2006. Thirty years in, which in Arizona counts as ancient.",v:"Sun, Mon, Tue, Thu 11–5. Fri–Sat 11–7. Closed Wed. Walk in."},
+{t:"Rune Wines",w:"Sonoita, AZ",p:"James Callahan started this in 2013 and works off-grid, fermenting on native yeast. Rhône-leaning and distinctly Arizonan. The people who follow this state closely tend to name-check him first.",v:"Mon–Wed 11–5, Thu 11–6, Fri 11–8, Sat 11–7, Sun 11–6. No reservation needed."},
+{t:"Los Milics Vineyards",w:"Elgin, AZ",p:"Newer than the others and built around its own high-desert estate, with casitas on site if you would rather sleep in the vines than drive back. Pavle Milics makes the wine. Less track record than Callaghan or Dos Cabezas — go for the place as much as the bottle.",v:"Daily 11–4. Reservations strongly recommended; walk-ins limited."}
+]},
+{region:"Willcox AVA",pieces:[
+{t:"Pillsbury Wine Company",w:"Willcox, AZ",p:"Sam Pillsbury made films before he made wine and is now one of the more respected names in the state. This is the estate address inside the Willcox AVA — not the Cottonwood tasting room, which has closed. Go to the vines.",v:"Sat–Sun 11–5. Tours and tastings by appointment otherwise."},
+{t:"Golden Rule Vineyards",w:"Willcox / Cochise, AZ",p:"A working grape farm first. Jim and Ruth Graham planted 21,000 vines across 26 acres in 2007 and sell most of the harvest to other Arizona wineries — about a quarter goes into their own label. Half the good Arizona bottles you have had probably started on their ground.",v:"Willcox tasting room Wed–Sat 10–5. Vineyard by appointment only."}
+]},
+{region:"Verde Valley AVA",pieces:[
+{t:"Alcantara Vineyards",w:"Camp Verde, AZ",p:"Eighty-seven acres where Oak Creek meets the Verde River — an actual estate property rather than a tasting counter in town. Ron Brumley makes the wine. No tasting fee, and free public tours on Friday and Saturday mornings, which is unusual anywhere.",v:"Daily 11–5. Walk in. Free tours Fri and Sat at 11:30."}
+]}
+]},
+{state:"Colorado",regions:[
+{region:"Grand Valley AVA",pieces:[
+{t:"BookCliff Vineyards",w:"Palisade, CO",p:"Founded in 1995 by John Garlich and Ulla Merz, and handed on to three families who took it up rather than let it fold. Thirty-seven acres, fourteen varieties, one hundred percent Colorado grown. Thirty years is a long run at this altitude.",v:"Palisade: Mon–Thu 12–6, Fri 12–7, Sat 11–8:30, Sun 11–6. Walk in."},
+{t:"Two Rivers Winery & Chateau",w:"Grand Junction, CO",p:"Billie and Bob Witham, both Colorado natives, started this in 1999 around a fifteen-acre estate vineyard. Fair warning: there is an inn and an event space attached, so it is a bigger operation than the rest of this page — but the vineyard and the family are real.",v:"Mon–Sat 10:30–5, Sun 12–5. Walk in; groups of six or more should reserve."}
+]},
+{region:"West Elks AVA",pieces:[
+{t:"The Storm Cellar",w:"Hotchkiss, CO",p:"Two sommeliers, Jayme Henderson and Steve Steese, who left the floor in 2017 to farm. They do the growing and the winemaking themselves — whites and rosés off cold-hardy and classic European varieties in the North Fork Valley. Colorado named them Winery of the Year in 2023.",v:"Thu–Sun 12–7 in season."},
+{t:"Stone Cottage Cellars",w:"Paonia, CO",p:"Brent and Karen Helleckson moved onto the property in 1997, onto what used to be one of the biggest apple orchards in the region. Thirteen acres of their own — Pinot Gris, Gewürztraminer, Pinot Noir — at an elevation that makes cool-climate whites make sense.",v:"Weekends in May, then daily 11–6 from Memorial Day weekend to the first Saturday in November."}
+]},
+{region:"Denver — outside any AVA",pieces:[
+{t:"Balistreri Vineyards",w:"Denver, CO",p:"Three generations in a city winery — John Balistreri makes it, his wife Birdie and daughter Julie run it, since 1998. Natural wine, unfined and without added sulfites. Straight answer on the fruit: most of it is Colorado, but some comes from California, grown by people they know. They say so themselves, which is a good part of why they are on this page.",v:"Daily 11–5. Reservations strongly encouraged."}
+]}
+]}
+];
+
+for(var i=0;i<NB.length;i++){ if(NB[i].state==="California"){ NB[i].regions=NB[i].regions.concat(ADD_CA); } }
+Array.prototype.push.apply(NB,ADD_STATES);
+})();
+
 document.getElementById("nb").innerHTML=NB.map(function(st){
   return '<div class="state rv">'+st.state+'</div><div class="state-rule rv"></div>'+st.regions.map(function(r){
     return '<div class="region rv">'+r.region+'</div>'+r.pieces.map(function(p){
