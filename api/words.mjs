@@ -232,6 +232,19 @@ const recoveryCode = () => Array.from({ length: 3 }, () =>
 const SESSION_DAYS = 120;
 const publicUser = (u) => ({ id: u.id, handle: u.handle });
 
+// A permanent, reusable one-tap sign-in link.
+//
+// Why permanent and not single-use: iOS evicts a web app's stored login after about
+// a week of not opening it. Someone who plays twice a month would be silently signed
+// out and, on a phone they are still learning, simply never come back. So the link a
+// family member keeps in their text messages has to work every single time.
+//
+// The trade is deliberate and stated in the app: anyone holding the link can open that
+// account. There is no payment method, no address, and no personal data in here — a
+// word game with your family is worth exactly this much friction and no more. Anyone
+// who wants the stricter thing uses the password instead, and the link can be replaced.
+const newKey = () => crypto.randomBytes(16).toString('base64url');
+
 async function userByToken(req) {
   const auth = String(req.headers.authorization || '');
   const t = auth.startsWith('Bearer ') ? auth.slice(7) : '';
@@ -272,6 +285,7 @@ function view(g, uid) {
       rack: i === me ? p.rack : undefined,
     })),
     moves: g.moves.slice(-40),
+    chat: (g.chat || []).slice(-60),
     result: g.result || null,
   };
 }
@@ -386,8 +400,32 @@ export default async function handler(req, res) {
       return ok(res, { ok: true, token: t, user: publicUser(u) });
     }
 
+    // One tap from a text message and you are in — no email, no password, no typing.
+    if (act === 'redeem') {
+      const key = String(body.key || '').trim();
+      if (!key) return bad(res, 400, 'That link is missing its code.');
+      const uid = await redis('GET', K('key:' + key));
+      if (!uid) return bad(res, 401, 'That link no longer works. Ask for a fresh one.');
+      const u = await getJSON(K('u:' + uid));
+      if (!u) return bad(res, 401, 'That link no longer works. Ask for a fresh one.');
+      const t = token();
+      await redis('SET', K('s:' + t), u.id, 'EX', String(SESSION_DAYS * 86400));
+      return ok(res, { ok: true, token: t, user: publicUser(u) });
+    }
+
     const me = await userByToken(req);
     if (!me) return bad(res, 401, 'Sign in first.');
+
+    // Hand someone a phone that is already signed in.
+    if (act === 'signinlink' || act === 'newsigninlink') {
+      if (act === 'newsigninlink' && me.signinKey) await redis('DEL', K('key:' + me.signinKey));
+      if (!me.signinKey || act === 'newsigninlink') {
+        me.signinKey = newKey();
+        await setJSON(K('u:' + me.id), me);
+      }
+      await redis('SET', K('key:' + me.signinKey), me.id);
+      return ok(res, { ok: true, key: me.signinKey });
+    }
 
     if (act === 'me') return ok(res, { ok: true, user: publicUser(me) });
     if (act === 'signout') {
@@ -461,11 +499,46 @@ export default async function handler(req, res) {
 
     /* ---- one game ---- */
     const g = body.id ? await getJSON(K('g:' + body.id)) : null;
-    if (['game', 'play', 'swap', 'pass', 'resign'].includes(act)) {
+    if (['game', 'play', 'swap', 'pass', 'resign', 'say', 'voice'].includes(act)) {
       if (!g) return bad(res, 404, 'No such game.');
       if (!g.players.some((p) => p.uid === me.id)) return bad(res, 403, 'That is not your game.');
     }
     if (act === 'game') return ok(res, { ok: true, game: view(g, me.id) });
+
+    /* ---- talking to each other ----
+       Chat exists ONLY between two people already in a game together, which means
+       only people who invited each other. There is no inbox, no discovery and no way
+       to reach a stranger — the thing that makes these games a hunting ground stays
+       shut. Inside a family game, talking is the entire point. */
+    if (act === 'say' || act === 'voice') {
+      if (!g) return bad(res, 404, 'No such game.');
+      const entry = { t: Date.now(), by: me.handle };
+      if (act === 'say') {
+        const text = String(body.text || '').trim().slice(0, 400);
+        if (!text) return bad(res, 400, 'Nothing to send.');
+        entry.text = text;
+      } else {
+        // A voice note lives under its own key so the game record stays small and quick.
+        const audio = String(body.audio || '');
+        if (!audio || audio.length > 900000) return bad(res, 400, 'That note is too long — keep it under about half a minute.');
+        const vid = newId();
+        await redis('SET', K('v:' + vid), audio, 'EX', String(400 * 86400));
+        entry.v = vid;
+        entry.secs = Math.min(60, Math.max(1, Math.round(Number(body.secs) || 0)));
+        entry.mime = String(body.mime || 'audio/mp4').slice(0, 40);
+      }
+      g.chat = (g.chat || []).concat(entry).slice(-200);
+      await saveGame(g);
+      return ok(res, { ok: true, chat: g.chat.slice(-60) });
+    }
+
+    if (act === 'voiceget') {
+      const vid = String(body.vid || '');
+      if (!/^[A-Za-z0-9_-]{6,32}$/.test(vid)) return bad(res, 400, 'No such note.');
+      const audio = await redis('GET', K('v:' + vid));
+      if (!audio) return bad(res, 404, 'That note has expired.');
+      return ok(res, { ok: true, audio });
+    }
 
     const seat = g ? g.players.findIndex((p) => p.uid === me.id) : -1;
     const mustBeYourTurn = () => {
