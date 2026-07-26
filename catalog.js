@@ -201,7 +201,11 @@
   { id:'espowords', name:'ESPOwords', tag:'Play the people you know', genre:'games', state:'live',
     acc:'#243D2C', mark:'/marks/espowords.svg', family:'ESPOparlor', url:'/apps/espowords/',
     blurb:'A turn-based word game with the people you actually know. No ads, no coins, no power-ups, no hints for sale, no strangers, no chat. Free.',
-    price:'Free', priceNote:'Free, and staying that way \u2014 there is nothing in it to buy.' }
+    price:'Free', priceNote:'Free, and staying that way \u2014 there is nothing in it to buy.' },
+  { id:'espodraw', name:'ESPOdraw', tag:'Draw it, they guess it', genre:'games', state:'live',
+    acc:'#243D2C', mark:'/marks/espodraw.svg', family:'ESPOparlor', url:'/apps/espodraw/',
+    blurb:'Draw a word, your friends guess it, then it comes back to you. Two to eight of you, in your own time. Every colour and every brush is there from the first round. No ads, no coins, no strangers.',
+    price:'Free', priceNote:'Free, and staying that way — there is nothing in it to buy.' }
   ];
 
   var GENRES = [
