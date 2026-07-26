@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>ESPOdraw — draw it, they guess it</title>
+<meta name="description" content="Draw a word, your friends guess it, then it comes back to you. Two to eight players. No ads, no coins, no strangers. Free, from Accelerated Experiences LLC.">
+<meta name="theme-color" content="#16301F">
+<link rel="icon" href="/marks/espodraw.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apps/espodraw/icon.png">
+<link rel="manifest" href="/apps/espodraw/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ESPOdraw">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  --paper:#F8F3E6; --card:#FDFAF0; --field:#FFFDF6; --ink:#1F2E23; --ink2:#66786B;
+  --line:#DFD5BC; --hair:#D3C6A6; --green:#24422E; --greendeep:#16301F;
+  --gold:#A67F1E; --foil:#D8B45A; --ok:#4E7D5B; --warn:#8A4B2A; --pop:#C8794F;
+  --serif:"Fraunces","Iowan Old Style",Georgia,serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;overscroll-behavior:none}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;
+  padding-bottom:calc(70px + env(safe-area-inset-bottom));-webkit-user-select:none;user-select:none}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input{font:inherit;color:inherit;-webkit-user-select:text;user-select:text}
+a{color:var(--green)}
+
+header.top{position:sticky;top:0;z-index:40;background:linear-gradient(160deg,var(--green),var(--greendeep));
+  border-bottom:2px solid var(--gold);padding:calc(9px + env(safe-area-inset-top)) 15px 9px;
+  display:flex;align-items:center;gap:11px}
+.mark{width:38px;height:38px;border-radius:11px;flex:none;background:var(--greendeep);
+  border:1px solid rgba(216,180,90,.45);display:grid;place-items:center}
+.wordmark{font-family:var(--serif);font-size:20px;font-weight:700;color:#F6F0DF}
+.wordmark i{color:var(--foil);font-style:italic}
+.tagline{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(246,240,223,.6);margin-top:1px}
+.top .spacer{flex:1}
+.pill{border:1px solid rgba(216,180,90,.5);color:#F0E7CE;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600}
+.pill.live{border-color:rgba(122,183,140,.6);color:#CDE7D4}
+
+main{max-width:620px;margin:0 auto;padding:14px 13px 8px}
+.view{display:none}.view.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:13px}
+h1{font-family:var(--serif);font-size:27px;line-height:1.15;margin:2px 0 8px;font-weight:700}
+h2{font-family:var(--serif);font-size:20px;margin:0 0 9px;font-weight:700}
+.kicker{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:7px}
+p{margin:0 0 9px}.muted{color:var(--ink2);font-size:14.5px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+label{display:block;font-size:12.5px;font-weight:600;color:var(--ink2);margin:10px 0 5px}
+input[type=text],input[type=email],input[type=password]{width:100%;background:var(--field);
+  border:1px solid var(--hair);border-radius:11px;padding:13px 14px;font-size:16px}
+.btn{background:var(--green);color:#F6F0DF;border-radius:12px;padding:13px 17px;font-weight:650;
+  font-size:15.5px;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:48px}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.42;cursor:default;transform:none}
+.btn.wide{width:100%}
+.btn.ghost{background:transparent;border:1.5px solid var(--hair);color:var(--ink)}
+.btn.pop{background:var(--pop);color:#fff}
+.btn.quiet{background:transparent;color:var(--green);text-decoration:underline;min-height:34px;padding:5px 2px}
+.err{border-left:3px solid var(--warn);background:#FBEEE7;padding:10px 12px;border-radius:0 10px 10px 0;font-size:14.5px;margin:9px 0}
+.good{border-left:3px solid var(--ok);background:#EDF5EE;padding:10px 12px;border-radius:0 10px 10px 0;font-size:14.5px;margin:9px 0}
+.note{border-left:3px solid var(--foil);background:#FBF5E3;padding:10px 12px;border-radius:0 10px 10px 0;font-size:14px;margin:9px 0}
+
+/* games list */
+.game{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:var(--card);
+  border:1px solid var(--line);border-radius:14px;padding:12px 13px;margin-bottom:8px}
+.game:active{background:#F6EFDC}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--ok);flex:none}
+.dot.off{background:var(--hair)}
+.game .who{flex:1;min-width:0}
+.game .who b{display:block;font-size:15.5px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.game .who small{color:var(--ink2);font-size:13px}
+.badge2{background:var(--pop);color:#fff;border-radius:999px;font-size:11.5px;font-weight:700;padding:2px 8px;white-space:nowrap}
+
+/* the canvas */
+.padWrap{position:relative;width:100%;background:#fff;border:2px solid var(--green);border-radius:14px;overflow:hidden}
+canvas{display:block;width:100%;touch-action:none;background:#fff}
+.tools{display:flex;gap:7px;align-items:center;margin:10px 0 6px;flex-wrap:wrap}
+.sw{width:38px;height:38px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 1.5px var(--hair);flex:none}
+.sw.on{box-shadow:0 0 0 3px var(--green);transform:scale(1.1)}
+.sz{width:40px;height:40px;border-radius:11px;border:1.5px solid var(--hair);display:grid;place-items:center;background:var(--field)}
+.sz.on{border-color:var(--green);border-width:2.5px;background:#EDF5EE}
+.sz i{display:block;background:var(--ink);border-radius:50%}
+.wordNow{font-family:var(--serif);font-size:26px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+
+/* guessing */
+.blanks{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:14px 0 4px}
+.bl{width:38px;height:46px;border-radius:9px;background:var(--field);border:1.5px solid var(--hair);
+  display:grid;place-items:center;font-family:var(--serif);font-size:23px;font-weight:700}
+.bl.filled{background:#EDF5EE;border-color:var(--ok)}
+.bank{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin:14px 0 2px}
+.lt{width:44px;height:52px;border-radius:10px;background:linear-gradient(175deg,#FBF1D8,#EFE0BB);
+  border:1px solid #CBB683;display:grid;place-items:center;font-family:var(--serif);font-size:23px;
+  font-weight:700;box-shadow:0 2px 0 rgba(0,0,0,.12)}
+.lt:active{transform:translateY(2px);box-shadow:none}
+.lt.used{opacity:.2;pointer-events:none}
+.shake{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(9px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.pop-in{animation:popin .35s cubic-bezier(.2,1.4,.4,1)}
+@keyframes popin{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.streak{display:inline-block;background:var(--foil);color:#3a2b06;border-radius:999px;padding:3px 11px;
+  font-size:13px;font-weight:800;letter-spacing:.02em}
+.wordChoice{display:grid;gap:9px;margin-top:10px}
+.wordChoice button{background:var(--field);border:1.5px solid var(--hair);border-radius:13px;padding:16px;
+  font-family:var(--serif);font-size:22px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;min-height:62px}
+.wordChoice button:active{background:#EDF5EE;border-color:var(--ok)}
+.scoreRow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.scoreRow div{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:7px 11px;font-size:14px}
+.scoreRow div.me{border-color:var(--ok);border-width:1.5px;font-weight:700}
+.scoreRow b{font-family:var(--serif);font-size:17px;margin-left:5px}
+.guessLog{max-height:150px;overflow:auto;font-size:14.5px}
+.guessLog div{padding:5px 0;border-bottom:1px solid var(--line)}
+.guessLog div:last-child{border:0}
+.guessLog .yes{color:var(--ok);font-weight:700}
+
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(253,250,240,.97);
+  backdrop-filter:blur(8px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);
+  padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs button{padding:9px 4px 8px;display:grid;justify-items:center;gap:3px;color:var(--ink2);
+  font-size:11.5px;font-weight:600;position:relative}
+nav.tabs button.on{color:var(--green)}
+nav.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav.tabs .badge{position:absolute;top:4px;left:50%;transform:translateX(6px);background:var(--pop);color:#fff;
+  border-radius:999px;font-size:10px;padding:1px 5px;font-weight:700}
+footer{text-align:center;padding:16px 14px 6px;color:var(--ink2);font-size:12.5px}
+footer img{height:16px;vertical-align:-3px;margin-right:5px;opacity:.75}
+.hidden{display:none !important}
+body.big{font-size:19px}
+body.big .btn{font-size:18px;min-height:56px}
+body.big .lt{width:50px;height:58px;font-size:26px}
+body.big .bl{width:42px;height:50px;font-size:25px}
+body.big .wordChoice button{font-size:25px;min-height:70px}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="mark"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D8B45A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l3-1 11-11a2.1 2.1 0 0 0-3-3L3 17l-1 3z"/><path d="M14 5l3 3"/></svg></div>
+  <div>
+    <div class="wordmark">ESPO<i>draw</i></div>
+    <div class="tagline">Draw it. They guess it.</div>
+  </div>
+  <div class="spacer"></div>
+  <button class="pill" id="whoPill" type="button">Sign in</button>
+</header>
+
+<main>
+  <!-- ============ GAMES ============ -->
+  <section class="view on" id="v-games">
+    <div id="signedOut">
+      <div class="card">
+        <div class="kicker">Free · no ads · no coins</div>
+        <h1>Draw a word. They guess it. Then it comes back to you.</h1>
+        <p class="muted">The one everybody played in 2012, without the parts that ruined it. Two to
+        eight of you. Take your turn whenever — nobody has to be online at the same time.</p>
+        <p class="muted"><b>One account plays both games.</b> If you already play ESPOwords, sign in
+        with the same email and password right here.</p>
+      </div>
+
+      <div class="card">
+        <div class="row" style="margin-bottom:4px">
+          <button class="btn ghost" id="tabLogin" type="button" style="flex:1">Sign in</button>
+          <button class="btn ghost" id="tabSignup" type="button" style="flex:1">New here</button>
+        </div>
+
+        <form id="formLogin" autocomplete="on">
+          <label for="liEmail">Email</label>
+          <input id="liEmail" type="email" autocomplete="email" autocapitalize="none" spellcheck="false">
+          <label for="liPw">Password</label>
+          <input id="liPw" type="password" autocomplete="current-password">
+          <button class="btn wide" type="submit" style="margin-top:12px">Sign in</button>
+          <button class="btn quiet" id="btnForgot" type="button">I have a recovery code</button>
+        </form>
+
+        <form id="formSignup" class="hidden" autocomplete="on">
+          <label for="suHandle">What should people call you?</label>
+          <input id="suHandle" type="text" autocomplete="nickname" autocapitalize="none" spellcheck="false" placeholder="3–16 characters">
+          <label for="suEmail">Email</label>
+          <input id="suEmail" type="email" autocomplete="email" autocapitalize="none" spellcheck="false">
+          <label for="suPw">Password</label>
+          <input id="suPw" type="password" autocomplete="new-password" placeholder="at least 8 characters">
+          <button class="btn wide" type="submit" style="margin-top:12px">Make my account</button>
+          <p class="muted" style="margin-top:10px;font-size:13px">Your email is only ever used to let
+          you back in. We do not send you anything and we do not pass it on.</p>
+        </form>
+
+        <form id="formRecover" class="hidden">
+          <label for="rcEmail">Email</label>
+          <input id="rcEmail" type="email" autocapitalize="none" spellcheck="false">
+          <label for="rcCode">Recovery code</label>
+          <input id="rcCode" type="text" autocapitalize="characters" spellcheck="false">
+          <label for="rcPw">New password</label>
+          <input id="rcPw" type="password" autocomplete="new-password">
+          <button class="btn wide" type="submit" style="margin-top:12px">Let me back in</button>
+        </form>
+
+        <div id="authMsg"></div>
+        <div id="recoveryBox"></div>
+      </div>
+    </div>
+
+    <div id="signedIn" class="hidden">
+      <div class="card">
+        <h2>Start a game</h2>
+        <label for="oppHandles">Who is playing? (names, separated by commas)</label>
+        <input id="oppHandles" type="text" placeholder="mum, jen, dave" autocapitalize="none">
+        <label>How hard should the words be?</label>
+        <div class="row">
+          <button class="btn ghost" data-lvl="easy" type="button" style="flex:1">Easy</button>
+          <button class="btn ghost" data-lvl="medium" type="button" style="flex:1">Medium</button>
+          <button class="btn ghost" data-lvl="hard" type="button" style="flex:1">Hard</button>
+        </div>
+        <button class="btn wide" id="btnNew" type="button" style="margin-top:12px">Start it</button>
+        <button class="btn ghost wide" id="btnJoin" type="button" style="margin-top:8px">Join with a code</button>
+        <div id="startMsg"></div>
+      </div>
+      <div class="kicker" style="margin:16px 0 8px">Your games</div>
+      <div id="gamesList"></div>
+    </div>
+  </section>
+
+  <!-- ============ PLAY ============ -->
+  <section class="view" id="v-play">
+    <div id="noGame" class="card">
+      <h2>Nothing open</h2>
+      <p class="muted">Pick a game from the Games tab, or start one.</p>
+    </div>
+
+    <div id="playOn" class="hidden">
+      <div class="scoreRow" id="scores"></div>
+      <div id="stage"></div>
+    </div>
+  </section>
+
+  <!-- ============ YOU ============ -->
+  <section class="view" id="v-you">
+    <div class="card">
+      <h2 id="youName">You</h2>
+      <p class="muted">One account plays ESPOwords and ESPOdraw. Same name, same password, same
+      one-tap link — sign in once and both are yours.</p>
+      <div class="row">
+        <button class="btn ghost" id="btnBig" type="button" style="flex:1">Use larger text</button>
+        <a class="btn ghost" href="/apps/espowords/" style="flex:1;text-decoration:none">ESPOwords</a>
+      </div>
+      <button class="btn ghost wide" id="btnLink" type="button" style="margin-top:8px">Send myself a one-tap sign-in link</button>
+      <div id="linkBox"></div>
+      <button class="btn quiet" id="btnOut" type="button" style="margin-top:6px">Sign out</button>
+    </div>
+    <div class="card">
+      <div class="kicker">What this game will never do</div>
+      <p class="muted">No adverts — not between rounds, not to see the drawing somebody made for you.
+      No coins, no bombs, no colour packs sold back to you: every colour is there from the start.
+      No strangers — you only ever play people you invited. Nothing to buy, ever.</p>
+    </div>
+  </section>
+
+  <footer>
+    <img src="/ae-mark.png" alt="" onerror="this.style.display='none'">
+    Powered by Accelerated Experiences LLC · <a href="/shop.html">More from the App Shop</a>
+  </footer>
+</main>
+
+<nav class="tabs">
+  <button data-go="games" class="on" type="button"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg><span>Games</span><i class="badge hidden" id="turnBadge"></i></button>
+  <button data-go="play" type="button"><svg viewBox="0 0 24 24"><path d="M3 21l3-1 11-11a2.1 2.1 0 0 0-3-3L3 17l-1 3z"/><path d="M14 5l3 3"/></svg><span>Play</span></button>
+  <button data-go="you" type="button"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg><span>You</span></button>
+</nav>
+
+<script>
+(function(){
+'use strict';
+const API='/api/draw';
+const AUTH='/api/words';   // one identity, two games — accounts live with the word game
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},
+          set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},
+          del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
+// the token is ESPOwords' token — one account, both games
+let token=LS.get('ew.token')||'', me=null, game=null, level=LS.get('ed.level')||'medium';
+let poll=null;
+
+async function post(url,payload){
+  const r=await fetch(url,{method:'POST',headers:Object.assign({'content-type':'application/json'},
+    token?{authorization:'Bearer '+token}:{}),body:JSON.stringify(payload)});
+  let j={}; try{ j=await r.json(); }catch(e){}
+  if(!r.ok){ const e=new Error(j.error||('Something went wrong ('+r.status+').')); e.status=r.status; throw e; }
+  return j;
+}
+const api=p=>post(API,p);
+const auth=p=>post(AUTH,p);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const say=(el,cls,msg)=>{ el.innerHTML=msg?'<div class="'+cls+'">'+esc(msg)+'</div>':''; };
+const ago=t=>{const s=(Date.now()-t)/1000;if(s<90)return'just now';if(s<5400)return Math.round(s/60)+' min ago';
+  if(s<172800)return Math.round(s/3600)+' hr ago';return Math.round(s/86400)+' days ago';};
+
+function go(name){
+  $$('.view').forEach(v=>v.classList.toggle('on', v.id==='v-'+name));
+  $$('nav.tabs button').forEach(b=>b.classList.toggle('on', b.dataset.go===name));
+  window.scrollTo(0,0);
+  if(name==='games'&&me) loadGames();
+  if(name==='play') requestAnimationFrame(refitPad);
+}
+$$('nav.tabs button').forEach(b=>b.onclick=()=>go(b.dataset.go));
+$('#whoPill').onclick=()=>go(me?'you':'games');
+function applyBig(){ const on=LS.get('ew.big')==='1'; document.body.classList.toggle('big',on);
+  $('#btnBig').textContent = on?'Use normal text':'Use larger text'; }
+$('#btnBig').onclick=()=>{ LS.set('ew.big', LS.get('ew.big')==='1'?'0':'1'); applyBig(); if(game) paint(); };
+
+function signedIn(user){
+  me=user;
+  $('#signedOut').classList.add('hidden'); $('#signedIn').classList.remove('hidden');
+  $('#whoPill').textContent=user.handle; $('#whoPill').classList.add('live');
+  $('#youName').textContent=user.handle;
+  paintLevel(); loadGames();
+}
+function signedOut(){
+  me=null; token=''; LS.del('ew.token');
+  $('#signedOut').classList.remove('hidden'); $('#signedIn').classList.add('hidden');
+  $('#whoPill').textContent='Sign in'; $('#whoPill').classList.remove('live'); go('games');
+}
+function tookToken(r){ token=r.token; LS.set('ew.token',token); signedIn(r.user); }
+
+/* ---------------- getting in ---------------- */
+function showForm(which){
+  ['Login','Signup','Recover'].forEach(n=>$('#form'+n).classList.toggle('hidden', n!==which));
+  $('#tabLogin').className = which==='Signup' ? 'btn ghost' : 'btn';
+  $('#tabSignup').className = which==='Signup' ? 'btn' : 'btn ghost';
+  $('#authMsg').innerHTML='';
+}
+showForm('Login');
+$('#tabLogin').onclick=()=>showForm('Login');
+$('#tabSignup').onclick=()=>showForm('Signup');
+$('#btnForgot').onclick=()=>showForm('Recover');
+
+$('#formLogin').onsubmit=async e=>{ e.preventDefault();
+  try{ tookToken(await auth({do:'login', email:$('#liEmail').value, password:$('#liPw').value})); }
+  catch(err){ say($('#authMsg'),'err',err.message); } };
+
+$('#formSignup').onsubmit=async e=>{ e.preventDefault();
+  try{
+    const r=await auth({do:'signup', handle:$('#suHandle').value, email:$('#suEmail').value, password:$('#suPw').value});
+    tookToken(r);
+    $('#recoveryBox').innerHTML='<div class="note"><b>Write this down.</b> Your recovery code is '
+      +'<b style="font-family:var(--serif);font-size:19px;letter-spacing:.08em">'+esc(r.recovery)+'</b>'
+      +'<br>It is the only way back in if you forget your password. We cannot email it to you — '
+      +'we do not send email.</div>';
+  }catch(err){ say($('#authMsg'),'err',err.message); } };
+
+$('#formRecover').onsubmit=async e=>{ e.preventDefault();
+  try{ tookToken(await auth({do:'recover', email:$('#rcEmail').value, code:$('#rcCode').value, password:$('#rcPw').value}));
+       say($('#authMsg'),'good','You are back in.'); }
+  catch(err){ say($('#authMsg'),'err',err.message); } };
+
+$('#btnOut').onclick=()=>{ LS.del('ed.game'); game=null; clearInterval(poll); signedOut(); };
+
+$('#btnLink').onclick=async()=>{
+  try{
+    const r=await auth({do:'signinlink'});
+    const url=location.origin+'/apps/espodraw/?k='+encodeURIComponent(r.key);
+    $('#linkBox').innerHTML='<div class="note">Open this on any phone and it is signed in as you — '
+      +'no password, no typing.<br><input type="text" id="myLink" readonly value="'+esc(url)+'" style="margin-top:8px">'
+      +'<button class="btn ghost wide" id="btnShareLink" type="button" style="margin-top:8px">Send it</button></div>';
+    $('#btnShareLink').onclick=async()=>{
+      if(navigator.share){ try{ await navigator.share({title:'ESPOdraw', url}); return; }catch(e){} }
+      try{ await navigator.clipboard.writeText(url); $('#btnShareLink').textContent='Copied'; }catch(e){}
+    };
+  }catch(err){ say($('#linkBox'),'err',err.message); }
+};
+
+/* ---------------- games ---------------- */
+function paintLevel(){ $$('[data-lvl]').forEach(b=>b.className = b.dataset.lvl===level?'btn':'btn ghost'); }
+$$('[data-lvl]').forEach(b=>b.onclick=()=>{ level=b.dataset.lvl; LS.set('ed.level',level); paintLevel(); });
+
+async function loadGames(){
+  try{
+    const r=await api({do:'games'});
+    const mine=r.games.filter(g=>g.yourTurn).length;
+    const b=$('#turnBadge'); b.textContent=mine; b.classList.toggle('hidden',!mine);
+    document.title = mine ? '('+mine+') ESPOdraw' : 'ESPOdraw — draw it, they guess it';
+    const el=$('#gamesList');
+    if(!r.games.length){ el.innerHTML='<div class="card"><p class="muted">No games yet. Put some names in above and start one — or send someone a code.</p></div>'; return; }
+    el.innerHTML=r.games.map(g=>{
+      const others=g.players.filter(h=>h!==me.handle);
+      const what = g.status!=='open' ? 'Finished'
+        : g.yourTurn ? (g.youAreDrawing ? (g.phase==='choosing'?'Pick a word and draw':'Finish your drawing') : 'Your guess')
+        : (g.phase==='guessing' ? 'Waiting on the guessers' : 'Waiting on '+esc(g.drawer||''));
+      return '<button class="game" data-id="'+esc(g.id)+'" type="button">'
+        +'<span class="dot'+(g.yourTurn?'':' off')+'"></span>'
+        +'<span class="who"><b>'+esc(others.join(', ')||'Just you so far')+'</b><small>'+what+' · '+ago(g.updated)+'</small></span>'
+        +(g.yourTurn?'<span class="badge2">'+(g.youAreDrawing?'DRAW':'GUESS')+'</span>':'')
+        +'</button>';
+    }).join('');
+    $$('#gamesList .game').forEach(b=>b.onclick=()=>openGame(b.dataset.id));
+  }catch(err){
+    if(err.status===401){ signedOut(); return; }
+    $('#gamesList').innerHTML='<div class="err">'+esc(err.message)+'</div>';
+  }
+}
+
+$('#btnNew').onclick=async()=>{
+  const handles=$('#oppHandles').value.split(',').map(s=>s.trim()).filter(Boolean);
+  try{
+    const r=await api({do:'newgame', handles, level});
+    $('#oppHandles').value='';
+    inviteBox($('#startMsg'), r.game.invite);
+    loadGames(); openGame(r.game.id);
+  }catch(err){ say($('#startMsg'),'err',err.message); }
+};
+function inviteBox(el, code){
+  if(!code){ el.innerHTML=''; return; }
+  const url=location.origin+'/apps/espodraw/?join='+encodeURIComponent(code);
+  el.innerHTML='<div class="good">Game on. Send this to anyone else who wants in — one tap and '
+    +'they are at the table.<br><input type="text" id="invLink" readonly value="'+esc(url)+'" style="margin-top:8px">'
+    +'<button class="btn ghost wide" id="btnShareInv" type="button" style="margin-top:8px">Send the invite</button>'
+    +'<p class="muted" style="margin:8px 0 0;font-size:13px">Or read them the code: <b>'+esc(code)+'</b></p></div>';
+  $('#btnShareInv').onclick=async()=>{
+    if(navigator.share){ try{ await navigator.share({title:'Play ESPOdraw with me', url}); return; }catch(e){} }
+    try{ await navigator.clipboard.writeText(url); $('#btnShareInv').textContent='Copied'; }catch(e){}
+  };
+}
+$('#btnJoin').onclick=()=>{
+  $('#startMsg').innerHTML='<div class="note"><label for="joinCode">Invite code</label>'
+    +'<input id="joinCode" type="text" autocapitalize="characters" placeholder="8 characters">'
+    +'<button class="btn" type="button" id="doJoin" style="margin-top:9px">Join</button></div>';
+  $('#doJoin').onclick=async()=>{
+    try{ const r=await api({do:'join', code:$('#joinCode').value.trim()});
+      say($('#startMsg'),'good','You are in.'); loadGames(); openGame(r.game.id); }
+    catch(err){ say($('#startMsg'),'err',err.message); }
+  };
+};
+
+/* ---------------- the drawing pad ---------------- */
+const COLOURS=['#1F2E23','#C8794F','#D8B45A','#4E7D5B','#2E6E9E','#8E4585','#B03A3A','#7A6B56','#FFFFFF'];
+const SIZES=[3,7,14,26];
+let pen={c:0,w:1}, strokes=[], cur=null, ctx=null, cv=null, DPR=1;
+
+function sizePad(){
+  const wrap=$('#pad'); if(!wrap) return;
+  const w=wrap.clientWidth;
+  // a hidden tab measures zero. Sizing the canvas to zero here is how you end up with a
+  // drawing pad that is a black hairline — refit() puts it right when the tab comes forward.
+  if(w < 20) return;
+  DPR=Math.min(2, window.devicePixelRatio||1);
+  cv.width=Math.round(w*DPR); cv.height=Math.round(w*DPR);
+  cv.style.height=w+'px';
+  ctx=cv.getContext('2d'); ctx.lineCap='round'; ctx.lineJoin='round';
+  redraw();
+}
+// coordinates are stored 0..1000 so a drawing looks the same on every screen
+const toPad=(e)=>{ const r=cv.getBoundingClientRect();
+  return [Math.round((e.clientX-r.left)/r.width*1000), Math.round((e.clientY-r.top)/r.height*1000)]; };
+
+function drawStroke(s, upto){
+  const n = upto===undefined ? s.p.length/2 : upto;
+  if(n<1) return;
+  ctx.strokeStyle=COLOURS[s.c]||'#000';
+  ctx.lineWidth=(SIZES[s.w]||6)*(cv.width/1000);
+  ctx.beginPath();
+  ctx.moveTo(s.p[0]*cv.width/1000, s.p[1]*cv.height/1000);
+  for(let i=1;i<n;i++) ctx.lineTo(s.p[i*2]*cv.width/1000, s.p[i*2+1]*cv.height/1000);
+  if(n===1) ctx.lineTo(s.p[0]*cv.width/1000+0.1, s.p[1]*cv.height/1000);
+  ctx.stroke();
+}
+function redraw(list){
+  if(!ctx) return;
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,cv.width,cv.height);
+  for(const s of (list||strokes)) drawStroke(s);
+}
+// Called whenever the pad might have been laid out while it could not be measured.
+function refitPad(){
+  const wrap=$('#pad'); if(!wrap || !cv || !document.contains(cv)) return;
+  const w=wrap.clientWidth;
+  if(w < 20) return;
+  if(cv.width === Math.round(w*Math.min(2, window.devicePixelRatio||1))) return;
+  sizePad();
+  if(game && game.phase==='guessing' && game.strokes) redraw(game.strokes); else redraw();
+}
+
+function padHandlers(){
+  cv.onpointerdown=e=>{ e.preventDefault(); cv.setPointerCapture(e.pointerId);
+    const [x,y]=toPad(e); cur={c:pen.c,w:pen.w,p:[x,y]}; strokes.push(cur); drawStroke(cur); syncPad(); };
+  cv.onpointermove=e=>{ if(!cur) return; e.preventDefault();
+    const [x,y]=toPad(e); const n=cur.p.length;
+    if(n>=2 && Math.abs(cur.p[n-2]-x)<3 && Math.abs(cur.p[n-1]-y)<3) return;  // thin it out
+    cur.p.push(x,y); drawStroke(cur, cur.p.length/2); };
+  cv.onpointerup=cv.onpointercancel=()=>{ cur=null; syncPad(); };
+}
+function syncPad(){ const b=$('#btnSend'); if(b) b.disabled = !strokes.length; }
+
+/* ---------------- replay ---------------- */
+function replay(list){
+  if(!ctx) return;
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,cv.width,cv.height);
+  let si=0, pi=1;
+  const total=list.reduce((a,s)=>a+s.p.length/2,0);
+  const perFrame=Math.max(2, Math.ceil(total/90));   // about a second and a half, whatever the drawing
+  (function step(){
+    let budget=perFrame;
+    while(budget>0 && si<list.length){
+      const s=list[si], pts=s.p.length/2;
+      const take=Math.min(budget, pts-pi);
+      if(take>0){ pi+=take; budget-=take; drawStroke(s, pi); }
+      if(pi>=pts){ si++; pi=1; }
+      if(take<=0 && pi<=1) { si++; pi=1; }
+    }
+    if(si<list.length) requestAnimationFrame(step);
+  })();
+}
+
+/* ---------------- the stage ---------------- */
+function scoreRow(){
+  if(!game) return '';
+  return game.players.map((p,i)=>'<div'+(i===game.you?' class="me"':'')+'>'+esc(p.handle)+'<b>'+p.score+'</b></div>').join('')
+    + (game.streak>1 ? '<div style="border:0;background:none;padding-top:9px"><span class="streak">'+game.streak+' in a row</span></div>' : '');
+}
+
+function paint(){
+  $('#playOn').classList.remove('hidden'); $('#noGame').classList.add('hidden');
+  $('#scores').innerHTML = scoreRow();
+  const st=$('#stage');
+
+  if(game.status!=='open'){ st.innerHTML='<div class="card"><h2>Game over</h2><p class="muted">Start another whenever you like.</p></div>'; return; }
+  if(game.players.length<2){
+    st.innerHTML='<div class="card"><h2>You need somebody to guess</h2>'
+      +'<p class="muted">A drawing with nobody looking at it is just a drawing.</p>'
+      +'<div id="invHere"></div></div>';
+    inviteBox($('#invHere'), game.invite);
+    return;
+  }
+
+  // ---- your turn to draw
+  if(game.youAreDrawing && game.phase==='choosing'){
+    st.innerHTML='<div class="card"><div class="kicker">Your turn to draw</div><h2>Pick one</h2>'
+      +'<div class="wordChoice">'+(game.choices||[]).map(w=>'<button type="button" data-w="'+esc(w)+'">'+esc(w)+'</button>').join('')+'</div>'
+      +'<p class="muted" style="margin-top:11px">Nobody sees which one you picked.</p><div id="stMsg"></div></div>';
+    $$('[data-w]').forEach(b=>b.onclick=async()=>{
+      try{ const r=await api({do:'choose', id:game.id, word:b.dataset.w}); game=r.game; paint(); }
+      catch(err){ say($('#stMsg'),'err',err.message); }
+    });
+    return;
+  }
+
+  if(game.youAreDrawing && game.phase==='drawing'){
+    st.innerHTML='<div class="card">'
+      +'<div class="kicker">Draw this</div>'
+      +'<div class="wordNow">'+esc(game.word||'')+'</div>'
+      +'<div class="tools" id="swatches"></div>'
+      +'<div class="tools" id="sizes"></div>'
+      +'<div class="padWrap" id="pad"><canvas id="cv"></canvas></div>'
+      +'<div class="row" style="margin-top:10px">'
+        +'<button class="btn ghost" id="btnUndo" type="button" style="flex:1">Undo</button>'
+        +'<button class="btn ghost" id="btnClear" type="button" style="flex:1">Clear</button>'
+      +'</div>'
+      +'<button class="btn pop wide" id="btnSend" type="button" style="margin-top:9px" disabled>Send it</button>'
+      +'<div id="stMsg"></div></div>';
+    cv=$('#cv'); strokes=[]; cur=null;
+    $('#swatches').innerHTML=COLOURS.map((c,i)=>'<button class="sw'+(i===pen.c?' on':'')+'" data-c="'+i+'" type="button" style="background:'+c+'"></button>').join('');
+    $('#sizes').innerHTML=SIZES.map((s,i)=>'<button class="sz'+(i===pen.w?' on':'')+'" data-s="'+i+'" type="button"><i style="width:'+Math.min(22,s)+'px;height:'+Math.min(22,s)+'px"></i></button>').join('');
+    $$('[data-c]').forEach(b=>b.onclick=()=>{ pen.c=+b.dataset.c; $$('[data-c]').forEach(x=>x.classList.toggle('on',x===b)); });
+    $$('[data-s]').forEach(b=>b.onclick=()=>{ pen.w=+b.dataset.s; $$('[data-s]').forEach(x=>x.classList.toggle('on',x===b)); });
+    $('#btnUndo').onclick=()=>{ strokes.pop(); redraw(); syncPad(); };
+    $('#btnClear').onclick=()=>{ strokes=[]; redraw(); syncPad(); };
+    $('#btnSend').onclick=async()=>{
+      const b=$('#btnSend'); b.disabled=true; b.textContent='Sending…';
+      try{ const r=await api({do:'submit', id:game.id, strokes}); game=r.game; loadGames(); paint(); }
+      catch(err){ say($('#stMsg'),'err',err.message); b.disabled=false; b.textContent='Send it'; }
+    };
+    sizePad(); padHandlers();
+    return;
+  }
+
+  // ---- waiting on other people
+  if(game.youAreDrawing && game.phase==='guessing'){
+    st.innerHTML='<div class="card"><div class="kicker">You drew</div>'
+      +'<div class="wordNow">'+esc(game.word||'')+'</div>'
+      +'<div class="padWrap" id="pad"><canvas id="cv"></canvas></div>'
+      +'<button class="btn ghost wide" id="btnReplay" type="button" style="margin-top:10px">Watch it again</button>'
+      +'<p class="muted" style="margin-top:10px">Waiting on '+esc((game.waitingOn||[]).join(', '))+'.</p>'
+      +'<div class="guessLog" id="glog"></div></div>';
+    cv=$('#cv'); sizePad();
+    if(game.strokes) replay(game.strokes);
+    $('#btnReplay').onclick=()=>replay(game.strokes||[]);
+    paintGuessLog();
+    return;
+  }
+
+  if(game.phase!=='guessing'){
+    st.innerHTML='<div class="card"><h2>'+esc(game.drawer||'Someone')+' is drawing</h2>'
+      +'<p class="muted">You will get a nudge on the Games tab when it lands.</p></div>';
+    return;
+  }
+
+  // ---- your turn to guess
+  const done=game.youFinished;
+  st.innerHTML='<div class="card">'
+    +'<div class="kicker">'+esc(game.drawer||'')+' drew this</div>'
+    +'<div class="padWrap" id="pad"><canvas id="cv"></canvas></div>'
+    +'<button class="btn ghost wide" id="btnReplay" type="button" style="margin-top:10px">Watch it again</button>'
+    +(done
+      ? '<div class="good" style="margin-top:12px">It was <b>'+esc(game.word||'')+'</b>.</div>'
+        +'<p class="muted">Waiting on '+esc((game.waitingOn||[]).join(', ')||'nobody')+'.</p>'
+      : '<div class="blanks" id="blanks"></div><div class="bank" id="bank"></div>'
+        +'<div class="row" style="margin-top:6px"><button class="btn ghost" id="btnBack" type="button" style="flex:1">Back one</button>'
+        +'<button class="btn ghost" id="btnGiveUp" type="button" style="flex:1">I give up</button></div>')
+    +'<div id="stMsg"></div>'
+    +'<div class="guessLog" id="glog"></div></div>';
+  cv=$('#cv'); sizePad();
+  if(game.strokes) replay(game.strokes);
+  $('#btnReplay').onclick=()=>replay(game.strokes||[]);
+  paintGuessLog();
+  if(!done) setupGuessing();
+}
+
+let picked=[];
+function setupGuessing(){
+  picked=[];
+  paintBlanks();
+  $('#bank').innerHTML=(game.bank||[]).map((L,i)=>'<button class="lt" data-i="'+i+'" type="button">'+esc(L)+'</button>').join('');
+  $$('#bank .lt').forEach(b=>b.onclick=()=>{
+    if(picked.length>=game.blanks) return;
+    picked.push({i:+b.dataset.i, L:b.textContent});
+    b.classList.add('used'); paintBlanks();
+    if(picked.length===game.blanks) submitGuess();
+  });
+  $('#btnBack').onclick=()=>{
+    const last=picked.pop(); if(!last) return;
+    const b=$('#bank .lt[data-i="'+last.i+'"]'); if(b) b.classList.remove('used');
+    paintBlanks();
+  };
+  $('#btnGiveUp').onclick=async()=>{
+    const artist=game.drawer;
+    try{
+      const r=await api({do:'giveup', id:game.id}); const answer=r.word;
+      game=r.game; loadGames();
+      $('#scores').innerHTML=scoreRow();
+      $('#stage').innerHTML='<div class="card pop-in" style="text-align:center">'
+        +'<div class="kicker" style="text-align:center">It was, all along</div>'
+        +'<div class="wordNow" style="margin:6px 0 4px">'+esc(answer||'')+'</div>'
+        +'<p class="muted">No shame in it. '+esc(artist||'They')+' will draw better next time.</p>'
+        +'<button class="btn wide" id="btnOnward2" type="button">Carry on</button></div>';
+      $('#btnOnward2').onclick=()=>paint();
+    }catch(err){ say($('#stMsg'),'err',err.message); }
+  };
+}
+function paintBlanks(){
+  const n=game.blanks||0;
+  $('#blanks').innerHTML=Array.from({length:n},(_,i)=>
+    '<div class="bl'+(picked[i]?' filled':'')+'">'+(picked[i]?esc(picked[i].L):'')+'</div>').join('');
+}
+// A wrong guess should feel like a laugh, not a red cross. A right one should feel
+// like the table cheering. That is the whole difference between this and a spelling test.
+const YAY=['Got it in one.','Nailed it.','That is the one.','Bang on.','Too easy for you.',
+  "You didn't even hesitate.",'Textbook.','The table salutes you.'];
+const YAY_SLOW=['Got there in the end.','We had faith.','Hard-won, that one.','Worth the wait.',
+  'Persistence pays.','You wrestled it down.'];
+const NOPE=['Not it. Keep going.','Nope — but I like your thinking.','Bold. Wrong, but bold.',
+  'Not quite. Try again.','That is a word. Not the word.','Close enough to be annoying.',
+  'No. But nobody saw that.','Swing and a miss.'];
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+
+function reveal(word, tries, artist){
+  const line = tries<=1 ? pick(YAY) : pick(YAY_SLOW);
+  $('#scores').innerHTML=scoreRow();
+  const st=$('#stage');
+  st.innerHTML='<div class="card pop-in" style="text-align:center">'
+    +'<div class="kicker" style="text-align:center">'+esc(line)+'</div>'
+    +'<div class="wordNow" style="margin:6px 0 4px">'+esc(word||'')+'</div>'
+    +'<p class="muted">+3 to you, +1 to '+esc(artist||'the artist')+'.</p>'
+    +'<button class="btn wide" id="btnOnward" type="button">Carry on</button></div>';
+  $('#btnOnward').onclick=()=>paint();
+  setTimeout(()=>{ if($('#btnOnward')) paint(); }, 3200);
+}
+
+async function submitGuess(){
+  const text=picked.map(p=>p.L).join('');
+  try{
+    const r=await api({do:'guess', id:game.id, text});
+    if(r.right){
+      const bl=$('#blanks'); if(bl) bl.classList.add('pop-in');
+      const answer=r.word, tries=r.tries||1, artist=game.drawer;
+      game=r.game; loadGames();
+      setTimeout(()=>reveal(answer, tries, artist), 420);
+    } else {
+      const bl=$('#blanks'); if(bl){ bl.classList.add('shake'); setTimeout(()=>bl.classList.remove('shake'),420); }
+      game=r.game;
+      say($('#stMsg'),'note',pick(NOPE));
+      setTimeout(()=>{ picked=[]; $$('#bank .lt').forEach(b=>b.classList.remove('used')); paintBlanks(); paintGuessLog(); }, 430);
+    }
+  }catch(err){ say($('#stMsg'),'err',err.message); }
+}
+function paintGuessLog(){
+  const el=$('#glog'); if(!el) return;
+  const gs=(game.guesses||[]).slice(-12).reverse();
+  el.innerHTML = gs.length
+    ? gs.map(x=>'<div>'+esc(x.handle)+' — <span'+(x.right?' class="yes"':'')+'>'+esc(x.text)+'</span>'+(x.right?' ✓':'')+'</div>').join('')
+    : '';
+}
+
+async function openGame(id){
+  try{
+    const r=await api({do:'game', id}); game=r.game; LS.set('ed.game', id);
+    go('play'); paint(); startPoll();   // show the tab FIRST — a hidden canvas measures zero
+  }catch(err){ say($('#startMsg'),'err',err.message); }
+}
+function startPoll(){
+  clearInterval(poll);
+  poll=setInterval(async()=>{
+    if(!game||document.hidden||game.status!=='open') return;
+    if(game.youAreDrawing && game.phase==='drawing') return;   // never interrupt someone mid-drawing
+    try{ const r=await api({do:'game', id:game.id});
+      if(r.game.rev!==game.rev){ game=r.game; paint(); loadGames(); } }catch(e){}
+  }, 15000);
+}
+window.addEventListener('resize', ()=>{ if(cv && $('#pad')) { const keep=strokes.slice(); sizePad(); if(game && game.phase==='guessing' && game.strokes) redraw(game.strokes); else { strokes=keep; redraw(); } } });
+
+/* ---------------- boot ---------------- */
+applyBig();
+(async()=>{
+  const q=new URLSearchParams(location.search);
+  const k=q.get('k'), invite=q.get('join');
+  if(k||invite) history.replaceState({},'',location.pathname);
+
+  if(k){
+    try{ tookToken(await auth({do:'redeem', key:k})); }
+    catch(err){ signedOut(); say($('#authMsg'),'err',err.message); return; }
+  } else if(token){
+    try{ const r=await api({do:'me'}); signedIn(r.user); }
+    catch(e){ signedOut(); }
+  } else { signedOut(); }
+
+  if(!me) return;
+  if(invite){
+    try{ const r=await api({do:'join', code:invite});
+         say($('#startMsg'),'good','You are in.'); loadGames(); await openGame(r.game.id); return; }
+    catch(err){ say($('#startMsg'),'err',err.message); }
+  }
+  const last=LS.get('ed.game');
+  if(last) await openGame(last);
+})();
+})();
+</script>
+</body>
+</html>

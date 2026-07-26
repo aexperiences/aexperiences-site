@@ -1,0 +1,15 @@
+{
+  "name": "ESPOdraw",
+  "short_name": "ESPOdraw",
+  "description": "Draw a word, your friends guess it, then it comes back to you. No ads, no coins, free.",
+  "start_url": "/apps/espodraw/",
+  "scope": "/apps/espodraw/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F8F3E6",
+  "theme_color": "#16301F",
+  "icons": [
+    { "src": "/apps/espodraw/icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
+    { "src": "/marks/espodraw.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
