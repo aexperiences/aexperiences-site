@@ -1,6 +1,6 @@
 /* ESPOvineyard service worker — offline-first, stale-while-revalidate.
    Accelerated Experiences, LLC */
-var C = "espovineyard-v2";
+var C = "espovineyard-v3";
 var ASSETS = ["./", "./index.html", "./icon.png", "./manifest.webmanifest",
   "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700&display=swap"];
 self.addEventListener("install", function (e) {
