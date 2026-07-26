@@ -1,0 +1,13 @@
+{
+  "name": "ESPOstogie",
+  "short_name": "ESPOstogie",
+  "description": "A private cigar journal. Log what you smoked, how it drew, and who you were with. No ads, no marketplace, no account. Your humidor is yours.",
+  "start_url": "/apps/espostogie/",
+  "scope": "/apps/espostogie/",
+  "display": "standalone",
+  "background_color": "#3A1D0E",
+  "theme_color": "#3A1D0E",
+  "icons": [
+    { "src": "/apps/espostogie/icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" }
+  ]
+}
