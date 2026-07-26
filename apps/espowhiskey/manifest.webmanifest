@@ -1,0 +1,13 @@
+{
+  "name": "ESPOwhiskey",
+  "short_name": "ESPOwhiskey",
+  "description": "A private whiskey journal. Log the pour, the nose, the palate and the finish. No ads, no marketplace, no account. Your shelf is yours.",
+  "start_url": "/apps/espowhiskey/",
+  "scope": "/apps/espowhiskey/",
+  "display": "standalone",
+  "background_color": "#2A1810",
+  "theme_color": "#2A1810",
+  "icons": [
+    { "src": "/apps/espowhiskey/icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" }
+  ]
+}
