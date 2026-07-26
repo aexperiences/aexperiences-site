@@ -320,6 +320,12 @@ body.big .phrases button{font-size:17px;min-height:58px}
     <div id="signedIn" class="hidden">
       <div class="card">
         <h2>Start a game</h2>
+        <label>Which words count?</label>
+        <div class="row" style="gap:8px">
+          <button class="btn ghost" id="dictStd" type="button" style="flex:1">Standard</button>
+          <button class="btn ghost" id="dictWide" type="button" style="flex:1">Wide open</button>
+        </div>
+        <p class="muted" id="dictNote" style="margin:8px 0 4px;font-size:13.5px"></p>
         <label for="oppHandle">Play someone by name</label>
         <div class="row" style="flex-wrap:nowrap">
           <input id="oppHandle" type="text" placeholder="their name on here" style="flex:1" autocapitalize="none">
@@ -363,7 +369,7 @@ body.big .phrases button{font-size:17px;min-height:58px}
       <div class="scoreline" id="scores"></div>
       <div class="meta">
         <span id="turnLine" class="muted"></span>
-        <span class="muted">Bag: <b id="bagLeft">–</b></span>
+        <span class="muted"><span id="dictBadge"></span> · Bag: <b id="bagLeft">–</b></span>
       </div>
       <div class="zoomBar">
         <button class="btn ghost" id="zoomOut" type="button" aria-label="Make the board smaller">–</button>
@@ -437,12 +443,24 @@ body.big .phrases button{font-size:17px;min-height:58px}
       <div id="lookupOut"></div>
     </div>
     <div class="card">
-      <div class="kicker">The word list, in the open</div>
+      <div class="kicker">Two word lists, both in the open</div>
       <p class="muted" id="dictLine">Loading…</p>
-      <p class="muted">Every other word game keeps its list secret, so a rejected word feels like a
-      rigged machine. Ours is a public-domain list used exactly as published — you can download the
-      same file and check any ruling yourself.</p>
-      <p class="muted"><a href="https://cdn.jsdelivr.net/gh/dolph/dictionary@master/enable1.txt" rel="noopener" target="_blank">Open the word list</a></p>
+      <p class="muted"><b>Standard</b> is that list exactly as it was released in 1997 — nothing
+      added, nothing taken away. <b>Wide open</b> is the same list plus the supplement below.
+      You pick which one a game uses when you start it.</p>
+      <p class="muted">Every other word game keeps one secret list, so a rejected word feels like a
+      rigged machine. We keep two, print both, and let you choose.
+      <a href="https://cdn.jsdelivr.net/gh/dolph/dictionary@master/enable1.txt" rel="noopener" target="_blank">Open the standard list</a></p>
+    </div>
+
+    <div class="card">
+      <div class="kicker">Everything Wide open adds</div>
+      <p class="muted">The 1997 list has no OK, no ZEN, no APP, no ONLINE, no TEXTED — and it is
+      missing nine of the two-letter words every modern game allows. Here is the entire supplement,
+      every word of it. Nothing is hidden and nothing is ever taken away.</p>
+      <div class="log" id="supList" style="max-height:230px"></div>
+      <p class="muted" style="margin-top:10px">Playing a word your friends allow that is not here?
+      Ask for it on the You page and it goes in, with your name on it.</p>
     </div>
     <div class="card">
       <div class="kicker">How the board works</div>
@@ -660,7 +678,7 @@ async function loadGames(){
 
 $('#btnChallenge').onclick=async()=>{
   const h=$('#oppHandle').value.trim(); if(!h) return;
-  try{ const r=await api({do:'newgame',handle:h}); $('#oppHandle').value='';
+  try{ const r=await api({do:'newgame',handle:h,dict:dictMode()}); $('#oppHandle').value='';
     say($('#startMsg'),'good','Game started with '+r.game.players.filter(p=>p.handle!==me.handle).map(p=>p.handle)[0]+'.');
     game=r.game; loadGames(); openGame(r.game.id);
   }catch(err){ say($('#startMsg'),'err',err.message); }
@@ -696,7 +714,11 @@ async function loadMeta(){
   try{
     const r=await fetch(API,{cache:'no-store'}); meta=await r.json();
     for(const [l,v] of Object.entries(meta.tiles)) LETTER_VALUE[l]=v[1];
-    $('#dictLine').textContent='Dictionary: '+meta.dictionary+' — 172,823 words. Used exactly as published; we add nothing of our own.';
+    $('#dictLine').textContent='Both lists start from '+meta.dictionary+' — 172,823 words.';
+    const sup=(meta.supplement||[]);
+    $('#supList').innerHTML = sup.length
+      ? '<div><b>'+sup.length+' words</b></div><div style="line-height:2">'+sup.map(w=>'<span style="display:inline-block;margin-right:12px">'+esc(w)+'</span>').join('')+'</div>'
+      : '<div class="muted">Could not load the supplement just now.</div>';
     $('#tileTable').innerHTML=Object.entries(meta.tiles).map(([l,v])=>
       '<span style="display:inline-block;min-width:64px">'+(l==='?'?'blank':l)+' ×'+v[0]+' <b>'+v[1]+'</b></span>').join('');
   }catch(e){ $('#dictLine').textContent='Could not reach the game service just now.'; }
@@ -789,6 +811,7 @@ function paint(){
     '<div class="me"><div class="n">'+esc(p[seat]?p[seat].handle:'You')+' (you)</div><div class="v">'+(p[seat]?p[seat].score:0)+'</div></div>'
    +'<div><div class="n">'+esc(p[them]?p[them].handle:'Waiting…')+'</div><div class="v">'+(p[them]?p[them].score:0)+'</div></div>';
   $('#bagLeft').textContent=game.bagLeft;
+  $('#dictBadge').textContent = game.dict==='wide' ? 'Wide open words' : 'Standard words';
   const done=game.status==='done';
   $('#turnLine').textContent = done
       ? (game.result && game.result.winner ? (game.result.winner===(p[seat]&&p[seat].handle)?'You won.':esc(game.result.winner)+' won.') : 'Finished — a tie.')
@@ -884,8 +907,10 @@ async function doLookup(){
   if(!w) return;
   try{
     const r=await api({do:'lookup',word:w});
-    say($('#lookupOut'), r.valid?'good':'err',
-      r.valid ? r.word+' is in the word list — it plays.' : (r.word+' is not in the word list.'+(r.note?' '+r.note:'')));
+    if(r.valid) say($('#lookupOut'),'good', r.word+' plays in both lists.');
+    else if(r.wide) say($('#lookupOut'),'note', r.word+' plays in a Wide open game, but not a Standard one.');
+    else say($('#lookupOut'),'err', r.word+' is in neither list.'+(r.note?' '+r.note:'')
+      +' If your friends play it, ask for it on the You page and it goes in.');
   }catch(err){ say($('#lookupOut'),'err',err.message); }
 }
 
@@ -1049,12 +1074,25 @@ $('#btnLink').onclick = async () => {
   }catch(err){ say($('#linkBox'),'err',err.message); }
 };
 
+/* ---------------- which words count ---------------- */
+function dictMode(){ return LS.get('ew.dict')==='wide' ? 'wide' : 'standard'; }
+function applyDict(){
+  const wide = dictMode()==='wide';
+  $('#dictStd').className  = wide ? 'btn ghost' : 'btn';
+  $('#dictWide').className = wide ? 'btn' : 'btn ghost';
+  $('#dictNote').textContent = wide
+    ? 'Slang, short oddities and modern words all count — QI, ZA, OK, ZEN, COQ, SEQ. Everything in Standard still counts too.'
+    : 'The 1997 word list, exactly as published. Strict, and the same for everyone.';
+}
+$('#dictStd').onclick  = () => { LS.set('ew.dict','standard'); applyDict(); };
+$('#dictWide').onclick = () => { LS.set('ew.dict','wide'); applyDict(); };
+
 /* ---------------- playing the computer ---------------- */
 $$('[data-bot]').forEach(b => b.onclick = async () => {
   const level = b.dataset.bot;
   b.disabled = true; const was = b.textContent; b.textContent = 'Starting…';
   try{
-    const r = await api({do:'newgame', vs:'computer', level});
+    const r = await api({do:'newgame', vs:'computer', level, dict:dictMode()});
     say($('#botMsg'),'good','Game on. It goes first only if you pass — the board is yours to open.');
     loadGames(); await openGame(r.game.id);
   }catch(err){ say($('#botMsg'),'err',err.message); }
@@ -1092,7 +1130,7 @@ $('#ideaText').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDe
 })();
 
 /* ---------------- boot ---------------- */
-loadMeta(); applyBig(); paintPhrases();
+loadMeta(); applyBig(); paintPhrases(); applyDict();
 (async()=>{
   const q=new URLSearchParams(location.search);
   const j=q.get('join');
