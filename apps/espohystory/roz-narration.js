@@ -176,8 +176,17 @@
     EL.onerror = function () { if (gen !== R.gen) return; stopTick(); F.tried[F.id] = false; F.words = null; standDown(); };
 
     if (EL.src !== src) {
+      var started = false;
       EL.src = src;
-      EL.onloadedmetadata = go;
+      EL.onloadedmetadata = function () { started = true; go(); };
+      // A child must never be left staring at a silent page. If the audio has not opened within
+      // 10 seconds (dead connection, blocked media), hand the story to the device voice and keep
+      // reading. A reload brings Roz back.
+      setTimeout(function () {
+        if (gen !== R.gen || started || EL.readyState > 0) return;
+        stopTick();
+        standDown();
+      }, 10000);
       EL.load();
     } else go();
   }
