@@ -69,6 +69,50 @@ const SOURCES = [
 export const DICT_NAME = 'ENABLE (public domain), unmodified';
 let DICT = null, dictLoading = null;
 
+/* ------------------------------------------------------- the wide list --
+   ENABLE was published in 1997. It has no OK, no ZEN, no APP, no ONLINE, no
+   TEXTED, no SELFIE — and it is missing nine of the two-letter words every
+   modern word game accepts, QI and ZA among them. Plenty of people play a
+   looser game than a 1997 word list allows, and telling them they are wrong
+   is not our job.
+
+   So there are two lists, and BOTH are published in full:
+
+     Standard   ENABLE exactly as released. Nothing added, nothing removed.
+     Wide open  ENABLE plus the supplement below — every word of it printed
+                inside the app, so a rejected or accepted word is never a
+                mystery. This is the whole point: other games keep a secret
+                dictionary. We keep two open ones and let you pick.
+
+   The supplement only ever ADDS. Anything that plays in Standard plays here.
+   Words asked for by the people playing get added by name, on request. */
+
+export const SUPPLEMENT = [
+  // the two-letter words modern games accept that ENABLE predates
+  'DA', 'DI', 'FE', 'FI', 'GA', 'KI', 'OI', 'QI', 'ZA',
+  // asked for by the people who play here
+  'COQ', 'SEQ',
+  // words the language gained after 1997
+  'OK', 'ZEN', 'APP', 'APPS', 'ONLINE', 'OFFLINE', 'INTERNET', 'WEBSITE', 'WEBSITES',
+  'WIFI', 'SMARTPHONE', 'BLOG', 'BLOGS', 'BLOGGED', 'BLOGGER', 'BLOGGERS', 'VLOG', 'VLOGS',
+  'PODCAST', 'PODCASTS', 'HASHTAG', 'HASHTAGS', 'MEME', 'MEMES', 'EMOJI', 'EMOJIS',
+  'EMOTICON', 'EMOTICONS', 'SELFIE', 'SELFIES', 'TEXTED', 'TEXTING', 'EMAILED', 'EMAILING',
+  'RETWEET', 'RETWEETS', 'UNFRIEND', 'UNFRIENDED', 'UNFOLLOW', 'UNFOLLOWED',
+  'SPAM', 'SPAMMED', 'SPAMMER', 'MALWARE', 'PHISHING', 'ROBOCALL', 'ROBOCALLS',
+  'STREAMED', 'PLAYLIST', 'PLAYLISTS', 'SCREENSHOT', 'SCREENSHOTS', 'TOUCHSCREEN',
+  'VAX', 'VAXED', 'TELEHEALTH', 'STAYCATION', 'GLAMPING', 'ADULTING',
+  // food and drink the world picked up
+  'PHO', 'BARISTA', 'BARISTAS', 'SRIRACHA', 'PANKO', 'EDAMAME', 'MOJITO', 'MOJITOS',
+  'PROSECCO', 'GUAC', 'MATCHA', 'MOCHI', 'BURRATA', 'GNOCCHI', 'CHURRO', 'CHURROS',
+  // the short ones people actually say
+  'EW', 'MEH', 'OOF', 'YEP', 'NOPE', 'YEAH', 'NAH', 'YAY', 'AHA', 'DUH', 'HUH', 'YIKES',
+  'HAHA', 'HEHE', 'OOPS', 'WHOA', 'ICK', 'ICKY', 'ZZZ',
+  // music and style
+  'DJ', 'DJS', 'EMO', 'GOTH', 'GOTHS', 'HIPHOP', 'RAPPER', 'RAPPERS', 'REMIX', 'REMIXED',
+];
+
+let WIDE = null;
+
 async function dictionary() {
   if (DICT) return DICT;
   if (!dictLoading) dictLoading = (async () => {
@@ -89,6 +133,16 @@ async function dictionary() {
   })();
   return dictLoading;
 }
+
+// The list a given game is played on. Anything that plays on Standard plays here too.
+async function wideList() {
+  if (WIDE) return WIDE;
+  const base = await dictionary();
+  WIDE = new Set(base);
+  for (const w of SUPPLEMENT) WIDE.add(w);
+  return WIDE;
+}
+const dictFor = (mode) => (mode === 'wide' ? wideList() : dictionary());
 
 /* ------------------------------------------------------------ the board -- */
 // Our own premium layout: 60 premium squares, eight-fold symmetric, triple-words
@@ -548,14 +602,16 @@ const COMMON = new Set([
   'ZEST','ZESTY','ZIG','ZINC','ZIP','ZIT','ZONAL','ZONE','ZOO','ZOOM'
 ]);
 
+for (const w of SUPPLEMENT) COMMON.add(w);
+
 const LEVELS = {
   easy:  { label: 'Computer · easy',  cap: 14, pick: 'low'  },
   even:  { label: 'Computer · even',  cap: 28, pick: 'mid'  },
   tough: { label: 'Computer · tough', cap: 999, pick: 'best' },
 };
 
-async function findMoves(board, rack, first, budgetMs = 3000) {
-  const dict = await dictionary();
+async function findMoves(board, rack, first, mode, budgetMs = 3000) {
+  const dict = await dictFor(mode);
   const pre = await prefixSet();
   const started = Date.now();
   const out = [];
@@ -638,7 +694,7 @@ async function computerTurn(g) {
   const me = g.players[seat];
   const first = g.moves.every((m) => m.kind !== 'play');
   let moves = [];
-  try { moves = await findMoves(g.board, me.rack, first); } catch (_) { moves = []; }
+  try { moves = await findMoves(g.board, me.rack, first, g.dict); } catch (_) { moves = []; }
   const pick = chooseMove(moves, me.level);
 
   if (!pick) {
@@ -660,7 +716,7 @@ async function computerTurn(g) {
     return;
   }
 
-  const dict = await dictionary();
+  const dict = await dictFor(g.dict);
   const ev = evaluatePlacement(g.board, pick.tiles, first, dict);
   if (ev.error || ev.rejected || !ev.words) { // belt and braces — should never happen
     g.moves.push({ t: Date.now(), by: me.handle, kind: 'pass' });
@@ -726,7 +782,7 @@ function newGame(a, b) {
   const bag = freshBag();
   return {
     id: newId(), rev: 0, created: Date.now(), updated: Date.now(),
-    status: 'open', turn: 0, scoreless: 0,
+    status: 'open', turn: 0, scoreless: 0, dict: 'standard',
     board: Array(225).fill(null),
     bag,
     players: [
@@ -742,6 +798,7 @@ function view(g, uid) {
   const me = g.players.findIndex((p) => p.uid === uid);
   return {
     id: g.id, rev: g.rev, status: g.status, created: g.created, updated: g.updated,
+    dict: g.dict || 'standard',
     board: g.board, bagLeft: g.bag.length, turn: g.turn, you: me,
     yourTurn: g.status === 'open' && g.players.length === 2 && g.turn === me,
     invite: g.invite || null,
@@ -790,7 +847,7 @@ function readBody(req) {
 export default async function handler(req, res) {
   res.setHeader('cache-control', 'no-store');
   if (req.method === 'GET') {
-    return ok(res, { ok: true, service: 'espowords', store: storeReady(), dictionary: DICT_NAME, layout: LAYOUT, tiles: TILES, bingo: BINGO });
+    return ok(res, { ok: true, service: 'espowords', store: storeReady(), dictionary: DICT_NAME, supplement: SUPPLEMENT, layout: LAYOUT, tiles: TILES, bingo: BINGO });
   }
   if (req.method !== 'POST') return bad(res, 405, 'POST only');
 
@@ -802,7 +859,12 @@ export default async function handler(req, res) {
   if (act === 'lookup') {
     const w = String(body.word || '').trim().toUpperCase();
     if (!/^[A-Z]{2,15}$/.test(w)) return ok(res, { ok: true, word: w, valid: false, note: 'Two to fifteen letters.' });
-    try { const d = await dictionary(); return ok(res, { ok: true, word: w, valid: d.has(w), dictionary: DICT_NAME }); }
+    try {
+      const std = await dictionary();
+      const wide = await wideList();
+      return ok(res, { ok: true, word: w, valid: std.has(w), wide: wide.has(w),
+        onlyWide: !std.has(w) && wide.has(w), dictionary: DICT_NAME });
+    }
     catch { return bad(res, 503, 'The word list is unreachable right now — no ruling either way.'); }
   }
 
@@ -943,9 +1005,11 @@ export default async function handler(req, res) {
     if (act === 'newgame') {
       // Play the computer. Useful on its own, and the gentlest possible way to try
       // the game for the first time without anybody watching you learn it.
+      const listMode = body.dict === 'wide' ? 'wide' : 'standard';
       if (body.vs === 'computer') {
         const level = LEVELS[body.level] ? body.level : 'even';
         const g = newGame(me, null);
+        g.dict = listMode;
         g.players.push({ uid: 'computer:' + level, handle: LEVELS[level].label, score: 0,
           rack: g.bag.splice(0, RACK), bot: true, level });
         await redis('SET', K('gr:' + g.id), '1');
@@ -964,6 +1028,7 @@ export default async function handler(req, res) {
         opp = await getJSON(K('u:' + uid));
       }
       const g = newGame(me, opp);
+      g.dict = listMode;
       if (!opp) {
         g.invite = crypto.randomBytes(4).toString('hex').toUpperCase();
         await redis('SET', K('inv:' + g.invite), g.id, 'EX', String(30 * 86400));
@@ -1116,7 +1181,7 @@ export default async function handler(req, res) {
       }
 
       let dict;
-      try { dict = await dictionary(); }
+      try { dict = await dictFor(g.dict); }
       catch { return bad(res, 503, 'The word list is unreachable right now — your turn is untouched, try again in a moment.'); }
 
       const first = g.moves.every((m) => m.kind !== 'play');
