@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#122a18">
 <title>AE App Shop — Accelerated Experiences, LLC</title>
-<meta name="description" content="Every app and business hub built by Accelerated Experiences, LLC. Walk in and use the real thing — no demo, no sales call, no download.">
+<meta name="description" content="Every app and business OS built by Accelerated Experiences, LLC. Walk in and use the real thing — no demo, no sales call, no download.">
 <link rel="canonical" href="https://www.aexperiences.com/shop.html">
 <meta property="og:type" content="website">
 <meta property="og:title" content="The AE App Shop — Accelerated Experiences, LLC">
-<meta property="og:description" content="Every app and business hub we build, in one place. Tap any app and you walk straight into the real thing.">
+<meta property="og:description" content="Every app and business OS we build, in one place. Tap any app and you walk straight into the real thing.">
 <meta property="og:image" content="https://www.aexperiences.com/ae-disc.png">
 <meta property="og:url" content="https://www.aexperiences.com/shop.html">
 <meta name="twitter:card" content="summary_large_image">
@@ -132,7 +132,7 @@ main{padding:24px 0 40px}
 .get.soon{background:transparent;border:1.5px solid var(--line-2);color:var(--mute);font-size:11.5px;letter-spacing:.05em}
 .badge-age{font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 7px;border-radius:9px;background:rgba(255,255,255,.12);color:var(--cream-2);margin-left:6px;font-family:var(--mono)}
 .empty{text-align:center;color:var(--mute);padding:48px 16px;font-size:15px;line-height:1.6}
-/* Business hub rows — a little extra shine so the flagship products catch the eye */
+/* Business OS rows — a little extra shine so the flagship products catch the eye */
 .row-app.hubrow .icon{position:relative;transition:transform .16s ease,box-shadow .22s ease;
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 6px 16px -4px color-mix(in srgb,var(--rowacc,#e0a83a) 70%,transparent),0 0 0 4px color-mix(in srgb,var(--rowacc,#e0a83a) 15%,transparent)}
 .row-app.hubrow .icon::after{content:"";position:absolute;inset:0;pointer-events:none;transform:translateX(-130%);
@@ -352,9 +352,9 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
   /* Say the difference once, in the plainest words available, at the top of whichever
      aisle you are standing in. Nobody should have to infer what a "hub" is. */
   function aisleNote(){
-    if(aisle==='business') return 'A hub is software that runs your whole company — your team, your clients, your money, all in one place. There is a one-time setup fee to make it yours, then a flat monthly. It never charges per person, so hiring does not cost you more.';
+    if(aisle==='business') return 'An OS is software that runs your whole company — your team, your clients, your money, all in one place. There is a one-time setup fee to make it yours, then a flat monthly. It never charges per person, so hiring does not cost you more.';
     if(aisle==='personal') return 'These are apps for one person. Open any of them right now — most are free to try, and none of them need an account to look around.';
-    return 'Two kinds of thing in here. <b>Business hubs</b> run a whole company — setup fee, then a flat monthly. <b>Apps</b> are for one person, and most are free to try.';
+    return 'Two kinds of thing in here. <b>Business OS</b> run a whole company — setup fee, then a flat monthly. <b>Apps</b> are for one person, and most are free to try.';
   }
 
   function setAisle(next, scroll){
@@ -385,7 +385,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     var apps=liveOnes.filter(function(a){return a.genre!=='business';});
 
     // In a single aisle there is no need to repeat the aisle's own name as a heading.
-    var hubHead = aisle==='business' ? 'Pick your trade' : 'Business hubs';
+    var hubHead = aisle==='business' ? 'Pick your trade' : 'Business OS';
     var appHead = aisle==='personal' ? 'All apps' : 'Apps';
 
     [ shelf(hubHead,'Every one is a live instance — walk in and use it before you talk to anyone.',hubs),
@@ -426,7 +426,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
   }
 
   // the two doors in the hero, and the segmented switch
-  document.getElementById('dnBiz').textContent  = C.inAisle('business').filter(function(a){return a.state==='live';}).length + ' hubs, all live';
+  document.getElementById('dnBiz').textContent  = C.inAisle('business').filter(function(a){return a.state==='live';}).length + ' business OS, all live';
   document.getElementById('dnPers').textContent = C.inAisle('personal').filter(function(a){return a.state==='live';}).length + ' apps you can open now';
   [].forEach.call(document.querySelectorAll('.door'), function(d){
     d.addEventListener('click', function(){ setAisle(d.dataset.aisle, true); });
