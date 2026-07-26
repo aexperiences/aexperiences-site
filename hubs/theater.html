@@ -160,7 +160,7 @@
 <h2 class="onh">Let’s stand up your Musical OS.</h2>
 <p class="lede onh">Tell us about your live theater operation and which tier fits. We’ll follow up with a tailored quote and a live demo — usually within a day. Every engagement is custom-built and quoted; these prices set the floor and the logic.</p>
 <ul class="assure">
-<li>A real demo of the hub, on your brand</li>
+<li>A real demo of the OS, on your brand</li>
 <li>A fixed build quote + flat monthly — no surprises</li>
 <li>Non-profit, founder & annual programs available</li>
 </ul>
@@ -224,7 +224,7 @@ document.querySelectorAll('[data-pick]').forEach(function(a){a.addEventListener(
 var f=document.getElementById('leadForm'), note=document.getElementById('lfNote');
 function mailtoFallback(d){
 var body=encodeURIComponent('Hi Anthony,\n\nI\'m interested in the Musical OS.\n\nName: '+(d.name||'')+'\nEmail: '+(d.email||'')+'\nPhone: '+(d.phone||'')+'\nOrg: '+(d.org||'')+'\nTier: '+(d.tier||'')+'\nNotes: '+(d.note||''));
-window.location.href='mailto:anthonye@aexperiences.studio?subject=Musical OS%20Hub%20inquiry&body='+body;
+window.location.href='mailto:anthonye@aexperiences.studio?subject=Musical OS%20inquiry&body='+body;
 }
 f.addEventListener('submit',async function(e){
 e.preventDefault();
@@ -235,7 +235,7 @@ var sent=false;
 try{
 var r=await fetch('https://formsubmit.co/ajax/anthonye@aexperiences.studio',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({
 Name:d.name, Email:d.email, Phone:d.phone||'—', Organization:d.org||'—',
-Hub:'Musical OS', Vertical:'Live Theater', Tier:d.tier||'—', Notes:d.note||'—',
+Product:'Musical OS', Vertical:'Live Theater', Tier:d.tier||'—', Notes:d.note||'—',
 _subject:'Musical OS inquiry — '+d.name, _template:'table', _captcha:'false'
 })});
 var j=await r.json().catch(function(){return {};});
