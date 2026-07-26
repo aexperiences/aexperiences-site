@@ -1,27 +1,33 @@
-/* ESPOhystory — Roz's real voice.
+/* ESPOhystory — Roz reads the stories.
  *
- * Replaces the Web Speech API narration (the flat robot "device voice") with Roz — ElevenLabs
- * "Rachel", the same narrator as Coach Roz on espodrama.com — while keeping every behaviour the
- * app already had: karaoke word highlighting, tap-a-word, pause/resume, Cozy/Storytime/Zippy
- * speeds, the star on finish.
+ * The app shipped narrating with the Web Speech API, which is whatever flat robot voice the
+ * device happens to have. Roz — ElevenLabs "Rachel", the same narrator as Coach Roz on
+ * espodrama.com — was already rendered for all 35 stories and sitting unused in
+ * /apps/espohystory/audio/. This file is the wiring that was missing.
  *
- * Word highlighting is driven by the REAL per-character timings that /api/roz returns alongside
- * the audio, so the highlight tracks Roz exactly instead of estimating.
+ * Three paths, best first:
+ *   1. PRE-RENDERED  /apps/espohystory/audio/<id>.mp3 + .json  — free, instant, works offline,
+ *      and the .json carries real per-word timings so the karaoke highlight tracks Roz exactly.
+ *   2. LIVE          /api/roz — ElevenLabs on demand, for any story added later that has no
+ *      rendered audio yet. Chunked on sentence boundaries so nothing is ever cut off.
+ *   3. DEVICE VOICE  the app's original Web Speech path, untouched, if neither is available.
  *
- * Additive companion file — it does not touch the app's 142KB inline script (same pattern proven
- * by roz-voice.js on espodrama.com). If /api/roz has no key or fails, this file steps aside
- * silently and the original device-voice path runs exactly as before. No fake Roz option ever
- * appears unless Roz actually works.
+ * A timing file is only trusted when its word count matches the story's exactly; a mismatch
+ * would highlight the wrong words, so it drops to path 2 instead. No Roz option ever appears
+ * in the picker unless Roz can actually speak.
  *
- * Accelerated Experiences LLC · v1
+ * Additive companion — does not touch the app's 142KB inline script (the pattern proven by
+ * roz-voice.js on espodrama.com).
+ *
+ * Accelerated Experiences LLC · v2
  */
 (function () {
   "use strict";
 
-  var VER = "1";
-  var MAX_CHARS = 900;          // per request; server ceiling is 1200, ElevenLabs' is ~2000
+  var VER = "2";
+  var AUDIO_DIR = "/apps/espohystory/audio/";
+  var MAX_CHARS = 900;   // live path only; ElevenLabs stops around 2000 per request
 
-  // ---- guard: the app's engine must be present ---------------------------------------------
   if (typeof window.playFromCurrent !== "function" || typeof window.paraTokens === "undefined") return;
 
   var orig = {
@@ -33,22 +39,27 @@
   };
 
   var R = {
-    ready: false,     // /api/roz answered yes
-    on: false,        // Roz is the selected voice
-    gen: 0,           // cancels in-flight work when the story or position changes
-    q: [],            // queue of pieces
-    i: 0,
-    piece: null,      // currently playing piece (with its word-to-time map)
+    ready: false,   // Roz can speak (rendered audio and/or a live key)
+    live: false,    // /api/roz answered ok
+    on: false,      // Roz is the selected voice
+    mode: null,     // "file" | "api"
+    gen: 0,
     raf: 0,
     unlocked: false,
     atPi: -1, atWi: -1
   };
 
+  // pre-rendered story state
+  var F = { id: null, words: null, base: null, total: 0, tried: {}, last: -1 };
+  // live-path queue state
+  var Q = { list: [], i: 0, piece: null };
+
   var EL = new Audio();
   EL.preload = "auto";
 
-  // ---- audio unlock: browsers only let a media element start inside a user gesture. Prime the
-  // one shared element on the first tap so later paragraphs (which start after a fetch) play.
+  // ---- audio unlock ---------------------------------------------------------------------------
+  // Browsers only let a media element start inside a user gesture. Prime the shared element on
+  // the first tap so paragraphs that begin after a fetch still play.
   function unlock() {
     if (R.unlocked) return;
     R.unlocked = true;
@@ -62,11 +73,133 @@
   document.addEventListener("pointerdown", unlock, { capture: true });
   document.addEventListener("keydown", unlock, { capture: true });
 
-  // ---- fetch + cache -------------------------------------------------------------------------
-  function urlFor(text) { return "/api/roz?v=" + VER + "&t=" + encodeURIComponent(text); }
+  function rate() {
+    // The app's presets were tuned for a synthetic voice. Roz is a real read, so Storytime is
+    // her natural pace rather than a slowed one.
+    var r = parseFloat(window.S && window.S.rate) || 0.95;
+    if (r < 0.9) return 0.9;
+    if (r > 1.05) return 1.15;
+    return 1;
+  }
+
+  // ---- flat token index (the timing files are one flat list for the whole story) ---------------
+  function buildBase() {
+    var b = [], n = 0;
+    for (var i = 0; i < window.paraTokens.length; i++) { b.push(n); n += window.paraTokens[i].length; }
+    F.base = b; F.total = n;
+  }
+  function flat(pi, wi) { return (F.base[pi] || 0) + wi; }
+  function unflat(k) {
+    var b = F.base;
+    for (var pi = b.length - 1; pi >= 0; pi--) if (k >= b[pi]) return [pi, k - b[pi]];
+    return [0, 0];
+  }
+
+  // ---- highlight loop ---------------------------------------------------------------------------
+  function tick() {
+    R.raf = 0;
+    if (!window.P || !window.P.playing || EL.paused) return;
+    var t = EL.currentTime, best = -1, lo = 0, hi = 0, m;
+
+    if (R.mode === "file" && F.words) {
+      lo = 0; hi = F.words.length - 1;
+      while (lo <= hi) { m = (lo + hi) >> 1; if (F.words[m][0] <= t) { best = m; lo = m + 1; } else hi = m - 1; }
+      if (best >= 0 && best !== F.last) {
+        F.last = best;
+        var pw = unflat(best);
+        window.P.pi = pw[0]; window.P.wi = pw[1];
+        try { window.hl(pw[0], pw[1]); } catch (e) {}
+      }
+    } else if (R.mode === "api" && Q.piece && Q.piece.mt) {
+      var p = Q.piece; lo = 0; hi = p.mt.length - 1;
+      while (lo <= hi) { m = (lo + hi) >> 1; if (p.mt[m] <= t) { best = m; lo = m + 1; } else hi = m - 1; }
+      if (best >= 0 && best !== p.last) {
+        p.last = best;
+        window.P.pi = p.pi; window.P.wi = p.mw[best];
+        try { window.hl(p.pi, p.mw[best]); } catch (e) {}
+      }
+    }
+    R.raf = requestAnimationFrame(tick);
+  }
+  function startTick() { if (!R.raf) R.raf = requestAnimationFrame(tick); }
+  function stopTick() { if (R.raf) { cancelAnimationFrame(R.raf); R.raf = 0; } }
+
+  function playing(on) {
+    window.P.playing = on;
+    try { window.setPlayBtn(on); } catch (e) {}
+  }
+
+  // ================= PATH 1 — pre-rendered =======================================================
+  function loadStory(id) {
+    if (F.id === id && F.words) return Promise.resolve(true);
+    if (F.tried[id] === false) return Promise.resolve(false);
+    buildBase();
+    var want = F.total;
+    return fetch(AUDIO_DIR + id + ".json").then(function (r) {
+      if (!r.ok) throw new Error("no timings");
+      return r.json();
+    }).then(function (j) {
+      var w = j && j.words;
+      // Only trust a timing file that lines up 1:1 with this story's words. Anything else would
+      // light up the wrong word, which is worse than no highlight at all.
+      if (!Array.isArray(w) || w.length !== want) throw new Error("token mismatch");
+      F.id = id; F.words = w; F.last = -1; F.tried[id] = true;
+      return true;
+    }).catch(function () {
+      F.tried[id] = false;
+      if (F.id === id) { F.id = null; F.words = null; }
+      return false;
+    });
+  }
+
+  function playFile(gen, seekTo) {
+    if (gen !== R.gen) return;
+    R.mode = "file";
+    var src = location.origin + AUDIO_DIR + F.id + ".mp3";
+    var start = F.words[Math.max(0, Math.min(seekTo, F.words.length - 1))][0];
+
+    function go() {
+      if (gen !== R.gen) return;
+      try { EL.currentTime = start; } catch (e) {}
+      EL.playbackRate = rate();
+      F.last = -1;
+      playing(true);
+      var pr = EL.play();
+      if (pr && pr.catch) pr.catch(function () {
+        playing(false);
+        try { window.toast("Tap Read to me once more to start Roz."); } catch (e) {}
+      });
+      startTick();
+    }
+
+    EL.onended = function () { if (gen !== R.gen) return; stopTick(); try { window.finishStory(); } catch (e) {} };
+    EL.onerror = function () { if (gen !== R.gen) return; stopTick(); F.tried[F.id] = false; F.words = null; standDown(); };
+
+    if (EL.src !== src) {
+      EL.src = src;
+      EL.onloadedmetadata = go;
+      EL.load();
+    } else go();
+  }
+
+  // ================= PATH 2 — live /api/roz ======================================================
+  // Pieces tile the paragraph EXACTLY — no character is ever dropped out of a story.
+  function split(text) {
+    var out = [], rest = text;
+    while (rest.length > MAX_CHARS) {
+      var win = rest.slice(0, MAX_CHARS);
+      var cut = Math.max(win.lastIndexOf(". "), win.lastIndexOf("! "), win.lastIndexOf("? "));
+      if (cut > MAX_CHARS * 0.4) cut = cut + 2;
+      else { cut = win.lastIndexOf(" "); cut = cut > 0 ? cut + 1 : MAX_CHARS; }
+      out.push(rest.slice(0, cut));
+      rest = rest.slice(cut);
+    }
+    if (rest.length) out.push(rest);
+    return out;
+  }
 
   function ask(text) {
-    var url = urlFor(text);
+    var url = "/api/roz?v=" + VER + "&t=" + encodeURIComponent(text);
     if (!window.caches) return fetch(url).then(function (r) { return r.json(); });
     return caches.open("roz-v" + VER).then(function (c) {
       return c.match(url).then(function (hit) {
@@ -79,50 +212,26 @@
           });
         });
       });
-    }).catch(function () {
-      return fetch(url).then(function (r) { return r.json(); });
-    });
+    }).catch(function () { return fetch(url).then(function (r) { return r.json(); }); });
   }
 
-  // ---- splitting: never split mid-word; prefer sentence ends ---------------------------------
-  // The pieces tile the input EXACTLY — no character is ever dropped out of a child's story.
-  function split(text) {
-    var out = [], rest = text;
-    while (rest.length > MAX_CHARS) {
-      var win = rest.slice(0, MAX_CHARS);
-      var cut = Math.max(win.lastIndexOf(". "), win.lastIndexOf("! "), win.lastIndexOf("? "));
-      if (cut > MAX_CHARS * 0.4) cut = cut + 2;
-      else {
-        cut = win.lastIndexOf(" ");
-        cut = cut > 0 ? cut + 1 : MAX_CHARS;
-      }
-      out.push(rest.slice(0, cut));
-      rest = rest.slice(cut);
-    }
-    if (rest.length) out.push(rest);
-    return out;
-  }
-
-  // ---- build the play queue from the app's current position -----------------------------------
   function buildQueue(startPi, startWi) {
     var q = [];
     if (!window.cur || !window.cur.paras) return q;
     for (var pi = startPi; pi < window.paraTokens.length; pi++) {
       var toks = window.paraTokens[pi];
-      var base = 0;
-      if (pi === startPi && toks && toks[startWi]) base = toks[startWi].start;
-      var text = window.cur.paras[pi].slice(base);
-      var off = base;
-      split(text).forEach(function (seg) {
-        if (seg.trim()) q.push({ pi: pi, off: off, text: seg });
-        off += seg.length;
-      });
+      var off = (pi === startPi && toks && toks[startWi]) ? toks[startWi].start : 0;
+      var text = window.cur.paras[pi].slice(off);
+      var segs = split(text);
+      for (var k = 0; k < segs.length; k++) {
+        if (segs[k].trim()) q.push({ pi: pi, off: off, text: segs[k] });
+        off += segs[k].length;
+      }
     }
     return q;
   }
 
-  // ---- word-to-time map for one piece ----------------------------------------------------------
-  function buildMap(piece, data, duration) {
+  function mapPiece(piece, data, duration) {
     var toks = window.paraTokens[piece.pi] || [];
     var len = piece.text.length;
     var exact = data && typeof data.chars === "string" && data.chars.length === len &&
@@ -131,91 +240,53 @@
     for (var i = 0; i < toks.length; i++) {
       var local = toks[i].start - piece.off;
       if (local < 0 || local >= len) continue;
-      var time;
-      if (exact) time = data.t[local];
-      else if (duration > 0) time = (local / len) * duration;   // honest fallback: proportional
-      else continue;
-      mw.push(i); mt.push(time);
+      if (exact) { mw.push(i); mt.push(data.t[local]); }
+      else if (duration > 0) { mw.push(i); mt.push((local / len) * duration); }
     }
     piece.mw = mw; piece.mt = mt; piece.exact = !!exact;
   }
 
-  // ---- highlight loop --------------------------------------------------------------------------
-  function tick() {
-    R.raf = 0;
-    var p = R.piece;
-    if (!p || !window.P || !window.P.playing || EL.paused) return;
-    if (p.mt && p.mt.length) {
-      var t = EL.currentTime, lo = 0, hi = p.mt.length - 1, best = -1;
-      while (lo <= hi) {
-        var mid = (lo + hi) >> 1;
-        if (p.mt[mid] <= t) { best = mid; lo = mid + 1; } else hi = mid - 1;
-      }
-      if (best >= 0 && best !== p.last) {
-        p.last = best;
-        window.P.pi = p.pi; window.P.wi = p.mw[best];
-        try { window.hl(p.pi, p.mw[best]); } catch (e) {}
-      }
-    }
-    R.raf = requestAnimationFrame(tick);
-  }
-  function startTick() { if (!R.raf) R.raf = requestAnimationFrame(tick); }
-  function stopTick() { if (R.raf) { cancelAnimationFrame(R.raf); R.raf = 0; } }
-
-  function rate() { return parseFloat(window.S && window.S.rate) || 0.95; }
-
-  // ---- playback --------------------------------------------------------------------------------
   function prefetch(n) {
-    var p = R.q[n];
+    var p = Q.list[n];
     if (p && !p.req) p.req = ask(p.text).catch(function () { return null; });
   }
 
-  function playPiece(gen) {
+  function playApi(gen) {
     if (gen !== R.gen) return;
-    var p = R.q[R.i];
+    R.mode = "api";
+    var p = Q.list[Q.i];
     if (!p) { stopTick(); try { window.finishStory(); } catch (e) {} return; }
-
     if (!p.req) p.req = ask(p.text).catch(function () { return null; });
+
     p.req.then(function (data) {
       if (gen !== R.gen) return;
-
       if (!data || !data.ok || !data.audio) {
-        // If Roz cannot speak at all, hand the whole story back to the device voice rather than
-        // leaving a child staring at a silent page.
         if (data && (data.reason === "no_key" || data.reason === "upstream")) { standDown(); return; }
-        R.i++; playPiece(gen);   // one bad piece skips forward; the rest of the story still reads
+        Q.i++; playApi(gen);            // one bad piece skips forward; the story keeps reading
         return;
       }
-
-      R.piece = p; p.last = -1;
+      Q.piece = p; p.last = -1;
       window.P.pi = p.pi;
-
-      EL.onended = function () { if (gen !== R.gen) return; R.i++; playPiece(gen); };
-      EL.onerror = function () { if (gen !== R.gen) return; R.i++; playPiece(gen); };
-      EL.onloadedmetadata = function () { buildMap(p, data, EL.duration || 0); };
-
+      EL.onended = function () { if (gen !== R.gen) return; Q.i++; playApi(gen); };
+      EL.onerror = function () { if (gen !== R.gen) return; Q.i++; playApi(gen); };
+      EL.onloadedmetadata = function () { mapPiece(p, data, EL.duration || 0); };
       EL.src = "data:audio/mpeg;base64," + data.audio;
       EL.playbackRate = rate();
-      buildMap(p, data, 0);
-
+      mapPiece(p, data, 0);
       var pr = EL.play();
       if (pr && pr.catch) pr.catch(function () {
-        // autoplay refused — do not strand the play button in the "playing" state
-        window.P.playing = false;
-        try { window.setPlayBtn(false); } catch (e) {}
+        playing(false);
         try { window.toast("Tap Read to me once more to start Roz."); } catch (e) {}
       });
-
-      window.P.playing = true;
-      try { window.setPlayBtn(true); } catch (e) {}
+      playing(true);
       startTick();
-      prefetch(R.i + 1);
+      prefetch(Q.i + 1);
     });
   }
 
-  // ---- Roz gives up: restore the original engine mid-story, without losing the reader ----------
+  // ================= PATH 3 — hand back to the device voice ======================================
   function standDown() {
-    R.ready = false; R.on = false;
+    R.ready = false; R.on = false; R.mode = null;
     stopTick(); try { EL.pause(); } catch (e) {}
     window.playFromCurrent = orig.playFromCurrent;
     window.pauseSpeech = orig.pauseSpeech;
@@ -227,116 +298,115 @@
     try { if (window.P && window.P.playing) window.playFromCurrent(); } catch (e) {}
   }
 
-  // ---- overrides --------------------------------------------------------------------------------
+  // ================= overrides ===================================================================
   window.playFromCurrent = function () {
     if (!R.on || !R.ready) return orig.playFromCurrent.apply(this, arguments);
     if (!window.cur) return;
     unlock();
 
-    // resume in place if nothing moved while paused — no refetch, no restarted sentence
-    if (R.q.length && R.piece && EL.paused && EL.currentTime > 0 && !EL.ended &&
+    // resume in place if nothing moved while paused — no reload, no restarted sentence
+    if (EL.paused && EL.currentTime > 0 && !EL.ended && R.mode &&
         window.P.pi === R.atPi && window.P.wi === R.atWi) {
-      window.P.playing = true;
-      try { window.setPlayBtn(true); } catch (e) {}
+      playing(true);
       EL.playbackRate = rate();
-      var pr0 = EL.play(); if (pr0 && pr0.catch) pr0.catch(function () {});
+      var pr = EL.play(); if (pr && pr.catch) pr.catch(function () {});
       startTick();
       return;
     }
 
-    R.gen++; R.i = 0; R.piece = null;
-    R.q = buildQueue(window.P.pi || 0, window.P.wi || 0);
-    if (!R.q.length) { try { window.finishStory(); } catch (e) {} return; }
-    window.P.playing = true;
-    try { window.setPlayBtn(true); } catch (e) {}
-    prefetch(0); prefetch(1);
-    playPiece(R.gen);
+    var gen = ++R.gen;
+    var id = window.cur.id;
+    var pi = window.P.pi || 0, wi = window.P.wi || 0;
+    playing(true);
+
+    loadStory(id).then(function (haveFile) {
+      if (gen !== R.gen) return;
+      if (haveFile) { playFile(gen, flat(pi, wi)); return; }
+      if (!R.live) { standDown(); return; }
+      Q.list = buildQueue(pi, wi); Q.i = 0; Q.piece = null;
+      if (!Q.list.length) { try { window.finishStory(); } catch (e) {} return; }
+      prefetch(0); prefetch(1);
+      playApi(gen);
+    });
   };
 
   window.pauseSpeech = function () {
     if (!R.on || !R.ready) return orig.pauseSpeech.apply(this, arguments);
-    window.P.playing = false;
     stopTick();
     try { EL.pause(); } catch (e) {}
     R.atPi = window.P.pi; R.atWi = window.P.wi;
-    try { window.setPlayBtn(false); } catch (e) {}
+    playing(false);
   };
 
   window.stopSpeech = function () {
     if (!R.on || !R.ready) return orig.stopSpeech.apply(this, arguments);
-    R.gen++; R.q = []; R.i = 0; R.piece = null; R.atPi = -1; R.atWi = -1;
-    window.P.playing = false;
+    R.gen++; R.mode = null; R.atPi = -1; R.atWi = -1;
+    Q.list = []; Q.i = 0; Q.piece = null;
     stopTick();
-    try { EL.pause(); EL.removeAttribute("src"); EL.load(); } catch (e) {}
-    try { window.clearHl(); window.setPlayBtn(false); } catch (e) {}
+    try { EL.pause(); } catch (e) {}
+    playing(false);
+    try { window.clearHl(); } catch (e) {}
   };
 
-  // tap a word: seek inside the loaded paragraph when we can (instant, free), otherwise let Roz
-  // say the single word on its own.
+  // Tap a word: seek straight to it in Roz's read. Free, instant, and it keeps the app's
+  // "tap any word to hear it alone" promise.
   window.sayWord = function (word, el) {
     if (!R.on || !R.ready) return orig.sayWord.apply(this, arguments);
     unlock();
     var pi = +el.dataset.pi, wi = +el.dataset.wi;
     var wasPlaying = window.P.playing;
-    var p = R.piece;
+    var k = -1, t0 = null, t1 = null;
 
-    if (p && p.pi === pi && p.mw) {
-      var k = p.mw.indexOf(wi);
-      if (k > -1) {
-        window.P.pi = pi; window.P.wi = wi;
-        try { window.clearHl(); } catch (e) {}
-        el.classList.add("hl");
-        try { EL.currentTime = p.mt[k]; } catch (e) {}
-        p.last = k - 1;
-        if (!wasPlaying) {
-          var stopAt = (p.mt[k + 1] != null) ? p.mt[k + 1] + 0.06 : null;
-          window.P.playing = true; startTick();
-          var watch = function () {
-            if (stopAt != null && EL.currentTime >= stopAt) {
-              EL.pause(); EL.removeEventListener("timeupdate", watch);
-              window.P.playing = false; stopTick();
-              R.atPi = pi; R.atWi = wi;
-              try { window.setPlayBtn(false); } catch (e) {}
-            }
-          };
-          EL.addEventListener("timeupdate", watch);
-          var pr1 = EL.play(); if (pr1 && pr1.catch) pr1.catch(function () {});
-        }
-        return;
-      }
+    if (R.mode === "file" && F.words) {
+      k = flat(pi, wi);
+      if (F.words[k]) { t0 = F.words[k][0]; t1 = F.words[k][1]; }
+    } else if (R.mode === "api" && Q.piece && Q.piece.pi === pi && Q.piece.mw) {
+      var j = Q.piece.mw.indexOf(wi);
+      if (j > -1) { t0 = Q.piece.mt[j]; t1 = (Q.piece.mt[j + 1] != null) ? Q.piece.mt[j + 1] : null; Q.piece.last = j - 1; }
     }
 
-    // word is outside the loaded audio — say it on its own
-    window.pauseSpeech();
+    window.P.pi = pi; window.P.wi = wi;
     try { window.clearHl(); } catch (e) {}
     el.classList.add("hl");
-    window.P.pi = pi; window.P.wi = wi; R.atPi = pi; R.atWi = wi;
-    var clean = String(word).replace(/[^A-Za-z0-9'-]/g, "");
-    if (!clean) return;
-    var gen = ++R.gen;
-    ask(clean).then(function (d) {
-      if (gen !== R.gen) return;
-      if (!d || !d.ok || !d.audio) return;
-      var one = new Audio("data:audio/mpeg;base64," + d.audio);
-      one.playbackRate = 0.85;
-      if (wasPlaying) one.onended = function () { if (gen === R.gen) window.playFromCurrent(); };
-      var pr2 = one.play(); if (pr2 && pr2.catch) pr2.catch(function () {});
-    }).catch(function () {});
+
+    if (t0 == null) {
+      // no timing for this word yet — start the read from here instead
+      R.atPi = -1; R.atWi = -1;
+      window.playFromCurrent();
+      return;
+    }
+
+    try { EL.currentTime = t0; } catch (e) {}
+    if (R.mode === "file") F.last = k - 1;
+
+    if (wasPlaying) { startTick(); return; }   // already reading: just jump
+
+    var stopAt = (t1 != null) ? t1 + 0.06 : t0 + 1.2;
+    playing(true); startTick();
+    var watch = function () {
+      if (EL.currentTime >= stopAt) {
+        EL.removeEventListener("timeupdate", watch);
+        try { EL.pause(); } catch (e) {}
+        stopTick(); playing(false);
+        R.atPi = pi; R.atWi = wi;
+      }
+    };
+    EL.addEventListener("timeupdate", watch);
+    var pr = EL.play(); if (pr && pr.catch) pr.catch(function () {});
   };
 
-  // ---- the voice picker: only ever offer Roz once she has answered -----------------------------
+  // ---- the voice picker: Roz is only ever offered once she can actually speak --------------------
   function addRozOption() {
     var sel = document.getElementById("selVoice");
     if (!sel || !R.ready) return;
     if (!sel.querySelector('option[value="roz"]')) {
       var o = document.createElement("option");
       o.value = "roz";
-      o.textContent = "Roz — real voice";
+      o.textContent = "Roz - read by a real voice";
       sel.insertBefore(o, sel.firstChild);
     }
     var saved = window.S && window.S.voice;
-    if (!saved || saved === "roz") { sel.value = "roz"; R.on = true; }
-    else { R.on = false; }
+    if (!saved || saved === "roz") { sel.value = "roz"; R.on = true; } else { R.on = false; }
   }
 
   window.loadVoices = function () {
@@ -349,35 +419,47 @@
     if (!sel) return;
     sel.onchange = function () {
       var wasPlaying = window.P && window.P.playing;
+      if (wasPlaying) window.pauseSpeech();
       if (sel.value === "roz") {
         if (window.speechSynthesis) speechSynthesis.cancel();
-        R.on = true; window.S.voice = "roz"; window.save();
+        R.on = true; window.S.voice = "roz";
       } else {
-        window.pauseSpeech();
-        R.on = false;
-        if (window.voices && window.voices[sel.value]) { window.S.voice = window.voices[sel.value].name; window.save(); }
+        try { EL.pause(); } catch (e) {}
+        stopTick(); R.on = false; R.mode = null;
+        if (window.voices && window.voices[sel.value]) window.S.voice = window.voices[sel.value].name;
       }
-      if (wasPlaying) { window.pauseSpeech(); window.playFromCurrent(); }
+      try { window.save(); } catch (e) {}
+      R.atPi = -1; R.atWi = -1;
+      if (wasPlaying) window.playFromCurrent();
     };
   }
 
-  // ---- boot: ask once whether Roz can speak. Costs zero ElevenLabs characters. -----------------
-  fetch("/api/roz?ping=1").then(function (r) { return r.json(); }).then(function (j) {
-    if (!j || !j.ok) return;                  // no key -> app untouched, device voice as before
+  // ---- boot ---------------------------------------------------------------------------------------
+  // Rendered audio alone is enough for Roz to read every story that ships today; the live key is
+  // what covers any story added later. Either one makes her available.
+  Promise.all([
+    fetch(AUDIO_DIR + "thanksgiving.json", { method: "HEAD" }).then(function (r) { return r.ok; }).catch(function () { return false; }),
+    fetch("/api/roz?ping=1").then(function (r) { return r.json(); }).then(function (j) { return !!(j && j.ok); }).catch(function () { return false; })
+  ]).then(function (res) {
+    R.live = res[1];
+    if (!res[0] && !res[1]) return;   // Roz cannot speak — app untouched, device voice as before
     R.ready = true;
     addRozOption();
     wirePicker();
     if (R.on && window.P && window.P.playing) {
       if (window.speechSynthesis) speechSynthesis.cancel();
+      R.atPi = -1; R.atWi = -1;
       window.playFromCurrent();
     }
-  }).catch(function () {});
+  });
 
   window.__rozNarration = {
-    v: VER, maxChars: MAX_CHARS,
+    v: VER,
     state: function () {
-      return { ready: R.ready, on: R.on, pieces: R.q.length, i: R.i,
-               exact: R.piece ? R.piece.exact : null, paused: EL.paused, t: EL.currentTime };
+      return { ready: R.ready, live: R.live, on: R.on, mode: R.mode, story: F.id,
+               words: F.words ? F.words.length : null, tokens: F.total,
+               paused: EL.paused, t: Math.round(EL.currentTime * 100) / 100,
+               dur: Math.round(EL.duration * 10) / 10, rate: EL.playbackRate };
     },
     split: split
   };
