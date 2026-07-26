@@ -37,8 +37,8 @@
 
     { id:'marquee', name:'Musical OS', img:'/Musical_OS.png', tag:'Live theater', genre:'business', state:'live',
       tiers:[ ['Community',650,4000,'Box office + productions + patrons'], ['Producing',1500,10000,'+ subscriptions · marketing · full house tools'], ['Regional / Multi-venue',3200,25000,'Multi-venue + custom + premium AI'] ],
-      acc:'#e0b24a', url:'https://ae-theater-hub.vercel.app', pricing:'/hubs/theater.html',
-      blurb:'Box office, seasons, casts, crews and volunteers — the whole theater, running on one spine.',
+      acc:'#e0b24a', url:'https://ae-musical-showroom.vercel.app', pricing:'/hubs/theater.html',
+      blurb:'Box office, season, giving, sponsorship, volunteers and classes — the whole playhouse on one spine, and the only theatre OS that speaks non-profit.',
       price:'$650/mo', priceNote:'3 tiers · annual $6,500/yr (2 months free)',
       svg:'<path d="M9 17h30l-3 22H12z"/><path d="M9 17 24 7l15 10"/><circle cx="19" cy="27" r="2"/><circle cx="29" cy="27" r="2"/>' },
 
