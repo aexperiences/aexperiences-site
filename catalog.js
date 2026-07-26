@@ -185,7 +185,11 @@
     { id:'esporacket', name:'ESPOracket', tag:'Tennis & pickleball', genre:'sport', state:'live',
       acc:'#101C2C', mark:M+'esporacket.svg', family:'ESPOcenter', url:'/apps/esporacket/',
       blurb:'Load your match film, tag every point, tap a tag to jump straight to the moment — on any device, footage never uploaded.',
-      price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — every price on the page, no hidden tiers' }
+      price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — every price on the page, no hidden tiers' },
+  { id:'espowords', name:'ESPOwords', tag:'Play the people you know', genre:'games', state:'live',
+    acc:'#243D2C', mark:'/marks/espowords.svg', family:'ESPOparlor', url:'/apps/espowords/',
+    blurb:'A turn-based word game with the people you actually know. No ads, no coins, no power-ups, no hints for sale, no strangers, no chat. Free.',
+    price:'Free', priceNote:'Free, and staying that way \u2014 there is nothing in it to buy.' }
   ];
 
   var GENRES = [
@@ -199,7 +203,8 @@
     { id:'travel',   label:'Travel' },
     { id:'sport',    label:'Sport' },
     { id:'savor',    label:'Food & drink' },
-    { id:'social',   label:'Social' }
+    { id:'social',   label:'Social' },
+    { id:'games',    label:'Games' }
   ];
 
   /* HARD GUARD — nobody gets into something that isn't finished.
