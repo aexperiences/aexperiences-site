@@ -1,5 +1,5 @@
 /* ESPOhystory service worker — network-first for the page, stale-while-revalidate for assets.
-   Accelerated Experiences LLC */
+   Accelerated Experiences, LLC */
 var C = "espohystory-v3";
 var ASSETS = ["./", "./index.html", "./icon.png", "./manifest.webmanifest"];
 self.addEventListener("install", function (e) {
@@ -22,6 +22,11 @@ self.addEventListener("fetch", function (e) {
   // even though a plain fetch() for the same URL/Range succeeds) — verified
   // live Jul 21 2026. Let these hit the network directly, untouched.
   if (e.request.url.indexOf("/audio/") !== -1) return;
+  var url;
+  try { url = new URL(e.request.url); } catch (err) { return; }
+  /* Never intercept /api/. A cached API response breaks the live feature it serves. */
+  if (url.pathname.indexOf("/api/") !== -1) return;
+  var sameOrigin = url.origin === self.location.origin;
   var accept = e.request.headers.get("accept") || "";
   var isDoc = e.request.mode === "navigate" ||
               e.request.destination === "document" ||
@@ -45,11 +50,13 @@ self.addEventListener("fetch", function (e) {
     );
     return;
   }
-  /* Everything else stays stale-while-revalidate: fast, and still works offline. */
+  /* Everything else stays stale-while-revalidate: fast, and still works offline.
+     Only same-origin responses get re-cached at runtime. Cross-origin assets we
+     genuinely need offline (the fonts) are already cached at install. */
   e.respondWith(
     caches.match(e.request).then(function (hit) {
       var net = fetch(e.request).then(function (res) {
-        if (res && res.ok) { var cp = res.clone(); caches.open(C).then(function (c) { c.put(e.request, cp); }); }
+        if (res && res.ok && sameOrigin) { var cp = res.clone(); caches.open(C).then(function (c) { c.put(e.request, cp); }); }
         return res;
       }).catch(function () { return hit; });
       return hit || net;
