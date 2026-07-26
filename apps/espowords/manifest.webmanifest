@@ -1,0 +1,15 @@
+{
+  "name": "ESPOwords",
+  "short_name": "ESPOwords",
+  "description": "A word game with the people you actually know. No ads, no strangers, free.",
+  "start_url": "/apps/espowords/",
+  "scope": "/apps/espowords/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F8F3E6",
+  "theme_color": "#16301F",
+  "icons": [
+    { "src": "/apps/espowords/icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
+    { "src": "/marks/espowords.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
