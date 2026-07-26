@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ESPOwords — a word game with your friends, and nothing else</title>
+<meta name="description" content="A turn-based word game you play with people you actually know. No ads, no hints for sale, no strangers, no chat, no tracking. Free. From Accelerated Experiences LLC.">
+<meta name="theme-color" content="#16301F">
+<link rel="icon" href="/marks/espowords.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apps/espowords/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#F8F3E6; --card:#FDFAF0; --field:#FFFDF6; --ink:#1F2E23; --ink2:#66786B;
+  --line:#DFD5BC; --hair:#D3C6A6; --green:#24422E; --greendeep:#16301F;
+  --gold:#A67F1E; --foil:#D8B45A; --ok:#4E7D5B; --warn:#8A4B2A;
+  --serif:"Fraunces","Iowan Old Style",Georgia,serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --tile:#F3E7C9; --tileEdge:#CBB683;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--ink); font-family:var(--sans);
+  font-size:16px; line-height:1.5; overscroll-behavior-y:none;
+  padding-bottom:calc(72px + env(safe-area-inset-bottom));
+}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input{font:inherit;color:inherit}
+a{color:var(--green)}
+
+/* ---------- header ---------- */
+header.top{
+  position:sticky; top:0; z-index:40;
+  background:linear-gradient(160deg,var(--green),var(--greendeep));
+  border-bottom:2px solid var(--gold);
+  padding:calc(10px + env(safe-area-inset-top)) 16px 10px;
+  display:flex; align-items:center; gap:12px;
+}
+.mark{
+  width:40px;height:40px;border-radius:11px;flex:none;
+  background:var(--greendeep); border:1px solid rgba(216,180,90,.45);
+  display:grid;place-items:center;
+}
+.mark span{font-family:var(--serif);font-weight:700;font-size:20px;color:var(--foil);line-height:1}
+.wordmark{font-family:var(--serif);font-size:21px;font-weight:700;color:#F6F0DF;letter-spacing:.1px}
+.wordmark i{color:var(--foil);font-style:italic}
+.tagline{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(246,240,223,.62);margin-top:1px}
+.top .spacer{flex:1}
+.pill{
+  border:1px solid rgba(216,180,90,.5); color:#F0E7CE; border-radius:999px;
+  padding:6px 13px; font-size:13px; font-weight:600; white-space:nowrap;
+}
+.pill.live{border-color:rgba(122,183,140,.6);color:#CDE7D4}
+
+/* ---------- layout ---------- */
+main{max-width:640px;margin:0 auto;padding:16px 14px 8px}
+.view{display:none} .view.on{display:block}
+.card{
+  background:var(--card); border:1px solid var(--line); border-radius:16px;
+  padding:16px; margin-bottom:14px;
+}
+h1{font-family:var(--serif);font-size:27px;line-height:1.15;margin:2px 0 8px;font-weight:700}
+h2{font-family:var(--serif);font-size:20px;margin:0 0 10px;font-weight:700}
+.kicker{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:8px}
+p{margin:0 0 10px} .muted{color:var(--ink2);font-size:14.5px}
+.row{display:flex;gap:9px;flex-wrap:wrap}
+label{display:block;font-size:12.5px;font-weight:600;color:var(--ink2);margin:11px 0 5px;letter-spacing:.02em}
+input[type=text],input[type=email],input[type=password]{
+  width:100%;background:var(--field);border:1px solid var(--hair);border-radius:11px;
+  padding:13px 14px;font-size:16px;
+}
+input:focus{outline:2px solid var(--ok);outline-offset:1px;border-color:transparent}
+.btn{
+  background:var(--green);color:#F6F0DF;border-radius:12px;padding:13px 18px;
+  font-weight:650;font-size:15.5px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:48px;
+}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.45;cursor:default;transform:none}
+.btn.wide{width:100%}
+.btn.ghost{background:transparent;border:1.5px solid var(--hair);color:var(--ink)}
+.btn.quiet{background:transparent;color:var(--green);text-decoration:underline;min-height:36px;padding:6px 2px}
+.btn.danger{background:transparent;border:1.5px solid #D8B7A6;color:var(--warn)}
+.note{border-left:3px solid var(--foil);background:#FBF5E3;padding:11px 13px;border-radius:0 10px 10px 0;font-size:14px}
+.err{border-left:3px solid var(--warn);background:#FBEEE7;padding:11px 13px;border-radius:0 10px 10px 0;font-size:14.5px;margin:10px 0}
+.good{border-left:3px solid var(--ok);background:#EDF5EE;padding:11px 13px;border-radius:0 10px 10px 0;font-size:14.5px;margin:10px 0}
+
+/* ---------- games list ---------- */
+.game{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:9px;
+}
+.game:active{background:#F6EFDC}
+.game .who{flex:1;min-width:0}
+.game .who b{display:block;font-size:16px;font-weight:650}
+.game .who small{color:var(--ink2);font-size:13px}
+.turnDot{width:10px;height:10px;border-radius:50%;background:var(--ok);flex:none}
+.turnDot.off{background:var(--hair)}
+.score{font-family:var(--serif);font-size:17px;font-weight:700;white-space:nowrap}
+
+/* ---------- board ---------- */
+.boardWrap{width:100%;max-width:560px;margin:0 auto}
+.board{
+  display:grid;grid-template-columns:repeat(15,1fr);gap:2px;
+  aspect-ratio:1/1;background:var(--hair);border:2px solid var(--green);
+  border-radius:10px;padding:2px;touch-action:manipulation;
+}
+.sq{
+  position:relative;background:#F1E9D4;border-radius:2px;
+  display:grid;place-items:center;font-size:8px;font-weight:700;color:#9A8A63;
+  letter-spacing:-.02em;user-select:none;
+}
+/* Green = a better letter. Gold = a better word. Reads at a glance and stays in the house palette. */
+.sq.DL{background:#DBE6D4;color:#4F6B52}
+.sq.TL{background:#B4CDAE;color:#2C4831}
+.sq.DW{background:#F1DFBE;color:#8A6A2E}
+.sq.TW{background:#E2BE88;color:#6B4715}
+.sq.mid{background:#E7DCC0;color:#8E7C55;font-size:11px}
+.sq.tgt{outline:2px solid var(--ok);outline-offset:-2px}
+.sq .t{
+  position:absolute;inset:0;background:linear-gradient(175deg,#FBF1D8,#EFE0BB);
+  border:1px solid #CBB683;border-radius:3px;display:grid;place-items:center;
+  font-family:var(--serif);font-weight:700;color:var(--ink);
+  font-size:clamp(9px,2.6vw,17px);box-shadow:0 1px 0 rgba(0,0,0,.13);
+}
+.sq .t.new{border-color:var(--ok);box-shadow:0 0 0 1.5px rgba(78,125,91,.5)}
+.sq .t.blank{color:#7A6B44}
+.sq .t sub{position:absolute;right:1px;bottom:0;font-size:7px;font-weight:600;color:#8B7B52}
+.sq .t.last{background:linear-gradient(175deg,#FDF6E4,#F6E9C6)}
+
+.rack{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:12px 0 8px;
+  background:var(--green);padding:8px;border-radius:12px;
+}
+.rt{
+  aspect-ratio:1/1;background:linear-gradient(175deg,#FBF1D8,#EFE0BB);border:1px solid #CBB683;
+  border-radius:6px;display:grid;place-items:center;position:relative;
+  font-family:var(--serif);font-weight:700;font-size:clamp(15px,5vw,26px);color:var(--ink);
+}
+.rt.sel{outline:3px solid var(--foil);outline-offset:1px;transform:translateY(-3px)}
+.rt.used{opacity:.22}
+.rt.empty{background:rgba(255,255,255,.07);border-style:dashed;border-color:rgba(255,255,255,.2)}
+.rt sub{position:absolute;right:3px;bottom:1px;font-size:9px;font-weight:600;color:#8B7B52}
+.rt.swapping{outline:3px solid var(--warn);outline-offset:1px}
+
+.bar{display:flex;gap:7px;margin:10px 0}
+.bar .btn{flex:1;padding:12px 6px;font-size:14px;min-height:46px}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:6px 0 2px;font-size:14px}
+.meta b{font-family:var(--serif);font-size:18px}
+.scoreline{display:flex;gap:10px;margin-bottom:10px}
+.scoreline > div{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:8px 12px;display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.scoreline .n{font-size:13px;color:var(--ink2);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scoreline .v{font-family:var(--serif);font-size:24px;font-weight:700;line-height:1.1}
+.scoreline > div.me{border-color:var(--ok);border-width:1.5px}
+.log{max-height:190px;overflow:auto;font-size:14px}
+.log div{padding:6px 0;border-bottom:1px solid var(--line)}
+.log div:last-child{border:0}
+
+/* blank picker */
+.sheet{position:fixed;inset:0;background:rgba(22,48,31,.5);display:grid;place-items:end center;z-index:60}
+.sheet .inner{background:var(--card);width:100%;max-width:640px;border-radius:18px 18px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom))}
+.letters{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px}
+.letters button{aspect-ratio:1/1;background:var(--field);border:1px solid var(--hair);border-radius:8px;font-family:var(--serif);font-weight:700;font-size:18px}
+
+/* ---------- tab bar ---------- */
+nav.tabs{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;
+  background:rgba(253,250,240,.97);backdrop-filter:blur(8px);
+  border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+nav.tabs button{padding:9px 4px 8px;display:grid;justify-items:center;gap:3px;color:var(--ink2);font-size:11.5px;font-weight:600}
+nav.tabs button.on{color:var(--green)}
+nav.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav.tabs .badge{position:absolute;transform:translate(14px,-6px);background:var(--warn);color:#fff;border-radius:999px;font-size:10px;padding:1px 5px;font-weight:700}
+footer{text-align:center;padding:18px 14px 6px;color:var(--ink2);font-size:12.5px}
+footer img{height:16px;vertical-align:-3px;margin-right:5px;opacity:.75}
+.hidden{display:none !important}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="mark"><span>W</span></div>
+  <div>
+    <div class="wordmark">ESPO<i>words</i></div>
+    <div class="tagline">Play your friends. That's it.</div>
+  </div>
+  <div class="spacer"></div>
+  <button class="pill" id="whoPill" type="button">Sign in</button>
+</header>
+
+<main>
+
+  <!-- ============ GAMES ============ -->
+  <section class="view on" id="v-games">
+    <div id="signedOut">
+      <div class="card">
+        <div class="kicker">Free · no ads · no hints for sale</div>
+        <h1>A word game with the people you actually know.</h1>
+        <p class="muted">Take turns building words on the board. Nothing interrupts you: there are
+        no ads, no coins, no power-ups, no treasure chests, no strangers, and no chat for anyone to
+        work you in. You play the people you invite, and that is the whole product.</p>
+        <div class="note">We ask for an email and a password so your games follow you between your
+        phone and your laptop. That is the only reason. We do not send email, we do not sell or
+        share anything, and there is no third-party tracking in this page.</div>
+      </div>
+
+      <div class="card">
+        <div class="row" style="gap:6px;margin-bottom:4px">
+          <button class="btn" id="tabSignin" type="button">Sign in</button>
+          <button class="btn ghost" id="tabSignup" type="button">Make an account</button>
+        </div>
+
+        <form id="formSignin">
+          <label for="siEmail">Email</label>
+          <input id="siEmail" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com">
+          <label for="siPw">Password</label>
+          <input id="siPw" type="password" autocomplete="current-password">
+          <div id="siErr"></div>
+          <button class="btn wide" type="submit" style="margin-top:14px">Sign in</button>
+          <button class="btn quiet" type="button" id="goRecover">Lost your password? Use your recovery code</button>
+        </form>
+
+        <form id="formSignup" class="hidden">
+          <label for="suHandle">Name other players will see</label>
+          <input id="suHandle" type="text" autocomplete="nickname" placeholder="3–16 characters" maxlength="16">
+          <label for="suEmail">Email</label>
+          <input id="suEmail" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com">
+          <label for="suPw">Password</label>
+          <input id="suPw" type="password" autocomplete="new-password" placeholder="at least 8 characters">
+          <div id="suErr"></div>
+          <button class="btn wide" type="submit" style="margin-top:14px">Make my account</button>
+          <p class="muted" style="margin-top:12px;font-size:13.5px">Because we do not send email, you
+          will get a recovery code on the next screen. That code is the only way back into your
+          account if you forget your password. Keep it somewhere.</p>
+        </form>
+
+        <form id="formRecover" class="hidden">
+          <label for="rcEmail">Email</label>
+          <input id="rcEmail" type="email" inputmode="email">
+          <label for="rcCode">Recovery code</label>
+          <input id="rcCode" type="text" placeholder="XXXXXX-XXXXXX-XXXXXX" autocapitalize="characters">
+          <label for="rcPw">New password</label>
+          <input id="rcPw" type="password" autocomplete="new-password">
+          <div id="rcErr"></div>
+          <button class="btn wide" type="submit" style="margin-top:14px">Set a new password</button>
+          <button class="btn quiet" type="button" id="backSignin">Back to sign in</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="signedIn" class="hidden">
+      <div class="card">
+        <h2>Start a game</h2>
+        <label for="oppHandle">Play someone by name</label>
+        <div class="row" style="flex-wrap:nowrap">
+          <input id="oppHandle" type="text" placeholder="their name on here" style="flex:1" autocapitalize="none">
+          <button class="btn" id="btnChallenge" type="button">Go</button>
+        </div>
+        <p class="muted" style="margin:12px 0 8px">Or make an invite link and send it however you
+        already talk to them.</p>
+        <div class="row">
+          <button class="btn ghost" id="btnInvite" type="button">Make an invite link</button>
+          <button class="btn ghost" id="btnJoin" type="button">Enter a code</button>
+        </div>
+        <div id="startMsg"></div>
+      </div>
+
+      <div class="kicker" style="margin:18px 0 8px">Your games</div>
+      <div id="gamesList"></div>
+    </div>
+  </section>
+
+  <!-- ============ BOARD ============ -->
+  <section class="view" id="v-board">
+    <div id="noGame" class="card">
+      <h2>No game open</h2>
+      <p class="muted">Pick a game from the Games tab, or start a new one.</p>
+    </div>
+
+    <div id="gameOn" class="hidden">
+      <div class="scoreline" id="scores"></div>
+      <div class="meta">
+        <span id="turnLine" class="muted"></span>
+        <span class="muted">Bag: <b id="bagLeft">–</b></span>
+      </div>
+      <div class="boardWrap"><div class="board" id="board" role="grid" aria-label="Game board"></div></div>
+      <div class="rack" id="rack" aria-label="Your tiles"></div>
+      <div id="playMsg"></div>
+      <div class="bar">
+        <button class="btn" id="btnPlay" type="button">Play</button>
+        <button class="btn ghost" id="btnRecall" type="button">Take back</button>
+        <button class="btn ghost" id="btnShuffle" type="button">Shuffle</button>
+      </div>
+      <div class="bar">
+        <button class="btn ghost" id="btnSwap" type="button">Swap tiles</button>
+        <button class="btn ghost" id="btnPass" type="button">Pass</button>
+        <button class="btn ghost" id="btnRefresh" type="button">Refresh</button>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <div class="kicker">What happened</div>
+        <div class="log" id="log"></div>
+        <button class="btn danger wide" id="btnResign" type="button" style="margin-top:12px">Resign this game</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WORDS ============ -->
+  <section class="view" id="v-words">
+    <div class="card">
+      <h2>Look a word up</h2>
+      <p class="muted">Any word, any time — before or after you play it. This tells you whether a
+      word is in the list. It will never tell you what to play: there are no hints in this game and
+      there never will be.</p>
+      <div class="row" style="flex-wrap:nowrap;margin-top:8px">
+        <input id="lookupWord" type="text" placeholder="type a word" autocapitalize="none" style="flex:1">
+        <button class="btn" id="btnLookup" type="button">Check</button>
+      </div>
+      <div id="lookupOut"></div>
+    </div>
+    <div class="card">
+      <div class="kicker">The word list, in the open</div>
+      <p class="muted" id="dictLine">Loading…</p>
+      <p class="muted">Every other word game keeps its list secret, so a rejected word feels like a
+      rigged machine. Ours is a public-domain list used exactly as published — you can download the
+      same file and check any ruling yourself.</p>
+      <p class="muted"><a href="https://cdn.jsdelivr.net/gh/dolph/dictionary@master/enable1.txt" rel="noopener" target="_blank">Open the word list</a></p>
+    </div>
+    <div class="card">
+      <div class="kicker">How the board works</div>
+      <p class="muted">Our own board and our own tiles, not a copy of anyone's. 60 premium squares,
+      arranged symmetrically. The centre square pays no bonus, so going first is not an advantage.
+      Using all seven tiles in one turn pays <b>40</b>. Tiles are drawn from the bag at random with
+      the same shuffle for both players, and neither of us can see the bag.</p>
+      <div id="tileTable" class="muted" style="font-size:13px;line-height:1.9"></div>
+    </div>
+  </section>
+
+  <!-- ============ YOU ============ -->
+  <section class="view" id="v-you">
+    <div class="card">
+      <h2 id="youName">You</h2>
+      <p class="muted" id="youSub"></p>
+      <div id="recoveryBox"></div>
+      <button class="btn ghost wide" id="btnSignout" type="button" style="margin-top:12px">Sign out</button>
+    </div>
+    <div class="card">
+      <div class="kicker">What we do not do</div>
+      <p class="muted">No ads, anywhere, ever — not between turns, not to see your own move, not for
+      a reward. No coins, no power-ups, no hint tools sold back to you. No bots dressed up as people:
+      every opponent here is a person you invited. No stranger matchmaking and no chat, which is how
+      the scams in these games find people. No analytics, no ad SDKs, no third-party scripts on this
+      page. We do not sell or share anything, because we do not collect anything to sell.</p>
+      <p class="muted">Your email is a login and nothing else. We never send to it.</p>
+    </div>
+    <div class="card">
+      <div class="kicker">Something wrong?</div>
+      <p class="muted">If a word was rejected that you believe is real, or anything here behaves
+      badly, that is a bug and we fix it. This game exists because the big ones stopped being
+      pleasant to play.</p>
+    </div>
+  </section>
+
+  <footer>
+    <img src="/ae-mark.png" alt="" onerror="this.style.display='none'">
+    Powered by Accelerated Experiences LLC ·
+    <a href="/shop.html">More from the App Shop</a>
+  </footer>
+</main>
+
+<nav class="tabs" role="tablist">
+  <button data-go="games" class="on" type="button"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg><span>Games</span><i class="badge hidden" id="turnBadge"></i></button>
+  <button data-go="board" type="button"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg><span>Board</span></button>
+  <button data-go="words" type="button"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h10M4 19h7"/><circle cx="18" cy="17" r="3"/><path d="m20.5 19.5 1.5 1.5"/></svg><span>Words</span></button>
+  <button data-go="you" type="button"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg><span>You</span></button>
+</nav>
+
+<script>
+(function(){
+'use strict';
+const API='/api/words';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const LS={ get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},
+           set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},
+           del:k=>{try{localStorage.removeItem(k)}catch(e){}} };
+
+let token=LS.get('ew.token')||'', me=null, game=null, meta=null;
+let placed=[];           // [{r,c,letter,blank,from}] this turn
+let selected=null;       // index into rack
+let swapMode=false, swapPick=[];
+let poll=null;
+
+/* ---------------- plumbing ---------------- */
+async function api(payload){
+  const r=await fetch(API,{method:'POST',headers:Object.assign(
+    {'content-type':'application/json'}, token?{authorization:'Bearer '+token}:{}),
+    body:JSON.stringify(payload)});
+  let j={}; try{ j=await r.json(); }catch(e){}
+  if(!r.ok){ const e=new Error(j.error||('Something went wrong ('+r.status+').')); e.status=r.status; throw e; }
+  return j;
+}
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const say=(el,cls,msg)=>{ el.innerHTML=msg?'<div class="'+cls+'">'+esc(msg)+'</div>':''; };
+const ago=t=>{ const s=(Date.now()-t)/1000; if(s<90)return'just now'; if(s<5400)return Math.round(s/60)+' min ago';
+  if(s<172800)return Math.round(s/3600)+' hr ago'; return Math.round(s/86400)+' days ago'; };
+
+/* ---------------- tabs ---------------- */
+function go(name){
+  $$('.view').forEach(v=>v.classList.toggle('on', v.id==='v-'+name));
+  $$('nav.tabs button').forEach(b=>b.classList.toggle('on', b.dataset.go===name));
+  window.scrollTo(0,0);
+  if(name==='games'&&me) loadGames();
+}
+$$('nav.tabs button').forEach(b=>b.onclick=()=>go(b.dataset.go));
+$('#whoPill').onclick=()=>go(me?'you':'games');
+
+/* ---------------- sign in / up ---------------- */
+function showForm(which){
+  $('#formSignin').classList.toggle('hidden',which!=='in');
+  $('#formSignup').classList.toggle('hidden',which!=='up');
+  $('#formRecover').classList.toggle('hidden',which!=='rec');
+  $('#tabSignin').className=which==='in'?'btn':'btn ghost';
+  $('#tabSignup').className=which==='up'?'btn':'btn ghost';
+}
+$('#tabSignin').onclick=()=>showForm('in');
+$('#tabSignup').onclick=()=>showForm('up');
+$('#goRecover').onclick=()=>showForm('rec');
+$('#backSignin').onclick=()=>showForm('in');
+
+function signedIn(user,recovery){
+  me=user; LS.set('ew.token',token);
+  $('#signedOut').classList.add('hidden'); $('#signedIn').classList.remove('hidden');
+  $('#whoPill').textContent=user.handle; $('#whoPill').classList.add('live');
+  $('#youName').textContent=user.handle;
+  $('#youSub').textContent='Signed in. Your games follow this account on any device.';
+  if(recovery){
+    LS.set('ew.recovery',recovery);
+  }
+  const rc=LS.get('ew.recovery');
+  $('#recoveryBox').innerHTML = rc
+    ? '<div class="note"><b>Your recovery code</b><br><code style="font-size:16px;letter-spacing:.06em">'+esc(rc)+'</code>'
+      + '<br><span style="font-size:13px">Write this down. Because we do not send email, this code is the only way back in if you forget your password. '
+      + 'It is shown here on this device only.</span><br><button class="btn quiet" id="hideRec" type="button">I have written it down — hide it</button></div>'
+    : '<p class="muted">Your recovery code was shown when you made the account. If you no longer have it, make a note to keep the password safe — we cannot email you a reset.</p>';
+  const hr=$('#hideRec'); if(hr) hr.onclick=()=>{ LS.del('ew.recovery'); signedIn(me); };
+  loadGames();
+  const j=new URLSearchParams(location.search).get('join');
+  if(j) joinCode(j);
+}
+function signedOut(){
+  me=null; token=''; LS.del('ew.token'); game=null;
+  $('#signedOut').classList.remove('hidden'); $('#signedIn').classList.add('hidden');
+  $('#whoPill').textContent='Sign in'; $('#whoPill').classList.remove('live');
+  $('#gameOn').classList.add('hidden'); $('#noGame').classList.remove('hidden');
+  go('games');
+}
+
+$('#formSignup').onsubmit=async e=>{
+  e.preventDefault(); const btn=e.target.querySelector('button[type=submit]'); btn.disabled=true;
+  try{
+    const r=await api({do:'signup',handle:$('#suHandle').value,email:$('#suEmail').value,password:$('#suPw').value});
+    token=r.token; say($('#suErr'),'',''); signedIn(r.user,r.recovery); go('you');
+  }catch(err){ say($('#suErr'),'err',err.message); } finally{ btn.disabled=false; }
+};
+$('#formSignin').onsubmit=async e=>{
+  e.preventDefault(); const btn=e.target.querySelector('button[type=submit]'); btn.disabled=true;
+  try{
+    const r=await api({do:'login',email:$('#siEmail').value,password:$('#siPw').value});
+    token=r.token; say($('#siErr'),'',''); signedIn(r.user);
+  }catch(err){ say($('#siErr'),'err',err.message); } finally{ btn.disabled=false; }
+};
+$('#formRecover').onsubmit=async e=>{
+  e.preventDefault(); const btn=e.target.querySelector('button[type=submit]'); btn.disabled=true;
+  try{
+    const r=await api({do:'recover',email:$('#rcEmail').value,code:$('#rcCode').value,password:$('#rcPw').value});
+    token=r.token; say($('#rcErr'),'',''); signedIn(r.user);
+  }catch(err){ say($('#rcErr'),'err',err.message); } finally{ btn.disabled=false; }
+};
+$('#btnSignout').onclick=async()=>{ try{ await api({do:'signout'}); }catch(e){} signedOut(); };
+
+/* ---------------- games list ---------------- */
+async function loadGames(){
+  try{
+    const r=await api({do:'games'});
+    const mine=r.games.filter(g=>g.yourTurn).length;
+    const badge=$('#turnBadge');
+    badge.textContent=mine; badge.classList.toggle('hidden',!mine);
+    const el=$('#gamesList');
+    if(!r.games.length){ el.innerHTML='<div class="card"><p class="muted">No games yet. Start one above — either type a friend\'s name, or make an invite link and send it to them.</p></div>'; return; }
+    el.innerHTML=r.games.map(g=>{
+      const who = g.waiting ? 'Waiting for someone to join' : esc(g.them||'—');
+      const sub = g.status==='done'
+        ? (g.result && g.result.winner ? (g.result.winner===g.you?'You won':esc(g.result.winner)+' won') : 'Finished — a tie')
+        : g.waiting ? ('Invite code '+esc(g.invite||'')) : (g.yourTurn?'Your turn':'Their turn') + ' · ' + ago(g.updated);
+      return '<button class="game" data-id="'+esc(g.id)+'" type="button">'
+        + '<span class="turnDot'+(g.yourTurn?'':' off')+'"></span>'
+        + '<span class="who"><b>'+who+'</b><small>'+sub+'</small></span>'
+        + '<span class="score">'+g.scores.join(' – ')+'</span></button>';
+    }).join('');
+    $$('#gamesList .game').forEach(b=>b.onclick=()=>openGame(b.dataset.id));
+  }catch(err){
+    if(err.status===401){ signedOut(); return; }
+    $('#gamesList').innerHTML='<div class="err">'+esc(err.message)+'</div>';
+  }
+}
+
+$('#btnChallenge').onclick=async()=>{
+  const h=$('#oppHandle').value.trim(); if(!h) return;
+  try{ const r=await api({do:'newgame',handle:h}); $('#oppHandle').value='';
+    say($('#startMsg'),'good','Game started with '+r.game.players.filter(p=>p.handle!==me.handle).map(p=>p.handle)[0]+'.');
+    game=r.game; loadGames(); openGame(r.game.id);
+  }catch(err){ say($('#startMsg'),'err',err.message); }
+};
+$('#btnInvite').onclick=async()=>{
+  try{
+    const r=await api({do:'newgame'});
+    const link=location.origin+location.pathname+'?join='+r.game.invite;
+    $('#startMsg').innerHTML='<div class="good">Send this to your friend. The first person to open it takes the seat.<br>'
+      +'<input type="text" readonly value="'+esc(link)+'" style="margin-top:8px" id="inviteLink">'
+      +'<br><button class="btn ghost" type="button" id="copyLink" style="margin-top:8px">Copy link</button> '
+      +'<span class="muted">or the code <b>'+esc(r.game.invite)+'</b></span></div>';
+    $('#copyLink').onclick=()=>{ const i=$('#inviteLink'); i.select(); i.setSelectionRange(0,999); try{document.execCommand('copy'); $('#copyLink').textContent='Copied';}catch(e){} };
+    loadGames();
+  }catch(err){ say($('#startMsg'),'err',err.message); }
+};
+$('#btnJoin').onclick=()=>{
+  $('#startMsg').innerHTML='<div class="note"><label for="joinCode">Invite code</label>'
+    +'<input id="joinCode" type="text" autocapitalize="characters" placeholder="8 characters">'
+    +'<button class="btn" type="button" id="doJoin" style="margin-top:10px">Join the game</button></div>';
+  $('#doJoin').onclick=()=>joinCode($('#joinCode').value.trim());
+};
+async function joinCode(code){
+  if(!code) return;
+  try{ const r=await api({do:'join',code:code}); say($('#startMsg'),'good','You are in.');
+       history.replaceState(null,'',location.pathname); loadGames(); openGame(r.game.id); }
+  catch(err){ say($('#startMsg'),'err',err.message); }
+}
+
+/* ---------------- the board ---------------- */
+const LETTER_VALUE={};
+async function loadMeta(){
+  try{
+    const r=await fetch(API,{cache:'no-store'}); meta=await r.json();
+    for(const [l,v] of Object.entries(meta.tiles)) LETTER_VALUE[l]=v[1];
+    $('#dictLine').textContent='Dictionary: '+meta.dictionary+' — 172,823 words. Used exactly as published; we add nothing of our own.';
+    $('#tileTable').innerHTML=Object.entries(meta.tiles).map(([l,v])=>
+      '<span style="display:inline-block;min-width:64px">'+(l==='?'?'blank':l)+' ×'+v[0]+' <b>'+v[1]+'</b></span>').join('');
+  }catch(e){ $('#dictLine').textContent='Could not reach the game service just now.'; }
+}
+
+function squareClass(i){
+  if(!meta) return '';
+  const c=meta.layout[i];
+  return c==='d'?'DL':c==='t'?'TL':c==='D'?'DW':c==='T'?'TW':c==='+'?'mid':'';
+}
+const LABEL={DL:'DL',TL:'TL',DW:'DW',TW:'TW',mid:'★'};
+
+function drawBoard(){
+  const b=$('#board'); const lastAt=new Set((game.moves.filter(m=>m.kind==='play').slice(-1)[0]||{}).at||[]);
+  const pmap=new Map(placed.map(p=>[p.r*15+p.c,p]));
+  let html='';
+  for(let i=0;i<225;i++){
+    const cls=squareClass(i);
+    const t=game.board[i];
+    const p=pmap.get(i);
+    let inner='';
+    if(t) inner='<span class="t'+(lastAt.has(i)?' last':'')+(t.b?' blank':'')+'">'+esc(t.l)+(t.b?'':'<sub>'+(LETTER_VALUE[t.l]||0)+'</sub>')+'</span>';
+    else if(p) inner='<span class="t new'+(p.blank?' blank':'')+'">'+esc(p.letter)+(p.blank?'':'<sub>'+(LETTER_VALUE[p.letter]||0)+'</sub>')+'</span>';
+    else if(cls) inner=LABEL[cls];
+    html+='<div class="sq '+cls+(selected!==null&&!t&&!p?' tgt':'')+'" data-i="'+i+'" role="gridcell">'+inner+'</div>';
+  }
+  b.innerHTML=html;
+  b.querySelectorAll('.sq').forEach(sq=>sq.onclick=()=>tapSquare(+sq.dataset.i));
+}
+
+function drawRack(){
+  const seat=game.you, rack=(game.players[seat]&&game.players[seat].rack)||[];
+  const usedIdx=new Set(placed.map(p=>p.from));
+  let html='';
+  for(let i=0;i<7;i++){
+    const l=rack[i];
+    if(l===undefined){ html+='<div class="rt empty"></div>'; continue; }
+    const cls='rt'+(selected===i?' sel':'')+(usedIdx.has(i)?' used':'')+(swapMode&&swapPick.includes(i)?' swapping':'');
+    html+='<button class="'+cls+'" data-i="'+i+'" type="button" aria-label="tile '+(l==='?'?'blank':l)+'">'
+      +(l==='?'?'<span style="opacity:.5">▢</span>':esc(l)+'<sub>'+(LETTER_VALUE[l]||0)+'</sub>')+'</button>';
+  }
+  $('#rack').innerHTML=html;
+  $$('#rack .rt[data-i]').forEach(b=>b.onclick=()=>tapRack(+b.dataset.i));
+}
+
+function tapRack(i){
+  const rack=game.players[game.you].rack;
+  if(swapMode){
+    const at=swapPick.indexOf(i);
+    if(at>=0) swapPick.splice(at,1); else swapPick.push(i);
+    drawRack(); return;
+  }
+  if(placed.some(p=>p.from===i)) return;         // already down this turn
+  selected = selected===i ? null : i;
+  drawRack(); drawBoard();
+}
+
+function tapSquare(i){
+  const r=Math.floor(i/15), c=i%15;
+  const existingIdx=placed.findIndex(p=>p.r===r&&p.c===c);
+  if(existingIdx>=0){ placed.splice(existingIdx,1); selected=null; drawRack(); drawBoard(); return; }  // take it back
+  if(game.board[i]) return;
+  if(selected===null) return;
+  const l=game.players[game.you].rack[selected];
+  if(l==='?'){ askBlank(selected,r,c); return; }
+  placed.push({r,c,letter:l,blank:false,from:selected});
+  selected=null; drawRack(); drawBoard(); say($('#playMsg'),'','');
+}
+
+function askBlank(from,r,c){
+  const wrap=document.createElement('div'); wrap.className='sheet';
+  wrap.innerHTML='<div class="inner"><h2>What is this blank?</h2>'
+   +'<p class="muted">It plays as that letter and is worth nothing, same as everywhere else.</p>'
+   +'<div class="letters">'+'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(l=>'<button type="button" data-l="'+l+'">'+l+'</button>').join('')+'</div>'
+   +'<button class="btn ghost wide" type="button" id="blankCancel" style="margin-top:12px">Never mind</button></div>';
+  document.body.appendChild(wrap);
+  wrap.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{
+    placed.push({r,c,letter:b.dataset.l,blank:true,from});
+    selected=null; wrap.remove(); drawRack(); drawBoard();
+  });
+  $('#blankCancel').onclick=()=>wrap.remove();
+  wrap.onclick=e=>{ if(e.target===wrap) wrap.remove(); };
+}
+
+function paint(){
+  const seat=game.you, them=1-seat;
+  $('#gameOn').classList.remove('hidden'); $('#noGame').classList.add('hidden');
+  const p=game.players;
+  $('#scores').innerHTML=
+    '<div class="me"><div class="n">'+esc(p[seat]?p[seat].handle:'You')+' (you)</div><div class="v">'+(p[seat]?p[seat].score:0)+'</div></div>'
+   +'<div><div class="n">'+esc(p[them]?p[them].handle:'Waiting…')+'</div><div class="v">'+(p[them]?p[them].score:0)+'</div></div>';
+  $('#bagLeft').textContent=game.bagLeft;
+  const done=game.status==='done';
+  $('#turnLine').textContent = done
+      ? (game.result && game.result.winner ? (game.result.winner===(p[seat]&&p[seat].handle)?'You won.':esc(game.result.winner)+' won.') : 'Finished — a tie.')
+      : p.length<2 ? ('Waiting for someone to take the invite'+(game.invite?' — code '+game.invite:''))
+      : game.yourTurn ? 'Your turn.' : 'Their turn.';
+  ['btnPlay','btnRecall','btnShuffle','btnSwap','btnPass'].forEach(id=>{ $('#'+id).disabled = done || !game.yourTurn; });
+  $('#btnResign').classList.toggle('hidden',done);
+  drawBoard(); drawRack();
+  $('#log').innerHTML = game.moves.slice().reverse().map(m=>{
+    if(m.kind==='play') return '<div><b>'+esc(m.by)+'</b> played '+m.words.map(w=>esc(w.word)+' ('+w.points+')').join(', ')+(m.bingo?' <b>+40 all seven!</b>':'')+' — <b>'+m.points+'</b></div>';
+    if(m.kind==='pass') return '<div><b>'+esc(m.by)+'</b> passed</div>';
+    if(m.kind==='swap') return '<div><b>'+esc(m.by)+'</b> swapped '+m.n+' tile'+(m.n>1?'s':'')+'</div>';
+    if(m.kind==='resign') return '<div><b>'+esc(m.by)+'</b> resigned</div>';
+    if(m.kind==='end') return '<div>Game over — '+esc(m.reason)+'</div>';
+    return '';
+  }).join('') || '<div class="muted">Nothing yet. First word has to cross the middle.</div>';
+}
+
+async function openGame(id){
+  try{
+    const r=await api({do:'game',id}); game=r.game; placed=[]; selected=null; swapMode=false; swapPick=[];
+    LS.set('ew.game',id); paint(); go('board'); startPoll();
+  }catch(err){ say($('#startMsg'),'err',err.message); }
+}
+function startPoll(){
+  clearInterval(poll);
+  poll=setInterval(async()=>{
+    if(!game||document.hidden||game.status==='done') return;
+    if(game.yourTurn && placed.length) return;              // never yank the board mid-move
+    try{ const r=await api({do:'game',id:game.id});
+      if(r.game.rev!==game.rev){ game=r.game; if(!placed.length) paint(); }
+    }catch(e){}
+  },15000);
+}
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden&&game&&!placed.length) $('#btnRefresh').click(); });
+
+$('#btnRecall').onclick=()=>{ placed=[]; selected=null; say($('#playMsg'),'',''); drawRack(); drawBoard(); };
+$('#btnShuffle').onclick=()=>{
+  const rack=game.players[game.you].rack;
+  if(placed.length){ say($('#playMsg'),'err','Take your tiles back first.'); return; }
+  for(let i=rack.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [rack[i],rack[j]]=[rack[j],rack[i]]; }
+  selected=null; drawRack();
+};
+$('#btnRefresh').onclick=async()=>{
+  if(!game) return;
+  try{ const r=await api({do:'game',id:game.id}); game=r.game; if(!placed.length) paint(); }catch(e){}
+};
+$('#btnPlay').onclick=async()=>{
+  if(!placed.length){ say($('#playMsg'),'err','Put some tiles on the board first.'); return; }
+  const btn=$('#btnPlay'); btn.disabled=true;
+  try{
+    const r=await api({do:'play',id:game.id,tiles:placed.map(p=>({r:p.r,c:p.c,letter:p.letter,blank:p.blank}))});
+    game=r.game; placed=[]; selected=null;
+    say($('#playMsg'),'good', r.words.map(w=>w.word).join(', ')+' — '+r.points+(r.bingo?' (all seven, +40)':'')+'.');
+    paint(); loadGames();
+  }catch(err){
+    // Your tiles are still on the board exactly where you left them. Nothing is lost.
+    say($('#playMsg'),'err',err.message);
+  } finally{ btn.disabled = !(game && game.yourTurn && game.status!=='done'); }
+};
+$('#btnPass').onclick=async()=>{
+  if(placed.length){ say($('#playMsg'),'err','Take your tiles back first.'); return; }
+  try{ const r=await api({do:'pass',id:game.id}); game=r.game; paint(); loadGames(); say($('#playMsg'),'','') ; }
+  catch(err){ say($('#playMsg'),'err',err.message); }
+};
+$('#btnSwap').onclick=async()=>{
+  if(placed.length){ say($('#playMsg'),'err','Take your tiles back first.'); return; }
+  if(!swapMode){ swapMode=true; swapPick=[]; drawRack();
+    say($('#playMsg'),'note','Tap the tiles you want to trade, then press Swap again. It costs your turn.');
+    $('#btnSwap').textContent='Swap these'; return; }
+  const rack=game.players[game.you].rack;
+  const letters=swapPick.map(i=>rack[i]);
+  swapMode=false; $('#btnSwap').textContent='Swap tiles';
+  if(!letters.length){ drawRack(); say($('#playMsg'),'',''); return; }
+  try{ const r=await api({do:'swap',id:game.id,letters}); game=r.game; swapPick=[]; paint(); loadGames();
+       say($('#playMsg'),'good','Swapped '+letters.length+'.'); }
+  catch(err){ say($('#playMsg'),'err',err.message); drawRack(); }
+};
+let resignArmed=false;
+$('#btnResign').onclick=async()=>{
+  if(!resignArmed){ resignArmed=true; $('#btnResign').textContent='Tap again to resign — this ends the game';
+    setTimeout(()=>{ resignArmed=false; $('#btnResign').textContent='Resign this game'; },5000); return; }
+  try{ const r=await api({do:'resign',id:game.id}); game=r.game; resignArmed=false;
+       $('#btnResign').textContent='Resign this game'; paint(); loadGames(); }
+  catch(err){ say($('#playMsg'),'err',err.message); }
+};
+
+/* ---------------- word lookup ---------------- */
+$('#btnLookup').onclick=doLookup;
+$('#lookupWord').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); doLookup(); }});
+async function doLookup(){
+  const w=$('#lookupWord').value.trim();
+  if(!w) return;
+  try{
+    const r=await api({do:'lookup',word:w});
+    say($('#lookupOut'), r.valid?'good':'err',
+      r.valid ? r.word+' is in the word list — it plays.' : (r.word+' is not in the word list.'+(r.note?' '+r.note:'')));
+  }catch(err){ say($('#lookupOut'),'err',err.message); }
+}
+
+/* ---------------- boot ---------------- */
+loadMeta();
+(async()=>{
+  const j=new URLSearchParams(location.search).get('join');
+  if(token){
+    try{ const r=await api({do:'me'}); signedIn(r.user);
+         const last=LS.get('ew.game'); if(last&&!j) { try{ await openGame(last); }catch(e){} }
+    }catch(e){ signedOut(); if(j) say($('#siErr'),'note','Sign in or make an account, and you will join that game.'); }
+  } else {
+    signedOut();
+    if(j) say($('#siErr'),'note','Sign in or make an account and you will join that game straight away.');
+  }
+})();
+})();
+</script>
+</body>
+</html>
