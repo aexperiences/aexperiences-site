@@ -334,6 +334,19 @@ body.big .phrases button{font-size:17px;min-height:58px}
         <div id="startMsg"></div>
       </div>
 
+      <div class="card">
+        <h2>Or play the computer</h2>
+        <p class="muted">No waiting for anyone. It plays properly — it reads the board and finds real
+        words — and it is always shown as the computer, never dressed up as a person. Easy is
+        genuinely easy; it is not pretending.</p>
+        <div class="row">
+          <button class="btn ghost" data-bot="easy" type="button">Easy</button>
+          <button class="btn ghost" data-bot="even" type="button">Even</button>
+          <button class="btn ghost" data-bot="tough" type="button">Tough</button>
+        </div>
+        <div id="botMsg"></div>
+      </div>
+
       <div class="kicker" style="margin:18px 0 8px">Your games</div>
       <div id="gamesList"></div>
     </div>
@@ -481,6 +494,18 @@ body.big .phrases button{font-size:17px;min-height:58px}
       <p class="muted">Your email is a login and nothing else. We never send to it.</p>
     </div>
     <div class="card">
+      <div class="kicker">What should we add? What should we take away?</div>
+      <p class="muted">This game gets built by the people playing it. Say what you want and it goes on
+      the list with your name on it — and when it turns up in the game, everyone knows whose idea it was.</p>
+      <label for="ideaText">Your idea</label>
+      <input id="ideaText" type="text" placeholder="bigger tiles, a different colour, anything">
+      <button class="btn wide" id="btnIdea" type="button" style="margin-top:10px">Send it in</button>
+      <div id="ideaMsg"></div>
+      <div class="kicker" style="margin-top:18px">On the list so far</div>
+      <div class="log" id="ideaList" style="max-height:260px"></div>
+    </div>
+
+    <div class="card">
       <div class="kicker">Something wrong?</div>
       <p class="muted">If a word was rejected that you believe is real, or anything here behaves
       badly, that is a bug and we fix it. This game exists because the big ones stopped being
@@ -572,7 +597,7 @@ function signedIn(user,recovery){
       + 'It is shown here on this device only.</span><br><button class="btn quiet" id="hideRec" type="button">I have written it down — hide it</button></div>'
     : '<p class="muted">Your recovery code was shown when you made the account. If you no longer have it, make a note to keep the password safe — we cannot email you a reset.</p>';
   const hr=$('#hideRec'); if(hr) hr.onclick=()=>{ LS.del('ew.recovery'); signedIn(me); };
-  loadGames();
+  loadGames(); loadIdeas();
   const j=new URLSearchParams(location.search).get('join');
   if(j) joinCode(j);
 }
@@ -1013,13 +1038,49 @@ $('#btnLink').onclick = async () => {
     const url = location.origin + location.pathname + '?k=' + r.key;
     $('#linkBox').innerHTML = '<div class="note" style="margin-top:12px"><b>Send this to them in a text message.</b>'
       + '<input type="text" readonly id="theLink" value="'+esc(url)+'" style="margin-top:8px">'
-      + '<div class="row" style="margin-top:8px"><button class="btn ghost" type="button" id="copyMine">Copy link</button></div>'
+      + '<div class="row" style="margin-top:8px"><button class="btn ghost" type="button" id="copyMine">Copy link</button>'
+      + (navigator.share ? '<button class="btn" type="button" id="shareMine">Send it in a message</button>' : '') + '</div>'
       + '<span class="muted" style="font-size:13.5px">Anyone with this link can open this account, so send it only to the person it belongs to. '
       + 'Tell them to keep the message — it works every time, including if their phone ever forgets them.</span></div>';
     $('#copyMine').onclick = () => { const i=$('#theLink'); i.select(); i.setSelectionRange(0,999);
       try{ document.execCommand('copy'); $('#copyMine').textContent='Copied'; }catch(e){} };
+    const sh=$('#shareMine');
+    if(sh) sh.onclick = () => navigator.share({title:'ESPOwords', text:'Tap this and you are in — no password needed.', url}).catch(()=>{});
   }catch(err){ say($('#linkBox'),'err',err.message); }
 };
+
+/* ---------------- playing the computer ---------------- */
+$$('[data-bot]').forEach(b => b.onclick = async () => {
+  const level = b.dataset.bot;
+  b.disabled = true; const was = b.textContent; b.textContent = 'Starting…';
+  try{
+    const r = await api({do:'newgame', vs:'computer', level});
+    say($('#botMsg'),'good','Game on. It goes first only if you pass — the board is yours to open.');
+    loadGames(); await openGame(r.game.id);
+  }catch(err){ say($('#botMsg'),'err',err.message); }
+  finally{ b.disabled=false; b.textContent=was; }
+});
+
+/* ---------------- what to add, what to take away ---------------- */
+async function loadIdeas(){
+  try{
+    const r = await api({do:'ideas'});
+    $('#ideaList').innerHTML = r.ideas.length
+      ? r.ideas.map(i=>'<div><b>'+esc(i.by)+'</b> — '+esc(i.text)+'</div>').join('')
+      : '<div class="muted">Nothing yet. Be the first.</div>';
+  }catch(e){ $('#ideaList').innerHTML=''; }
+}
+$('#btnIdea').onclick = async () => {
+  const v = $('#ideaText').value.trim();
+  if(!v) return;
+  try{
+    const r = await api({do:'idea', text:v});
+    $('#ideaText').value='';
+    say($('#ideaMsg'),'good','On the list, with your name on it.');
+    $('#ideaList').innerHTML = r.ideas.map(i=>'<div><b>'+esc(i.by)+'</b> — '+esc(i.text)+'</div>').join('');
+  }catch(err){ say($('#ideaMsg'),'err',err.message); }
+};
+$('#ideaText').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); $('#btnIdea').click(); }});
 
 /* ---------------- put it on the Home Screen ---------------- */
 (function installHint(){
