@@ -30,6 +30,10 @@ async function redis(...cmd) {
   if (j.error) throw new Error('store: ' + j.error);
   return j.result;
 }
+// Every key this game writes is namespaced, so it can share a Redis database with
+// another AE product without either one ever stepping on the other's keys.
+const NS = 'ew:';
+const K = (s) => NS + s;
 const getJSON = async (k) => { const v = await redis('GET', k); return v ? JSON.parse(v) : null; };
 const setJSON = (k, v, ttl) => ttl ? redis('SET', k, JSON.stringify(v), 'EX', String(ttl))
                                    : redis('SET', k, JSON.stringify(v));
@@ -48,7 +52,7 @@ async function saveGame(g) {
   const expect = String(g.rev);
   g.rev += 1;
   g.updated = Date.now();
-  const ok = await redis('EVAL', CAS, '2', 'g:' + g.id, 'gr:' + g.id, expect, JSON.stringify(g), next);
+  const ok = await redis('EVAL', CAS, '2', K('g:' + g.id), K('gr:' + g.id), expect, JSON.stringify(g), next);
   if (!ok) { g.rev -= 1; throw new Error('busy'); }
 }
 
@@ -232,10 +236,10 @@ async function userByToken(req) {
   const auth = String(req.headers.authorization || '');
   const t = auth.startsWith('Bearer ') ? auth.slice(7) : '';
   if (!t) return null;
-  const uid = await redis('GET', 's:' + t);
+  const uid = await redis('GET', K('s:' + t));
   if (!uid) return null;
-  await redis('EXPIRE', 's:' + t, String(SESSION_DAYS * 86400));
-  return await getJSON('u:' + uid);
+  await redis('EXPIRE', K('s:' + t), String(SESSION_DAYS * 86400));
+  return await getJSON(K('u:' + uid));
 }
 
 /* ---------------------------------------------------------------- games -- */
@@ -335,50 +339,50 @@ export default async function handler(req, res) {
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return bad(res, 400, 'That email address does not look right.');
       if (pw.length < 8) return bad(res, 400, 'Password needs at least 8 characters.');
       if (!/^[A-Za-z0-9_.-]{3,16}$/.test(handle)) return bad(res, 400, 'Name: 3–16 letters, numbers, dot, dash or underscore.');
-      const emailKey = 'e:' + crypto.createHash('sha256').update(email).digest('hex').slice(0, 32);
-      const claimedHandle = await redis('SET', 'h:' + handle.toLowerCase(), 'pending', 'NX');
+      const emailKey = K('e:') + crypto.createHash('sha256').update(email).digest('hex').slice(0, 32);
+      const claimedHandle = await redis('SET', K('h:' + handle.toLowerCase()), 'pending', 'NX');
       if (!claimedHandle) return bad(res, 409, 'That name is taken — pick another.');
       const claimedEmail = await redis('SET', emailKey, 'pending', 'NX');
-      if (!claimedEmail) { await redis('DEL', 'h:' + handle.toLowerCase()); return bad(res, 409, 'There is already an account on that email.'); }
+      if (!claimedEmail) { await redis('DEL', K('h:' + handle.toLowerCase())); return bad(res, 409, 'There is already an account on that email.'); }
       const salt = crypto.randomBytes(16).toString('hex');
       const recov = recoveryCode();
       const u = { id: newId(), handle, emailKey, salt, hash: hashPw(pw, salt),
         recovSalt: salt, recovHash: hashPw(recov, salt), created: Date.now(), games: [] };
-      await setJSON('u:' + u.id, u);
-      await redis('SET', 'h:' + handle.toLowerCase(), u.id);
+      await setJSON(K('u:' + u.id), u);
+      await redis('SET', K('h:' + handle.toLowerCase()), u.id);
       await redis('SET', emailKey, u.id);
       const t = token();
-      await redis('SET', 's:' + t, u.id, 'EX', String(SESSION_DAYS * 86400));
+      await redis('SET', K('s:' + t), u.id, 'EX', String(SESSION_DAYS * 86400));
       return ok(res, { ok: true, token: t, user: publicUser(u), recovery: recov });
     }
 
     if (act === 'login') {
       const email = norm(body.email);
-      const emailKey = 'e:' + crypto.createHash('sha256').update(email).digest('hex').slice(0, 32);
+      const emailKey = K('e:') + crypto.createHash('sha256').update(email).digest('hex').slice(0, 32);
       const uid = await redis('GET', emailKey);
       if (!uid || uid === 'pending') return bad(res, 401, 'No account on that email and password.');
-      const u = await getJSON('u:' + uid);
+      const u = await getJSON(K('u:' + uid));
       if (!u || hashPw(String(body.password || ''), u.salt) !== u.hash) return bad(res, 401, 'No account on that email and password.');
       const t = token();
-      await redis('SET', 's:' + t, u.id, 'EX', String(SESSION_DAYS * 86400));
+      await redis('SET', K('s:' + t), u.id, 'EX', String(SESSION_DAYS * 86400));
       return ok(res, { ok: true, token: t, user: publicUser(u) });
     }
 
     if (act === 'recover') {
       const email = norm(body.email);
-      const emailKey = 'e:' + crypto.createHash('sha256').update(email).digest('hex').slice(0, 32);
+      const emailKey = K('e:') + crypto.createHash('sha256').update(email).digest('hex').slice(0, 32);
       const uid = await redis('GET', emailKey);
       if (!uid || uid === 'pending') return bad(res, 401, 'That email and recovery code do not match an account.');
-      const u = await getJSON('u:' + uid);
+      const u = await getJSON(K('u:' + uid));
       const code = String(body.code || '').trim().toUpperCase();
       const pw = String(body.password || '');
       if (!u || hashPw(code, u.recovSalt) !== u.recovHash) return bad(res, 401, 'That email and recovery code do not match an account.');
       if (pw.length < 8) return bad(res, 400, 'New password needs at least 8 characters.');
       u.salt = crypto.randomBytes(16).toString('hex');
       u.hash = hashPw(pw, u.salt);
-      await setJSON('u:' + u.id, u);
+      await setJSON(K('u:' + u.id), u);
       const t = token();
-      await redis('SET', 's:' + t, u.id, 'EX', String(SESSION_DAYS * 86400));
+      await redis('SET', K('s:' + t), u.id, 'EX', String(SESSION_DAYS * 86400));
       return ok(res, { ok: true, token: t, user: publicUser(u) });
     }
 
@@ -388,7 +392,7 @@ export default async function handler(req, res) {
     if (act === 'me') return ok(res, { ok: true, user: publicUser(me) });
     if (act === 'signout') {
       const auth = String(req.headers.authorization || '');
-      if (auth.startsWith('Bearer ')) await redis('DEL', 's:' + auth.slice(7));
+      if (auth.startsWith('Bearer ')) await redis('DEL', K('s:' + auth.slice(7)));
       return ok(res, { ok: true });
     }
 
@@ -397,7 +401,7 @@ export default async function handler(req, res) {
       const ids = (me.games || []).slice(-60).reverse();
       const list = [];
       for (const id of ids) {
-        const g = await getJSON('g:' + id);
+        const g = await getJSON(K('g:' + id));
         if (!g) continue;
         const i = g.players.findIndex((p) => p.uid === me.id);
         list.push({
@@ -419,44 +423,44 @@ export default async function handler(req, res) {
       let opp = null;
       if (other) {
         if (other.toLowerCase() === me.handle.toLowerCase()) return bad(res, 400, 'You cannot start a game with yourself.');
-        const uid = await redis('GET', 'h:' + other.toLowerCase());
+        const uid = await redis('GET', K('h:' + other.toLowerCase()));
         if (!uid || uid === 'pending') return bad(res, 404, `Nobody here goes by "${other}".`);
-        opp = await getJSON('u:' + uid);
+        opp = await getJSON(K('u:' + uid));
       }
       const g = newGame(me, opp);
       if (!opp) {
         g.invite = crypto.randomBytes(4).toString('hex').toUpperCase();
-        await redis('SET', 'inv:' + g.invite, g.id, 'EX', String(30 * 86400));
+        await redis('SET', K('inv:' + g.invite), g.id, 'EX', String(30 * 86400));
       }
-      await redis('SET', 'gr:' + g.id, '1');
-      await redis('SET', 'g:' + g.id, JSON.stringify({ ...g, rev: 1 }));
+      await redis('SET', K('gr:' + g.id), '1');
+      await redis('SET', K('g:' + g.id), JSON.stringify({ ...g, rev: 1 }));
       g.rev = 1;
       for (const u of [me, opp].filter(Boolean)) {
         u.games = (u.games || []).concat(g.id);
-        await setJSON('u:' + u.id, u);
+        await setJSON(K('u:' + u.id), u);
       }
       return ok(res, { ok: true, game: view(g, me.id) });
     }
 
     if (act === 'join') {
       const code = String(body.code || '').trim().toUpperCase();
-      const gid = await redis('GET', 'inv:' + code);
+      const gid = await redis('GET', K('inv:' + code));
       if (!gid) return bad(res, 404, 'That invite code has expired or was never a code.');
-      const g = await getJSON('g:' + gid);
+      const g = await getJSON(K('g:' + gid));
       if (!g) return bad(res, 404, 'That game is gone.');
       if (g.players.some((p) => p.uid === me.id)) return ok(res, { ok: true, game: view(g, me.id) });
       if (g.players.length >= 2) return bad(res, 409, 'Someone already took that invite.');
       g.players.push({ uid: me.id, handle: me.handle, score: 0, rack: g.bag.splice(0, RACK) });
       delete g.invite;
-      await redis('DEL', 'inv:' + code);
+      await redis('DEL', K('inv:' + code));
       await saveGame(g);
       me.games = (me.games || []).concat(g.id);
-      await setJSON('u:' + me.id, me);
+      await setJSON(K('u:' + me.id), me);
       return ok(res, { ok: true, game: view(g, me.id) });
     }
 
     /* ---- one game ---- */
-    const g = body.id ? await getJSON('g:' + body.id) : null;
+    const g = body.id ? await getJSON(K('g:' + body.id)) : null;
     if (['game', 'play', 'swap', 'pass', 'resign'].includes(act)) {
       if (!g) return bad(res, 404, 'No such game.');
       if (!g.players.some((p) => p.uid === me.id)) return bad(res, 403, 'That is not your game.');
