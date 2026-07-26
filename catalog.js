@@ -13,7 +13,7 @@
 
   var CATALOG = [
 
-    /* ─────────── BUSINESS HUBS — live, sold as a subscription ─────────── */
+    /* ─────────── BUSINESS OS — live, sold as a subscription ─────────── */
     { id:'homestead', name:'Abode OS', img:'/Abode_OS.png', tag:'Real estate', genre:'business', state:'live',
       tiers:[ ['Solo / Team',450,2500,'Pipeline + CRM + commissions, DeepSeek AI'], ['Team',950,6500,'Full suite + broker views + marketing + Claude'], ['Brokerage',2400,18000,'Multi-team · compliance · custom + premium AI'] ],
       acc:'#c8794f', url:'https://ae-realestate-hub.vercel.app', pricing:'/hubs/real-estate.html',
@@ -23,8 +23,8 @@
 
     { id:'draftline', name:'Buttress OS', img:'/Buttress_OS.png', tag:'Architecture', genre:'business', state:'live',
       tiers:[ ['Studio',550,3500,'Projects + RFIs + billing + Detail Studio'], ['Firm',1200,9000,'Full suite + custom workflows + Claude eyes'], ['Multi-office',2800,22000,'Unlimited + custom modules + white-glove'] ],
-      acc:'#5c8a5f', url:'https://ae-architecture-hub.vercel.app', pricing:'/hubs/architecture.html',
-      blurb:'Projects, drawing sets, consultants and clients in one studio hub — built around how a practice actually runs.',
+      acc:'#5c8a5f', url:'https://ae-buttress-showroom.vercel.app', pricing:'/hubs/architecture.html',
+      blurb:'Projects, drawing sets, consultants and clients in one studio OS — built around how a practice actually runs.',
       price:'$550/mo', priceNote:'3 tiers · annual $5,500/yr (2 months free)',
       svg:'<path d="M24 7 11 41M24 7l13 34"/><circle cx="24" cy="7" r="2.6"/><path d="M24 7v11"/><path d="M16 30h16"/>' },
 
@@ -73,7 +73,7 @@
     { id:'targeted', name:'Targeted OS', img:'/Targeted_OS.png', tag:'Marketing agencies & studios', genre:'business', state:'live',
       tiers:[ ['Freelance / Studio',450,2500,'CRM + pipeline + estimator + campaigns'], ['Agency',950,6500,'Full suite + agent org + mail + Connect'], ['Multi-team',2200,16000,'Multi-team + custom + premium AI'] ],
       acc:'#d97a2e', url:'https://ae-targeted-showroom.vercel.app/dashboard', pricing:'/hubs/targeted.html',
-      blurb:'CRM, pipeline, estimator and campaigns for a marketing agency or studio — on one branded hub.',
+      blurb:'CRM, pipeline, estimator and campaigns for a marketing agency or studio — on one branded OS.',
       price:'$450/mo', priceNote:'3 tiers · annual $4,500/yr (2 months free)',
       svg:'<circle cx="24" cy="24" r="15"/><circle cx="24" cy="24" r="9"/><circle cx="24" cy="24" r="3"/>' },
 
