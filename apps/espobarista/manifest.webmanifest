@@ -1,0 +1,13 @@
+{
+  "name": "ESPObarista",
+  "short_name": "ESPObarista",
+  "description": "A private coffee journal. Log the bean, the brew, the ratio and the cup. No ads, no marketplace, no account. Your log is yours.",
+  "start_url": "/apps/espobarista/",
+  "scope": "/apps/espobarista/",
+  "display": "standalone",
+  "background_color": "#241812",
+  "theme_color": "#241812",
+  "icons": [
+    { "src": "/apps/espobarista/icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" }
+  ]
+}
