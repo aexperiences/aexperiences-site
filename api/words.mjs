@@ -217,6 +217,198 @@ function scoreWords(board, wordCells, placedSet) {
   return { total, detail };
 }
 
+/* ------------------------------------------------------ one shared judge --
+   Both a person's move and the computer's move go through this exact function.
+   That is the whole trick: the computer physically cannot propose something the
+   game would refuse, because it is asking the same judge. */
+
+function evaluatePlacement(prevBoard, placed, first, dict) {
+  const board = prevBoard.slice();
+  const placedSet = new Set();
+  const used = [];
+  for (const t of placed) {
+    const r = Number(t.r), c = Number(t.c);
+    if (!(r >= 0 && r < 15 && c >= 0 && c < 15)) return { error: 'A tile landed off the board.' };
+    const i = r * 15 + c;
+    if (board[i]) return { error: 'One of those squares is already taken.', taken: true };
+    if (placedSet.has(i)) return { error: 'Two tiles on one square.' };
+    const letter = String(t.letter || '').toUpperCase();
+    if (!/^[A-Z]$/.test(letter)) return { error: 'That is not a letter.' };
+    board[i] = { l: letter, b: !!t.blank };
+    placedSet.add(i);
+    used.push(t.blank ? '?' : letter);
+  }
+  if (first && !placedSet.has(CENTRE)) return { error: 'The first word has to cross the centre square.' };
+  if (!first) {
+    const touches = [...placedSet].some((i) => {
+      const r = Math.floor(i / 15), c = i % 15;
+      return [[r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]]
+        .some(([a, b]) => a >= 0 && a < 15 && b >= 0 && b < 15 && prevBoard[a * 15 + b]);
+    });
+    if (!touches) return { error: 'Your word has to touch a word already on the board.' };
+  }
+  const found = wordsFormed(board, [...placedSet].map((i) => ({ i })));
+  if (found.error) return { error: found.error };
+  if (!found.words.length) return { error: 'A single tile on its own is not a word.' };
+  const spelled = found.words.map((cells) => cells.map((i) => board[i].l).join(''));
+  const rejected = spelled.filter((w) => !dict.has(w));
+  if (rejected.length) return { error: null, rejected };
+  const { total, detail } = scoreWords(board, found.words, placedSet);
+  return { board, placedSet, words: detail, total, used };
+}
+
+/* ------------------------------------------------------ the computer --
+   A real opponent, not a lookup table of canned words. It reads the board,
+   works out every legal word it could actually play from the tiles it holds,
+   and then picks one according to how hard you asked it to be.
+   It is always shown as the computer. Nobody here is ever fooled into
+   thinking they are playing a person — that is the one thing the big word
+   games did that there is no excuse for. */
+
+let PREFIX = null, prefixLoading = null;
+async function prefixSet() {
+  if (PREFIX) return PREFIX;
+  if (!prefixLoading) prefixLoading = (async () => {
+    const d = await dictionary();
+    const p = new Set();
+    for (const w of d) for (let i = 1; i < w.length; i++) p.add(w.slice(0, i));
+    PREFIX = p;
+    return p;
+  })();
+  return prefixLoading;
+}
+
+const LEVELS = {
+  easy:  { label: 'Computer · easy',  cap: 14, pick: 'low'  },
+  even:  { label: 'Computer · even',  cap: 28, pick: 'mid'  },
+  tough: { label: 'Computer · tough', cap: 999, pick: 'best' },
+};
+
+async function findMoves(board, rack, first, budgetMs = 3000) {
+  const dict = await dictionary();
+  const pre = await prefixSet();
+  const started = Date.now();
+  const out = [];
+  const seen = new Set();
+  const letters = rack.slice();
+
+  const consider = (placed) => {
+    if (!placed.length) return;
+    const key = placed.map((p) => p.r + ',' + p.c + p.letter + (p.blank ? '*' : '')).sort().join('|');
+    if (seen.has(key)) return;
+    seen.add(key);
+    const ev = evaluatePlacement(board, placed, first, dict);
+    if (ev.error || ev.rejected || !ev.words) return;
+    out.push({ tiles: placed.slice(), score: ev.total, words: ev.words });
+  };
+
+  for (const dir of [1, 15]) {
+    for (let line = 0; line < 15; line++) {
+      const at = (pos) => (dir === 1 ? line * 15 + pos : pos * 15 + line);
+      const rc = (pos) => (dir === 1 ? { r: line, c: pos } : { r: pos, c: line });
+      for (let start = 0; start < 15; start++) {
+        if (start > 0 && board[at(start - 1)]) continue;   // never begin mid-word
+        const walk = (pos, pool, placed, word) => {
+          if (Date.now() - started > budgetMs) return;
+          if (pos > 14) { if (placed.length && dict.has(word)) consider(placed); return; }
+          const sq = board[at(pos)];
+          if (sq) return walk(pos + 1, pool, placed, word + sq.l);
+          // stopping here is a candidate, as long as we actually laid something down
+          if (placed.length && word.length > 1 && dict.has(word)) consider(placed);
+          if (!pool.length) return;
+          const tried = new Set();
+          for (let k = 0; k < pool.length; k++) {
+            const tile = pool[k];
+            const options = tile === '?' ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('') : [tile];
+            for (const L of options) {
+              const tag = tile + L;
+              if (tried.has(tag)) continue;
+              tried.add(tag);
+              const next = word + L;
+              if (!pre.has(next) && !dict.has(next)) continue;
+              const { r, c } = rc(pos);
+              const rest = pool.slice(0, k).concat(pool.slice(k + 1));
+              walk(pos + 1, rest, placed.concat([{ r, c, letter: L, blank: tile === '?' }]), next);
+            }
+          }
+        };
+        walk(start, letters, [], '');
+      }
+    }
+  }
+  out.sort((a, b) => b.score - a.score);
+  return out;
+}
+
+function chooseMove(moves, level) {
+  if (!moves.length) return null;
+  const cfg = LEVELS[level] || LEVELS.even;
+  if (cfg.pick === 'best') return moves[0];
+  // Easy and even play like a relaxed human: a decent word, not the optimal one,
+  // and never a crushing score. Losing to a machine that plays perfectly is not fun,
+  // and being flattened is exactly why people stop playing.
+  const fits = moves.filter((m) => m.score <= cfg.cap);
+  const pool = fits.length ? fits : moves.slice(-Math.max(1, Math.floor(moves.length / 4)));
+  if (cfg.pick === 'low') {
+    const bottom = pool.slice(Math.floor(pool.length * 0.55));
+    const arr = bottom.length ? bottom : pool;
+    return arr[crypto.randomInt(arr.length)];
+  }
+  const mid = pool.slice(0, Math.max(1, Math.ceil(pool.length * 0.4)));
+  return mid[crypto.randomInt(mid.length)];
+}
+
+// The computer takes its turn, in the same game record, under the same rules.
+async function computerTurn(g) {
+  const seat = g.players.findIndex((p) => p.bot);
+  if (seat < 0 || g.status !== 'open' || g.turn !== seat) return;
+  const me = g.players[seat];
+  const first = g.moves.every((m) => m.kind !== 'play');
+  let moves = [];
+  try { moves = await findMoves(g.board, me.rack, first); } catch (_) { moves = []; }
+  const pick = chooseMove(moves, me.level);
+
+  if (!pick) {
+    // Nothing playable: trade tiles if it can, otherwise pass. Same options a person has.
+    if (g.bag.length >= 3) {
+      const give = me.rack.slice(0, Math.min(3, me.rack.length));
+      const keep = me.rack.slice(give.length);
+      const drawn = g.bag.splice(0, give.length);
+      me.rack = keep.concat(drawn);
+      g.bag = g.bag.concat(give);
+      for (let i = g.bag.length - 1; i > 0; i--) { const j = crypto.randomInt(i + 1); [g.bag[i], g.bag[j]] = [g.bag[j], g.bag[i]]; }
+      g.moves.push({ t: Date.now(), by: me.handle, kind: 'swap', n: give.length });
+    } else {
+      g.moves.push({ t: Date.now(), by: me.handle, kind: 'pass' });
+    }
+    g.scoreless += 1;
+    g.turn = 1 - g.turn;
+    if (g.scoreless >= 6) endGame(g, 'passed out');
+    return;
+  }
+
+  const dict = await dictionary();
+  const ev = evaluatePlacement(g.board, pick.tiles, first, dict);
+  if (ev.error || ev.rejected || !ev.words) { // belt and braces — should never happen
+    g.moves.push({ t: Date.now(), by: me.handle, kind: 'pass' });
+    g.scoreless += 1; g.turn = 1 - g.turn;
+    return;
+  }
+  const rack = me.rack.slice();
+  for (const u of ev.used) { const at = rack.indexOf(u); if (at >= 0) rack.splice(at, 1); }
+  const bingo = pick.tiles.length === RACK;
+  const points = ev.total + (bingo ? BINGO : 0);
+  g.board = ev.board;
+  me.score += points;
+  const drawn = g.bag.splice(0, Math.min(RACK - rack.length, g.bag.length));
+  me.rack = rack.concat(drawn);
+  g.scoreless = 0;
+  g.moves.push({ t: Date.now(), by: me.handle, kind: 'play', points, bingo, words: ev.words,
+    at: [...ev.placedSet] });
+  g.turn = 1 - g.turn;
+  if (!me.rack.length && !g.bag.length) endGame(g, 'out of tiles');
+}
+
 /* --------------------------------------------------------------- people -- */
 
 const norm = (s) => String(s || '').trim().toLowerCase();
@@ -282,6 +474,7 @@ function view(g, uid) {
     invite: g.invite || null,
     players: g.players.map((p, i) => ({
       handle: p.handle, score: p.score, tiles: p.rack.length,
+      bot: !!p.bot,
       rack: i === me ? p.rack : undefined,
     })),
     moves: g.moves.slice(-40),
@@ -428,6 +621,23 @@ export default async function handler(req, res) {
     }
 
     if (act === 'me') return ok(res, { ok: true, user: publicUser(me) });
+
+    /* ---- what should we add, what should we take away ----
+       The people playing it get to shape it, and they get to see that they did.
+       Suggestions are listed with the name of whoever asked, so when a thing turns
+       up in the game a fortnight later everyone knows whose idea it was. */
+    if (act === 'idea') {
+      const text = String(body.text || '').trim().slice(0, 500);
+      if (!text) return bad(res, 400, 'Tell us the idea first.');
+      const list = (await getJSON(K('ideas'))) || [];
+      list.push({ t: Date.now(), by: me.handle, text });
+      await setJSON(K('ideas'), list.slice(-150));
+      return ok(res, { ok: true, ideas: list.slice(-40).reverse() });
+    }
+    if (act === 'ideas') {
+      const list = (await getJSON(K('ideas'))) || [];
+      return ok(res, { ok: true, ideas: list.slice(-40).reverse() });
+    }
     if (act === 'signout') {
       const auth = String(req.headers.authorization || '');
       if (auth.startsWith('Bearer ')) await redis('DEL', K('s:' + auth.slice(7)));
@@ -448,6 +658,7 @@ export default async function handler(req, res) {
           yourTurn: g.status === 'open' && g.players.length === 2 && g.turn === i,
           you: g.players[i] ? g.players[i].handle : null,
           them: g.players.filter((p) => p.uid !== me.id).map((p) => p.handle)[0] || null,
+          vsComputer: g.players.some((p) => p.bot),
           scores: g.players.map((p) => p.score),
           result: g.result || null,
         });
@@ -457,6 +668,20 @@ export default async function handler(req, res) {
 
     /* ---- starting a game ---- */
     if (act === 'newgame') {
+      // Play the computer. Useful on its own, and the gentlest possible way to try
+      // the game for the first time without anybody watching you learn it.
+      if (body.vs === 'computer') {
+        const level = LEVELS[body.level] ? body.level : 'even';
+        const g = newGame(me, null);
+        g.players.push({ uid: 'computer:' + level, handle: LEVELS[level].label, score: 0,
+          rack: g.bag.splice(0, RACK), bot: true, level });
+        await redis('SET', K('gr:' + g.id), '1');
+        await redis('SET', K('g:' + g.id), JSON.stringify({ ...g, rev: 1 }));
+        g.rev = 1;
+        me.games = (me.games || []).concat(g.id);
+        await setJSON(K('u:' + me.id), me);
+        return ok(res, { ok: true, game: view(g, me.id) });
+      }
       const other = String(body.handle || '').trim();
       let opp = null;
       if (other) {
@@ -554,6 +779,7 @@ export default async function handler(req, res) {
       g.moves.push({ t: Date.now(), by: me.handle, kind: 'pass' });
       g.turn = 1 - g.turn;
       if (g.scoreless >= 6) endGame(g, 'passed out');
+      await computerTurn(g);
       await saveGame(g);
       return ok(res, { ok: true, game: view(g, me.id) });
     }
@@ -587,6 +813,7 @@ export default async function handler(req, res) {
       g.moves.push({ t: Date.now(), by: me.handle, kind: 'swap', n: want.length });
       g.turn = 1 - g.turn;
       if (g.scoreless >= 6) endGame(g, 'passed out');
+      await computerTurn(g);
       await saveGame(g);
       return ok(res, { ok: true, game: view(g, me.id) });
     }
@@ -597,67 +824,52 @@ export default async function handler(req, res) {
       if (!placed.length) return bad(res, 400, 'Put some tiles down first.');
       if (placed.length > RACK) return bad(res, 400, 'That is more tiles than you have.');
 
-      const board = g.board.slice();
-      const rack = g.players[seat].rack.slice();
-      const placedSet = new Set();
+      // if a square is already taken, say that — it is the more useful complaint,
+      // and it is what the player can actually see on their screen
       for (const t of placed) {
         const r = Number(t.r), c = Number(t.c);
-        if (!(r >= 0 && r < 15 && c >= 0 && c < 15)) return bad(res, 400, 'A tile landed off the board.');
-        const i = r * 15 + c;
-        if (board[i]) return bad(res, 409, 'One of those squares is already taken.');
-        if (placedSet.has(i)) return bad(res, 400, 'Two tiles on one square.');
-        const letter = String(t.letter || '').toUpperCase();
-        if (!/^[A-Z]$/.test(letter)) return bad(res, 400, 'That is not a letter.');
-        const from = t.blank ? '?' : letter;
+        if (r >= 0 && r < 15 && c >= 0 && c < 15 && g.board[r * 15 + c]) {
+          return bad(res, 409, 'One of those squares is already taken.');
+        }
+      }
+
+      // your tiles must actually be yours
+      const rack = g.players[seat].rack.slice();
+      for (const t of placed) {
+        const from = t.blank ? '?' : String(t.letter || '').toUpperCase();
         const at = rack.indexOf(from);
         if (at < 0) return bad(res, 400, 'Those are not all your tiles.');
         rack.splice(at, 1);
-        board[i] = { l: letter, b: !!t.blank };
-        placedSet.add(i);
       }
-
-      const first = g.moves.every((m) => m.kind !== 'play');
-      if (first && !placedSet.has(CENTRE)) return bad(res, 400, 'The first word has to cross the centre square.');
-      if (!first) {
-        const touches = [...placedSet].some((i) => {
-          const r = Math.floor(i / 15), c = i % 15;
-          return [[r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]]
-            .some(([a, b]) => a >= 0 && a < 15 && b >= 0 && b < 15 && g.board[a * 15 + b]);
-        });
-        if (!touches) return bad(res, 400, 'Your word has to touch a word already on the board.');
-      }
-
-      const found = wordsFormed(board, [...placedSet].map((i) => ({ i })));
-      if (found.error) return bad(res, 400, found.error);
-      if (!found.words.length) return bad(res, 400, 'A single tile on its own is not a word.');
 
       let dict;
       try { dict = await dictionary(); }
       catch { return bad(res, 503, 'The word list is unreachable right now — your turn is untouched, try again in a moment.'); }
 
-      const spelled = found.words.map((cells) => cells.map((i) => board[i].l).join(''));
-      const rejected = spelled.filter((w) => !dict.has(w));
-      if (rejected.length) {
+      const first = g.moves.every((m) => m.kind !== 'play');
+      const ev = evaluatePlacement(g.board, placed, first, dict);
+      if (ev.error) return bad(res, ev.taken ? 409 : 400, ev.error);
+      if (ev.rejected) {
         // Nothing is committed. You keep your tiles and your turn, and you are told
         // exactly which word failed — the thing every other word game refuses to do.
-        return bad(res, 422, `${rejected.join(', ')} ${rejected.length > 1 ? 'are not' : 'is not'} in the word list. Nothing was played — your tiles are still yours.`);
+        return bad(res, 422, `${ev.rejected.join(', ')} ${ev.rejected.length > 1 ? 'are not' : 'is not'} in the word list. Nothing was played — your tiles are still yours.`);
       }
 
-      const { total, detail } = scoreWords(board, found.words, placedSet);
       const bingo = placed.length === RACK;
-      const points = total + (bingo ? BINGO : 0);
+      const points = ev.total + (bingo ? BINGO : 0);
 
-      g.board = board;
+      g.board = ev.board;
       g.players[seat].score += points;
       const drawn = g.bag.splice(0, Math.min(RACK - rack.length, g.bag.length));
       g.players[seat].rack = rack.concat(drawn);
       g.scoreless = 0;
-      g.moves.push({ t: Date.now(), by: me.handle, kind: 'play', points, bingo, words: detail,
-        at: [...placedSet] });
+      g.moves.push({ t: Date.now(), by: me.handle, kind: 'play', points, bingo, words: ev.words,
+        at: [...ev.placedSet] });
       g.turn = 1 - g.turn;
       if (!g.players[seat].rack.length && !g.bag.length) endGame(g, 'out of tiles');
+      await computerTurn(g);
       await saveGame(g);
-      return ok(res, { ok: true, points, bingo, words: detail, game: view(g, me.id) });
+      return ok(res, { ok: true, points, bingo, words: ev.words, game: view(g, me.id) });
     }
 
     return bad(res, 400, 'Unknown request.');
