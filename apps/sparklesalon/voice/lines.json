@@ -1,0 +1,86 @@
+[
+  {
+    "id": "welcome",
+    "text": "Welcome to your Sparkle Salon! Your first customer is here."
+  },
+  {
+    "id": "c01",
+    "text": "Hi! I'm Mia! Can I get long rainbow hair and star nails?"
+  },
+  {
+    "id": "c02",
+    "text": "Hi! I'm Ava! I have a party! I'd love a sparkly dress and curly hair."
+  },
+  {
+    "id": "c03",
+    "text": "Hi! I'm Lily! Ooh, give me bubblegum pink hair and heart nails!"
+  },
+  {
+    "id": "c04",
+    "text": "Hi! I'm Zoe! Can you do a top bun and pretty lips?"
+  },
+  {
+    "id": "c05",
+    "text": "Hi! I'm Ruby! I want a tutu and a sparkly crown, please!"
+  },
+  {
+    "id": "c06",
+    "text": "Hi! I'm Nora! Mermaid vibes! Mint hair and glitter nails?"
+  },
+  {
+    "id": "c07",
+    "text": "Hi! I'm Isla! Give me a cozy hoodie and wavy hair!"
+  },
+  {
+    "id": "c08",
+    "text": "Hi! I'm Cleo! I'd love braids and a cute bow."
+  },
+  {
+    "id": "c09",
+    "text": "Hi! I'm Poppy! Can I be a superhero? A hero cape and star nails!"
+  },
+  {
+    "id": "c10",
+    "text": "Hi! I'm Daisy! Sunshine look, please — blonde hair and a flower!"
+  },
+  {
+    "id": "c11",
+    "text": "Hi! I'm Luna! Grape purple hair and a sparkly top?"
+  },
+  {
+    "id": "c12",
+    "text": "Hi! I'm Willa! I want a bob and fancy French nails!"
+  },
+  {
+    "id": "c13",
+    "text": "Hi! I'm Sadie! Overalls and a ponytail for me, please!"
+  },
+  {
+    "id": "c14",
+    "text": "Hi! I'm Coco! Surprise me — but I really want sparkly lips!"
+  },
+  {
+    "id": "p1",
+    "text": "I love it so much!"
+  },
+  {
+    "id": "p2",
+    "text": "Wow, I look amazing!"
+  },
+  {
+    "id": "p3",
+    "text": "You're the best stylist ever!"
+  },
+  {
+    "id": "p4",
+    "text": "This is perfect, thank you!"
+  },
+  {
+    "id": "p5",
+    "text": "I feel like a star!"
+  },
+  {
+    "id": "p6",
+    "text": "Eeee, I love my new look!"
+  }
+]
