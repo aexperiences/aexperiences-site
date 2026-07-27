@@ -214,22 +214,22 @@ No ads. No trackers. Offline stamps — your visits are yours. Not affiliated wi
 <div class="toast" id="toast"></div>
 
 <script>
-/* The 63 U.S. National Parks — name + state(s) */
-var PARKS=[["Acadia","ME"],["American Samoa","AS"],["Arches","UT"],["Badlands","SD"],["Big Bend","TX"],
-["Biscayne","FL"],["Black Canyon of the Gunnison","CO"],["Bryce Canyon","UT"],["Canyonlands","UT"],
-["Capitol Reef","UT"],["Carlsbad Caverns","NM"],["Channel Islands","CA"],["Congaree","SC"],
-["Crater Lake","OR"],["Cuyahoga Valley","OH"],["Death Valley","CA/NV"],["Denali","AK"],
-["Dry Tortugas","FL"],["Everglades","FL"],["Gates of the Arctic","AK"],["Gateway Arch","MO"],
-["Glacier","MT"],["Glacier Bay","AK"],["Grand Canyon","AZ"],["Grand Teton","WY"],["Great Basin","NV"],
-["Great Sand Dunes","CO"],["Great Smoky Mountains","TN/NC"],["Guadalupe Mountains","TX"],
-["Haleakala","HI"],["Hawaii Volcanoes","HI"],["Hot Springs","AR"],["Indiana Dunes","IN"],
-["Isle Royale","MI"],["Joshua Tree","CA"],["Katmai","AK"],["Kenai Fjords","AK"],["Kings Canyon","CA"],
-["Kobuk Valley","AK"],["Lake Clark","AK"],["Lassen Volcanic","CA"],["Mammoth Cave","KY"],
-["Mesa Verde","CO"],["Mount Rainier","WA"],["New River Gorge","WV"],["North Cascades","WA"],
-["Olympic","WA"],["Petrified Forest","AZ"],["Pinnacles","CA"],["Redwood","CA"],["Rocky Mountain","CO"],
-["Saguaro","AZ"],["Sequoia","CA"],["Shenandoah","VA"],["Theodore Roosevelt","ND"],["Virgin Islands","VI"],
-["Voyageurs","MN"],["White Sands","NM"],["Wind Cave","SD"],["Wrangell-St. Elias","AK"],
-["Yellowstone","WY/MT/ID"],["Yosemite","CA"],["Zion","UT"]];
+/* The 63 U.S. National Parks — name + state(s) + year established as a national park */
+var PARKS=[["Acadia","ME",1919],["American Samoa","AS",1988],["Arches","UT",1971],["Badlands","SD",1978],["Big Bend","TX",1944],
+["Biscayne","FL",1980],["Black Canyon of the Gunnison","CO",1999],["Bryce Canyon","UT",1928],["Canyonlands","UT",1964],
+["Capitol Reef","UT",1971],["Carlsbad Caverns","NM",1930],["Channel Islands","CA",1980],["Congaree","SC",2003],
+["Crater Lake","OR",1902],["Cuyahoga Valley","OH",2000],["Death Valley","CA/NV",1994],["Denali","AK",1917],
+["Dry Tortugas","FL",1992],["Everglades","FL",1934],["Gates of the Arctic","AK",1980],["Gateway Arch","MO",2018],
+["Glacier","MT",1910],["Glacier Bay","AK",1980],["Grand Canyon","AZ",1919],["Grand Teton","WY",1929],["Great Basin","NV",1986],
+["Great Sand Dunes","CO",2004],["Great Smoky Mountains","TN/NC",1934],["Guadalupe Mountains","TX",1966],
+["Haleakala","HI",1961],["Hawaii Volcanoes","HI",1916],["Hot Springs","AR",1921],["Indiana Dunes","IN",2019],
+["Isle Royale","MI",1940],["Joshua Tree","CA",1994],["Katmai","AK",1980],["Kenai Fjords","AK",1980],["Kings Canyon","CA",1940],
+["Kobuk Valley","AK",1980],["Lake Clark","AK",1980],["Lassen Volcanic","CA",1916],["Mammoth Cave","KY",1941],
+["Mesa Verde","CO",1906],["Mount Rainier","WA",1899],["New River Gorge","WV",2020],["North Cascades","WA",1968],
+["Olympic","WA",1938],["Petrified Forest","AZ",1962],["Pinnacles","CA",2013],["Redwood","CA",1968],["Rocky Mountain","CO",1915],
+["Saguaro","AZ",1994],["Sequoia","CA",1890],["Shenandoah","VA",1935],["Theodore Roosevelt","ND",1978],["Virgin Islands","VI",1956],
+["Voyageurs","MN",1975],["White Sands","NM",2019],["Wind Cave","SD",1903],["Wrangell-St. Elias","AK",1980],
+["Yellowstone","WY/MT/ID",1872],["Yosemite","CA",1890],["Zion","UT",1919]];
 
 var K="esponatlparks.v1",S;
 try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
@@ -256,7 +256,7 @@ function drawParks(){
     var v=S.visits[i]&&S.visits[i].length;
     h+='<div class="park'+(v?' visited':'')+'" data-i="'+i+'">'
       +'<div class="st">'+initials(p[0])+'</div>'
-      +'<div class="m"><b>'+esc(p[0])+'</b><span>'+esc(p[1])+(v?' · '+S.visits[i].length+' visit'+(S.visits[i].length>1?'s':''):'')+'</span></div>'
+      +'<div class="m"><b>'+esc(p[0])+'</b><span>'+esc(p[1])+' · est. '+p[2]+(v?' · '+S.visits[i].length+' visit'+(S.visits[i].length>1?'s':''):'')+'</span></div>'
       +(v?'<div class="tick">✓</div>':'')+'</div>';
   });
   el.innerHTML=h||'<div class="empty">No parks match — loosen the search.</div>';
@@ -270,7 +270,7 @@ var cur=-1;
 function openPark(i){
   cur=i;
   document.getElementById("mName").textContent=PARKS[i][0]+" National Park";
-  document.getElementById("mState").textContent=PARKS[i][1];
+  document.getElementById("mState").textContent=PARKS[i][1]+" · National park since "+PARKS[i][2];
   document.getElementById("mDate").value=new Date().toISOString().slice(0,10);
   document.getElementById("mNote").value="";
   drawVisits();
@@ -311,8 +311,8 @@ function drawPass(){
   }).join("");
 }
 document.getElementById("expBtn").onclick=function(){
-  var rows=[["park","states","date","note"]];
-  PARKS.forEach(function(p,i){(S.visits[i]||[]).forEach(function(v){rows.push([p[0],p[1],v.d,v.note||""])})});
+  var rows=[["park","states","established","date","note"]];
+  PARKS.forEach(function(p,i){(S.visits[i]||[]).forEach(function(v){rows.push([p[0],p[1],p[2],v.d,v.note||""])})});
   var c=rows.map(function(r){return r.map(function(v){return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'}).join(",")}).join("\n");
   var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([c],{type:"text/csv"}));
   a.download="esponatlparks-passport.csv";a.click();
