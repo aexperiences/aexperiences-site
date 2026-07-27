@@ -16,7 +16,7 @@
     /* ─────────── BUSINESS OS — live, sold as a subscription ─────────── */
     { id:'homestead', mark:'/os-icons/Abode_OS.png', name:'Abode OS', img:'/Abode_OS.png', tag:'Real estate', genre:'business', state:'live',
       tiers:[ ['Solo / Team',450,2500,'Pipeline + CRM + commissions, DeepSeek AI'], ['Team',950,6500,'Full suite + broker views + marketing + Claude'], ['Brokerage',2400,18000,'Multi-team · compliance · custom + premium AI'] ],
-      acc:'#c8794f', url:'https://ae-realestate-hub.vercel.app', pricing:'/hubs/real-estate.html',
+      acc:'#c8794f', url:'https://ae-abode-showroom.vercel.app', pricing:'/hubs/real-estate.html',
       blurb:'Run a real-estate practice from one place — listings, clients, calendar, and the paperwork that follows a deal.',
       price:'$450/mo', priceNote:'3 tiers · annual $4,500/yr (2 months free)',
       svg:'<path d="M7 22 24 8l17 14"/><path d="M11 20v19h26V20"/><circle cx="24" cy="29" r="3.2"/><path d="M24 32.2V37"/>' },
@@ -30,7 +30,7 @@
 
     { id:'datum', mark:'/os-icons/Truss_OS.png', name:'Truss OS', img:'/Truss_OS.png', tag:'Engineering', genre:'business', state:'live',
       tiers:[ ['Practice',650,3500,'Projects + submittals + Calc Studio'], ['Firm',1400,10000,'Full suite + QA + premium AI eyes'], ['Multi-discipline',3200,24000,'Unlimited + custom + priority SLA'] ],
-      acc:'#18b0ba', url:'https://ae-engineering-hub.vercel.app', pricing:'/hubs/engineering.html',
+      acc:'#18b0ba', url:'https://ae-truss-showroom.vercel.app', pricing:'/hubs/engineering.html',
       blurb:'Job tracking, submittals, field notes and billing for an engineering firm — one system instead of six.',
       price:'$650/mo', priceNote:'3 tiers · annual $6,500/yr (2 months free)',
       svg:'<path d="M6 40 24 9l18 31zM6 40h36"/><path d="M24 9 16 40M24 9l8 31M13 30h22"/>' },
@@ -44,7 +44,7 @@
 
     { id:'reel', mark:'/os-icons/8mm_OS.png', name:'8mm OS', img:'/8mm_OS.png', tag:'Film & production', genre:'business', state:'live',
       tiers:[ ['Single / Twin',500,3000,'Box office + showtimes + members'], ['Multiplex',1200,8500,'Up to 8 screens + reserved + concessions'], ['Circuit',2800,22000,'Multi-location + custom + premium AI'] ],
-      acc:'#8a6fd6', url:'https://ae-cinema-hub.vercel.app', pricing:'/hubs/cinema.html',
+      acc:'#8a6fd6', url:'https://ae-8mm-showroom.vercel.app', pricing:'/hubs/cinema.html',
       blurb:'Productions, crew, call sheets, gear and post — from greenlight to delivery.',
       price:'$500/mo', priceNote:'3 tiers · annual $5,000/yr (2 months free)',
       svg:'<rect x="7" y="14" width="24" height="20" rx="3"/><path d="M31 22l10-6v16l-10-6z"/>' },
@@ -58,7 +58,7 @@
 
     { id:'cartwheel', mark:'/os-icons/LilNinja_OS.png', name:'LilNinja OS', img:'/LilNinja_OS.png', tag:'Kids gyms & programs', genre:'business', state:'live',
       tiers:[ ['Studio',400,2500,'Schedule + enrollment + tuition + families'], ['Center',750,6000,'Full suite + coaches + parent portal + your site'], ['Multi-location',1600,15000,'Multi-site + custom + premium AI'] ],
-      acc:'#4aa3d6', url:'https://ae-gym-hub.vercel.app', pricing:'/hubs/kids-gym.html',
+      acc:'#4aa3d6', url:'https://ae-lilninja-showroom.vercel.app', pricing:'/hubs/kids-gym.html',
       blurb:'Classes, enrollment, waivers, parents and payments — for gyms, camps and kids programs.',
       price:'$400/mo', priceNote:'3 tiers · annual $4,000/yr (2 months free)',
       svg:'<circle cx="24" cy="24" r="15"/><path d="M24 9v30M9 24h30"/><path d="M13 13l22 22M35 13L13 35"/>' },
