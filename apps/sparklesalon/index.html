@@ -52,33 +52,38 @@ h1,h2,h3,button,.disp{font-family:'Baloo 2',system-ui,sans-serif}
 
 /* ---------- stage ---------- */
 .stage{flex:1; position:relative; display:flex; flex-direction:column; align-items:center; min-height:0; padding:2px 12px 0}
-.customer-card{position:relative; width:min(88vw,360px); flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center}
-.speech{position:relative; background:#fff; border:3px solid #ffe0ef; border-radius:20px; padding:9px 15px;
-  font-weight:800; font-size:clamp(14px,3.6vw,18px); color:var(--ink); box-shadow:var(--shadow); text-align:center;
-  max-width:94%; margin-bottom:4px; z-index:3}
+.customer-card{position:relative; width:min(96vw,520px); flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center}
+.speech{position:relative; background:#fff; border:2px solid #ffe0ef; border-radius:16px; padding:6px 13px;
+  font-weight:800; font-size:clamp(12.5px,3.2vw,15.5px); color:var(--ink); box-shadow:var(--shadow); text-align:center;
+  max-width:92%; margin-bottom:2px; z-index:3}
 .speech b{color:var(--pink-deep)}
 .speech:after{content:""; position:absolute; left:50%; bottom:-11px; transform:translateX(-50%);
   border:9px solid transparent; border-top-color:#fff; filter:drop-shadow(0 2px 0 #ffe0ef)}
 .avatar-wrap{position:relative; flex:1; min-height:0; width:100%; display:grid; place-items:center}
-svg.avatar{width:auto; height:100%; max-height:46vh; filter:drop-shadow(0 12px 18px rgba(150,80,130,.22))}
-@media (max-height:680px){ svg.avatar{max-height:40vh} }
+svg.avatar{width:100%; height:100%; max-height:66vh; filter:drop-shadow(0 14px 20px rgba(150,80,130,.24)); transform-origin:center 72%; animation:idle 3.6s ease-in-out infinite}
+@media (max-height:680px){ svg.avatar{max-height:56vh} }
+#faceView.enter{animation:popin .5s cubic-bezier(.2,1.3,.4,1)}
+@keyframes idle{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-1.4%) rotate(-0.7deg)}}
+@keyframes popin{0%{transform:scale(.6) translateY(30px); opacity:0}60%{opacity:1}100%{transform:none; opacity:1}}
+svg.avatar .eyes{transform-box:fill-box; transform-origin:center; animation:blink 4.8s ease-in-out infinite}
+@keyframes blink{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.08)}}
 
 .hands-toggle{position:absolute; right:2px; bottom:6px; z-index:4}
-.mini-hands{position:absolute; left:6px; bottom:6px; width:74px; height:74px; background:#fff; border-radius:18px;
-  box-shadow:var(--shadow); border:2px solid #ffe6f2; display:grid; place-items:center; z-index:4; padding:5px}
+.mini-hands{position:absolute; left:4px; top:4px; width:58px; height:58px; background:#fff; border-radius:15px;
+  box-shadow:var(--shadow); border:2px solid #ffe6f2; display:grid; place-items:center; z-index:4; padding:4px}
 .mini-hands svg{width:100%; height:100%}
 .mini-hands .cap{position:absolute; top:-9px; left:50%; transform:translateX(-50%); background:var(--pink-deep); color:#fff;
   font-size:10px; font-weight:800; padding:2px 7px; border-radius:999px; font-family:'Baloo 2'}
 
 /* nails big view */
 .nails-stagewrap{flex:1; min-height:0; width:100%; display:grid; place-items:center}
-.nails-stagewrap svg{width:auto; height:100%; max-height:44vh; filter:drop-shadow(0 12px 18px rgba(150,80,130,.22))}
+.nails-stagewrap svg{width:auto; height:100%; max-height:58vh; filter:drop-shadow(0 12px 18px rgba(150,80,130,.22))}
 
 /* ---------- tools ---------- */
 .dock{background:rgba(255,255,255,.72); backdrop-filter:blur(8px); border-top:2px solid #ffe4f1;
-  border-radius:26px 26px 0 0; box-shadow:0 -8px 30px rgba(180,80,150,.12); padding:8px 10px calc(10px + env(safe-area-inset-bottom))}
-.tabs{display:flex; gap:6px; justify-content:center; margin-bottom:8px}
-.tab{flex:1; max-width:130px; border:none; border-radius:15px; padding:8px 4px; font-weight:800; font-size:13.5px;
+  border-radius:26px 26px 0 0; box-shadow:0 -8px 30px rgba(180,80,150,.12); padding:6px 10px calc(6px + env(safe-area-inset-bottom))}
+.tabs{display:flex; gap:6px; justify-content:center; margin-bottom:5px}
+.tab{flex:1; max-width:130px; border:none; border-radius:14px; padding:6px 4px; font-weight:800; font-size:13px;
   background:#fff; color:var(--ink-soft); box-shadow:var(--shadow); cursor:pointer; display:flex; flex-direction:column;
   align-items:center; gap:1px; border:2px solid transparent; transition:transform .12s}
 .tab .em{font-size:19px; height:23px; display:flex; align-items:center; justify-content:center}
@@ -93,22 +98,22 @@ svg.avatar{width:auto; height:100%; max-height:46vh; filter:drop-shadow(0 12px 1
 .panel{display:none}
 .panel.on{display:block; animation:fade .25s ease}
 @keyframes fade{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
-.row-label{font-weight:800; font-size:12.5px; color:var(--ink-soft); margin:2px 4px 4px; text-transform:uppercase; letter-spacing:.5px}
-.tray{display:flex; gap:8px; overflow-x:auto; padding:2px 2px 8px; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch}
+.row-label{font-weight:800; font-size:10.5px; color:var(--ink-soft); margin:1px 4px 2px; text-transform:uppercase; letter-spacing:.5px}
+.tray{display:flex; gap:7px; overflow-x:auto; padding:1px 2px 4px; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch}
 .tray::-webkit-scrollbar{height:0}
-.swatch{flex:0 0 auto; width:42px; height:42px; border-radius:50%; border:3px solid #fff; box-shadow:var(--shadow);
+.swatch{flex:0 0 auto; width:34px; height:34px; border-radius:50%; border:3px solid #fff; box-shadow:var(--shadow);
   cursor:pointer; position:relative; scroll-snap-align:start; transition:transform .12s}
 .swatch:active{transform:scale(.9)}
 .swatch[aria-pressed="true"]{outline:3px solid var(--pink-deep); outline-offset:2px; transform:scale(1.06)}
-.opt{flex:0 0 auto; min-width:64px; height:52px; border-radius:15px; border:3px solid #fff; background:#fff; box-shadow:var(--shadow);
-  cursor:pointer; font-weight:800; font-size:13px; color:var(--ink); display:flex; flex-direction:column; align-items:center;
-  justify-content:center; gap:1px; padding:4px 9px; scroll-snap-align:start; transition:transform .12s}
-.opt .em{font-size:20px}
+.opt{flex:0 0 auto; min-width:54px; height:44px; border-radius:13px; border:2px solid #fff; background:#fff; box-shadow:var(--shadow);
+  cursor:pointer; font-weight:800; font-size:11px; color:var(--ink); display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:0; padding:3px 8px; scroll-snap-align:start; transition:transform .12s}
+.opt .em{font-size:17px; line-height:1.05}
 .opt:active{transform:scale(.94)}
 .opt[aria-pressed="true"]{outline:3px solid var(--pink-deep); outline-offset:2px; background:#fff0f7}
 
-.dock-actions{display:flex; gap:10px; margin-top:4px}
-.btn{flex:1; border:none; border-radius:18px; padding:13px; font-weight:800; font-size:17px; cursor:pointer;
+.dock-actions{display:flex; gap:10px; margin-top:5px}
+.btn{flex:1; border:none; border-radius:16px; padding:11px; font-weight:800; font-size:16px; cursor:pointer;
   box-shadow:var(--shadow); color:#fff; display:flex; align-items:center; justify-content:center; gap:7px}
 .btn:active{transform:scale(.97)}
 .btn.ghost{background:#fff; color:var(--ink); flex:0 0 54px; padding:13px 0}
@@ -206,6 +211,8 @@ svg.avatar{width:auto; height:100%; max-height:46vh; filter:drop-shadow(0 12px 1
 
     <!-- HAIR -->
     <div class="panel on" id="panel-hair" role="tabpanel">
+      <div class="row-label">Skin</div>
+      <div class="tray" id="skinTones"></div>
       <div class="row-label">Style</div>
       <div class="tray" id="hairStyles"></div>
       <div class="row-label">Color</div>
@@ -341,22 +348,29 @@ function say(text,pitch,rate){
     window.speechSynthesis.speak(u);
   }catch(e){}
 }
-var curAudio=null;
-function stopAudio(){ if(curAudio){ try{ curAudio.pause(); }catch(e){} curAudio=null; } }
+/* Voice playback via Web Audio. Once the AudioContext is resumed on the first tap
+   (the "Open my salon" button), buffer playback is NOT subject to autoplay blocking —
+   which is why HTMLAudio was staying silent. Baked ElevenLabs clip if present,
+   else the device voice as a fallback so it always talks. */
+var curSrc=null, BUF={};
+var VOICE_IDS=['welcome','c01','c02','c03','c04','c05','c06','c07','c08','c09','c10','c11','c12','c13','c14','p1','p2','p3','p4','p5','p6'];
+function stopAudio(){ if(curSrc){ try{ curSrc.stop(); }catch(e){} curSrc=null; } }
 function hush(){ stopAudio(); if(canSpeak){ try{ window.speechSynthesis.cancel(); }catch(e){} } }
-/* Play a baked ElevenLabs clip if it exists (voice/<id>.mp3); otherwise fall back
-   to the device voice so the game always talks, even before clips are baked / offline. */
+function fetchBuf(id){
+  if(BUF[id]) return Promise.resolve(BUF[id]);
+  var c=actx(); if(!c) return Promise.reject();
+  return fetch('voice/'+id+'.mp3').then(function(r){ if(!r.ok) throw 0; return r.arrayBuffer(); })
+    .then(function(ab){ return new Promise(function(res,rej){ c.decodeAudioData(ab, function(b){ BUF[id]=b; res(b); }, rej); }); });
+}
+function preloadVoices(){ VOICE_IDS.forEach(function(id){ fetchBuf(id).catch(function(){}); }); }
 function playLine(id,text,pitch){
   if(muted) return;
   hush();
-  var done=false, fallback=function(){ if(done) return; done=true; say(text,pitch,1); };
-  try{
-    var a=new Audio('voice/'+id+'.mp3'); curAudio=a; a.volume=1;
-    a.addEventListener('playing',function(){ done=true; });
-    a.addEventListener('error',fallback);
-    var pr=a.play();
-    if(pr&&pr.catch) pr.catch(fallback);
-  }catch(e){ fallback(); }
+  var c=actx(); if(c && c.state==='suspended'){ try{ c.resume(); }catch(e){} }
+  fetchBuf(id).then(function(b){
+    if(muted || !c) return;
+    var s=c.createBufferSource(); s.buffer=b; s.connect(c.destination); curSrc=s; s.start();
+  }).catch(function(){ say(text,pitch,1); });
 }
 
 /* ---------------- palettes ---------------- */
@@ -466,6 +480,7 @@ function newCustomer(){
   $('#speech').innerHTML='<b>'+L.name+':</b> '+L.text+' '+pick(['💕','✨','🌸','💫','🎀']);
   setTab('hair');
   renderFace(); renderMiniHands();
+  var fv=$('#faceView'); fv.classList.remove('enter'); void fv.offsetWidth; fv.classList.add('enter');
   playLine(L.id, spokenOf(L), 1.28);
 }
 function listJoin(a){ if(a.length===1)return a[0]; if(a.length===2)return a[0]+' and '+a[1]; return a.slice(0,-1).join(', ')+' and '+a[a.length-1]; }
@@ -584,7 +599,7 @@ function faceSVG(L){
   if(L.eyeshadow){ s+='<path d="M106 150 Q124 133 143 149" stroke="'+L.eyeshadow+'" stroke-width="10" fill="none" stroke-linecap="round" opacity=".7"/>'
     +'<path d="M157 149 Q176 133 194 150" stroke="'+L.eyeshadow+'" stroke-width="10" fill="none" stroke-linecap="round" opacity=".7"/>'; }
   // eyes
-  s+='<g>';
+  s+='<g class="eyes">';
   s+='<ellipse cx="124" cy="160" rx="13.5" ry="15.5" fill="#fff"/><ellipse cx="176" cy="160" rx="13.5" ry="15.5" fill="#fff"/>';
   s+='<circle cx="125" cy="161" r="10" fill="'+L.eye+'"/><circle cx="175" cy="161" r="10" fill="'+L.eye+'"/>';
   s+='<circle cx="125" cy="164" r="6" fill="#fff" opacity=".16"/><circle cx="175" cy="164" r="6" fill="#fff" opacity=".16"/>';
@@ -619,7 +634,7 @@ function faceSVG(L){
   s+=hairFront(L.hairStyle,L.hairColor);
   s+='<path d="M112 92 Q150 66 190 92 Q168 80 150 80 Q132 80 112 92 Z" fill="#ffffff" opacity=".16"/>';
   if(L.accessory && L.accessory!=='none') s+=accessorySVG(L.accessory,L.accColor);
-  return '<svg class="avatar" viewBox="0 0 300 358" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Customer">'+s+'</svg>';
+  return '<svg class="avatar" viewBox="30 26 240 322" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Customer">'+s+'</svg>';
 }
 
 /* nails: a cute hand with 5 nails */
@@ -676,6 +691,8 @@ function optBtn(label,em,active,fn){
 function fill(id,nodes){ var t=$(id); t.innerHTML=''; nodes.forEach(function(n){t.appendChild(n);}); }
 
 function buildTrays(){
+  // skin tone
+  fill('#skinTones', SKINS.map(function(c){ return swatch(c,look.skin===c,function(){look.skin=c;renderFace();renderMiniHands();buildTrays();}); }));
   // hair styles
   fill('#hairStyles', HAIRSTYLES.map(function(st){ return optBtn(HAIRLABEL[st],HAIREMOJI[st],look.hairStyle===st,function(){look.hairStyle=st;renderFace();buildTrays();}); }));
   // hair colors
@@ -870,6 +887,7 @@ $('#ownerName').addEventListener('focus', function(){ pickVoice(); }, {once:true
 $('#ownerName').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); $('#startBtn').click(); } });
 $('#startBtn').onclick=function(){
   actx(); if(AC&&AC.state==='suspended')AC.resume();
+  preloadVoices();
   var typed=($('#ownerName').value||'').replace(/[<>]/g,'').trim().slice(0,14);
   owner=typed; STORE.set('owner',owner); updateBrand();
   pickVoice();
