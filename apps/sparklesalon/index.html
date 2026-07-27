@@ -60,13 +60,16 @@ h1,h2,h3,button,.disp{font-family:'Baloo 2',system-ui,sans-serif}
 .speech:after{content:""; position:absolute; left:50%; bottom:-11px; transform:translateX(-50%);
   border:9px solid transparent; border-top-color:#fff; filter:drop-shadow(0 2px 0 #ffe0ef)}
 .avatar-wrap{position:relative; flex:1; min-height:0; width:100%; display:grid; place-items:center}
-svg.avatar{width:100%; height:100%; max-height:66vh; filter:drop-shadow(0 14px 20px rgba(150,80,130,.24)); transform-origin:center 72%; animation:idle 3.6s ease-in-out infinite}
-@media (max-height:680px){ svg.avatar{max-height:56vh} }
+svg.avatar{width:100%; height:100%; max-height:74vh; filter:drop-shadow(0 14px 20px rgba(150,80,130,.24)); transform-origin:center 78%; animation:idle 3.8s ease-in-out infinite}
+@media (max-height:680px){ svg.avatar{max-height:64vh} }
 #faceView.enter{animation:popin .5s cubic-bezier(.2,1.3,.4,1)}
-@keyframes idle{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-1.4%) rotate(-0.7deg)}}
+@keyframes idle{0%,100%{transform:translateY(0) rotate(0deg) scale(1)}50%{transform:translateY(-1.2%) rotate(-0.6deg) scale(1.012)}}
 @keyframes popin{0%{transform:scale(.6) translateY(30px); opacity:0}60%{opacity:1}100%{transform:none; opacity:1}}
-svg.avatar .eyes{transform-box:fill-box; transform-origin:center; animation:blink 4.8s ease-in-out infinite}
+svg.avatar .eyes{transform-box:fill-box; transform-origin:center; animation:blink 4.6s ease-in-out infinite}
 @keyframes blink{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.08)}}
+svg.avatar .mouth{transform-box:fill-box; transform-origin:center}
+svg.avatar.talking .mouth{animation:talk .26s ease-in-out infinite}
+@keyframes talk{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.5) translateY(.4px)}}
 
 .hands-toggle{position:absolute; right:2px; bottom:6px; z-index:4}
 .mini-hands{position:absolute; left:4px; top:4px; width:58px; height:58px; background:#fff; border-radius:15px;
@@ -112,6 +115,18 @@ svg.avatar .eyes{transform-box:fill-box; transform-origin:center; animation:blin
 .opt:active{transform:scale(.94)}
 .opt[aria-pressed="true"]{outline:3px solid var(--pink-deep); outline-offset:2px; background:#fff0f7}
 
+.collapse-handle{display:flex; align-items:center; gap:6px; margin:-2px auto 6px; border:2px solid #ffe0ef; background:#fff;
+  color:var(--ink-soft); font-family:'Baloo 2'; font-weight:800; font-size:12px; padding:3px 14px; border-radius:999px; box-shadow:var(--shadow); cursor:pointer}
+.collapse-handle:active{transform:scale(.96)}
+.collapse-handle #handleIcon{font-size:11px}
+.catchips{display:flex; gap:6px; overflow-x:auto; padding:0 2px 5px; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch}
+.catchips::-webkit-scrollbar{height:0}
+.chip{flex:0 0 auto; border:2px solid #ffe0ef; background:#fff; color:var(--ink-soft); font-family:'Baloo 2'; font-weight:800;
+  font-size:12.5px; padding:5px 13px; border-radius:999px; cursor:pointer; box-shadow:var(--shadow); scroll-snap-align:start; transition:transform .12s}
+.chip:active{transform:scale(.95)}
+.chip.on{background:linear-gradient(90deg,var(--pink-deep),var(--lilac)); color:#fff; border-color:#fff}
+.optrow{min-height:48px; align-items:center}
+.dock.collapsed .dock-inner{display:none}
 .dock-actions{display:flex; gap:10px; margin-top:5px}
 .btn{flex:1; border:none; border-radius:16px; padding:11px; font-weight:800; font-size:16px; cursor:pointer;
   box-shadow:var(--shadow); color:#fff; display:flex; align-items:center; justify-content:center; gap:7px}
@@ -201,54 +216,18 @@ svg.avatar .eyes{transform-box:fill-box; transform-origin:center; animation:blin
     </div>
   </div>
 
-  <div class="dock">
-    <div class="tabs" role="tablist">
-      <button class="tab hair"   id="tab-hair"   role="tab" aria-selected="true"  aria-controls="panel-hair"><span class="em"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/></svg></span>Hair</button>
-      <button class="tab nails"  id="tab-nails"  role="tab" aria-selected="false" aria-controls="panel-nails"><span class="em"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="8" y="9" width="8" height="12" rx="2.2"/><rect x="9.6" y="4.4" width="4.8" height="4.8" rx="1.2"/><rect x="9" y="1.4" width="6" height="3.4" rx="1.2"/></svg></span>Nails</button>
-      <button class="tab makeup" id="tab-makeup" role="tab" aria-selected="false" aria-controls="panel-makeup"><span class="em"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="8.5" y="11" width="7" height="10.5" rx="1.6"/><path d="M9.4 11V6.2Q9.4 3 12 3 14.6 3 14.6 6.2V11Z"/></svg></span>Makeup</button>
-      <button class="tab dress" id="tab-dress" role="tab" aria-selected="false" aria-controls="panel-dress"><span class="em"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5a2 2 0 1 0 2 2"/><path d="M14 5.5 21 15H3l7-9.5"/><path d="M3 15h18"/></svg></span>Dress</button>
+  <div class="dock" id="dock">
+    <button class="collapse-handle" id="collapseBtn" aria-label="Show or hide styling tools"><span id="handleIcon">▾</span><span id="handleTxt">Hide tools</span></button>
+    <div class="dock-inner" id="dockInner">
+      <div class="tabs" role="tablist">
+        <button class="tab hair"   id="tab-hair"   role="tab" aria-selected="true"><span class="em"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/></svg></span>Hair</button>
+        <button class="tab nails"  id="tab-nails"  role="tab" aria-selected="false"><span class="em"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="8" y="9" width="8" height="12" rx="2.2"/><rect x="9.6" y="4.4" width="4.8" height="4.8" rx="1.2"/><rect x="9" y="1.4" width="6" height="3.4" rx="1.2"/></svg></span>Nails</button>
+        <button class="tab makeup" id="tab-makeup" role="tab" aria-selected="false"><span class="em"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="8.5" y="11" width="7" height="10.5" rx="1.6"/><path d="M9.4 11V6.2Q9.4 3 12 3 14.6 3 14.6 6.2V11Z"/></svg></span>Makeup</button>
+        <button class="tab dress" id="tab-dress" role="tab" aria-selected="false"><span class="em"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5a2 2 0 1 0 2 2"/><path d="M14 5.5 21 15H3l7-9.5"/><path d="M3 15h18"/></svg></span>Dress</button>
+      </div>
+      <div class="catchips" id="catChips"></div>
+      <div class="tray optrow" id="optRow"></div>
     </div>
-
-    <!-- HAIR -->
-    <div class="panel on" id="panel-hair" role="tabpanel">
-      <div class="row-label">Skin</div>
-      <div class="tray" id="skinTones"></div>
-      <div class="row-label">Style</div>
-      <div class="tray" id="hairStyles"></div>
-      <div class="row-label">Color</div>
-      <div class="tray" id="hairColors"></div>
-      <div class="row-label">Accessory</div>
-      <div class="tray" id="accessories"></div>
-    </div>
-
-    <!-- NAILS -->
-    <div class="panel" id="panel-nails" role="tabpanel">
-      <div class="row-label">Polish color</div>
-      <div class="tray" id="nailColors"></div>
-      <div class="row-label">Nail art</div>
-      <div class="tray" id="nailArt"></div>
-    </div>
-
-    <!-- MAKEUP -->
-    <div class="panel" id="panel-makeup" role="tabpanel">
-      <div class="row-label">Lips</div>
-      <div class="tray" id="lipColors"></div>
-      <div class="row-label">Eyeshadow</div>
-      <div class="tray" id="eyeColors"></div>
-      <div class="row-label">Cheeks &amp; sparkle</div>
-      <div class="tray" id="cheekRow"></div>
-    </div>
-
-    <!-- DRESS -->
-    <div class="panel" id="panel-dress" role="tabpanel">
-      <div class="row-label">Outfit</div>
-      <div class="tray" id="outfitStyles"></div>
-      <div class="row-label">Color</div>
-      <div class="tray" id="outfitColors"></div>
-      <div class="row-label">Pattern</div>
-      <div class="tray" id="outfitArt"></div>
-    </div>
-
     <div class="dock-actions">
       <button class="btn surprise" id="surpriseBtn" title="Surprise style!" aria-label="Surprise style">🎲</button>
       <button class="btn go" id="doneBtn">✨ All done!</button>
@@ -354,7 +333,7 @@ function say(text,pitch,rate){
    else the device voice as a fallback so it always talks. */
 var curSrc=null, BUF={};
 var VOICE_IDS=['welcome','c01','c02','c03','c04','c05','c06','c07','c08','c09','c10','c11','c12','c13','c14','p1','p2','p3','p4','p5','p6'];
-function stopAudio(){ if(curSrc){ try{ curSrc.stop(); }catch(e){} curSrc=null; } }
+function stopAudio(){ if(curSrc){ try{ curSrc.stop(); }catch(e){} curSrc=null; } var sv=document.querySelector('#faceView svg'); if(sv) sv.classList.remove('talking'); }
 function hush(){ stopAudio(); if(canSpeak){ try{ window.speechSynthesis.cancel(); }catch(e){} } }
 function fetchBuf(id){
   if(BUF[id]) return Promise.resolve(BUF[id]);
@@ -369,7 +348,10 @@ function playLine(id,text,pitch){
   var c=actx(); if(c && c.state==='suspended'){ try{ c.resume(); }catch(e){} }
   fetchBuf(id).then(function(b){
     if(muted || !c) return;
-    var s=c.createBufferSource(); s.buffer=b; s.connect(c.destination); curSrc=s; s.start();
+    var s=c.createBufferSource(); s.buffer=b; s.connect(c.destination); curSrc=s;
+    var sv=document.querySelector('#faceView svg'); if(sv) sv.classList.add('talking');
+    s.onended=function(){ if(sv) sv.classList.remove('talking'); };
+    s.start();
   }).catch(function(){ say(text,pitch,1); });
 }
 
@@ -532,34 +514,33 @@ function accessorySVG(acc,col){
 function spark(x,y,r,c){ var i=r*0.3; return '<g transform="translate('+x+','+y+')" fill="'+(c||'#fff')+'"><path d="M0 '+(-r)+' L'+i+' '+(-i)+' L'+r+' 0 L'+i+' '+i+' L0 '+r+' L'+(-i)+' '+i+' L'+(-r)+' 0 L'+(-i)+' '+(-i)+' Z"/></g>'; }
 function outfitPattern(art){
   var s='',x,y;
-  if(art==='stripes'){ for(y=286;y<362;y+=15){ s+='<rect x="40" y="'+y+'" width="220" height="7" fill="#fff" opacity=".5"/>'; } }
-  else if(art==='dots'){ for(y=294;y<358;y+=20){ for(x=62;x<254;x+=26){ s+='<circle cx="'+x+'" cy="'+y+'" r="4" fill="#fff" opacity=".6"/>'; } } }
-  else if(art==='hearts'){ for(y=296;y<358;y+=24){ for(x=72;x<250;x+=34){ s+='<path transform="translate('+x+','+y+')" d="M0 3 C-4 -3 -10 1 0 8 C10 1 4 -3 0 3 Z" fill="#fff" opacity=".65"/>'; } } }
-  else if(art==='stars'){ for(y=298;y<358;y+=26){ for(x=74;x<250;x+=36){ s+='<g transform="translate('+x+','+y+')">'+star(6,'#ffffff')+'</g>'; } } }
+  if(art==='stripes'){ for(y=314;y<416;y+=16){ s+='<rect x="55" y="'+y+'" width="190" height="7" fill="#fff" opacity=".5"/>'; } }
+  else if(art==='dots'){ for(y=320;y<412;y+=22){ for(x=76;x<226;x+=26){ s+='<circle cx="'+x+'" cy="'+y+'" r="4" fill="#fff" opacity=".6"/>'; } } }
+  else if(art==='hearts'){ for(y=322;y<412;y+=26){ for(x=84;x<220;x+=34){ s+='<path transform="translate('+x+','+y+')" d="M0 3 C-4 -3 -10 1 0 8 C10 1 4 -3 0 3 Z" fill="#fff" opacity=".65"/>'; } } }
+  else if(art==='stars'){ for(y=324;y<412;y+=28){ for(x=88;x<218;x+=36){ s+='<g transform="translate('+x+','+y+')">'+star(6,'#ffffff')+'</g>'; } } }
   return s;
 }
 function outfitSVG(style,color,art){
-  var T='M44 360 C44 300 92 270 150 270 C208 270 256 300 256 360 Z';
+  var T='M82 418 C74 372 62 336 98 315 C118 302 134 298 150 298 C166 298 182 302 202 315 C238 336 226 372 218 418 Z';
   var s='<defs><clipPath id="clipTorso"><path d="'+T+'"/></clipPath></defs>';
   // hero cape behind the body
-  if(style==='super'){ s+='<path d="M100 278 C58 300 44 360 44 360 L116 360 L124 286 Z" fill="#ff2d7a"/><path d="M200 278 C242 300 256 360 256 360 L184 360 L176 286 Z" fill="#ff2d7a"/>'; }
-  // sleeves
-  if(style!=='super'){ s+='<ellipse cx="58" cy="302" rx="20" ry="24" fill="'+color+'"/><ellipse cx="242" cy="302" rx="20" ry="24" fill="'+color+'"/>'; }
-  else { s+='<ellipse cx="58" cy="302" rx="19" ry="23" fill="'+color+'"/><ellipse cx="242" cy="302" rx="19" ry="23" fill="'+color+'"/>'; }
+  if(style==='super'){ s+='<path d="M106 306 C58 330 44 418 44 418 L120 418 L128 316 Z" fill="#ff2d7a"/><path d="M194 306 C242 330 256 418 256 418 L180 418 L172 316 Z" fill="#ff2d7a"/>'; }
+  // shoulder / sleeve caps
+  s+='<ellipse cx="80" cy="336" rx="24" ry="28" fill="'+color+'"/><ellipse cx="220" cy="336" rx="24" ry="28" fill="'+color+'"/>';
   // body
   s+='<path d="'+T+'" fill="'+color+'"/>';
   // pattern (clipped to torso)
   if(art&&art!=='plain'){ s+='<g clip-path="url(#clipTorso)">'+outfitPattern(art)+'</g>'; }
   // style details
-  if(style==='dress'){ s+='<path d="M74 360 C96 332 204 332 226 360 Z" fill="#000" opacity=".06"/><path d="M150 282 L150 360" stroke="#000" stroke-opacity=".05" stroke-width="4"/>'; }
-  if(style==='hoodie'){ s+='<path d="M104 276 Q150 258 196 276 Q150 300 104 276 Z" fill="'+color+'"/><path d="M112 282 Q150 296 188 282" stroke="#000" stroke-opacity=".14" stroke-width="3" fill="none"/><line x1="140" y1="302" x2="140" y2="322" stroke="#fff" stroke-width="3" stroke-linecap="round"/><line x1="160" y1="302" x2="160" y2="322" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="M120 330 h60 v18 a6 6 0 0 1 -6 6 h-48 a6 6 0 0 1 -6 -6 z" fill="#000" opacity=".06"/>'; }
-  if(style==='overalls'){ s+='<rect x="120" y="284" width="12" height="64" rx="3" fill="#fff" opacity=".85"/><rect x="168" y="284" width="12" height="64" rx="3" fill="#fff" opacity=".85"/><rect x="124" y="316" width="52" height="30" rx="6" fill="#fff" opacity=".22"/><circle cx="126" cy="320" r="2.6" fill="#ffd646"/><circle cx="174" cy="320" r="2.6" fill="#ffd646"/>'; }
-  if(style==='tutu'){ s+='<g fill="#fff" opacity=".9"><path d="M56 346 L88 318 L112 350 Z"/><path d="M100 352 L132 320 L152 354 Z"/><path d="M148 354 L168 320 L200 352 Z"/><path d="M188 350 L212 318 L244 346 Z"/></g><path d="M108 300 Q150 314 192 300" stroke="#fff" stroke-width="4" fill="none" opacity=".7"/>'; }
-  if(style==='sparkle'){ var sp=''; for(var i=0;i<24;i++){ sp+='<circle cx="'+(46+Math.random()*208).toFixed(1)+'" cy="'+(278+Math.random()*80).toFixed(1)+'" r="'+(0.8+Math.random()*1.6).toFixed(1)+'" fill="#fff" opacity=".85"/>'; } s+='<g clip-path="url(#clipTorso)">'+sp+'</g>'; }
-  if(style==='super'){ s+='<g transform="translate(150,322)">'+star(15,'#ffd646')+'</g>'; }
-  // collar shadow + sheen
-  s+='<path d="M120 284 Q150 306 180 284 L174 274 Q150 290 126 274 Z" fill="#000" opacity=".08"/>';
-  s+='<path d="M150 270 C120 270 92 282 74 302 C96 288 122 282 150 282 C178 282 204 288 226 302 C208 282 180 270 150 270 Z" fill="#ffffff" opacity=".2"/>';
+  if(style==='dress'){ s+='<path d="M92 418 C116 386 184 386 208 418 Z" fill="#000" opacity=".06"/><path d="M150 312 L150 418" stroke="#000" stroke-opacity=".05" stroke-width="4"/>'; }
+  if(style==='hoodie'){ s+='<path d="M112 300 Q150 282 188 300 Q150 322 112 300 Z" fill="'+color+'"/><path d="M120 306 Q150 320 180 306" stroke="#000" stroke-opacity=".14" stroke-width="3" fill="none"/><line x1="140" y1="322" x2="140" y2="348" stroke="#fff" stroke-width="3" stroke-linecap="round"/><line x1="160" y1="322" x2="160" y2="348" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="M124 372 h52 v22 a6 6 0 0 1 -6 6 h-40 a6 6 0 0 1 -6 -6 z" fill="#000" opacity=".06"/>'; }
+  if(style==='overalls'){ s+='<rect x="126" y="304" width="12" height="86" rx="3" fill="#fff" opacity=".85"/><rect x="162" y="304" width="12" height="86" rx="3" fill="#fff" opacity=".85"/><rect x="126" y="346" width="48" height="34" rx="6" fill="#fff" opacity=".22"/><circle cx="132" cy="350" r="2.6" fill="#ffd646"/><circle cx="168" cy="350" r="2.6" fill="#ffd646"/>'; }
+  if(style==='tutu'){ s+='<g fill="#fff" opacity=".9"><path d="M64 404 L96 372 L120 408 Z"/><path d="M108 410 L138 376 L158 412 Z"/><path d="M154 412 L172 376 L204 410 Z"/><path d="M192 408 L216 372 L246 404 Z"/></g><path d="M112 352 Q150 368 188 352" stroke="#fff" stroke-width="4" fill="none" opacity=".7"/>'; }
+  if(style==='sparkle'){ var sp=''; for(var i=0;i<30;i++){ sp+='<circle cx="'+(62+Math.random()*176).toFixed(1)+'" cy="'+(308+Math.random()*106).toFixed(1)+'" r="'+(0.8+Math.random()*1.7).toFixed(1)+'" fill="#fff" opacity=".85"/>'; } s+='<g clip-path="url(#clipTorso)">'+sp+'</g>'; }
+  if(style==='super'){ s+='<g transform="translate(150,362)">'+star(18,'#ffd646')+'</g>'; }
+  // neckline shadow + sheen
+  s+='<path d="M126 302 Q150 320 174 302 L168 296 Q150 308 132 296 Z" fill="#000" opacity=".08"/>';
+  s+='<path d="M150 298 C124 298 102 306 88 322 C112 310 132 306 150 306 C168 306 188 310 212 322 C198 306 176 298 150 298 Z" fill="#ffffff" opacity=".18"/>';
   return s;
 }
 function gem(x,y,c){ return '<g transform="translate('+x+','+y+')"><path d="M0 -4.5 L3.4 0 L0 5.5 L-3.4 0 Z" fill="'+c+'"/><path d="M0 -4.5 L3.4 0 L0 0 Z" fill="#fff" opacity=".55"/><path d="M0 -4.5 L-3.4 0 L0 0 Z" fill="#fff" opacity=".25"/></g>'; }
@@ -578,9 +559,10 @@ function faceSVG(L){
   s+=spark(46,70,6)+spark(256,84,5)+spark(250,252,5,'#ffe6f4');
   // outfit + shoulders
   s+=outfitSVG(L.outfit||'tee', L.outfitColor||'#ff5fa8', L.outfitArt||'plain');
-  // neck
-  s+='<path d="M129 212 L129 250 Q150 266 171 250 L171 212 Z" fill="'+L.skin+'"/>';
-  s+='<path d="M126 214 Q150 238 174 214" stroke="#000" stroke-opacity=".08" stroke-width="11" fill="none" stroke-linecap="round"/>';
+  // neck (longer, full)
+  s+='<path d="M134 230 C133 256 131 278 138 294 L162 294 C169 278 167 256 166 230 Z" fill="'+L.skin+'"/>';
+  s+='<path d="M132 234 Q150 254 168 234" stroke="#000" stroke-opacity=".09" stroke-width="12" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M136 292 Q150 300 164 292" stroke="#000" stroke-opacity=".06" stroke-width="5" fill="none" stroke-linecap="round"/>';
   // hair behind
   s+=hairBack(L.hairStyle,L.hairColor);
   // ears
@@ -617,7 +599,8 @@ function faceSVG(L){
   s+='<path d="M159 131 Q176 125 191 133" stroke="#7a5647" stroke-width="4" fill="none" stroke-linecap="round"/>';
   // nose
   s+='<path d="M150 168 q6 9 -3 14" stroke="rgba(110,64,54,.32)" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
-  // lips
+  // lips (wrapped for the talking animation)
+  s+='<g class="mouth">';
   if(L.lip){
     s+='<path d="M132 197 Q141 191 150 193 Q159 191 168 197 Q159 201 150 201 Q141 201 132 197 Z" fill="'+L.lip+'"/>';
     s+='<path d="M132 197 Q150 200 168 197 Q150 215 132 197 Z" fill="'+L.lip+'"/>';
@@ -627,6 +610,7 @@ function faceSVG(L){
     s+='<path d="M139 200 Q150 207 161 200" stroke="#cd7a86" stroke-width="3" fill="none" stroke-linecap="round"/>';
     s+='<path d="M143 198 Q150 201 157 198" stroke="#e6a3ad" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>';
   }
+  s+='</g>';
   // cheek gems
   if(L.gem){ s+=gem(108,181,'#8fd0ff')+gem(116,191,'#ff8fce')+spark(100,173,4)
              +gem(192,181,'#c99cf2')+gem(184,191,'#ffd646')+spark(200,173,4); }
@@ -634,7 +618,7 @@ function faceSVG(L){
   s+=hairFront(L.hairStyle,L.hairColor);
   s+='<path d="M112 92 Q150 66 190 92 Q168 80 150 80 Q132 80 112 92 Z" fill="#ffffff" opacity=".16"/>';
   if(L.accessory && L.accessory!=='none') s+=accessorySVG(L.accessory,L.accColor);
-  return '<svg class="avatar" viewBox="30 26 240 322" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Customer">'+s+'</svg>';
+  return '<svg class="avatar" viewBox="24 24 252 398" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Customer">'+s+'</svg>';
 }
 
 /* nails: a cute hand with 5 nails */
@@ -690,53 +674,57 @@ function optBtn(label,em,active,fn){
 }
 function fill(id,nodes){ var t=$(id); t.innerHTML=''; nodes.forEach(function(n){t.appendChild(n);}); }
 
-function buildTrays(){
-  // skin tone
-  fill('#skinTones', SKINS.map(function(c){ return swatch(c,look.skin===c,function(){look.skin=c;renderFace();renderMiniHands();buildTrays();}); }));
-  // hair styles
-  fill('#hairStyles', HAIRSTYLES.map(function(st){ return optBtn(HAIRLABEL[st],HAIREMOJI[st],look.hairStyle===st,function(){look.hairStyle=st;renderFace();buildTrays();}); }));
-  // hair colors
-  fill('#hairColors', HAIRCOLORS.map(function(h){ var c=h.c==='url(#gRainbow)'?'linear-gradient(135deg,#ff8fce,#c99cf2,#8fd0ff)':h.c; return swatch(c,look.hairColor===h.c,function(){look.hairColor=h.c;renderFace();buildTrays();}); }));
-  // accessories
-  fill('#accessories', ACCESSORIES.map(function(a){ return optBtn(a.n,a.em,look.accessory===a.id,function(){look.accessory=a.id;renderFace();buildTrays();}); }));
-
-  // nails
-  fill('#nailColors', NAILCOLORS.map(function(c){ return swatch(c,look.nail===c,function(){look.nail=c;renderNailsBig();renderMiniHands();buildTrays();}); }));
-  fill('#nailArt', NAILART.map(function(a){ return optBtn(a.n,a.em,look.nailArt===a.id,function(){look.nailArt=a.id;renderNailsBig();renderMiniHands();buildTrays();}); }));
-
-  // makeup
-  var lipNodes=[optBtn('None','🚫',!look.lip,function(){look.lip=null;renderFace();buildTrays();})];
-  LIPS.forEach(function(c){ lipNodes.push(swatch(c,look.lip===c,function(){look.lip=c;renderFace();buildTrays();})); });
-  fill('#lipColors', lipNodes);
-
-  var eyeNodes=[optBtn('None','🚫',!look.eyeshadow,function(){look.eyeshadow=null;renderFace();buildTrays();})];
-  EYESHADOW.forEach(function(c){ eyeNodes.push(swatch(c,look.eyeshadow===c,function(){look.eyeshadow=c;renderFace();buildTrays();})); });
-  fill('#eyeColors', eyeNodes);
-
-  var cheek=[optBtn('No blush','🚫',!look.blush,function(){look.blush=null;renderFace();buildTrays();})];
-  BLUSH.forEach(function(c){ cheek.push(swatch(c,look.blush===c,function(){look.blush=c;renderFace();buildTrays();})); });
-  cheek.push(optBtn('Gems',look.gem?'💎':'✨',look.gem,function(){look.gem=!look.gem;renderFace();buildTrays();}));
-  fill('#cheekRow', cheek);
-
-  // dress
-  fill('#outfitStyles', OUTFITS.map(function(o){ return optBtn(o.n,o.em,look.outfit===o.id,function(){look.outfit=o.id;renderFace();buildTrays();}); }));
-  fill('#outfitColors', OUTFITCOLORS.map(function(c){ return swatch(c,look.outfitColor===c,function(){look.outfitColor=c;renderFace();buildTrays();}); }));
-  fill('#outfitArt', OUTFITART.map(function(a){ return optBtn(a.n,a.em,look.outfitArt===a.id,function(){look.outfitArt=a.id;renderFace();buildTrays();}); }));
+/* ---------------- one condensed control row: category chips + a single option scroller ---------------- */
+var CATS={
+  hair:[{id:'skin',label:'Skin'},{id:'style',label:'Style'},{id:'color',label:'Hair color'},{id:'acc',label:'Accessory'}],
+  nails:[{id:'ncolor',label:'Polish'},{id:'nart',label:'Nail art'}],
+  makeup:[{id:'lips',label:'Lips'},{id:'eyes',label:'Eyeshadow'},{id:'cheeks',label:'Cheeks & gems'}],
+  dress:[{id:'outfit',label:'Outfit'},{id:'ocolor',label:'Color'},{id:'oart',label:'Pattern'}]
+};
+var activeTab='hair', activeCat='skin';
+function optionsFor(tab,cat){
+  var f=renderOptRow;
+  if(tab==='hair'){
+    if(cat==='skin')  return SKINS.map(function(c){ return swatch(c,look.skin===c,function(){look.skin=c;renderFace();renderMiniHands();f();}); });
+    if(cat==='style') return HAIRSTYLES.map(function(st){ return optBtn(HAIRLABEL[st],HAIREMOJI[st],look.hairStyle===st,function(){look.hairStyle=st;renderFace();f();}); });
+    if(cat==='color') return HAIRCOLORS.map(function(h){ var c=h.c==='url(#gRainbow)'?'linear-gradient(135deg,#ff8fce,#c99cf2,#8fd0ff)':h.c; return swatch(c,look.hairColor===h.c,function(){look.hairColor=h.c;renderFace();f();}); });
+    if(cat==='acc')   return ACCESSORIES.map(function(a){ return optBtn(a.n,a.em,look.accessory===a.id,function(){look.accessory=a.id;renderFace();f();}); });
+  }
+  if(tab==='nails'){
+    if(cat==='ncolor') return NAILCOLORS.map(function(c){ return swatch(c,look.nail===c,function(){look.nail=c;renderNailsBig();renderMiniHands();f();}); });
+    if(cat==='nart')   return NAILART.map(function(a){ return optBtn(a.n,a.em,look.nailArt===a.id,function(){look.nailArt=a.id;renderNailsBig();renderMiniHands();f();}); });
+  }
+  if(tab==='makeup'){
+    if(cat==='lips'){ var n=[optBtn('None','🚫',!look.lip,function(){look.lip=null;renderFace();f();})]; LIPS.forEach(function(c){ n.push(swatch(c,look.lip===c,function(){look.lip=c;renderFace();f();})); }); return n; }
+    if(cat==='eyes'){ var n2=[optBtn('None','🚫',!look.eyeshadow,function(){look.eyeshadow=null;renderFace();f();})]; EYESHADOW.forEach(function(c){ n2.push(swatch(c,look.eyeshadow===c,function(){look.eyeshadow=c;renderFace();f();})); }); return n2; }
+    if(cat==='cheeks'){ var n3=[optBtn('No blush','🚫',!look.blush,function(){look.blush=null;renderFace();f();})]; BLUSH.forEach(function(c){ n3.push(swatch(c,look.blush===c,function(){look.blush=c;renderFace();f();})); }); n3.push(optBtn('Gems',look.gem?'💎':'✨',look.gem,function(){look.gem=!look.gem;renderFace();f();})); return n3; }
+  }
+  if(tab==='dress'){
+    if(cat==='outfit') return OUTFITS.map(function(o){ return optBtn(o.n,o.em,look.outfit===o.id,function(){look.outfit=o.id;renderFace();f();}); });
+    if(cat==='ocolor') return OUTFITCOLORS.map(function(c){ return swatch(c,look.outfitColor===c,function(){look.outfitColor=c;renderFace();f();}); });
+    if(cat==='oart')   return OUTFITART.map(function(a){ return optBtn(a.n,a.em,look.outfitArt===a.id,function(){look.outfitArt=a.id;renderFace();f();}); });
+  }
+  return [];
 }
+function chip(label,active,fn){ var b=el('button','chip'+(active?' on':'')); b.textContent=label; b.onclick=function(){ sTab(); fn(); }; return b; }
+function renderChips(){ fill('#catChips', CATS[activeTab].map(function(c){ return chip(c.label, activeCat===c.id, function(){ activeCat=c.id; renderChips(); renderOptRow(); }); })); }
+function renderOptRow(){ fill('#optRow', optionsFor(activeTab,activeCat)); }
+function renderControls(){ renderChips(); renderOptRow(); }
+function buildTrays(){ renderControls(); }
 
 /* ---------------- tabs ---------------- */
 function setTab(which){
-  ['hair','nails','makeup','dress'].forEach(function(t){
-    $('#tab-'+t).setAttribute('aria-selected', t===which?'true':'false');
-    $('#panel-'+t).classList.toggle('on', t===which);
-  });
+  activeTab=which; activeCat=CATS[which][0].id;
+  ['hair','nails','makeup','dress'].forEach(function(t){ $('#tab-'+t).setAttribute('aria-selected', t===which?'true':'false'); });
   var nails=which==='nails';
   $('#nailsView').style.display=nails?'grid':'none';
   $('#faceView').style.display=nails?'none':'grid';
   $('#miniHands').style.display=nails?'none':'grid';
   if(nails) renderNailsBig();
+  renderControls();
 }
 ['hair','nails','makeup','dress'].forEach(function(t){ $('#tab-'+t).onclick=function(){ sTab(); setTab(t); }; });
+$('#collapseBtn').onclick=function(){ sTab(); var d=$('#dock'); var c=d.classList.toggle('collapsed'); $('#handleIcon').textContent=c?'▴':'▾'; $('#handleTxt').textContent=c?'Show tools':'Hide tools'; };
 
 /* ---------------- surprise ---------------- */
 $('#surpriseBtn').onclick=function(){
@@ -812,7 +800,7 @@ function savePhoto(name){
     var g=ctx.createLinearGradient(0,0,S,S); g.addColorStop(0,'#fff2f9'); g.addColorStop(1,'#eef0ff');
     ctx.fillStyle=g; ctx.fillRect(0,0,cv.width,cv.height);
     ctx.fillStyle='#fff'; roundRect(ctx,pad,pad,S-pad*2,S-pad*2,36); ctx.fill();
-    var T=S-pad*2-20, ratio=300/358, dw=T*ratio, dx=pad+10+(T-dw)/2;
+    var T=S-pad*2-20, ratio=252/398, dw=T*ratio, dx=pad+10+(T-dw)/2;
     ctx.drawImage(img,dx,pad+10,dw,T);
     ctx.fillStyle='#ff5fa8'; ctx.textAlign='center';
     ctx.font='800 42px "Baloo 2", sans-serif';
