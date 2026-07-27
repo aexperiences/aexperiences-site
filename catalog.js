@@ -3,8 +3,8 @@
    Adding a product later = one entry here. Nothing else to touch.
 
    HONESTY RULES baked into the shape of the data (Accelerated Experiences, LLC):
-   - `state:'live'`  — a stranger can open it and use it today. It gets a real link.
-   - `state:'dev'`   — being built. NO price, NO buy path, notify-me only. Never dressed as buyable.
+   - `state:'live'` — a stranger can open it and use it today. It gets a real link.
+   - `state:'dev'` — being built. NO price, NO buy path, notify-me only. Never dressed as buyable.
    - A price only ever appears on a `live` product. If we don't have a real number, we say so.
    - Never add an entry for something that does not exist.
 */
@@ -83,8 +83,8 @@
       /* The store sheet IS the product page — url goes INTO the app (never the marketing
          landing). openMap lets the sheet's instrument picker retarget the Open button. */
       openMap:{ fret:'https://espomusic.com/fret', grand:'https://espomusic.com/grand',
-                harp:'https://espomusic.com/harp', uke:'https://espomusic.com/uke',
-                bass:'https://espomusic.com/bass' },
+        harp:'https://espomusic.com/harp', uke:'https://espomusic.com/uke',
+        bass:'https://espomusic.com/bass' },
       shots:['/shots/music-fret.png','/shots/music-grand.png','/shots/music-harp.png','/shots/music-uke.png','/shots/music-bass.png'],
       blurb:'Five instruments — guitar, piano, harmonica, ukulele, bass — each with a real coach that listens and responds.',
       price:'From $5.99/mo',
@@ -181,31 +181,36 @@
       acc:'#2E0D19', mark:M+'espovineyard.svg', family:'ESPOsavor', age:'21+', url:'/apps/espovineyard/',
       blurb:'A calm wine journal with a real Wine Country Notebook inside — no ads, no marketplace, a cellar that is actually yours.',
       price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — journal, cellar & Notebook stay free' },
-  { id:'espostogie', name:'ESPOstogie', tag:'Cigar journal · 21+', genre:'savor', state:'live',
-    acc:'#7A3F18', mark:'/apps/espostogie/icon.png', family:'ESPOsavor', age:'21+', url:'/apps/espostogie/',
-    blurb:'A cigar journal and humidor — vitola, wrapper, origin, strength, burn time and pairing, kept on your own device.',
-    price:'Free right now', priceNote:'Paid plans not switched on yet' },
-  { id:'espowhiskey', name:'ESPOwhiskey', tag:'Whiskey journal · 21+', genre:'savor', state:'live',
-    acc:'#8A5A18', mark:'/apps/espowhiskey/icon.png', family:'ESPOsavor', age:'21+', url:'/apps/espowhiskey/',
-    blurb:'A whiskey journal with two sides on one shelf — log a neat pour or a built cocktail, and the base spirit lands in the same place either way.',
-    price:'Free right now', priceNote:'Paid plans not switched on yet' },
-  { id:'espobarista', name:'ESPObarista', tag:'Coffee journal', genre:'savor', state:'live',
-    acc:'#7A4A28', mark:'/apps/espobarista/icon.png', family:'ESPOsavor', url:'/apps/espobarista/',
-    blurb:'A coffee journal that logs both sides of the habit — the pour-over you brewed and the latte you bought.',
-    price:'Free right now', priceNote:'Paid plans not switched on yet' },
+    { id:'espostogie', name:'ESPOstogie', tag:'Cigar journal · 21+', genre:'savor', state:'live',
+      acc:'#7A3F18', mark:'/apps/espostogie/icon.png', family:'ESPOsavor', age:'21+', url:'/apps/espostogie/',
+      blurb:'A cigar journal and humidor — vitola, wrapper, origin, strength, burn time and pairing, kept on your own device.',
+      price:'Free right now', priceNote:'Paid plans not switched on yet' },
+    { id:'espowhiskey', name:'ESPOwhiskey', tag:'Whiskey journal · 21+', genre:'savor', state:'live',
+      acc:'#8A5A18', mark:'/apps/espowhiskey/icon.png', family:'ESPOsavor', age:'21+', url:'/apps/espowhiskey/',
+      blurb:'A whiskey journal with two sides on one shelf — log a neat pour or a built cocktail, and the base spirit lands in the same place either way.',
+      price:'Free right now', priceNote:'Paid plans not switched on yet' },
+    { id:'espobarista', name:'ESPObarista', tag:'Coffee journal', genre:'savor', state:'live',
+      acc:'#7A4A28', mark:'/apps/espobarista/icon.png', family:'ESPOsavor', url:'/apps/espobarista/',
+      blurb:'A coffee journal that logs both sides of the habit — the pour-over you brewed and the latte you bought.',
+      price:'Free right now', priceNote:'Paid plans not switched on yet' },
 
     { id:'esporacket', name:'ESPOracket', tag:'Tennis & pickleball', genre:'sport', state:'live',
       acc:'#101C2C', mark:M+'esporacket.svg', family:'ESPOcenter', url:'/apps/esporacket/',
       blurb:'Load your match film, tag every point, tap a tag to jump straight to the moment — on any device, footage never uploaded.',
       price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — every price on the page, no hidden tiers' },
-  { id:'espowords', name:'ESPOwords', tag:'Play the people you know', genre:'games', state:'live',
-    acc:'#243D2C', mark:'/marks/espowords.svg', family:'ESPOparlor', url:'/apps/espowords/',
-    blurb:'A turn-based word game with the people you actually know. No ads, no coins, no power-ups, no hints for sale, no strangers, no chat. Free.',
-    price:'Free', priceNote:'Free, and staying that way \u2014 there is nothing in it to buy.' },
-  { id:'espodraw', name:'ESPOdraw', tag:'Draw it, they guess it', genre:'games', state:'live',
-    acc:'#243D2C', mark:'/marks/espodraw.svg', family:'ESPOparlor', url:'/apps/espodraw/',
-    blurb:'Draw a word, your friends guess it, then it comes back to you. Two to eight of you, in your own time. Every colour and every brush is there from the first round. No ads, no coins, no strangers.',
-    price:'Free', priceNote:'Free, and staying that way — there is nothing in it to buy.' }
+    { id:'espowords', name:'ESPOwords', tag:'Play the people you know', genre:'games', state:'live',
+      acc:'#243D2C', mark:'/marks/espowords.svg', family:'ESPOparlor', url:'/apps/espowords/',
+      blurb:'A turn-based word game with the people you actually know. No ads, no coins, no power-ups, no hints for sale, no strangers, no chat. Free.',
+      price:'Free', priceNote:'Free, and staying that way — there is nothing in it to buy.' },
+    { id:'espodraw', name:'ESPOdraw', tag:'Draw it, they guess it', genre:'games', state:'live',
+      acc:'#243D2C', mark:'/marks/espodraw.svg', family:'ESPOparlor', url:'/apps/espodraw/',
+      blurb:'Draw a word, your friends guess it, then it comes back to you. Two to eight of you, in your own time. Every colour and every brush is there from the first round. No ads, no coins, no strangers.',
+      price:'Free', priceNote:'Free, and staying that way — there is nothing in it to buy.' },
+    { id:'sparklesalon', name:'Sparkle Salon', tag:'Salon game · ages 6–10', genre:'games', state:'live',
+      acc:'#ff5fa8', img:'/apps/sparklesalon/icon.png', family:'AE Games', url:'/apps/sparklesalon/', age:'Kids',
+      shots:['/shots/sparklesalon.png','/shots/sparklesalon-reveal.png','/shots/sparklesalon-2.png','/shots/sparklesalon-4.png'],
+      blurb:'Run your very own salon — give every happy customer amazing hair, nails, makeup and outfits. The customers talk out loud, so it works even before kids can read. No losing, no timers, no ads, nothing collected, and it works offline.',
+      price:'Free', priceNote:'A free kids’ game — no ads, no accounts, nothing to buy, nothing collected' }
   ];
 
   var GENRES = [
@@ -242,8 +247,8 @@
   }
 
   function byId(id) { for (var i = 0; i < CATALOG.length; i++) if (CATALOG[i].id === id) return CATALOG[i]; return null; }
-  function live()  { return CATALOG.filter(function (a) { return a.state === 'live'; }); }
-  function dev()   { return CATALOG.filter(function (a) { return a.state === 'dev'; }); }
+  function live() { return CATALOG.filter(function (a) { return a.state === 'live'; }); }
+  function dev() { return CATALOG.filter(function (a) { return a.state === 'dev'; }); }
   // Genres that actually have something in them — never render an empty aisle.
   function activeGenres() {
     return GENRES.filter(function (g) {
@@ -284,7 +289,7 @@
         var t = h.tiers[0];
         a.price = '$' + Number(t.mo).toLocaleString('en-US') + '/mo';
         a.priceNote = h.tiers.length + ' tiers · from $' + Number(t.build).toLocaleString('en-US')
-                    + ' one-time setup · first year $' + Number(t.firstYear).toLocaleString('en-US');
+          + ' one-time setup · first year $' + Number(t.firstYear).toLocaleString('en-US');
       });
       if (rec.appShop && rec.appShop.build) {
         root.AEShop.appShop = rec.appShop;
