@@ -192,6 +192,16 @@ svg.avatar.talking .mouth{animation:talk .26s ease-in-out infinite}
 .toast{position:fixed; left:50%; top:70px; transform:translateX(-50%) translateY(-20px); background:#fff; color:var(--ink);
   font-weight:800; padding:10px 18px; border-radius:999px; box-shadow:var(--shadow-lg); z-index:55; opacity:0; transition:.3s; border:2px solid #ffe0ef}
 .toast.on{opacity:1; transform:translateX(-50%) translateY(0)}
+.floaty{position:fixed; z-index:52; font-size:26px; pointer-events:none; will-change:transform,opacity; animation:floatup .9s ease-out forwards}
+.floaty.word{font-family:'Baloo 2'; font-weight:800; font-size:21px; color:var(--pink-deep); text-shadow:0 2px 8px rgba(255,255,255,.9)}
+@keyframes floatup{0%{opacity:0; transform:translate(-50%,12px) scale(.6)}25%{opacity:1}100%{opacity:0; transform:translate(-50%,-64px) scale(1.15)}}
+#faceView.react{animation:react .42s ease}
+@keyframes react{0%{transform:scale(1)}35%{transform:scale(1.045) rotate(-1deg)}70%{transform:scale(.99)}100%{transform:scale(1)}}
+.hint{position:absolute; left:50%; transform:translateX(-50%); bottom:6px; z-index:5; background:var(--pink-deep); color:#fff;
+  font-family:'Baloo 2'; font-weight:800; font-size:14px; padding:7px 16px; border-radius:999px; box-shadow:var(--shadow-lg);
+  white-space:nowrap; pointer-events:none; opacity:0; transition:opacity .3s}
+.hint.on{opacity:1; animation:hintbob 1.4s ease-in-out infinite}
+@keyframes hintbob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}
 </style>
 </head>
 <body>
@@ -214,6 +224,7 @@ svg.avatar.talking .mouth{animation:talk .26s ease-in-out infinite}
         <div class="mini-hands" id="miniHands"><span class="cap">nails</span><div id="miniHandsSvg"></div></div>
       </div>
     </div>
+    <div class="hint" id="hint">👆 Tap a color to style her!</div>
   </div>
 
   <div class="dock" id="dock">
@@ -464,14 +475,15 @@ function newCustomer(){
   renderFace(); renderMiniHands();
   var fv=$('#faceView'); fv.classList.remove('enter'); void fv.offsetWidth; fv.classList.add('enter');
   playLine(L.id, spokenOf(L), 1.28);
+  if(!STORE.get('seenHint')){ var h=$('#hint'); h.classList.add('on'); setTimeout(function(){ h.classList.remove('on'); },6000); }
 }
 function listJoin(a){ if(a.length===1)return a[0]; if(a.length===2)return a[0]+' and '+a[1]; return a.slice(0,-1).join(', ')+' and '+a[a.length-1]; }
 
 /* ---------------- AVATAR (SVG) ---------------- */
 function hairBack(style,col){
   switch(style){
-    case 'long': return '<path d="M55 120 C40 60 100 30 150 30 C200 30 260 60 245 120 L250 300 C235 250 220 250 210 300 L200 260 C195 300 175 300 172 258 L150 300 L128 258 C125 300 105 300 100 260 L90 300 C80 250 65 250 50 300 Z" fill="'+col+'"/>';
-    case 'wavy': return '<path d="M52 120 C38 60 100 28 150 28 C200 28 262 60 248 120 C262 170 240 180 250 235 C232 210 236 250 244 300 C224 262 214 290 206 300 C205 258 190 262 186 300 L150 300 L114 300 C110 262 95 258 94 300 C86 290 76 262 56 300 C64 250 68 210 50 235 C60 180 38 170 52 120 Z" fill="'+col+'"/>';
+    case 'long': return '<path d="M55 118 C40 58 100 30 150 30 C200 30 260 58 245 118 L250 356 Q246 376 233 366 Q224 358 214 368 Q205 380 196 368 Q188 358 178 367 Q168 378 159 366 L150 358 L141 366 Q132 378 122 367 Q112 358 104 368 Q95 380 86 368 Q74 358 55 372 Z" fill="'+col+'"/>';
+    case 'wavy': return '<path d="M52 118 C38 58 100 28 150 28 C200 28 262 58 248 118 C262 168 240 178 250 232 C258 288 246 330 250 360 Q246 378 234 367 Q225 358 215 368 Q206 380 197 368 Q189 358 179 367 L150 360 L121 367 Q111 358 103 368 Q94 380 85 368 Q73 358 56 372 C60 330 44 288 52 232 C60 178 38 168 52 118 Z" fill="'+col+'"/>';
     case 'curly': return '<g fill="'+col+'"><circle cx="60" cy="120" r="30"/><circle cx="60" cy="180" r="28"/><circle cx="70" cy="235" r="26"/><circle cx="240" cy="120" r="30"/><circle cx="240" cy="180" r="28"/><circle cx="230" cy="235" r="26"/><path d="M60 90 C60 40 110 26 150 26 C190 26 240 40 240 90 L240 210 L60 210 Z"/></g>';
     case 'pony': return '<g fill="'+col+'"><path d="M55 120 C42 62 100 30 150 30 C200 30 258 62 245 120 L245 200 L55 200 Z"/><path d="M232 96 C300 110 300 210 250 250 C284 200 250 150 214 150 Z"/></g>';
     case 'braids': return '<g fill="'+col+'"><path d="M55 120 C42 62 100 30 150 30 C200 30 258 62 245 120 L245 175 L55 175 Z"/><g><ellipse cx="70" cy="200" rx="18" ry="16"/><ellipse cx="68" cy="230" rx="17" ry="15"/><ellipse cx="70" cy="258" rx="16" ry="14"/><ellipse cx="68" cy="284" rx="14" ry="13"/></g><g><ellipse cx="230" cy="200" rx="18" ry="16"/><ellipse cx="232" cy="230" rx="17" ry="15"/><ellipse cx="230" cy="258" rx="16" ry="14"/><ellipse cx="232" cy="284" rx="14" ry="13"/></g></g>';
@@ -554,9 +566,16 @@ function faceSVG(L){
     +'<radialGradient id="gHalo" cx=".5" cy=".4" r=".62"><stop offset="0" stop-color="#ffffff" stop-opacity=".9"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>'
     +'<linearGradient id="gCape" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd9ec"/><stop offset="1" stop-color="#ffb4da"/></linearGradient>'
     +'</defs>';
-  // soft portrait backdrop
-  s+='<ellipse cx="150" cy="150" rx="150" ry="150" fill="url(#gHalo)"/>';
-  s+=spark(46,70,6)+spark(256,84,5)+spark(250,252,5,'#ffe6f4');
+  // salon vanity mirror (soft, behind everything)
+  s+='<path d="M52 320 L52 132 Q52 50 150 50 Q248 50 248 132 L248 320 Z" fill="#fff7fc" opacity=".92"/>';
+  s+='<path d="M52 320 L52 132 Q52 50 150 50 Q248 50 248 132 L248 320 Z" fill="none" stroke="#ffd9a6" stroke-width="6"/>';
+  s+='<path d="M64 320 L64 134 Q64 62 150 62 Q236 62 236 134 L236 320 Z" fill="none" stroke="#ffe7c2" stroke-width="2.5"/>';
+  var bulbs=[[52,150],[52,214],[60,110],[82,80],[112,62],[150,54],[188,62],[218,80],[240,110],[248,150],[248,214]];
+  for(var bi=0;bi<bulbs.length;bi++){ var bx=bulbs[bi][0],by=bulbs[bi][1];
+    s+='<circle cx="'+bx+'" cy="'+by+'" r="5.5" fill="#fff3d0"/><circle cx="'+bx+'" cy="'+by+'" r="5.5" fill="none" stroke="#ffcf87" stroke-width="1.4"/><circle cx="'+(bx-1.6)+'" cy="'+(by-1.6)+'" r="1.6" fill="#fff"/>'; }
+  // soft portrait glow inside the mirror
+  s+='<ellipse cx="150" cy="152" rx="120" ry="140" fill="url(#gHalo)"/>';
+  s+=spark(150,78,5,'#ffe6f4')+spark(96,96,4)+spark(206,96,4);
   // outfit + shoulders
   s+=outfitSVG(L.outfit||'tee', L.outfitColor||'#ff5fa8', L.outfitArt||'plain');
   // neck (longer, full)
@@ -664,13 +683,25 @@ function renderMiniHands(){ $('#miniHandsSvg').innerHTML=handSVG(look.nail,look.
 /* ---------------- build tool trays ---------------- */
 function swatch(color,active,fn){
   var b=el('button','swatch'); b.style.background=color; b.setAttribute('aria-pressed',active?'true':'false');
-  b.onclick=function(){ sPop(); fn(); };
+  b.onclick=function(){ sPop(); fn(); delight(); };
   return b;
 }
 function optBtn(label,em,active,fn){
   var b=el('button','opt'); b.innerHTML='<span class="em">'+em+'</span>'+label; b.setAttribute('aria-pressed',active?'true':'false');
-  b.onclick=function(){ sPop(); fn(); };
+  b.onclick=function(){ sPop(); fn(); delight(); };
   return b;
+}
+/* a little burst of love every time she gets styled — no-fail, all encouragement */
+var PRAISE_WORDS=['Pretty!','Cute!','Love it!','Ooh!','So fun!','Yay!','Gorgeous!','Sparkly!','Adorable!'];
+function delight(){
+  var fv=$('#faceView'); if(fv){ fv.classList.remove('react'); void fv.offsetWidth; fv.classList.add('react'); }
+  var fx=$('#fx'), e=el('div','floaty');
+  if(Math.random()<0.4){ e.className='floaty word'; e.textContent=pick(PRAISE_WORDS); }
+  else { e.textContent=pick(['💖','✨','💕','🌟','💫','🎀']); }
+  e.style.left=(window.innerWidth/2 + (Math.random()-0.5)*130)+'px';
+  e.style.top=(window.innerHeight*0.40)+'px';
+  fx.appendChild(e); setTimeout(function(){ e.remove(); },900);
+  var h=$('#hint'); if(h && h.classList.contains('on')){ h.classList.remove('on'); STORE.set('seenHint',true); }
 }
 function fill(id,nodes){ var t=$(id); t.innerHTML=''; nodes.forEach(function(n){t.appendChild(n);}); }
 
