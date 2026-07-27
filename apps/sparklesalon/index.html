@@ -588,7 +588,7 @@ function gem(x,y,c){ return '<g transform="translate('+x+','+y+')"><path d="M0 -
 function petals(col){var s='';for(var i=0;i<6;i++){var a=i*60*Math.PI/180;s+='<ellipse cx="'+(Math.cos(a)*12).toFixed(1)+'" cy="'+(Math.sin(a)*12).toFixed(1)+'" rx="8" ry="12" transform="rotate('+(i*60)+' '+(Math.cos(a)*12).toFixed(1)+' '+(Math.sin(a)*12).toFixed(1)+')" fill="'+col+'"/>';}return s;}
 function star(r,col){var p='';for(var i=0;i<10;i++){var rr=i%2?r*0.45:r;var a=(i*36-90)*Math.PI/180;p+=(i?'L':'M')+(Math.cos(a)*rr).toFixed(1)+' '+(Math.sin(a)*rr).toFixed(1)+' ';}return '<path d="'+p+'Z" fill="'+col+'"/>';}
 
-function faceSVG(L){
+function faceSVG(L, reveal){
   var s='';
   s+='<defs>'
     +'<linearGradient id="gRainbow" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8fce"/><stop offset=".5" stop-color="#c99cf2"/><stop offset="1" stop-color="#8fd0ff"/></linearGradient>'
@@ -666,7 +666,45 @@ function faceSVG(L){
   s+=hairFront(L.hairStyle,L.hairColor);
   s+='<path d="M112 92 Q150 66 190 92 Q168 80 150 80 Q132 80 112 92 Z" fill="#ffffff" opacity=".16"/>';
   if(L.accessory && L.accessory!=='none') s+=accessorySVG(L.accessory,L.accColor);
+  // arms + hands (resting normally; raised to show off nails on the reveal)
+  s+=armsAndHands(L, reveal);
   return '<svg class="avatar" viewBox="24 24 252 398" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Customer">'+s+'</svg>';
+}
+/* a cute up-facing hand with 4 painted nails + thumb; flip mirrors it */
+function avatarHand(x,y,sc,flip,skin,base,art){
+  var g='<g transform="translate('+x+' '+y+') scale('+(flip?-sc:sc)+' '+sc+')">';
+  g+='<path d="M-16 22 C-18 6 -14 -4 -6 -6 L8 -6 C16 -4 18 8 16 22 C14 30 -14 30 -16 22 Z" fill="'+skin+'"/>';
+  var fx=[-11,-4,4,11], fh=[15,21,21,15];
+  for(var i=0;i<4;i++){ var xx=fx[i], h=fh[i];
+    g+='<rect x="'+(xx-4)+'" y="'+(-6-h)+'" width="8" height="'+(h+9)+'" rx="4" fill="'+skin+'"/>';
+    g+='<rect x="'+(xx-3.4)+'" y="'+(-6-h)+'" width="6.8" height="8.4" rx="3.2" fill="'+base+'"/>';
+    g+=nailOverlay(art,(xx-3.4),(-6-h),6.8,8.4,base);
+    g+='<rect x="'+(xx-2.4)+'" y="'+(-5-h)+'" width="2.2" height="3" rx="1.1" fill="rgba(255,255,255,.4)"/>';
+  }
+  g+='<path d="M-16 8 C-25 6 -27 17 -20 20 C-15 22 -11 16 -13 11 Z" fill="'+skin+'"/>';
+  g+='</g>';
+  return g;
+}
+function armsAndHands(L, reveal){
+  var skin=L.skin, base=L.nail, art=L.nailArt, col=L.outfitColor||'#ff5fa8';
+  var s='';
+  if(reveal){
+    // sleeves up
+    s+='<path d="M86 340 C68 300 82 240 104 206" stroke="'+col+'" stroke-width="27" fill="none" stroke-linecap="round"/>';
+    s+='<path d="M214 340 C232 300 218 240 196 206" stroke="'+col+'" stroke-width="27" fill="none" stroke-linecap="round"/>';
+    // forearm skin
+    s+='<path d="M104 210 C100 190 104 172 108 158" stroke="'+skin+'" stroke-width="21" fill="none" stroke-linecap="round"/>';
+    s+='<path d="M196 210 C200 190 196 172 192 158" stroke="'+skin+'" stroke-width="21" fill="none" stroke-linecap="round"/>';
+    s+=avatarHand(108,150,1.05,false,skin,base,art);
+    s+=avatarHand(192,150,1.05,true,skin,base,art);
+  } else {
+    // arms resting, hands held up on the lap showing the nails while you style
+    s+='<path d="M92 344 C98 364 114 378 132 384" stroke="'+col+'" stroke-width="26" fill="none" stroke-linecap="round"/>';
+    s+='<path d="M208 344 C202 364 186 378 168 384" stroke="'+col+'" stroke-width="26" fill="none" stroke-linecap="round"/>';
+    s+=avatarHand(130,392,0.64,false,skin,base,art);
+    s+=avatarHand(170,392,0.64,true,skin,base,art);
+  }
+  return s;
 }
 
 /* nails: a cute hand with 5 nails */
@@ -831,7 +869,7 @@ $('#doneBtn').onclick=function(){
   card.innerHTML=
     '<h2>'+customer.name+' is thrilled! 🎉</h2>'+
     '<div class="sub">"'+praise+'"</div>'+
-    '<div class="reveal-photo" id="photoBox">'+faceSVG(look)+'</div>'+
+    '<div class="reveal-photo" id="photoBox">'+faceSVG(look, true)+'</div>'+
     '<div class="stars">'+stars+'</div>'+
     matchLine+
     '<div class="reward">🪙 +'+earned+' coins &nbsp;•&nbsp; '+sticker+' new sticker!</div>'+
