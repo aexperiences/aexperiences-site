@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff9ecb"/><stop offset=".55" stop-color="#c99cf2"/><stop offset="1" stop-color="#8fd0ff"/>
+    </linearGradient>
+    <linearGradient id="polish" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff6fb0"/><stop offset="1" stop-color="#ff2d7a"/>
+    </linearGradient>
+    <radialGradient id="shine" cx=".35" cy=".3" r=".8">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".55"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="228" fill="url(#bg)"/>
+  <rect width="1024" height="1024" rx="228" fill="url(#shine)"/>
+  <!-- nail polish bottle -->
+  <g transform="translate(512 560)">
+    <rect x="-150" y="-40" width="300" height="300" rx="70" fill="url(#polish)"/>
+    <rect x="-150" y="-40" width="300" height="300" rx="70" fill="#ffffff" opacity=".08"/>
+    <rect x="-70" y="-150" width="140" height="120" rx="26" fill="#ffffff"/>
+    <rect x="-52" y="-250" width="104" height="120" rx="34" fill="#3a2440"/>
+    <rect x="-52" y="-250" width="104" height="46" rx="24" fill="#ffffff" opacity=".18"/>
+    <!-- brush drop -->
+    <ellipse cx="0" cy="120" rx="60" ry="72" fill="#ffffff" opacity=".22"/>
+  </g>
+  <!-- sparkles -->
+  <g fill="#ffffff">
+    <path d="M250 250 l24 60 60 24 -60 24 -24 60 -24 -60 -60 -24 60 -24 z" opacity=".95"/>
+    <path d="M792 300 l16 40 40 16 -40 16 -16 40 -16 -40 -40 -16 40 -16 z" opacity=".9"/>
+    <path d="M770 760 l20 50 50 20 -50 20 -20 50 -20 -50 -50 -20 50 -20 z" opacity=".85"/>
+  </g>
+</svg>

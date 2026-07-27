@@ -1,0 +1,890 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#ffb6d5">
+<title>Sparkle Salon 💅✨</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="description" content="Run your very own sparkle salon — hair, nails and makeup for every happy customer. A kind, no-losing game for kids. By Accelerated Experiences LLC.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#ff8fc4; --pink-deep:#ff5fa8; --lilac:#c99cf2; --mint:#7fe0c4;
+  --sky:#8fd0ff; --sun:#ffd45e; --peach:#ffb59e; --cream:#fff6fb;
+  --ink:#5a3a55; --ink-soft:#8b6a86; --panel:#ffffff;
+  --shadow:0 10px 26px rgba(180,80,150,.18);
+  --shadow-lg:0 18px 46px rgba(180,80,150,.28);
+  --r:22px;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0; height:100%}
+body{
+  font-family:'Nunito',system-ui,sans-serif; color:var(--ink);
+  background:
+    radial-gradient(1200px 700px at 15% -10%, #ffe1f0 0%, rgba(255,225,240,0) 55%),
+    radial-gradient(1000px 700px at 100% 0%, #e7dcff 0%, rgba(231,220,255,0) 55%),
+    linear-gradient(160deg,#fff2f9 0%,#f3ecff 48%,#e8fbff 100%);
+  overflow:hidden; user-select:none; -webkit-user-select:none;
+}
+h1,h2,h3,button,.disp{font-family:'Baloo 2',system-ui,sans-serif}
+#app{position:fixed; inset:0; display:flex; flex-direction:column; max-width:760px; margin:0 auto}
+
+/* ---------- top bar ---------- */
+.topbar{display:flex; align-items:center; gap:10px; padding:12px 14px 6px}
+.brand{font-family:'Baloo 2'; font-weight:800; font-size:22px; letter-spacing:.3px;
+  background:linear-gradient(90deg,var(--pink-deep),var(--lilac)); -webkit-background-clip:text; background-clip:text; color:transparent;
+  display:flex; align-items:center; gap:6px; line-height:1}
+.brand small{font-size:14px}
+.spacer{flex:1}
+.chip{display:flex; align-items:center; gap:6px; background:var(--panel); border-radius:999px;
+  padding:7px 13px; font-family:'Baloo 2'; font-weight:800; font-size:17px; color:var(--ink);
+  box-shadow:var(--shadow); border:2px solid #ffffff}
+.chip .ic{font-size:18px}
+.iconbtn{width:44px; height:44px; border-radius:50%; border:2px solid #fff; background:var(--panel);
+  box-shadow:var(--shadow); font-size:20px; cursor:pointer; display:grid; place-items:center; color:var(--ink)}
+.iconbtn:active{transform:scale(.92)}
+
+/* ---------- stage ---------- */
+.stage{flex:1; position:relative; display:flex; flex-direction:column; align-items:center; min-height:0; padding:2px 12px 0}
+.customer-card{position:relative; width:min(88vw,360px); flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center}
+.speech{position:relative; background:#fff; border:3px solid #ffe0ef; border-radius:20px; padding:9px 15px;
+  font-weight:800; font-size:clamp(14px,3.6vw,18px); color:var(--ink); box-shadow:var(--shadow); text-align:center;
+  max-width:94%; margin-bottom:4px; z-index:3}
+.speech b{color:var(--pink-deep)}
+.speech:after{content:""; position:absolute; left:50%; bottom:-11px; transform:translateX(-50%);
+  border:9px solid transparent; border-top-color:#fff; filter:drop-shadow(0 2px 0 #ffe0ef)}
+.avatar-wrap{position:relative; flex:1; min-height:0; width:100%; display:grid; place-items:center}
+svg.avatar{width:auto; height:100%; max-height:46vh; filter:drop-shadow(0 12px 18px rgba(150,80,130,.22))}
+@media (max-height:680px){ svg.avatar{max-height:40vh} }
+
+.hands-toggle{position:absolute; right:2px; bottom:6px; z-index:4}
+.mini-hands{position:absolute; left:6px; bottom:6px; width:74px; height:74px; background:#fff; border-radius:18px;
+  box-shadow:var(--shadow); border:2px solid #ffe6f2; display:grid; place-items:center; z-index:4; padding:5px}
+.mini-hands svg{width:100%; height:100%}
+.mini-hands .cap{position:absolute; top:-9px; left:50%; transform:translateX(-50%); background:var(--pink-deep); color:#fff;
+  font-size:10px; font-weight:800; padding:2px 7px; border-radius:999px; font-family:'Baloo 2'}
+
+/* nails big view */
+.nails-stagewrap{flex:1; min-height:0; width:100%; display:grid; place-items:center}
+.nails-stagewrap svg{width:auto; height:100%; max-height:44vh; filter:drop-shadow(0 12px 18px rgba(150,80,130,.22))}
+
+/* ---------- tools ---------- */
+.dock{background:rgba(255,255,255,.72); backdrop-filter:blur(8px); border-top:2px solid #ffe4f1;
+  border-radius:26px 26px 0 0; box-shadow:0 -8px 30px rgba(180,80,150,.12); padding:8px 10px calc(10px + env(safe-area-inset-bottom))}
+.tabs{display:flex; gap:6px; justify-content:center; margin-bottom:8px}
+.tab{flex:1; max-width:130px; border:none; border-radius:15px; padding:8px 4px; font-weight:800; font-size:13.5px;
+  background:#fff; color:var(--ink-soft); box-shadow:var(--shadow); cursor:pointer; display:flex; flex-direction:column;
+  align-items:center; gap:1px; border:2px solid transparent; transition:transform .12s}
+.tab .em{font-size:19px; height:23px; display:flex; align-items:center; justify-content:center}
+.tab .em svg{width:22px; height:22px; display:block}
+.tab[aria-selected="true"]{color:#fff; border-color:#fff}
+.tab.hair[aria-selected="true"]{background:linear-gradient(180deg,#ffa6d4,#ff6fb0)}
+.tab.nails[aria-selected="true"]{background:linear-gradient(180deg,#c7a3f5,#a06fe6)}
+.tab.makeup[aria-selected="true"]{background:linear-gradient(180deg,#8fd8ff,#54b6f2)}
+.tab.dress[aria-selected="true"]{background:linear-gradient(180deg,#8ce0c0,#3fc79a)}
+.tab:active{transform:scale(.95)}
+
+.panel{display:none}
+.panel.on{display:block; animation:fade .25s ease}
+@keyframes fade{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
+.row-label{font-weight:800; font-size:12.5px; color:var(--ink-soft); margin:2px 4px 4px; text-transform:uppercase; letter-spacing:.5px}
+.tray{display:flex; gap:8px; overflow-x:auto; padding:2px 2px 8px; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch}
+.tray::-webkit-scrollbar{height:0}
+.swatch{flex:0 0 auto; width:42px; height:42px; border-radius:50%; border:3px solid #fff; box-shadow:var(--shadow);
+  cursor:pointer; position:relative; scroll-snap-align:start; transition:transform .12s}
+.swatch:active{transform:scale(.9)}
+.swatch[aria-pressed="true"]{outline:3px solid var(--pink-deep); outline-offset:2px; transform:scale(1.06)}
+.opt{flex:0 0 auto; min-width:64px; height:52px; border-radius:15px; border:3px solid #fff; background:#fff; box-shadow:var(--shadow);
+  cursor:pointer; font-weight:800; font-size:13px; color:var(--ink); display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:1px; padding:4px 9px; scroll-snap-align:start; transition:transform .12s}
+.opt .em{font-size:20px}
+.opt:active{transform:scale(.94)}
+.opt[aria-pressed="true"]{outline:3px solid var(--pink-deep); outline-offset:2px; background:#fff0f7}
+
+.dock-actions{display:flex; gap:10px; margin-top:4px}
+.btn{flex:1; border:none; border-radius:18px; padding:13px; font-weight:800; font-size:17px; cursor:pointer;
+  box-shadow:var(--shadow); color:#fff; display:flex; align-items:center; justify-content:center; gap:7px}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:#fff; color:var(--ink); flex:0 0 54px; padding:13px 0}
+.btn.go{background:linear-gradient(90deg,var(--pink-deep),var(--lilac))}
+.btn.surprise{flex:0 0 54px; background:linear-gradient(180deg,#ffe07a,#ffc93c); color:#7a5a10; padding:13px 0}
+
+/* ---------- reveal overlay ---------- */
+.overlay{position:fixed; inset:0; background:rgba(90,40,80,.42); backdrop-filter:blur(4px); display:none;
+  align-items:center; justify-content:center; z-index:40; padding:18px}
+.overlay.on{display:flex; animation:fade .3s}
+.card{background:var(--cream); border-radius:28px; box-shadow:var(--shadow-lg); width:min(92vw,420px); max-height:92vh;
+  overflow:auto; padding:18px 18px 16px; text-align:center; border:4px solid #fff; position:relative}
+.card h2{margin:2px 0 2px; font-size:26px; color:var(--pink-deep)}
+.card .sub{font-weight:700; color:var(--ink-soft); margin-bottom:8px; font-size:15px}
+.reveal-photo{width:min(70vw,230px); margin:0 auto; background:#fff; border-radius:20px; padding:8px; box-shadow:var(--shadow); border:3px solid #ffe0ef}
+.reveal-photo svg{width:100%; height:auto; display:block}
+.stars{font-size:30px; letter-spacing:4px; margin:8px 0 2px}
+.reward{display:flex; align-items:center; justify-content:center; gap:8px; font-family:'Baloo 2'; font-weight:800;
+  font-size:20px; color:#c98a00; margin:6px 0}
+.card .btn{margin-top:6px; width:100%}
+.card .btn+.btn{margin-top:8px}
+.mini-actions{display:flex; gap:8px; margin-top:8px}
+.mini-actions .btn{flex:1; font-size:15px; padding:11px}
+
+/* sticker book */
+.book{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:10px 0 4px}
+.sticker{aspect-ratio:1; background:#fff; border-radius:16px; box-shadow:var(--shadow); border:2px solid #ffe6f2;
+  display:grid; place-items:center; font-size:26px}
+.sticker.empty{background:#f6ecf5; box-shadow:none; border:2px dashed #e2cfe0; color:#d8c3d6; font-size:20px}
+
+/* confetti + sparkle */
+.fx{position:fixed; inset:0; pointer-events:none; z-index:50; overflow:hidden}
+.confetti{position:absolute; width:11px; height:16px; border-radius:3px; will-change:transform,opacity}
+.sparkle{position:absolute; font-size:22px; animation:pop .9s ease forwards}
+@keyframes pop{0%{transform:scale(0) rotate(0);opacity:0}30%{transform:scale(1.2) rotate(20deg);opacity:1}100%{transform:scale(.4) rotate(60deg);opacity:0}}
+
+/* intro */
+.intro{position:fixed; inset:0; z-index:60; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:24px;
+  background:radial-gradient(900px 600px at 50% 0,#ffe1f0,rgba(255,225,240,0) 60%),linear-gradient(160deg,#fff2f9,#f0e8ff 60%,#e6fbff)}
+.intro.hide{display:none}
+.intro .logo{font-family:'Baloo 2'; font-weight:800; font-size:clamp(34px,10vw,58px);
+  background:linear-gradient(90deg,var(--pink-deep),var(--lilac),var(--sky)); -webkit-background-clip:text; background-clip:text; color:transparent}
+.intro p{font-weight:800; color:var(--ink-soft); font-size:18px; margin:6px 0 20px; max-width:340px}
+.intro .big{border:none; border-radius:22px; padding:16px 34px; font-family:'Baloo 2'; font-weight:800; font-size:22px; color:#fff;
+  background:linear-gradient(90deg,var(--pink-deep),var(--lilac)); box-shadow:var(--shadow-lg); cursor:pointer; animation:bob 1.6s ease-in-out infinite}
+.intro .big:active{transform:scale(.96)}
+.namebox{display:flex; flex-direction:column; align-items:center; gap:6px; margin-bottom:18px}
+.namebox label{font-family:'Baloo 2'; font-weight:800; color:var(--pink-deep); font-size:16px}
+.namebox input{font-family:'Baloo 2'; font-weight:700; font-size:20px; text-align:center; color:var(--ink);
+  border:3px solid #ffd9ec; background:#fff; border-radius:16px; padding:11px 16px; width:min(78vw,300px);
+  box-shadow:var(--shadow); outline:none}
+.namebox input:focus{border-color:var(--pink-deep)}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.intro .chairs{font-size:44px; margin-bottom:6px; animation:bob 2.2s ease-in-out infinite}
+.credit{position:fixed; bottom:6px; left:0; right:0; text-align:center; font-size:11px; color:#b79ab3; font-weight:700; z-index:61}
+.wishtag{display:inline-flex; align-items:center; gap:5px; background:#fff4fa; border:2px solid #ffd9ec; color:var(--pink-deep);
+  font-weight:800; font-size:12px; padding:3px 10px; border-radius:999px; margin-top:4px}
+.match{display:inline-block; background:#e9fbf3; color:#0f9d6e; border:2px solid #bff0dd; font-weight:800; font-size:13px;
+  padding:4px 12px; border-radius:999px; margin:4px 0}
+.toast{position:fixed; left:50%; top:70px; transform:translateX(-50%) translateY(-20px); background:#fff; color:var(--ink);
+  font-weight:800; padding:10px 18px; border-radius:999px; box-shadow:var(--shadow-lg); z-index:55; opacity:0; transition:.3s; border:2px solid #ffe0ef}
+.toast.on{opacity:1; transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div id="app" aria-hidden="true">
+  <div class="topbar">
+    <div class="brand" id="brand">💅 Sparkle Salon</div>
+    <div class="spacer"></div>
+    <div class="chip" title="Coins"><span class="ic">🪙</span><span id="coins">0</span></div>
+    <button class="iconbtn" id="bookBtn" title="Sticker book" aria-label="Sticker book">📖</button>
+    <button class="iconbtn" id="muteBtn" title="Sound" aria-label="Sound on or off">🔊</button>
+  </div>
+
+  <div class="stage">
+    <div class="customer-card">
+      <div class="speech" id="speech">Welcome! 💕</div>
+      <div class="avatar-wrap" id="avatarWrap">
+        <div id="faceView" class="avatar-wrap" style="width:100%;height:100%;display:grid;place-items:center"></div>
+        <div class="nails-stagewrap" id="nailsView" style="display:none"></div>
+        <div class="mini-hands" id="miniHands"><span class="cap">nails</span><div id="miniHandsSvg"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dock">
+    <div class="tabs" role="tablist">
+      <button class="tab hair"   id="tab-hair"   role="tab" aria-selected="true"  aria-controls="panel-hair"><span class="em"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/></svg></span>Hair</button>
+      <button class="tab nails"  id="tab-nails"  role="tab" aria-selected="false" aria-controls="panel-nails"><span class="em"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="8" y="9" width="8" height="12" rx="2.2"/><rect x="9.6" y="4.4" width="4.8" height="4.8" rx="1.2"/><rect x="9" y="1.4" width="6" height="3.4" rx="1.2"/></svg></span>Nails</button>
+      <button class="tab makeup" id="tab-makeup" role="tab" aria-selected="false" aria-controls="panel-makeup"><span class="em"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="8.5" y="11" width="7" height="10.5" rx="1.6"/><path d="M9.4 11V6.2Q9.4 3 12 3 14.6 3 14.6 6.2V11Z"/></svg></span>Makeup</button>
+      <button class="tab dress" id="tab-dress" role="tab" aria-selected="false" aria-controls="panel-dress"><span class="em"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5a2 2 0 1 0 2 2"/><path d="M14 5.5 21 15H3l7-9.5"/><path d="M3 15h18"/></svg></span>Dress</button>
+    </div>
+
+    <!-- HAIR -->
+    <div class="panel on" id="panel-hair" role="tabpanel">
+      <div class="row-label">Style</div>
+      <div class="tray" id="hairStyles"></div>
+      <div class="row-label">Color</div>
+      <div class="tray" id="hairColors"></div>
+      <div class="row-label">Accessory</div>
+      <div class="tray" id="accessories"></div>
+    </div>
+
+    <!-- NAILS -->
+    <div class="panel" id="panel-nails" role="tabpanel">
+      <div class="row-label">Polish color</div>
+      <div class="tray" id="nailColors"></div>
+      <div class="row-label">Nail art</div>
+      <div class="tray" id="nailArt"></div>
+    </div>
+
+    <!-- MAKEUP -->
+    <div class="panel" id="panel-makeup" role="tabpanel">
+      <div class="row-label">Lips</div>
+      <div class="tray" id="lipColors"></div>
+      <div class="row-label">Eyeshadow</div>
+      <div class="tray" id="eyeColors"></div>
+      <div class="row-label">Cheeks &amp; sparkle</div>
+      <div class="tray" id="cheekRow"></div>
+    </div>
+
+    <!-- DRESS -->
+    <div class="panel" id="panel-dress" role="tabpanel">
+      <div class="row-label">Outfit</div>
+      <div class="tray" id="outfitStyles"></div>
+      <div class="row-label">Color</div>
+      <div class="tray" id="outfitColors"></div>
+      <div class="row-label">Pattern</div>
+      <div class="tray" id="outfitArt"></div>
+    </div>
+
+    <div class="dock-actions">
+      <button class="btn surprise" id="surpriseBtn" title="Surprise style!" aria-label="Surprise style">🎲</button>
+      <button class="btn go" id="doneBtn">✨ All done!</button>
+    </div>
+  </div>
+</div>
+
+<!-- REVEAL -->
+<div class="overlay" id="reveal">
+  <div class="card" id="revealCard"></div>
+</div>
+
+<!-- STICKER BOOK -->
+<div class="overlay" id="bookOverlay">
+  <div class="card">
+    <h2>My Sticker Book</h2>
+    <div class="sub" id="bookSub">Every happy customer gives you a sticker!</div>
+    <div class="book" id="bookGrid"></div>
+    <button class="btn go" id="closeBook">Back to the salon</button>
+  </div>
+</div>
+
+<div class="fx" id="fx"></div>
+<div class="toast" id="toast"></div>
+
+<!-- INTRO -->
+<div class="intro" id="intro">
+  <div class="chairs">💇‍♀️💅💄</div>
+  <div class="logo">Sparkle Salon</div>
+  <p>You own the coolest salon in town! Give every customer amazing hair, nails &amp; makeup.</p>
+  <div class="namebox">
+    <label for="ownerName">What should we call your salon?</label>
+    <input id="ownerName" type="text" maxlength="14" autocomplete="off" autocapitalize="words"
+      spellcheck="false" placeholder="Type your name ✨" aria-label="Your name">
+  </div>
+  <button class="big" id="startBtn">Open my salon ✨</button>
+</div>
+<div class="credit">Powered by Accelerated Experiences LLC</div>
+
+<script>
+"use strict";
+/* Sparkle Salon — a kind salon-styling game for kids (ages 6–10).
+   No losing, no timers, nothing to get wrong, nothing collected or uploaded.
+   Everything lives on this device. By Accelerated Experiences LLC. */
+
+/* ---------------- tiny helpers ---------------- */
+var $=function(s,r){return (r||document).querySelector(s);};
+var el=function(tag,cls){var e=document.createElement(tag); if(cls)e.className=cls; return e;};
+function clamp(n,a,b){return Math.max(a,Math.min(b,n));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+
+/* safe storage (never crash if disabled) */
+var STORE={
+  get:function(k,d){try{var v=localStorage.getItem('sparklesalon_'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},
+  set:function(k,v){try{localStorage.setItem('sparklesalon_'+k,JSON.stringify(v));}catch(e){}}
+};
+
+/* ---------------- sound (synth, no files) ---------------- */
+var AC=null, muted=STORE.get('muted',false);
+function actx(){ if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}} return AC; }
+function beep(freq,dur,type,vol,slideTo){
+  if(muted) return; var c=actx(); if(!c) return;
+  var o=c.createOscillator(), g=c.createGain();
+  o.type=type||'sine'; o.frequency.value=freq;
+  if(slideTo){o.frequency.exponentialRampToValueAtTime(slideTo,c.currentTime+dur);}
+  g.gain.value=0.0001; g.gain.exponentialRampToValueAtTime(vol||0.14,c.currentTime+0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+dur);
+  o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime+dur+0.02);
+}
+function sPop(){ beep(520+Math.random()*140,0.12,'triangle',0.10,220); }
+function sTab(){ beep(660,0.08,'sine',0.08); }
+function sSparkle(){ beep(880,0.09,'triangle',0.08); setTimeout(function(){beep(1320,0.12,'triangle',0.07);},70); }
+function sTada(){ [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){beep(f,0.22,'triangle',0.12);},i*110); }); }
+function sCoin(){ beep(988,0.07,'square',0.07); setTimeout(function(){beep(1319,0.12,'square',0.06);},60); }
+
+/* ---------------- voice (browser speech — offline, nothing sent) ---------------- */
+var VOICE=null, canSpeak=('speechSynthesis' in window);
+function pickVoice(){
+  if(!canSpeak) return;
+  try{
+    var vs=window.speechSynthesis.getVoices()||[];
+    VOICE = vs.filter(function(v){return /^en/i.test(v.lang);})
+              .sort(function(a,b){ return score(b)-score(a); })[0] || vs[0] || null;
+  }catch(e){}
+  function score(v){ var n=(v.name||'').toLowerCase(); var s=0;
+    if(/samantha|zira|karen|tessa|moira|serena|female|google us english|catherine|allison/.test(n)) s+=5;
+    if(/google/.test(n)) s+=2; if(/^en-us/i.test(v.lang)) s+=1; return s; }
+}
+if(canSpeak){ pickVoice(); window.speechSynthesis.onvoiceschanged=pickVoice; }
+function say(text,pitch,rate){
+  if(muted || !canSpeak || !text) return;
+  try{
+    window.speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(text);
+    if(VOICE) u.voice=VOICE;
+    u.pitch=pitch||1.25; u.rate=rate||1; u.volume=0.95;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+var curAudio=null;
+function stopAudio(){ if(curAudio){ try{ curAudio.pause(); }catch(e){} curAudio=null; } }
+function hush(){ stopAudio(); if(canSpeak){ try{ window.speechSynthesis.cancel(); }catch(e){} } }
+/* Play a baked ElevenLabs clip if it exists (voice/<id>.mp3); otherwise fall back
+   to the device voice so the game always talks, even before clips are baked / offline. */
+function playLine(id,text,pitch){
+  if(muted) return;
+  hush();
+  var done=false, fallback=function(){ if(done) return; done=true; say(text,pitch,1); };
+  try{
+    var a=new Audio('voice/'+id+'.mp3'); curAudio=a; a.volume=1;
+    a.addEventListener('playing',function(){ done=true; });
+    a.addEventListener('error',fallback);
+    var pr=a.play();
+    if(pr&&pr.catch) pr.catch(fallback);
+  }catch(e){ fallback(); }
+}
+
+/* ---------------- palettes ---------------- */
+var SKINS=['#ffe0c4','#f6c9a0','#e0a878','#c98a5c','#a8683f','#7d4a2b'];
+var HAIRCOLORS=[
+  {n:'Brown',c:'#6b4423'},{n:'Black',c:'#2b2320'},{n:'Blonde',c:'#e9c46a'},{n:'Auburn',c:'#a3441f'},
+  {n:'Bubblegum',c:'#ff8fce'},{n:'Grape',c:'#b57edc'},{n:'Ocean',c:'#5fb3e8'},{n:'Mint',c:'#6fd7bf'},
+  {n:'Cherry',c:'#e0456a'},{n:'Silver',c:'#cfcfe0'},{n:'Sunset',c:'url(#gRainbow)'}
+];
+var NAILCOLORS=['#ff5fa8','#ff9e57','#ffd646','#7fd977','#5fc9e8','#8f7bff','#c46bff','#ff6f6f','#ffffff','#2b2540','#ff2d7a','#00c2a8'];
+var LIPS=['#ff5fa8','#e0456a','#ff7f66','#c94f8f','#a03f7a','#ff9aa8','#d64545'];
+var EYESHADOW=['#c46bff','#ff8fce','#5fc9e8','#6fd7bf','#ffd646','#cfcfe0','#ff9e57'];
+var BLUSH=['#ff9ec7','#ff8f7a','#ffb59e','#ff7fa8'];
+
+/* hair styles registry */
+var HAIRSTYLES=['long','wavy','curly','pony','bun','braids','bob','pixie'];
+var HAIRLABEL={long:'Long',wavy:'Wavy',curly:'Curly',pony:'Pony',bun:'Top Bun',braids:'Braids',bob:'Bob',pixie:'Pixie'};
+var HAIREMOJI={long:'💁‍♀️',wavy:'🌊',curly:'🌀',pony:'🎀',bun:'🧋',braids:'🪢',bob:'💇‍♀️',pixie:'✂️'};
+var ACCESSORIES=[
+  {id:'none',n:'None',em:'🚫'},{id:'bow',n:'Bow',em:'🎀'},{id:'flower',n:'Flower',em:'🌸'},
+  {id:'band',n:'Band',em:'👑'},{id:'crown',n:'Crown',em:'👑'},{id:'star',n:'Star',em:'⭐'},{id:'clips',n:'Clips',em:'✨'}
+];
+var NAILART=[
+  {id:'plain',n:'Plain',em:'⬤'},{id:'dots',n:'Dots',em:'🔵'},{id:'stripe',n:'Stripe',em:'➖'},
+  {id:'glitter',n:'Glitter',em:'✨'},{id:'heart',n:'Hearts',em:'💖'},{id:'star',n:'Stars',em:'⭐'},{id:'french',n:'French',em:'🤍'}
+];
+var OUTFITS=[
+  {id:'tee',n:'T-shirt',em:'👕'},{id:'dress',n:'Dress',em:'👗'},{id:'hoodie',n:'Hoodie',em:'🧥'},
+  {id:'tutu',n:'Tutu',em:'🩰'},{id:'overalls',n:'Overalls',em:'🧵'},{id:'sparkle',n:'Sparkle',em:'✨'},{id:'super',n:'Hero cape',em:'🦸'}
+];
+var OUTFITLABEL={tee:'T-shirt',dress:'Dress',hoodie:'Hoodie',tutu:'Tutu',overalls:'Overalls',sparkle:'Sparkle top',super:'Hero cape'};
+var OUTFITCOLORS=['#ff5fa8','#ff9e57','#ffd646','#7fd977','#5fc9e8','#8f7bff','#c46bff','#ff6f6f','#ffffff','#2b2540','#ff2d7a','#00c2a8'];
+var OUTFITART=[
+  {id:'plain',n:'Plain',em:'⬤'},{id:'stripes',n:'Stripes',em:'➖'},{id:'hearts',n:'Hearts',em:'💖'},{id:'stars',n:'Stars',em:'⭐'},{id:'dots',n:'Dots',em:'🔵'}
+];
+
+/* ---------------- look state ---------------- */
+var look, customer, coins=STORE.get('coins',0), served=STORE.get('served',0);
+var book=STORE.get('book',[]);
+var owner=STORE.get('owner','');
+function salonTitle(){ return owner ? owner + "'s Salon" : 'Sparkle Salon'; }
+function updateBrand(){ $('#brand').innerHTML = '💅 ' + salonTitle(); }
+
+function freshLook(seed){
+  return {
+    skin: seed?seed.skin:pick(SKINS),
+    eye: seed?seed.eye:pick(['#5a3a2a','#3a6a8a','#3a7a4a','#6a4a7a']),
+    hairStyle: pick(HAIRSTYLES),
+    hairColor: pick(HAIRCOLORS).c,
+    accessory:'none', accColor:pick(['#ff5fa8','#ffd646','#8f7bff','#5fc9e8']),
+    lip:null, eyeshadow:null, blush:null, gem:false,
+    nail:'#ff5fa8', nailArt:'plain',
+    outfit:pick(['tee','dress','hoodie']), outfitColor:pick(OUTFITCOLORS), outfitArt:'plain'
+  };
+}
+
+/* ---------------- WISHES (gentle, never required) ---------------- */
+/* Fixed, bakeable line library. Each customer speaks one authored line so the
+   audio can be pre-generated in one voice (ElevenLabs) and matches the bubble. */
+var CUSTLINES=[
+  {id:'c01',name:'Mia',   text:"Can I get long rainbow hair and star nails?",            wish:[{t:'hairStyle',v:'long'},{t:'hairColor',v:'url(#gRainbow)'},{t:'nailArt',v:'star'}]},
+  {id:'c02',name:'Ava',   text:"I have a party! I'd love a sparkly dress and curly hair.",wish:[{t:'outfit',v:'dress'},{t:'hairStyle',v:'curly'}]},
+  {id:'c03',name:'Lily',  text:"Ooh, give me bubblegum pink hair and heart nails!",       wish:[{t:'hairColor',v:'#ff8fce'},{t:'nailArt',v:'heart'}]},
+  {id:'c04',name:'Zoe',   text:"Can you do a top bun and pretty lips?",                   wish:[{t:'hairStyle',v:'bun'},{t:'lip',v:'any'}]},
+  {id:'c05',name:'Ruby',  text:"I want a tutu and a sparkly crown, please!",             wish:[{t:'outfit',v:'tutu'},{t:'accessory',v:'crown'}]},
+  {id:'c06',name:'Nora',  text:"Mermaid vibes! Mint hair and glitter nails?",            wish:[{t:'hairColor',v:'#6fd7bf'},{t:'nailArt',v:'glitter'}]},
+  {id:'c07',name:'Isla',  text:"Give me a cozy hoodie and wavy hair!",                   wish:[{t:'outfit',v:'hoodie'},{t:'hairStyle',v:'wavy'}]},
+  {id:'c08',name:'Cleo',  text:"I'd love braids and a cute bow.",                        wish:[{t:'hairStyle',v:'braids'},{t:'accessory',v:'bow'}]},
+  {id:'c09',name:'Poppy', text:"Can I be a superhero? A hero cape and star nails!",      wish:[{t:'outfit',v:'super'},{t:'nailArt',v:'star'}]},
+  {id:'c10',name:'Daisy', text:"Sunshine look, please — blonde hair and a flower!",      wish:[{t:'hairColor',v:'#e9c46a'},{t:'accessory',v:'flower'}]},
+  {id:'c11',name:'Luna',  text:"Grape purple hair and a sparkly top?",                   wish:[{t:'hairColor',v:'#b57edc'},{t:'outfit',v:'sparkle'}]},
+  {id:'c12',name:'Willa', text:"I want a bob and fancy French nails!",                   wish:[{t:'hairStyle',v:'bob'},{t:'nailArt',v:'french'}]},
+  {id:'c13',name:'Sadie', text:"Overalls and a ponytail for me, please!",               wish:[{t:'outfit',v:'overalls'},{t:'hairStyle',v:'pony'}]},
+  {id:'c14',name:'Coco',  text:"Surprise me — but I really want sparkly lips!",          wish:[{t:'lip',v:'any'}]}
+];
+var PRAISES=[
+  {id:'p1',text:"I love it so much!"},
+  {id:'p2',text:"Wow, I look amazing!"},
+  {id:'p3',text:"You're the best stylist ever!"},
+  {id:'p4',text:"This is perfect, thank you!"},
+  {id:'p5',text:"I feel like a star!"},
+  {id:'p6',text:"Eeee, I love my new look!"}
+];
+var WELCOME_TEXT="Welcome to your Sparkle Salon! Your first customer is here.";
+function spokenOf(L){ return "Hi! I'm "+L.name+"! "+L.text; }
+
+function makeWish(){
+  var kinds=[];
+  if(Math.random()<0.7){ var hc=pick(HAIRCOLORS.filter(function(h){return h.n!=='Sunset';})); kinds.push({t:'hairColor',v:hc.c,say:hc.n.toLowerCase()+' hair'}); }
+  if(Math.random()<0.6){ var st=pick(HAIRSTYLES); kinds.push({t:'hairStyle',v:st,say:HAIRLABEL[st].toLowerCase()+' hair'}); }
+  if(Math.random()<0.6){ var na=pick(NAILART.filter(function(a){return a.id!=='plain';})); kinds.push({t:'nailArt',v:na.id,say:na.n.toLowerCase()+' nails'}); }
+  if(Math.random()<0.55){ var of=pick(OUTFITS); kinds.push({t:'outfit',v:of.id,say:'a '+OUTFITLABEL[of.id].toLowerCase()}); }
+  if(Math.random()<0.5){ kinds.push({t:'lip',v:'any',say:'pretty lips'}); }
+  if(Math.random()<0.45){ var acc=pick(ACCESSORIES.filter(function(a){return a.id!=='none';})); kinds.push({t:'accessory',v:acc.id,say:'a '+acc.n.toLowerCase()}); }
+  if(!kinds.length) kinds.push({t:'lip',v:'any',say:'a fun new look'});
+  kinds=kinds.slice(0,3);
+  return kinds;
+}
+var NAMES=['Mia','Ava','Lily','Zoe','Ruby','Nora','Ella','Isla','Cleo','Poppy','Daisy','Luna','Willa','Sadie','Juniper','Coco'];
+var OPEN=['Hi! Can I get','Hello! I would love','Ooh, today I want','Can you give me','I have a party! I need','Make me sparkly with'];
+var lastLineIdx=-1;
+function newCustomer(){
+  look=freshLook();
+  var idx; do{ idx=Math.floor(Math.random()*CUSTLINES.length); }while(CUSTLINES.length>1 && idx===lastLineIdx); lastLineIdx=idx;
+  var L=CUSTLINES[idx];
+  customer={ name:L.name, wish:L.wish, line:L.text, id:L.id };
+  $('#speech').innerHTML='<b>'+L.name+':</b> '+L.text+' '+pick(['💕','✨','🌸','💫','🎀']);
+  setTab('hair');
+  renderFace(); renderMiniHands();
+  playLine(L.id, spokenOf(L), 1.28);
+}
+function listJoin(a){ if(a.length===1)return a[0]; if(a.length===2)return a[0]+' and '+a[1]; return a.slice(0,-1).join(', ')+' and '+a[a.length-1]; }
+
+/* ---------------- AVATAR (SVG) ---------------- */
+function hairBack(style,col){
+  switch(style){
+    case 'long': return '<path d="M55 120 C40 60 100 30 150 30 C200 30 260 60 245 120 L250 300 C235 250 220 250 210 300 L200 260 C195 300 175 300 172 258 L150 300 L128 258 C125 300 105 300 100 260 L90 300 C80 250 65 250 50 300 Z" fill="'+col+'"/>';
+    case 'wavy': return '<path d="M52 120 C38 60 100 28 150 28 C200 28 262 60 248 120 C262 170 240 180 250 235 C232 210 236 250 244 300 C224 262 214 290 206 300 C205 258 190 262 186 300 L150 300 L114 300 C110 262 95 258 94 300 C86 290 76 262 56 300 C64 250 68 210 50 235 C60 180 38 170 52 120 Z" fill="'+col+'"/>';
+    case 'curly': return '<g fill="'+col+'"><circle cx="60" cy="120" r="30"/><circle cx="60" cy="180" r="28"/><circle cx="70" cy="235" r="26"/><circle cx="240" cy="120" r="30"/><circle cx="240" cy="180" r="28"/><circle cx="230" cy="235" r="26"/><path d="M60 90 C60 40 110 26 150 26 C190 26 240 40 240 90 L240 210 L60 210 Z"/></g>';
+    case 'pony': return '<g fill="'+col+'"><path d="M55 120 C42 62 100 30 150 30 C200 30 258 62 245 120 L245 200 L55 200 Z"/><path d="M232 96 C300 110 300 210 250 250 C284 200 250 150 214 150 Z"/></g>';
+    case 'braids': return '<g fill="'+col+'"><path d="M55 120 C42 62 100 30 150 30 C200 30 258 62 245 120 L245 175 L55 175 Z"/><g><ellipse cx="70" cy="200" rx="18" ry="16"/><ellipse cx="68" cy="230" rx="17" ry="15"/><ellipse cx="70" cy="258" rx="16" ry="14"/><ellipse cx="68" cy="284" rx="14" ry="13"/></g><g><ellipse cx="230" cy="200" rx="18" ry="16"/><ellipse cx="232" cy="230" rx="17" ry="15"/><ellipse cx="230" cy="258" rx="16" ry="14"/><ellipse cx="232" cy="284" rx="14" ry="13"/></g></g>';
+    case 'bob': return '<path d="M58 120 C46 64 100 32 150 32 C200 32 254 64 242 120 L242 195 C242 210 226 214 214 206 L214 150 L86 150 L86 206 C74 214 58 210 58 195 Z" fill="'+col+'"/>';
+    case 'bun': return '<g fill="'+col+'"><circle cx="150" cy="34" r="26"/><path d="M58 122 C46 66 100 36 150 36 C200 36 254 66 242 122 L242 180 L58 180 Z"/></g>';
+    case 'pixie': return '<path d="M62 118 C52 66 102 36 150 36 C198 36 248 66 238 118 L238 150 L62 150 Z" fill="'+col+'"/>';
+  }
+  return '';
+}
+function hairFront(style,col){
+  var shade='rgba(0,0,0,.12)';
+  switch(style){
+    case 'long': case 'wavy': return '<path d="M88 96 C96 60 130 46 150 46 C170 46 204 60 212 96 C214 108 208 120 206 130 C202 96 176 84 150 84 C124 84 98 96 94 130 C92 120 86 108 88 96 Z" fill="'+col+'"/><path d="M150 46 C130 46 96 60 88 96 C100 70 128 60 150 60 Z" fill="'+shade+'"/>';
+    case 'curly': return '<g fill="'+col+'"><circle cx="104" cy="86" r="22"/><circle cx="140" cy="72" r="24"/><circle cx="178" cy="82" r="22"/><circle cx="200" cy="112" r="18"/><circle cx="92" cy="116" r="18"/></g>';
+    case 'pony': return '<path d="M92 92 C100 58 132 46 150 46 C168 46 200 58 208 92 C204 74 176 66 150 66 C124 66 98 74 92 92 Z" fill="'+col+'"/><path d="M150 46 C120 46 96 66 96 96 L150 66 Z" fill="'+shade+'"/>';
+    case 'braids': return '<path d="M92 92 C100 58 132 46 150 46 C168 46 200 58 208 92 C202 74 176 66 150 66 C124 66 98 74 96 92 Z" fill="'+col+'"/>';
+    case 'bob': return '<path d="M86 100 C94 62 128 50 150 50 C172 50 206 62 214 100 C208 80 178 72 150 72 C122 72 94 80 86 100 Z" fill="'+col+'"/><path d="M150 50 C126 50 96 64 88 100 L150 74 Z" fill="'+shade+'"/>';
+    case 'bun': return '<path d="M90 96 C98 62 130 50 150 50 C170 50 202 62 210 96 C204 78 176 70 150 70 C124 70 98 78 90 96 Z" fill="'+col+'"/>';
+    case 'pixie': return '<path d="M84 104 C90 62 126 48 150 48 C176 48 214 64 216 108 C208 86 196 92 180 92 C176 74 150 70 150 70 C150 70 140 92 120 92 C104 92 92 88 84 104 Z" fill="'+col+'"/>';
+  }
+  return '';
+}
+function accessorySVG(acc,col){
+  switch(acc){
+    case 'bow': return '<g transform="translate(150,64)">'
+      +'<path d="M0 0 C-8 -16 -36 -18 -36 -4 C-36 10 -10 10 0 0 Z" fill="'+col+'"/>'
+      +'<path d="M0 0 C8 -16 36 -18 36 -4 C36 10 10 10 0 0 Z" fill="'+col+'"/>'
+      +'<path d="M0 0 C-8 -16 -36 -18 -36 -4 C-22 -4 -10 -2 0 0 Z" fill="#000" opacity=".1"/>'
+      +'<path d="M0 0 C8 -16 36 -18 36 -4 C22 -4 10 -2 0 0 Z" fill="#000" opacity=".1"/>'
+      +'<ellipse cx="0" cy="1" rx="7.5" ry="9.5" fill="'+col+'"/>'
+      +'<ellipse cx="-2.4" cy="-2" rx="2.2" ry="3" fill="#fff" opacity=".5"/></g>';
+    case 'flower': return '<g transform="translate(206,78)">'+petals(col)+'<circle r="7" fill="#ffd646"/><circle cx="-2" cy="-2" r="2" fill="#fff" opacity=".6"/></g>';
+    case 'band': return '<path d="M84 78 Q150 44 216 78" stroke="'+col+'" stroke-width="13" fill="none" stroke-linecap="round"/><path d="M84 78 Q150 44 216 78" stroke="#fff" stroke-opacity=".3" stroke-width="4" fill="none" stroke-linecap="round"/>';
+    case 'crown': return '<g transform="translate(150,42)"><path d="M-42 12 L-42 -16 L-22 0 L0 -22 L22 0 L42 -16 L42 12 Z" fill="'+col+'"/><path d="M-42 12 L42 12 L42 5 L-42 5 Z" fill="#000" opacity=".12"/><circle cx="0" cy="-3" r="4" fill="#fff"/><circle cx="-24" cy="3" r="3" fill="#fff" opacity=".85"/><circle cx="24" cy="3" r="3" fill="#fff" opacity=".85"/></g>';
+    case 'star': return '<g transform="translate(206,74)">'+star(15,col)+'<g transform="translate(-1,-1)">'+star(5,'#fff')+'</g></g>';
+    case 'clips': return '<g><g transform="translate(98,90)">'+star(9,col)+'</g><g transform="translate(206,86)">'+star(9,'#ff8fce')+'</g><g transform="translate(122,74)">'+star(6,'#ffd646')+'</g></g>';
+  }
+  return '';
+}
+function spark(x,y,r,c){ var i=r*0.3; return '<g transform="translate('+x+','+y+')" fill="'+(c||'#fff')+'"><path d="M0 '+(-r)+' L'+i+' '+(-i)+' L'+r+' 0 L'+i+' '+i+' L0 '+r+' L'+(-i)+' '+i+' L'+(-r)+' 0 L'+(-i)+' '+(-i)+' Z"/></g>'; }
+function outfitPattern(art){
+  var s='',x,y;
+  if(art==='stripes'){ for(y=286;y<362;y+=15){ s+='<rect x="40" y="'+y+'" width="220" height="7" fill="#fff" opacity=".5"/>'; } }
+  else if(art==='dots'){ for(y=294;y<358;y+=20){ for(x=62;x<254;x+=26){ s+='<circle cx="'+x+'" cy="'+y+'" r="4" fill="#fff" opacity=".6"/>'; } } }
+  else if(art==='hearts'){ for(y=296;y<358;y+=24){ for(x=72;x<250;x+=34){ s+='<path transform="translate('+x+','+y+')" d="M0 3 C-4 -3 -10 1 0 8 C10 1 4 -3 0 3 Z" fill="#fff" opacity=".65"/>'; } } }
+  else if(art==='stars'){ for(y=298;y<358;y+=26){ for(x=74;x<250;x+=36){ s+='<g transform="translate('+x+','+y+')">'+star(6,'#ffffff')+'</g>'; } } }
+  return s;
+}
+function outfitSVG(style,color,art){
+  var T='M44 360 C44 300 92 270 150 270 C208 270 256 300 256 360 Z';
+  var s='<defs><clipPath id="clipTorso"><path d="'+T+'"/></clipPath></defs>';
+  // hero cape behind the body
+  if(style==='super'){ s+='<path d="M100 278 C58 300 44 360 44 360 L116 360 L124 286 Z" fill="#ff2d7a"/><path d="M200 278 C242 300 256 360 256 360 L184 360 L176 286 Z" fill="#ff2d7a"/>'; }
+  // sleeves
+  if(style!=='super'){ s+='<ellipse cx="58" cy="302" rx="20" ry="24" fill="'+color+'"/><ellipse cx="242" cy="302" rx="20" ry="24" fill="'+color+'"/>'; }
+  else { s+='<ellipse cx="58" cy="302" rx="19" ry="23" fill="'+color+'"/><ellipse cx="242" cy="302" rx="19" ry="23" fill="'+color+'"/>'; }
+  // body
+  s+='<path d="'+T+'" fill="'+color+'"/>';
+  // pattern (clipped to torso)
+  if(art&&art!=='plain'){ s+='<g clip-path="url(#clipTorso)">'+outfitPattern(art)+'</g>'; }
+  // style details
+  if(style==='dress'){ s+='<path d="M74 360 C96 332 204 332 226 360 Z" fill="#000" opacity=".06"/><path d="M150 282 L150 360" stroke="#000" stroke-opacity=".05" stroke-width="4"/>'; }
+  if(style==='hoodie'){ s+='<path d="M104 276 Q150 258 196 276 Q150 300 104 276 Z" fill="'+color+'"/><path d="M112 282 Q150 296 188 282" stroke="#000" stroke-opacity=".14" stroke-width="3" fill="none"/><line x1="140" y1="302" x2="140" y2="322" stroke="#fff" stroke-width="3" stroke-linecap="round"/><line x1="160" y1="302" x2="160" y2="322" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="M120 330 h60 v18 a6 6 0 0 1 -6 6 h-48 a6 6 0 0 1 -6 -6 z" fill="#000" opacity=".06"/>'; }
+  if(style==='overalls'){ s+='<rect x="120" y="284" width="12" height="64" rx="3" fill="#fff" opacity=".85"/><rect x="168" y="284" width="12" height="64" rx="3" fill="#fff" opacity=".85"/><rect x="124" y="316" width="52" height="30" rx="6" fill="#fff" opacity=".22"/><circle cx="126" cy="320" r="2.6" fill="#ffd646"/><circle cx="174" cy="320" r="2.6" fill="#ffd646"/>'; }
+  if(style==='tutu'){ s+='<g fill="#fff" opacity=".9"><path d="M56 346 L88 318 L112 350 Z"/><path d="M100 352 L132 320 L152 354 Z"/><path d="M148 354 L168 320 L200 352 Z"/><path d="M188 350 L212 318 L244 346 Z"/></g><path d="M108 300 Q150 314 192 300" stroke="#fff" stroke-width="4" fill="none" opacity=".7"/>'; }
+  if(style==='sparkle'){ var sp=''; for(var i=0;i<24;i++){ sp+='<circle cx="'+(46+Math.random()*208).toFixed(1)+'" cy="'+(278+Math.random()*80).toFixed(1)+'" r="'+(0.8+Math.random()*1.6).toFixed(1)+'" fill="#fff" opacity=".85"/>'; } s+='<g clip-path="url(#clipTorso)">'+sp+'</g>'; }
+  if(style==='super'){ s+='<g transform="translate(150,322)">'+star(15,'#ffd646')+'</g>'; }
+  // collar shadow + sheen
+  s+='<path d="M120 284 Q150 306 180 284 L174 274 Q150 290 126 274 Z" fill="#000" opacity=".08"/>';
+  s+='<path d="M150 270 C120 270 92 282 74 302 C96 288 122 282 150 282 C178 282 204 288 226 302 C208 282 180 270 150 270 Z" fill="#ffffff" opacity=".2"/>';
+  return s;
+}
+function gem(x,y,c){ return '<g transform="translate('+x+','+y+')"><path d="M0 -4.5 L3.4 0 L0 5.5 L-3.4 0 Z" fill="'+c+'"/><path d="M0 -4.5 L3.4 0 L0 0 Z" fill="#fff" opacity=".55"/><path d="M0 -4.5 L-3.4 0 L0 0 Z" fill="#fff" opacity=".25"/></g>'; }
+function petals(col){var s='';for(var i=0;i<6;i++){var a=i*60*Math.PI/180;s+='<ellipse cx="'+(Math.cos(a)*12).toFixed(1)+'" cy="'+(Math.sin(a)*12).toFixed(1)+'" rx="8" ry="12" transform="rotate('+(i*60)+' '+(Math.cos(a)*12).toFixed(1)+' '+(Math.sin(a)*12).toFixed(1)+')" fill="'+col+'"/>';}return s;}
+function star(r,col){var p='';for(var i=0;i<10;i++){var rr=i%2?r*0.45:r;var a=(i*36-90)*Math.PI/180;p+=(i?'L':'M')+(Math.cos(a)*rr).toFixed(1)+' '+(Math.sin(a)*rr).toFixed(1)+' ';}return '<path d="'+p+'Z" fill="'+col+'"/>';}
+
+function faceSVG(L){
+  var s='';
+  s+='<defs>'
+    +'<linearGradient id="gRainbow" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8fce"/><stop offset=".5" stop-color="#c99cf2"/><stop offset="1" stop-color="#8fd0ff"/></linearGradient>'
+    +'<radialGradient id="gHalo" cx=".5" cy=".4" r=".62"><stop offset="0" stop-color="#ffffff" stop-opacity=".9"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>'
+    +'<linearGradient id="gCape" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd9ec"/><stop offset="1" stop-color="#ffb4da"/></linearGradient>'
+    +'</defs>';
+  // soft portrait backdrop
+  s+='<ellipse cx="150" cy="150" rx="150" ry="150" fill="url(#gHalo)"/>';
+  s+=spark(46,70,6)+spark(256,84,5)+spark(250,252,5,'#ffe6f4');
+  // outfit + shoulders
+  s+=outfitSVG(L.outfit||'tee', L.outfitColor||'#ff5fa8', L.outfitArt||'plain');
+  // neck
+  s+='<path d="M129 212 L129 250 Q150 266 171 250 L171 212 Z" fill="'+L.skin+'"/>';
+  s+='<path d="M126 214 Q150 238 174 214" stroke="#000" stroke-opacity=".08" stroke-width="11" fill="none" stroke-linecap="round"/>';
+  // hair behind
+  s+=hairBack(L.hairStyle,L.hairColor);
+  // ears
+  s+='<circle cx="86" cy="164" r="13" fill="'+L.skin+'"/><circle cx="214" cy="164" r="13" fill="'+L.skin+'"/>';
+  s+='<circle cx="86" cy="165" r="6" fill="#000" opacity=".08"/><circle cx="214" cy="165" r="6" fill="#000" opacity=".08"/>';
+  // face
+  s+='<path d="M88 148 C88 98 116 78 150 78 C184 78 212 98 212 148 C212 198 188 226 150 238 C112 226 88 198 88 148 Z" fill="'+L.skin+'"/>';
+  // soft shading + highlight (any skin tone)
+  s+='<path d="M88 148 C88 108 104 86 122 80 C108 96 100 120 100 150 C100 190 120 214 146 226 C112 220 88 196 88 148 Z" fill="#000" opacity=".05"/>';
+  s+='<ellipse cx="150" cy="116" rx="30" ry="17" fill="#fff" opacity=".14"/>';
+  // blush
+  if(L.blush){ s+='<g>'
+    +'<ellipse cx="118" cy="181" rx="16" ry="11" fill="'+L.blush+'" opacity=".26"/><ellipse cx="118" cy="181" rx="9.5" ry="6.5" fill="'+L.blush+'" opacity=".34"/>'
+    +'<ellipse cx="182" cy="181" rx="16" ry="11" fill="'+L.blush+'" opacity=".26"/><ellipse cx="182" cy="181" rx="9.5" ry="6.5" fill="'+L.blush+'" opacity=".34"/></g>'; }
+  // eyeshadow
+  if(L.eyeshadow){ s+='<path d="M106 150 Q124 133 143 149" stroke="'+L.eyeshadow+'" stroke-width="10" fill="none" stroke-linecap="round" opacity=".7"/>'
+    +'<path d="M157 149 Q176 133 194 150" stroke="'+L.eyeshadow+'" stroke-width="10" fill="none" stroke-linecap="round" opacity=".7"/>'; }
+  // eyes
+  s+='<g>';
+  s+='<ellipse cx="124" cy="160" rx="13.5" ry="15.5" fill="#fff"/><ellipse cx="176" cy="160" rx="13.5" ry="15.5" fill="#fff"/>';
+  s+='<circle cx="125" cy="161" r="10" fill="'+L.eye+'"/><circle cx="175" cy="161" r="10" fill="'+L.eye+'"/>';
+  s+='<circle cx="125" cy="164" r="6" fill="#fff" opacity=".16"/><circle cx="175" cy="164" r="6" fill="#fff" opacity=".16"/>';
+  s+='<circle cx="125" cy="161" r="10" fill="none" stroke="#000" stroke-opacity=".18" stroke-width="1.6"/><circle cx="175" cy="161" r="10" fill="none" stroke="#000" stroke-opacity=".18" stroke-width="1.6"/>';
+  s+='<circle cx="125" cy="162" r="4.6" fill="#241a24"/><circle cx="175" cy="162" r="4.6" fill="#241a24"/>';
+  s+='<circle cx="121.6" cy="157.6" r="3" fill="#fff"/><circle cx="171.6" cy="157.6" r="3" fill="#fff"/>';
+  s+='<circle cx="127.8" cy="164.6" r="1.6" fill="#fff" opacity=".85"/><circle cx="177.8" cy="164.6" r="1.6" fill="#fff" opacity=".85"/>';
+  s+='<path d="M108 150 Q124 137 141 149" stroke="#3a2233" stroke-width="3.6" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M159 149 Q176 137 192 150" stroke="#3a2233" stroke-width="3.6" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M139 147 l7 -3 M141 151 l7 -1" stroke="#3a2233" stroke-width="2" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M161 147 l-7 -3 M159 151 l-7 -1" stroke="#3a2233" stroke-width="2" fill="none" stroke-linecap="round"/>';
+  s+='</g>';
+  // brows
+  s+='<path d="M109 133 Q124 125 141 131" stroke="#7a5647" stroke-width="4" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M159 131 Q176 125 191 133" stroke="#7a5647" stroke-width="4" fill="none" stroke-linecap="round"/>';
+  // nose
+  s+='<path d="M150 168 q6 9 -3 14" stroke="rgba(110,64,54,.32)" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
+  // lips
+  if(L.lip){
+    s+='<path d="M132 197 Q141 191 150 193 Q159 191 168 197 Q159 201 150 201 Q141 201 132 197 Z" fill="'+L.lip+'"/>';
+    s+='<path d="M132 197 Q150 200 168 197 Q150 215 132 197 Z" fill="'+L.lip+'"/>';
+    s+='<path d="M132 197 Q150 200 168 197" stroke="rgba(0,0,0,.16)" stroke-width="1.4" fill="none"/>';
+    s+='<ellipse cx="145" cy="206" rx="6.5" ry="2.6" fill="#fff" opacity=".38"/>';
+  } else {
+    s+='<path d="M139 200 Q150 207 161 200" stroke="#cd7a86" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    s+='<path d="M143 198 Q150 201 157 198" stroke="#e6a3ad" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>';
+  }
+  // cheek gems
+  if(L.gem){ s+=gem(108,181,'#8fd0ff')+gem(116,191,'#ff8fce')+spark(100,173,4)
+             +gem(192,181,'#c99cf2')+gem(184,191,'#ffd646')+spark(200,173,4); }
+  // hair front + crown shine + accessory
+  s+=hairFront(L.hairStyle,L.hairColor);
+  s+='<path d="M112 92 Q150 66 190 92 Q168 80 150 80 Q132 80 112 92 Z" fill="#ffffff" opacity=".16"/>';
+  if(L.accessory && L.accessory!=='none') s+=accessorySVG(L.accessory,L.accColor);
+  return '<svg class="avatar" viewBox="0 0 300 358" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Customer">'+s+'</svg>';
+}
+
+/* nails: a cute hand with 5 nails */
+function nailFill(art,base){
+  return base;
+}
+function nailOverlay(art,x,y,w,h,base){
+  var cx=x+w/2, cy=y+h/2, s='';
+  var light='rgba(255,255,255,.9)';
+  if(art==='dots'){ s+='<circle cx="'+cx+'" cy="'+(cy-3)+'" r="2.2" fill="'+light+'"/><circle cx="'+(cx-4)+'" cy="'+(cy+3)+'" r="1.8" fill="'+light+'"/><circle cx="'+(cx+4)+'" cy="'+(cy+3)+'" r="1.8" fill="'+light+'"/>'; }
+  else if(art==='stripe'){ s+='<rect x="'+(cx-1.4)+'" y="'+y+'" width="2.8" height="'+h+'" fill="'+light+'" opacity=".85"/>'; }
+  else if(art==='glitter'){ for(var i=0;i<7;i++){ s+='<circle cx="'+(x+2+Math.random()*(w-4)).toFixed(1)+'" cy="'+(y+2+Math.random()*(h-4)).toFixed(1)+'" r="'+(0.9+Math.random()).toFixed(1)+'" fill="#fff"/>'; } }
+  else if(art==='heart'){ s+='<path transform="translate('+cx+','+cy+') scale(.5)" d="M0 3 C-4 -3 -9 1 0 7 C9 1 4 -3 0 3 Z" fill="'+light+'"/>'; }
+  else if(art==='star'){ s+='<g transform="translate('+cx+','+cy+')">'+star(4,light)+'</g>'; }
+  else if(art==='french'){ s+='<path d="M'+x+' '+(y+4)+' Q'+cx+' '+(y-2)+' '+(x+w)+' '+(y+4)+' L'+(x+w)+' '+y+' L'+x+' '+y+' Z" fill="#fff"/>'; }
+  return s;
+}
+function handSVG(base,art,big){
+  var s='';
+  var skin=look?look.skin:'#f6c9a0';
+  // palm
+  s+='<path d="M70 250 C50 210 54 150 70 120 C78 104 96 104 100 122 L104 160 L108 96 C112 78 132 78 134 96 L136 158 L142 84 C146 66 166 66 168 84 L170 158 L176 100 C180 82 200 84 200 104 L200 170 C210 150 226 152 228 172 C230 196 214 214 200 230 C186 246 180 250 160 254 C120 262 88 268 70 250 Z" fill="'+skin+'"/>';
+  // soft hand highlight
+  s+='<path d="M76 240 C60 206 64 154 78 126 C74 156 76 200 94 232 C88 240 82 242 76 240 Z" fill="#fff" opacity=".14"/>';
+  // 5 nails at fingertips: positions {x,y,w,h}
+  var nails=[ {x:92,y:108,w:16,h:20}, {x:126,y:82,w:16,h:22}, {x:158,y:70,w:16,h:22}, {x:188,y:88,w:16,h:20}, {x:214,y:120,w:15,h:18} ];
+  for(var i=0;i<nails.length;i++){ var n=nails[i];
+    s+='<rect x="'+n.x+'" y="'+n.y+'" rx="7" ry="8" width="'+n.w+'" height="'+n.h+'" fill="'+base+'"/>';
+    // shiny moon at the base
+    s+='<path d="M'+n.x+' '+(n.y+5)+' Q'+(n.x+n.w/2)+' '+(n.y-1)+' '+(n.x+n.w)+' '+(n.y+5)+' L'+(n.x+n.w)+' '+n.y+' L'+n.x+' '+n.y+' Z" fill="#fff" opacity=".22"/>';
+    s+=nailOverlay(art,n.x,n.y,n.w,n.h,base);
+    // gloss streak + base shade
+    s+='<rect x="'+(n.x+2.5)+'" y="'+(n.y+2)+'" rx="3" width="'+(n.w-9)+'" height="'+(n.h*0.52).toFixed(1)+'" fill="#fff" opacity=".32"/>';
+    s+='<rect x="'+n.x+'" y="'+(n.y+n.h*0.66).toFixed(1)+'" rx="6" width="'+n.w+'" height="'+(n.h*0.34).toFixed(1)+'" fill="#000" opacity=".06"/>';
+  }
+  return '<svg viewBox="40 55 210 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Nails"><g transform="rotate(-8 150 160)">'+s+'</g></svg>';
+}
+
+function renderFace(){ $('#faceView').innerHTML=faceSVG(look); }
+function renderNailsBig(){ $('#nailsView').innerHTML=handSVG(look.nail,look.nailArt,true); }
+function renderMiniHands(){ $('#miniHandsSvg').innerHTML=handSVG(look.nail,look.nailArt,false); }
+
+/* ---------------- build tool trays ---------------- */
+function swatch(color,active,fn){
+  var b=el('button','swatch'); b.style.background=color; b.setAttribute('aria-pressed',active?'true':'false');
+  b.onclick=function(){ sPop(); fn(); };
+  return b;
+}
+function optBtn(label,em,active,fn){
+  var b=el('button','opt'); b.innerHTML='<span class="em">'+em+'</span>'+label; b.setAttribute('aria-pressed',active?'true':'false');
+  b.onclick=function(){ sPop(); fn(); };
+  return b;
+}
+function fill(id,nodes){ var t=$(id); t.innerHTML=''; nodes.forEach(function(n){t.appendChild(n);}); }
+
+function buildTrays(){
+  // hair styles
+  fill('#hairStyles', HAIRSTYLES.map(function(st){ return optBtn(HAIRLABEL[st],HAIREMOJI[st],look.hairStyle===st,function(){look.hairStyle=st;renderFace();buildTrays();}); }));
+  // hair colors
+  fill('#hairColors', HAIRCOLORS.map(function(h){ var c=h.c==='url(#gRainbow)'?'linear-gradient(135deg,#ff8fce,#c99cf2,#8fd0ff)':h.c; return swatch(c,look.hairColor===h.c,function(){look.hairColor=h.c;renderFace();buildTrays();}); }));
+  // accessories
+  fill('#accessories', ACCESSORIES.map(function(a){ return optBtn(a.n,a.em,look.accessory===a.id,function(){look.accessory=a.id;renderFace();buildTrays();}); }));
+
+  // nails
+  fill('#nailColors', NAILCOLORS.map(function(c){ return swatch(c,look.nail===c,function(){look.nail=c;renderNailsBig();renderMiniHands();buildTrays();}); }));
+  fill('#nailArt', NAILART.map(function(a){ return optBtn(a.n,a.em,look.nailArt===a.id,function(){look.nailArt=a.id;renderNailsBig();renderMiniHands();buildTrays();}); }));
+
+  // makeup
+  var lipNodes=[optBtn('None','🚫',!look.lip,function(){look.lip=null;renderFace();buildTrays();})];
+  LIPS.forEach(function(c){ lipNodes.push(swatch(c,look.lip===c,function(){look.lip=c;renderFace();buildTrays();})); });
+  fill('#lipColors', lipNodes);
+
+  var eyeNodes=[optBtn('None','🚫',!look.eyeshadow,function(){look.eyeshadow=null;renderFace();buildTrays();})];
+  EYESHADOW.forEach(function(c){ eyeNodes.push(swatch(c,look.eyeshadow===c,function(){look.eyeshadow=c;renderFace();buildTrays();})); });
+  fill('#eyeColors', eyeNodes);
+
+  var cheek=[optBtn('No blush','🚫',!look.blush,function(){look.blush=null;renderFace();buildTrays();})];
+  BLUSH.forEach(function(c){ cheek.push(swatch(c,look.blush===c,function(){look.blush=c;renderFace();buildTrays();})); });
+  cheek.push(optBtn('Gems',look.gem?'💎':'✨',look.gem,function(){look.gem=!look.gem;renderFace();buildTrays();}));
+  fill('#cheekRow', cheek);
+
+  // dress
+  fill('#outfitStyles', OUTFITS.map(function(o){ return optBtn(o.n,o.em,look.outfit===o.id,function(){look.outfit=o.id;renderFace();buildTrays();}); }));
+  fill('#outfitColors', OUTFITCOLORS.map(function(c){ return swatch(c,look.outfitColor===c,function(){look.outfitColor=c;renderFace();buildTrays();}); }));
+  fill('#outfitArt', OUTFITART.map(function(a){ return optBtn(a.n,a.em,look.outfitArt===a.id,function(){look.outfitArt=a.id;renderFace();buildTrays();}); }));
+}
+
+/* ---------------- tabs ---------------- */
+function setTab(which){
+  ['hair','nails','makeup','dress'].forEach(function(t){
+    $('#tab-'+t).setAttribute('aria-selected', t===which?'true':'false');
+    $('#panel-'+t).classList.toggle('on', t===which);
+  });
+  var nails=which==='nails';
+  $('#nailsView').style.display=nails?'grid':'none';
+  $('#faceView').style.display=nails?'none':'grid';
+  $('#miniHands').style.display=nails?'none':'grid';
+  if(nails) renderNailsBig();
+}
+['hair','nails','makeup','dress'].forEach(function(t){ $('#tab-'+t).onclick=function(){ sTab(); setTab(t); }; });
+
+/* ---------------- surprise ---------------- */
+$('#surpriseBtn').onclick=function(){
+  sSparkle();
+  var keepSkin={skin:look.skin,eye:look.eye};
+  look=freshLook(keepSkin);
+  look.lip=pick(LIPS); look.eyeshadow=pick(EYESHADOW); look.blush=pick(BLUSH);
+  look.nail=pick(NAILCOLORS); look.nailArt=pick(NAILART).id;
+  look.accessory=pick(ACCESSORIES).id; look.gem=Math.random()<0.5;
+  renderFace(); renderMiniHands(); renderNailsBig(); buildTrays();
+  burstSparkles(10);
+};
+
+/* ---------------- DONE / reveal ---------------- */
+function matchedWishes(){
+  return customer.wish.filter(function(w){
+    if(w.t==='hairColor') return look.hairColor===w.v;
+    if(w.t==='hairStyle') return look.hairStyle===w.v;
+    if(w.t==='nailArt') return look.nailArt===w.v;
+    if(w.t==='outfit') return look.outfit===w.v;
+    if(w.t==='lip') return !!look.lip;
+    if(w.t==='accessory') return look.accessory===w.v;
+    return false;
+  }).length;
+}
+var STICKERS=['🌟','💖','🌈','🦄','🎀','👑','🌸','💎','🧁','🍭','🌺','✨','🐱','🦋','🍩','⭐'];
+
+$('#doneBtn').onclick=function(){
+  var matched=matchedWishes(), total=customer.wish.length;
+  var base=10, bonus=matched*5, tip=5;
+  var earned=base+bonus+tip;
+  coins+=earned; served++;
+  var sticker=pick(STICKERS);
+  book.unshift(sticker); if(book.length>16) book.pop();
+  STORE.set('coins',coins); STORE.set('served',served); STORE.set('book',book);
+  $('#coins').textContent=coins;
+  sTada(); confetti(); burstSparkles(16);
+
+  var stars = matched>=total? '⭐⭐⭐' : (matched>0? '⭐⭐' : '⭐⭐');
+  var pr = pick(PRAISES), praise = pr.text;
+  var matchLine = matched>0 ? '<div class="match">🎯 You remembered '+matched+' of '+customer.name+"'s wishes! +"+bonus+' coins</div>' : '';
+
+  var card=$('#revealCard');
+  card.innerHTML=
+    '<h2>'+customer.name+' is thrilled! 🎉</h2>'+
+    '<div class="sub">"'+praise+'"</div>'+
+    '<div class="reveal-photo" id="photoBox">'+faceSVG(look)+'</div>'+
+    '<div class="stars">'+stars+'</div>'+
+    matchLine+
+    '<div class="reward">🪙 +'+earned+' coins &nbsp;•&nbsp; '+sticker+' new sticker!</div>'+
+    '<div class="mini-actions">'+
+      '<button class="btn ghost" id="savePhoto" style="flex:1;color:var(--ink)">📸 Save photo</button>'+
+    '</div>'+
+    '<button class="btn go" id="nextBtn">Next customer →</button>';
+  $('#reveal').classList.add('on');
+  setTimeout(function(){ playLine(pr.id, praise, 1.4); }, 650);
+  $('#nextBtn').onclick=function(){ sTab(); hush(); $('#reveal').classList.remove('on'); newCustomer(); buildTrays(); };
+  $('#savePhoto').onclick=function(){ savePhoto(customer.name); };
+};
+
+/* ---------------- save photo (svg -> png) ---------------- */
+function savePhoto(name){
+  sSparkle();
+  var svg=$('#photoBox svg');
+  if(!svg){ return; }
+  var xml=new XMLSerializer().serializeToString(svg);
+  var img=new Image();
+  var svg64='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(xml)));
+  img.onload=function(){
+    var S=700, pad=40;
+    var cv=document.createElement('canvas'); cv.width=S; cv.height=S+120;
+    var ctx=cv.getContext('2d');
+    var g=ctx.createLinearGradient(0,0,S,S); g.addColorStop(0,'#fff2f9'); g.addColorStop(1,'#eef0ff');
+    ctx.fillStyle=g; ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.fillStyle='#fff'; roundRect(ctx,pad,pad,S-pad*2,S-pad*2,36); ctx.fill();
+    var T=S-pad*2-20, ratio=300/358, dw=T*ratio, dx=pad+10+(T-dw)/2;
+    ctx.drawImage(img,dx,pad+10,dw,T);
+    ctx.fillStyle='#ff5fa8'; ctx.textAlign='center';
+    ctx.font='800 42px "Baloo 2", sans-serif';
+    ctx.fillText('💅 '+name+"'s new look!", S/2, S+30);
+    ctx.fillStyle='#b79ab3'; ctx.font='700 20px Nunito, sans-serif';
+    ctx.fillText((owner? owner+"'s " : '')+'Sparkle Salon · Accelerated Experiences LLC', S/2, S+70);
+    try{
+      var a=document.createElement('a');
+      a.download='sparkle-salon-'+name.toLowerCase()+'.png';
+      a.href=cv.toDataURL('image/png'); a.click();
+      toast('Photo saved! 📸');
+    }catch(e){ toast('Saved to your screen ✨'); }
+  };
+  img.onerror=function(){ toast('Aww, try again ✨'); };
+  img.src=svg64;
+}
+function roundRect(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+
+/* ---------------- fx ---------------- */
+function confetti(){
+  var fx=$('#fx'), cols=['#ff8fc4','#ffd646','#8f7bff','#5fc9e8','#7fd977','#ff9e57'];
+  for(var i=0;i<70;i++){(function(){
+    var c=el('div','confetti'); c.style.background=pick(cols);
+    var x=Math.random()*window.innerWidth; c.style.left=x+'px'; c.style.top='-20px';
+    c.style.transform='rotate('+(Math.random()*360)+'deg)';
+    fx.appendChild(c);
+    var dur=1400+Math.random()*1200, dx=(Math.random()-.5)*160, ry=window.innerHeight+60;
+    var t0=performance.now();
+    (function anim(t){ var p=(t-t0)/dur; if(p>=1){ c.remove(); return; }
+      c.style.transform='translate('+(dx*p)+'px,'+(ry*p)+'px) rotate('+(p*720)+'deg)'; c.style.opacity=(1-p);
+      requestAnimationFrame(anim);
+    })(t0);
+  })();}
+}
+function burstSparkles(n){
+  var fx=$('#fx');
+  for(var i=0;i<n;i++){(function(){
+    var s=el('div','sparkle'); s.textContent=pick(['✨','⭐','💫','🌟']);
+    s.style.left=(20+Math.random()*(window.innerWidth-40))+'px';
+    s.style.top=(80+Math.random()*(window.innerHeight*0.5))+'px';
+    fx.appendChild(s); setTimeout(function(){s.remove();},950);
+  })();}
+}
+var toastT;
+function toast(msg){ var t=$('#toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(function(){t.classList.remove('on');},1800); }
+
+/* ---------------- sticker book ---------------- */
+function openBook(){
+  var grid=$('#bookGrid'); grid.innerHTML='';
+  $('#bookSub').textContent = served>0 ? ('You have made '+served+' customers happy! 💕') : 'Style your first customer to earn a sticker!';
+  for(var i=0;i<16;i++){
+    var d=el('div', book[i]?'sticker':'sticker empty');
+    d.textContent = book[i]||'✦';
+    grid.appendChild(d);
+  }
+  $('#bookOverlay').classList.add('on');
+}
+$('#bookBtn').onclick=function(){ sTab(); openBook(); };
+$('#closeBook').onclick=function(){ sPop(); $('#bookOverlay').classList.remove('on'); };
+
+/* ---------------- mute ---------------- */
+function updateMute(){ $('#muteBtn').textContent=muted?'🔇':'🔊'; }
+$('#muteBtn').onclick=function(){ muted=!muted; STORE.set('muted',muted); updateMute(); if(muted){ hush(); } else { sSparkle(); } };
+updateMute();
+
+/* ---------------- start ---------------- */
+$('#coins').textContent=coins;
+updateBrand();
+if(owner) $('#ownerName').value=owner;
+/* prime the speech engine on first touch so voices are ready */
+$('#ownerName').addEventListener('focus', function(){ pickVoice(); }, {once:true});
+$('#ownerName').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); $('#startBtn').click(); } });
+$('#startBtn').onclick=function(){
+  actx(); if(AC&&AC.state==='suspended')AC.resume();
+  var typed=($('#ownerName').value||'').replace(/[<>]/g,'').trim().slice(0,14);
+  owner=typed; STORE.set('owner',owner); updateBrand();
+  pickVoice();
+  $('#intro').classList.add('hide');
+  $('#app').setAttribute('aria-hidden','false');
+  sSparkle();
+  playLine('welcome', WELCOME_TEXT, 1.35);
+  setTimeout(function(){ newCustomer(); buildTrays(); }, owner?900:200);
+};
+
+/* pre-render an idle avatar behind the intro so it feels alive */
+look=freshLook(); customer={name:'',wish:[]}; renderFace(); renderMiniHands();
+
+/* service worker (offline) */
+if('serviceWorker' in navigator){ window.addEventListener('load',function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "Sparkle Salon",
+  "short_name": "Sparkle Salon",
+  "description": "Run your own salon — hair, nails and makeup for every happy customer. A kind, no-losing game for kids. By Accelerated Experiences, LLC.",
+  "start_url": "/apps/sparklesalon/",
+  "scope": "/apps/sparklesalon/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff2f9",
+  "theme_color": "#ffb6d5",
+  "categories": ["games", "kids", "entertainment"],
+  "icons": [
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
+  ]
+}
