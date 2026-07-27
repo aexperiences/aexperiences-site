@@ -205,6 +205,16 @@ main{padding:24px 0 40px}
 footer{background:var(--forest-dd);color:var(--mute);padding:32px 0 40px;font-size:13.5px;line-height:1.7;border-top:1px solid var(--line)}
 footer a{color:var(--cream-2)}
 footer .fwrap{display:flex;flex-direction:column;gap:8px}
+
+.tiers{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.tier{border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:13px 15px;background:rgba(255,255,255,.04);transition:border-color .15s,background .15s}
+.tier:hover{border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.06)}
+.tier .tn{font-weight:800;font-size:14px;letter-spacing:.01em}
+.tier .tp{font-size:24px;font-weight:800;line-height:1.1;margin-top:3px}
+.tier .tp small{font-size:13px;font-weight:600;color:#9db09f;letter-spacing:0}
+.tier .tb{font-size:12.5px;color:#9db09f;margin-top:1px}
+.tier .ti{font-size:13.5px;line-height:1.5;color:#f4eede;opacity:.88;margin-top:7px;border-top:1px solid rgba(255,255,255,.12);padding-top:8px}
+.tnote{font-size:12.5px;line-height:1.55;color:#9db09f;margin:0 2px 20px}
 </style>
 </head>
 <body>
@@ -452,7 +462,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
 
     var body='<h4>What it is</h4><p>'+esc(a.blurb)+'</p>';
     if(a.state==='live'){
-      body+='<div class="rows"><div class="rw"><span>Price</span><span>'+esc(a.price||'—')+'</span></div>'
+      body+=(a.tiers&&a.tiers.length?('<h4>Plans</h4><div class="tiers">'+a.tiers.map(function(t){return '<div class="tier"><div class="tn">'+esc(t[0])+'</div><div class="tp">$'+Number(t[1]).toLocaleString()+'<small>/mo</small></div><div class="tb">+ $'+Number(t[2]).toLocaleString()+' one-time build</div><div class="ti">'+esc(t[3])+'</div></div>';}).join('')+'</div><p class="tnote">Monthly plus a one-time build. Annual billing saves about two months. Final numbers are confirmed with you before anything is signed — nothing here auto-charges.</p>'):'')+'<div class="rows"'+(a.tiers&&a.tiers.length?' hidden':'')+'><div class="rw"><span>Price</span><span>'+esc(a.price||'—')+'</span></div>'
         +(a.priceNote?'<div class="rw"><span>Details</span><span>'+esc(a.priceNote)+'</span></div>':'')
         +'<div class="rw"><span>Status</span><span>Live — open it today</span></div></div>';
       if(/not switched on/i.test(a.priceNote||''))
