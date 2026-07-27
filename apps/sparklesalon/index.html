@@ -352,7 +352,7 @@ function say(text,pitch,rate){
    which is why HTMLAudio was staying silent. Baked ElevenLabs clip if present,
    else the device voice as a fallback so it always talks. */
 var curSrc=null, BUF={};
-var VOICE_IDS=['welcome','c01','c02','c03','c04','c05','c06','c07','c08','c09','c10','c11','c12','c13','c14','p1','p2','p3','p4','p5','p6'];
+var VOICE_IDS=['welcome','c01','c02','c03','c04','c05','c06','c07','c08','c09','c10','c11','c12','c13','c14','p1','p2','p3','p4','p5','p6','f1','f2','f3','f4','f5'];
 function stopAudio(){ if(curSrc){ try{ curSrc.stop(); }catch(e){} curSrc=null; } var sv=document.querySelector('#faceView svg'); if(sv) sv.classList.remove('talking'); }
 function hush(){ stopAudio(); if(canSpeak){ try{ window.speechSynthesis.cancel(); }catch(e){} } }
 function fetchBuf(id){
@@ -473,18 +473,24 @@ function makeWish(){
 }
 var NAMES=['Mia','Ava','Lily','Zoe','Ruby','Nora','Ella','Isla','Cleo','Poppy','Daisy','Luna','Willa','Sadie','Juniper','Coco'];
 var OPEN=['Hi! Can I get','Hello! I would love','Ooh, today I want','Can you give me','I have a party! I need','Make me sparkly with'];
-var FREE_LINES=['Style me any way you like!','Make me a masterpiece!','Do whatever you want — surprise me!','Give me a brand-new look!','Make me sparkle however you like!'];
+var FREE_LINES=[
+  {id:'f1',text:'Style me any way you like!'},
+  {id:'f2',text:'Make me a masterpiece!'},
+  {id:'f3',text:'Do whatever you want — surprise me!'},
+  {id:'f4',text:'Give me a brand-new look!'},
+  {id:'f5',text:'Make me sparkle however you like!'}
+];
 var mode=STORE.get('mode','customers'), lastLineIdx=-1;
 /* free-style model: no wish, style anything, always a happy 3 stars */
 function newModel(){
   look=freshLook();
-  customer={ name:pick(NAMES), wish:[], line:'', id:null, free:true };
-  var line=pick(FREE_LINES);
-  $('#speech').innerHTML='<b>'+customer.name+':</b> '+line+' 🎨✨';
+  var L=pick(FREE_LINES);
+  customer={ name:pick(NAMES), wish:[], line:L.text, id:L.id, free:true };
+  $('#speech').innerHTML='<b>'+customer.name+':</b> '+L.text+' 🎨✨';
   setTab('hair');
   renderFace(); renderMiniHands();
   var fv=$('#faceView'); fv.classList.remove('enter'); void fv.offsetWidth; fv.classList.add('enter');
-  say(line, 1.3, 1);
+  playLine(L.id, L.text, 1.3);
   if(!STORE.get('seenHint')){ var h=$('#hint'); h.classList.add('on'); setTimeout(function(){ h.classList.remove('on'); },6000); }
 }
 function next(){ if(mode==='free') newModel(); else newCustomer(); }

@@ -2,8 +2,8 @@
    Network-first for the page so a fresh deploy is never hidden behind the cache;
    assets are cached one at a time so one bad URL can't kill offline support.
    Accelerated Experiences LLC */
-var C = "sparklesalon-v2";
-var VOICE = ["welcome","c01","c02","c03","c04","c05","c06","c07","c08","c09","c10","c11","c12","c13","c14","p1","p2","p3","p4","p5","p6"]
+var C = "sparklesalon-v3";
+var VOICE = ["welcome","c01","c02","c03","c04","c05","c06","c07","c08","c09","c10","c11","c12","c13","c14","p1","p2","p3","p4","p5","p6","f1","f2","f3","f4","f5"]
   .map(function(id){ return "./voice/" + id + ".mp3"; });
 var ASSETS = ["./", "./index.html", "./icon.png", "./manifest.webmanifest",
   "https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@600;700;800&display=swap"]
