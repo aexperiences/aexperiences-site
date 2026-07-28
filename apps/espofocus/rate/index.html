@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESPOfocus — rate today</title>
+<meta name="theme-color" content="#14183a">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#171a33;--mut:#6b7299;--line2:#d7dbef;--bg:#f5f6fc;--card:#fff;--soft:#eef0fb;--indigo:#4c63d2;--teal:#1fb6a6;--good:#1fb6a6;--s3:#d97a4e;--serif:'Fraunces',Georgia,serif;--sans:'Inter',-apple-system,sans-serif}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;padding-bottom:90px}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px}
+.top{background:linear-gradient(135deg,#1a1f4d,#22285f 55%,#1b3f57);color:#fff;padding:20px 16px 22px}
+.top .in{max-width:640px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--serif);font-weight:600;font-size:17px}
+.brand .mk{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.15);display:grid;place-items:center}
+.brand .mk svg{width:16px;height:16px}
+h1{font-family:var(--serif);font-weight:600;font-size:23px;margin:14px 0 4px}
+.sub{color:#c7cdf0;font-size:14px;margin:0}
+.card{background:var(--card);border:1px solid #e6e8f4;border-radius:18px;box-shadow:0 10px 30px rgba(30,38,90,.07);margin:16px 0}
+label.lb{display:block;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);margin:0 2px 6px}
+.rolerow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rolebtn{border:1.5px solid var(--line2);background:#fff;border-radius:12px;padding:11px 6px;cursor:pointer;font-weight:700;font-size:13px;color:#3a4066;text-align:center}
+.rolebtn.sel{background:var(--indigo);color:#fff;border-color:transparent}
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.qb{border:1.5px solid var(--line2);background:#fff;border-radius:13px;padding:10px 6px;cursor:pointer;text-align:center;font-weight:800;font-size:13px;color:#3a4066}
+.qb .e{font-size:18px;display:block;margin-bottom:2px}
+.q{padding:13px 15px;border-top:1px solid #e6e8f4}.q:first-child{border-top:0}
+.q .qt{font-size:14.5px;font-weight:600;margin-bottom:9px;display:flex;gap:8px}.q .qt i{color:var(--mut);font-weight:800;font-style:normal;min-width:20px}
+.scale{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.opt{border:1.5px solid var(--line2);background:#fff;border-radius:12px;padding:8px 6px;cursor:pointer;text-align:center;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.opt .n{font-family:var(--serif);font-weight:600;font-size:17px}.opt .t{font-size:10px;color:var(--mut);font-weight:600}
+.opt.sel{color:#fff;border-color:transparent}.opt.sel .t{color:rgba(255,255,255,.85)}
+.posnote{background:#eafaf6;color:#0f7a6e;font-size:12.5px;font-weight:600;padding:9px 14px}
+.field{width:100%;border:1.5px solid var(--line2);border-radius:12px;padding:11px 13px;font:inherit;font-size:15px}
+.pad{padding:15px}
+.savebar{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(180deg,transparent,var(--bg) 30%);padding:12px 16px calc(14px + env(safe-area-inset-bottom))}
+.savebar .in{max-width:640px;margin:0 auto}
+.btn{width:100%;border:0;cursor:pointer;font-weight:800;font-size:16px;border-radius:14px;padding:15px;color:#fff;background:linear-gradient(120deg,var(--indigo),#3a4fb8);box-shadow:0 8px 20px rgba(76,99,210,.28)}
+.progbar{height:6px;background:var(--soft);border-radius:999px;overflow:hidden;margin-bottom:10px}.progbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--indigo),var(--teal));width:0;transition:.25s}
+.center{text-align:center;padding:40px 22px}.center .big{font-size:46px;margin-bottom:8px}
+.disc{color:var(--mut);font-size:11.5px;text-align:center;padding:10px 16px 20px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="top"><div class="in">
+  <div class="brand"><span class="mk"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/><circle cx="12" cy="12" r="3.4" fill="#fff"/></svg></span>ESPOfocus</div>
+  <h1 id="hd">Loading…</h1><p class="sub" id="sub">One quick check‑in — about a minute.</p>
+</div></div>
+
+<main class="wrap" id="main"></main>
+
+<div class="savebar" id="savebar" style="display:none"><div class="in"><div class="progbar"><i id="prog"></i></div><button class="btn" id="saveBtn" onclick="submit()">Send today's rating</button></div></div>
+<p class="disc" id="disc" style="display:none">You're rating one day for this child. You won't see any history, and nothing you enter identifies you. A monitoring aid — not a diagnosis. By Accelerated Experiences, LLC.</p>
+
+<script>
+var ITEMS=["Fidgets with hands or feet or squirms in seat","Difficulty remaining seated","Difficulty waiting turn","Talks excessively","Interrupts others",'Always "on the go"',"Easily distracted","Fails to complete assigned tasks","Trouble paying attention","Careless / messy work","Does not seem to listen when spoken to","Difficulty following directions","Follows class rules","Gets along with peers","Seems happy and in good mood"];
+var POS=[12,13,14], SCALE=["Not at all","A little","Pretty much","Very much"], SC=['#43b581','#7cc36a','#e0a63a','#d97a4e'];
+var PRESET={smooth:[1,3],mixed:[2,2],rough:[3,1]};
+var TOKEN=new URLSearchParams(location.search).get('t')||'';
+var scores=new Array(15).fill(null), role='Teacher', note='';
+var $=function(id){return document.getElementById(id);};
+
+async function init(){
+  if(!TOKEN){ return fail('This link is missing its code. Ask the parent to resend the ESPOfocus rater link.'); }
+  try{
+    var r=await fetch('/api/espofocus?action=rate.get&token='+encodeURIComponent(TOKEN)).then(function(r){return r.json();});
+    if(!r.ok){ return fail('This link isn’t working. Ask the parent to resend it.'); }
+    if(r.enabled===false){ return fail('Ratings aren’t switched on yet. Check back soon.'); }
+    $('hd').textContent='Rate '+r.name+' — today';
+    $('sub').textContent=r.alreadyToday? 'Already logged today — you can update it below.' : 'How was '+r.name+' today? Rate each item.';
+    render();
+    $('savebar').style.display='block'; $('disc').style.display='block';
+  }catch(e){ fail('Couldn’t reach ESPOfocus. Check the connection and reopen the link.'); }
+}
+function fail(msg){ $('hd').textContent='Hmm.'; $('sub').textContent=''; $('main').innerHTML='<div class="card center"><div class="big">🔗</div><p style="color:var(--mut)">'+msg+'</p></div>'; }
+
+function render(){
+  var h='<div class="card pad"><label class="lb">You are the child’s…</label><div class="rolerow" id="roleRow">'
+    +['Teacher','Specialist','Parent'].map(function(x){return '<button class="rolebtn'+(x===role?' sel':'')+'" onclick="pickRole(\''+x+'\')">'+x+'</button>';}).join('')
+    +'</div><div style="height:14px"></div><label class="lb">Quick day — fills all 15, then adjust</label><div class="quick">'
+    +'<button class="qb" onclick="quick(\'smooth\')"><span class="e">🙂</span>Smooth</button><button class="qb" onclick="quick(\'mixed\')"><span class="e">😐</span>Mixed</button><button class="qb" onclick="quick(\'rough\')"><span class="e">😮‍💨</span>Rough</button></div></div>';
+  h+='<div class="card">';
+  ITEMS.forEach(function(q,i){ if(i===12)h+='<div class="posnote">✓ For the next three, <b>higher is better</b>.</div>';
+    h+='<div class="q"><div class="qt"><i>'+(i+1)+'.</i><span>'+q+'</span></div><div class="scale">';
+    for(var s=0;s<4;s++){var sel=scores[i]===s;h+='<div class="opt'+(sel?' sel':'')+'" data-q="'+i+'" data-s="'+s+'" style="'+(sel?'background:'+SC[s]:'')+'" onclick="pick('+i+','+s+')"><span class="n">'+s+'</span><span class="t">'+SCALE[s]+'</span></div>';}
+    h+='</div></div>';
+  });
+  h+='</div>';
+  $('main').innerHTML=h; prog();
+}
+function pickRole(x){role=x;document.querySelectorAll('#roleRow .rolebtn').forEach(function(b){b.classList.toggle('sel',b.textContent===x);});}
+function quick(p){var pr=PRESET[p];for(var i=0;i<15;i++)scores[i]=POS.indexOf(i)>=0?pr[1]:pr[0];render();}
+function pick(i,s){scores[i]=s;document.querySelectorAll('.opt[data-q="'+i+'"]').forEach(function(o){var on=+o.dataset.s===s;o.classList.toggle('sel',on);o.style.background=on?SC[s]:'#fff';});prog();}
+function prog(){var d=scores.filter(function(x){return x!==null;}).length;$('prog').style.width=(d/15*100)+'%';$('saveBtn').textContent=d<15?('Send today’s rating ('+d+'/15)'):'Send today’s rating';}
+async function submit(){
+  var d=scores.filter(function(x){return x!==null;}).length;
+  if(d<15){var first=scores.indexOf(null);var el=document.querySelector('.opt[data-q="'+first+'"]');if(el)el.scrollIntoView({behavior:'smooth',block:'center'});return;}
+  $('saveBtn').textContent='Sending…'; $('saveBtn').disabled=true;
+  try{
+    var r=await fetch('/api/espofocus?action=rate.save',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({token:TOKEN,scores:scores,role:role,note:note})}).then(function(r){return r.json();});
+    if(r.ok){ $('main').innerHTML='<div class="card center"><div class="big">✅</div><h2 style="font-family:var(--serif);font-weight:600;margin:0 0 6px">Thank you.</h2><p style="color:var(--mut)">Today’s rating is in. You can close this — the parent sees it in their trend.</p></div>'; $('savebar').style.display='none'; window.scrollTo(0,0); }
+    else{ $('saveBtn').textContent='Try again'; $('saveBtn').disabled=false; }
+  }catch(e){ $('saveBtn').textContent='Try again'; $('saveBtn').disabled=false; }
+}
+init();
+</script>
+</body>
+</html>
