@@ -64,6 +64,10 @@
       "destination": "https://ae-targeted-showroom.vercel.app/dashboard"
     },
     {
+      "source": "/apps/stayathome/",
+      "destination": "https://ae-stayathome-showroom.vercel.app/index.html"
+    },
+    {
       "source": "/apps/abode/:path*",
       "destination": "https://ae-abode-showroom.vercel.app/:path*"
     },
@@ -98,6 +102,10 @@
     {
       "source": "/apps/targeted/:path*",
       "destination": "https://ae-targeted-showroom.vercel.app/:path*"
+    },
+    {
+      "source": "/apps/stayathome/:path*",
+      "destination": "https://ae-stayathome-showroom.vercel.app/:path*"
     }
   ]
 }

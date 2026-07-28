@@ -63,6 +63,13 @@
       price:'$400/mo', priceNote:'3 tiers · annual $4,000/yr (2 months free)',
       svg:'<circle cx="24" cy="24" r="15"/><path d="M24 9v30M9 24h30"/><path d="M13 13l22 22M35 13L13 35"/>' },
 
+    { id:'stayathome', mark:'/os-icons/StayAtHome_OS.png', name:'Stay@Home OS', img:'/StayAtHome_OS.png', tag:'Home care agencies', genre:'business', state:'live',
+      tiers:[ ['Office',550,4800,'One office \u2014 the whole system, sized for a single territory'], ['Agency',1150,9500,'Multi-office + referral CRM + books + the AI department org'], ['Grandsuite',2600,18000,'Multi-state + dedicated environment + migration + branded caregiver app'] ],
+      acc:'#2e7f7c', url:'/apps/stayathome/', pricing:'/hubs/home-care.html',
+      blurb:'Recruiting, scheduling with an AI match engine, EVV field ops, care-plan guardrails, native e-sign, split-rate billing and payroll \u2014 for non-medical home care agencies.',
+      price:'$550/mo', priceNote:'3 tiers \u00b7 the whole spine in every tier',
+      svg:'<path d="M8 24L24 10l16 14"/><path d="M12 24v14h24V24"/><path d="M24 34c-4-3-6-5-6-8a3 3 0 016-1 3 3 0 016 1c0 3-2 5-6 8z"/>' },
+
     { id:'showroom', mark:'/os-icons/4barrel_OS.png', name:'4barrel OS', img:'/4barrel_OS.png', tag:'Used-car dealers', genre:'business', state:'live',
       tiers:[ ['Lot',450,2500,'Inventory + desk + leads + recon'], ['Dealership',950,6500,'Full suite + online sales + service'], ['Multi-lot',2000,15000,'Multi-lot + custom + premium AI'] ],
       acc:'#1c5568', url:'/apps/4barrel/', pricing:'/hubs/showroom.html',
