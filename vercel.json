@@ -72,6 +72,10 @@
       "destination": "https://ae-toolbelt-showroom.vercel.app/index.html"
     },
     {
+      "source": "/apps/sleeves/",
+      "destination": "https://ae-sleeves-showroom.vercel.app/index.html"
+    },
+    {
       "source": "/apps/abode/:path*",
       "destination": "https://ae-abode-showroom.vercel.app/:path*"
     },
@@ -114,6 +118,10 @@
     {
       "source": "/apps/toolbelt/:path*",
       "destination": "https://ae-toolbelt-showroom.vercel.app/:path*"
+    },
+    {
+      "source": "/apps/sleeves/:path*",
+      "destination": "https://ae-sleeves-showroom.vercel.app/:path*"
     }
   ]
 }

@@ -63,6 +63,13 @@
       price:'$400/mo', priceNote:'3 tiers · annual $4,000/yr (2 months free)',
       svg:'<circle cx="24" cy="24" r="15"/><path d="M24 9v30M9 24h30"/><path d="M13 13l22 22M35 13L13 35"/>' },
 
+    { id:'sleeves', mark:'/os-icons/Sleeves_OS.png', name:'Sleeves OS', img:'/Sleeves_OS.png', tag:'Tattoo studios', genre:'business', state:'live',
+      tiers:[ ['Chair',250,2400,'A single artist \u2014 the whole system for someone who is also the front desk'], ['Studio',650,5600,'A real shop with booth renters \u2014 books, metrics and the AI department org'], ['Grandsuite',1400,11000,'Multi-location, guest artists, dedicated environment, branded booking site'] ],
+      acc:'#b8324a', url:'/apps/sleeves/', pricing:'/hubs/tattoo.html',
+      blurb:'Request, review, quote, deposit \u2014 then a date. One-of-one flash inventory, per-session consent and health screening, and booth-rent splits computed at the chair.',
+      price:'$250/mo', priceNote:'3 tiers \u00b7 the whole spine in every tier',
+      svg:'<rect x="16" y="10" width="16" height="20" rx="4"/><rect x="20" y="30" width="8" height="12" rx="3"/><path d="M24 42v4"/><path d="M12 14h4M32 14h4"/>' },
+
     { id:'toolbelt', mark:'/os-icons/Toolbelt_OS.png', name:'Toolbelt OS', img:'/Toolbelt_OS.png', tag:'HVAC \u00b7 plumbing \u00b7 electrical', genre:'business', state:'live',
       tiers:[ ['Truck',450,3900,'1\u20133 trucks \u2014 the whole system for an owner still turning wrenches'], ['Shop',950,8200,'A real shop with a dispatcher \u2014 referral CRM, recruiting, books, agent org'], ['Grandsuite',2200,16000,'Multi-location, multi-trade, dedicated environment, branded tech app'] ],
       acc:'#e4832b', url:'/apps/toolbelt/', pricing:'/hubs/field-service.html',
