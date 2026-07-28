@@ -97,12 +97,12 @@
       ] },
 
     { id:'espo-learning', name:'ESPO Learning', tag:'Kids · early skills', genre:'learning', state:'live',
-      acc:'#5c8a5f', url:'https://espolearning.com/handwriting', img:'/logo-learning.png', mark:'/marks/espolearning-icon.png',
+      acc:'#5c8a5f', url:'https://espolearning.com/', img:'/logo-learning.png', mark:'/marks/espolearning-icon.png',
       blurb:'Handwriting, reading, math and writing for young kids. No fail states, no red marks, nothing collected.',
       price:'Free to try', priceNote:'Paid plans not switched on yet' },
 
     { id:'espo-genius', name:'ESPO Genius', tag:'Plain-English paperwork', genre:'money', state:'live',
-      acc:'#7a6fd6', url:'https://espogenius.com/espo-iep-genius-app', img:'/logo-genius.png',
+      acc:'#7a6fd6', url:'https://espogenius.com/', img:'/logo-genius.png',
       blurb:'The forms and fine print nobody explains — IEPs, benefits, care paperwork — translated into plain English.',
       price:'Free right now', priceNote:'Paid plans not switched on yet' },
 
@@ -116,7 +116,7 @@
       blurb:'A quiet place for a real group — private chat, live video, and Tag for the conversations that do not fit a live call.', priceNote:'Paid plans not switched on yet' },
 
     { id:'the-narcs', name:'The Narcs', tag:'Fine print, decoded', genre:'money', state:'live',
-      acc:'#2f8f7a', url:'https://marketnarc.com/thenarc-app', img:'/logo-narcs.png',
+      acc:'#2f8f7a', url:'https://marketnarc.com/', img:'/logo-narcs.png',
       blurb:'Two tools in one app: The Narc reads the fine print you were handed, MarketNarc watches the tickers you own.',
       price:'Free right now', priceNote:'Paid plans not switched on yet' },
 
