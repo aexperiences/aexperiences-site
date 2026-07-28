@@ -79,7 +79,7 @@
 
     /* ─────────── ESPO FAMILY — live today ─────────── */
     { id:'espo-music', name:'ESPO Music', tag:'Instrument coaching', genre:'arts', state:'live',
-      acc:'#e0a83a', url:'https://espomusic.com/fret', img:'/logo-music.png',
+      acc:'#e0a83a', url:'https://espomusic.com/', img:'/logo-music.png',
       /* The store sheet IS the product page — url goes INTO the app (never the marketing
          landing). openMap lets the sheet's instrument picker retarget the Open button. */
       openMap:{ fret:'https://espomusic.com/fret', grand:'https://espomusic.com/grand',
