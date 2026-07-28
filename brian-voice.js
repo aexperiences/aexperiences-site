@@ -217,3 +217,39 @@
   }
   micBtn.addEventListener('click', startListen);
 })();
+
+/* ── SEO: per-hub Service JSON-LD (rich results) ─────────────────────────────
+   Fills ONLY vertical hub pages that don't ALREADY carry inline structured data,
+   so it can never duplicate a block another build placed. Googlebot renders JS
+   and reads this. Matches the existing hub Service+offers pattern exactly. */
+(function () {
+  try {
+    var m = (location.pathname || '').toLowerCase().match(/\/hubs\/([a-z0-9-]+)\.html$/);
+    if (!m) return;
+    if (document.querySelector('script[type="application/ld+json"]')) return; // already present — leave it
+    var DATA = {
+      'real-estate': { name: 'Abode OS', svc: 'Real estate business OS',
+        desc: 'Listings, clients, calendar & the paperwork behind every deal in one place.',
+        offers: [['Solo / Team', '450'], ['Team', '950'], ['Brokerage', '2,400']] },
+      'architecture': { name: 'Buttress OS', svc: 'Architecture business OS',
+        desc: 'Projects, drawing sets, consultants & clients in one studio OS.',
+        offers: [['Studio', '550'], ['Firm', '1,200'], ['Multi-office', '2,800']] },
+      'showroom': { name: '4barrel OS', svc: 'Used-car business OS',
+        desc: 'Inventory, sales desk, leads & recon for independent used-car dealers.',
+        offers: [['Lot', '450'], ['Dealership', '950'], ['Multi-lot', '2,000']] },
+      'targeted': { name: 'Targeted OS', svc: 'Marketing business OS',
+        desc: 'CRM, pipeline, estimator & campaigns for a marketing agency in one place.',
+        offers: [['Freelance / Studio', '450'], ['Agency', '950'], ['Multi-team', '2,200']] }
+    };
+    var d = DATA[m[1]]; if (!d) return;
+    var BASE = 'https://www.aexperiences.com';
+    var ld = {
+      "@context": "https://schema.org", "@type": "Service", "serviceType": d.svc, "name": d.name,
+      "provider": { "@type": "Organization", "name": "Accelerated Experiences LLC", "url": "https://aexperiences.com" },
+      "areaServed": "US", "url": BASE + "/hubs/" + m[1] + ".html", "description": d.desc,
+      "offers": d.offers.map(function (o) { return { "@type": "Offer", "priceCurrency": "USD", "price": o[1], "name": o[0] }; })
+    };
+    var s = document.createElement('script'); s.type = 'application/ld+json'; s.id = 'ae-hub-jsonld';
+    s.textContent = JSON.stringify(ld); document.head.appendChild(s);
+  } catch (e) { /* SEO must never break the page */ }
+})();
