@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ESPOfocus — see whether the plan is working</title>
-<meta name="description" content="A calm weekly tracker for a child's ADHD treatment plan. Parents, teachers and behavior specialists rate the same 15 things each week; ESPOfocus charts the trend so you can see whether the plan is working — and share it with your provider. Not a diagnosis. Made by Accelerated Experiences, LLC.">
+<meta name="description" content="A calm daily tracker for a child's ADHD treatment plan. Log a quick check-in each day — parents, teachers and behavior specialists rate the same 15 things — and ESPOfocus rolls the days up into the weekly report your provider asked for. See whether the plan is working. Not a diagnosis. By Accelerated Experiences, LLC.">
 <meta name="theme-color" content="#14183a">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon.png">
@@ -16,179 +16,170 @@
   --ink:#171a33; --ink2:#3a4066; --mut:#6b7299; --line:#e6e8f4; --line2:#d7dbef;
   --bg:#f5f6fc; --card:#ffffff; --soft:#eef0fb;
   --indigo:#4c63d2; --indigo-d:#3a4fb8; --teal:#1fb6a6; --teal-d:#159a8c;
-  --s0:#43b581; --s1:#7cc36a; --s2:#e0a63a; --s3:#d97a4e; /* score colors: calm→warm, never alarm-red */
+  --s0:#43b581; --s1:#7cc36a; --s2:#e0a63a; --s3:#d97a4e; /* calm→warm, never alarm-red */
   --good:#1fb6a6;
   --serif:'Fraunces',Georgia,serif; --sans:'Inter',-apple-system,"Segoe UI",Roboto,sans-serif;
   --shadow:0 10px 30px rgba(30,38,90,.08); --shadow2:0 16px 44px rgba(30,38,90,.14);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;min-height:100%}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;
-  -webkit-font-smoothing:antialiased;padding-bottom:env(safe-area-inset-bottom)}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:env(safe-area-inset-bottom)}
 a{color:var(--indigo);text-decoration:none}
 button{font-family:inherit}
 .wrap{max-width:760px;margin:0 auto;padding:0 16px}
-/* header */
-.top{position:sticky;top:0;z-index:20;background:rgba(245,246,252,.86);backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--line)}
+.top{position:sticky;top:0;z-index:20;background:rgba(245,246,252,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .top .row{display:flex;align-items:center;gap:12px;padding:12px 0}
 .brand{display:flex;align-items:center;gap:10px;cursor:pointer}
-.brand .mk{width:34px;height:34px;border-radius:10px;background:linear-gradient(150deg,var(--indigo),var(--teal));
-  display:grid;place-items:center;box-shadow:var(--shadow)}
+.brand .mk{width:34px;height:34px;border-radius:10px;background:linear-gradient(150deg,var(--indigo),var(--teal));display:grid;place-items:center;box-shadow:var(--shadow)}
 .brand .mk svg{width:20px;height:20px}
 .brand b{font-family:var(--serif);font-weight:600;font-size:19px;letter-spacing:-.2px}
 .brand b span{color:var(--indigo)}
 .top .sp{flex:1}
-.kidpick{display:flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line2);
-  border-radius:999px;padding:6px 12px 6px 8px;font-weight:700;font-size:14px;color:var(--ink2);cursor:pointer;box-shadow:var(--shadow)}
-.kidpick .av{width:24px;height:24px;border-radius:50%;background:linear-gradient(150deg,var(--indigo),var(--teal));
-  color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800}
+.kidpick{display:flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line2);border-radius:999px;padding:6px 12px 6px 8px;font-weight:700;font-size:14px;color:var(--ink2);cursor:pointer;box-shadow:var(--shadow)}
+.kidpick .av{width:24px;height:24px;border-radius:50%;background:linear-gradient(150deg,var(--indigo),var(--teal));color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800}
 .kidpick svg{width:14px;height:14px;color:var(--mut)}
-/* generic */
 .card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
 .sec{margin:18px 0}
 h1{font-family:var(--serif);font-weight:600;font-size:27px;letter-spacing:-.5px;margin:0}
 h2{font-family:var(--serif);font-weight:600;font-size:20px;margin:0 0 2px}
 .mutp{color:var(--mut);font-size:14px;margin:2px 0 0}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;
-  font-weight:800;font-size:15px;border-radius:14px;padding:13px 18px;min-height:48px;transition:.15s;color:#fff;
-  background:linear-gradient(120deg,var(--indigo),var(--indigo-d));box-shadow:0 8px 20px rgba(76,99,210,.28)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;font-weight:800;font-size:15px;border-radius:14px;padding:13px 18px;min-height:48px;transition:.15s;color:#fff;background:linear-gradient(120deg,var(--indigo),var(--indigo-d));box-shadow:0 8px 20px rgba(76,99,210,.28)}
 .btn:hover{transform:translateY(-1px)}
 .btn.g{background:linear-gradient(120deg,var(--teal),var(--teal-d));box-shadow:0 8px 20px rgba(31,182,166,.28)}
 .btn.ghost{background:#fff;color:var(--ink2);border:1px solid var(--line2);box-shadow:var(--shadow)}
 .btn.sm{padding:9px 14px;min-height:40px;font-size:13.5px;border-radius:11px}
 .btn.block{width:100%}
 .row-btns{display:flex;gap:10px;flex-wrap:wrap}
-.pill{display:inline-flex;align-items:center;gap:6px;background:var(--soft);color:var(--ink2);border-radius:999px;
-  padding:5px 11px;font-size:12.5px;font-weight:700}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--soft);color:var(--ink2);border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:700}
 .view{display:none;animation:fade .25s ease}
 .view.on{display:block}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-/* hero / this week */
 .hero{padding:22px 20px;background:linear-gradient(135deg,#1a1f4d,#22285f 55%,#1b3f57);color:#fff;border:0;overflow:hidden;position:relative}
-.hero::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;
-  background:radial-gradient(circle,rgba(31,182,166,.35),transparent 70%)}
+.hero::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(31,182,166,.35),transparent 70%)}
 .hero .k{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#9fb0ff;position:relative}
 .hero h1{color:#fff;margin:6px 0 3px;position:relative}
 .hero p{color:#c7cdf0;font-size:14.5px;margin:0 0 16px;position:relative}
 .hero .btn{position:relative}
-/* stat cards */
+.streak{position:relative;display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:6px 13px;font-size:13px;font-weight:800;color:#fff;margin-bottom:14px}
+/* day strip */
+.strip{display:flex;gap:7px;justify-content:space-between}
+.day{flex:1;text-align:center;cursor:pointer}
+.day .dl{font-size:11px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.03em;margin-bottom:6px}
+.day .dd{height:44px;border-radius:13px;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--soft);color:var(--mut);border:2px solid transparent;transition:.12s}
+.day.today .dd{border-color:var(--indigo)}
+.day.future{opacity:.4;pointer-events:none}
+.day .dd.filled{color:#fff}
+.day:hover .dd{transform:translateY(-1px)}
+/* stats */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 @media(max-width:560px){.stats{grid-template-columns:1fr 1fr}}
-.stat{padding:15px 15px 14px}
+.stat{padding:15px}
 .stat .lab{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
 .stat .big{font-family:var(--serif);font-weight:700;font-size:26px;margin-top:4px;line-height:1}
-.stat .sub{font-size:12px;color:var(--mut);margin-top:3px}
-.trend{font-size:12px;font-weight:800;margin-top:6px;display:inline-flex;align-items:center;gap:4px}
-.trend.up{color:var(--s3)} .trend.down{color:var(--good)} .trend.flat{color:var(--mut)}
-/* chart */
+.stat .sub{font-size:12px;margin-top:3px;font-weight:700}
 .chartcard{padding:18px 16px 12px}
 .charthead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 4px 8px}
 .legend{display:flex;gap:14px;flex-wrap:wrap;margin:6px 4px 2px}
 .legend i{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);font-weight:600}
 .legend i b{width:10px;height:10px;border-radius:3px;display:block}
-svg.chart{width:100%;height:210px;display:block}
-.empty{padding:34px 22px;text-align:center}
-.empty .em{width:64px;height:64px;border-radius:18px;margin:0 auto 12px;background:var(--soft);display:grid;place-items:center}
+svg.chart{width:100%;height:200px;display:block}
+.empty{padding:30px 22px;text-align:center}
+.empty .em{width:60px;height:60px;border-radius:17px;margin:0 auto 12px;background:var(--soft);display:grid;place-items:center;font-size:26px}
 .empty h2{margin-bottom:6px}
-/* weeks list */
 .wk{display:flex;align-items:center;gap:12px;padding:13px 15px;border-top:1px solid var(--line)}
 .wk:first-child{border-top:0}
-.wk .dot{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-weight:800;color:#fff;font-size:13px;flex:0 0 auto}
-.wk .m{flex:1;min-width:0}
-.wk .m b{font-size:14.5px;font-weight:700}
-.wk .m span{display:block;font-size:12.5px;color:var(--mut)}
-.wk .sc{font-family:var(--serif);font-weight:700;font-size:17px}
-.rolechip{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:2px 7px;border-radius:999px;background:var(--soft);color:var(--ink2)}
-/* markers */
+.wk .dot{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-weight:800;color:#fff;font-size:13px;flex:0 0 auto}
+.wk .m{flex:1;min-width:0}.wk .m b{font-size:14.5px;font-weight:700}.wk .m span{display:block;font-size:12.5px;color:var(--mut)}
+.wk .sc{font-family:var(--serif);font-weight:700;font-size:16px;text-align:right}
+.rolechip{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:2px 6px;border-radius:999px;background:var(--soft);color:var(--ink2)}
 .mk-item{display:flex;align-items:center;gap:11px;padding:11px 15px;border-top:1px solid var(--line)}
-.mk-item:first-child{border-top:0}
-.mk-item .pin{width:30px;height:30px;border-radius:9px;background:var(--soft);display:grid;place-items:center;color:var(--indigo)}
+.mk-item:first-child{border-top:0}.mk-item .pin{width:30px;height:30px;border-radius:9px;background:var(--soft);display:grid;place-items:center}
 .mk-item .m{flex:1}.mk-item .m b{font-size:14px}.mk-item .m span{display:block;font-size:12px;color:var(--mut)}
 .mk-item .x{color:var(--mut);cursor:pointer;font-size:18px;padding:4px}
-/* entry form */
-.q{padding:14px 15px;border-top:1px solid var(--line)}
+/* quick fill */
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.qb{border:1.5px solid var(--line2);background:#fff;border-radius:13px;padding:11px 6px;cursor:pointer;text-align:center;font-weight:800;font-size:13.5px;color:var(--ink2);transition:.12s}
+.qb .e{font-size:19px;display:block;margin-bottom:2px}
+.qb:hover{border-color:var(--indigo)}
+.qb.smooth.sel{background:var(--s0);color:#fff;border-color:transparent}
+.qb.mixed.sel{background:var(--s2);color:#fff;border-color:transparent}
+.qb.rough.sel{background:var(--s3);color:#fff;border-color:transparent}
+.q{padding:13px 15px;border-top:1px solid var(--line)}
 .q:first-child{border-top:0}
-.q .qt{font-size:15px;font-weight:600;margin-bottom:10px;display:flex;gap:8px}
+.q .qt{font-size:14.5px;font-weight:600;margin-bottom:9px;display:flex;gap:8px}
 .q .qt i{color:var(--mut);font-weight:800;font-style:normal;font-size:13px;min-width:20px}
 .scale{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.opt{border:1.5px solid var(--line2);background:#fff;border-radius:12px;padding:9px 6px;cursor:pointer;text-align:center;transition:.12s;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
-.opt .n{font-family:var(--serif);font-weight:700;font-size:18px;line-height:1}
-.opt .t{font-size:10.5px;color:var(--mut);font-weight:600;line-height:1.15}
+.opt{border:1.5px solid var(--line2);background:#fff;border-radius:12px;padding:8px 6px;cursor:pointer;text-align:center;transition:.12s;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.opt .n{font-family:var(--serif);font-weight:700;font-size:17px;line-height:1}
+.opt .t{font-size:10px;color:var(--mut);font-weight:600;line-height:1.15}
 .opt:hover{border-color:var(--indigo)}
-.opt.sel{color:#fff;border-color:transparent}
-.opt.sel .t{color:rgba(255,255,255,.85)}
-.posnote{background:#eafaf6;color:#0f7a6e;font-size:12.5px;font-weight:600;padding:9px 14px;border-radius:0}
+.opt.sel{color:#fff;border-color:transparent}.opt.sel .t{color:rgba(255,255,255,.85)}
+.posnote{background:#eafaf6;color:#0f7a6e;font-size:12.5px;font-weight:600;padding:9px 14px}
 .field{width:100%;border:1.5px solid var(--line2);border-radius:12px;padding:12px 14px;font:inherit;font-size:15px;color:var(--ink);background:#fff}
 .field:focus{outline:none;border-color:var(--indigo)}
 label.lb{display:block;font-size:12.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);margin:0 2px 6px}
 .rolerow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .rolebtn{border:1.5px solid var(--line2);background:#fff;border-radius:12px;padding:11px 8px;cursor:pointer;font-weight:700;font-size:13.5px;color:var(--ink2);text-align:center}
 .rolebtn.sel{background:var(--indigo);color:#fff;border-color:transparent}
-.progbar{height:7px;background:var(--soft);border-radius:999px;overflow:hidden;margin:2px 0 0}
+.progbar{height:7px;background:var(--soft);border-radius:999px;overflow:hidden}
 .progbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--indigo),var(--teal));width:0;transition:width .25s}
 .savebar{position:sticky;bottom:0;background:linear-gradient(180deg,transparent,var(--bg) 22%);padding:14px 0 16px;margin-top:6px}
-/* modal */
 .scrim{position:fixed;inset:0;background:rgba(20,24,58,.5);backdrop-filter:blur(3px);display:none;z-index:60}
 .scrim.on{display:block}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;transform:translateY(100%);transition:.28s cubic-bezier(.2,.8,.2,1);
-  background:var(--card);border-radius:24px 24px 0 0;padding:20px 18px calc(22px + env(safe-area-inset-bottom));box-shadow:var(--shadow2);
-  max-width:760px;margin:0 auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;transform:translateY(100%);transition:.28s cubic-bezier(.2,.8,.2,1);background:var(--card);border-radius:24px 24px 0 0;padding:20px 18px calc(22px + env(safe-area-inset-bottom));box-shadow:var(--shadow2);max-width:760px;margin:0 auto}
 .sheet.on{transform:translateY(0)}
 .sheet .grab{width:40px;height:4px;border-radius:999px;background:var(--line2);margin:0 auto 14px}
 .sheet h2{margin-bottom:12px}
 .foot{color:var(--mut);font-size:11.5px;text-align:center;line-height:1.6;padding:26px 12px 30px}
 .foot b{color:var(--ink2)}
 .disc{background:#fff7ed;border:1px solid #f5dcae;color:#8a5a12;border-radius:14px;padding:12px 14px;font-size:12.5px;line-height:1.5;margin:14px 0}
-/* print */
-@media print{
-  .top,.savebar,.hero .btn,.row-btns,#tabbar,.noprint{display:none!important}
-  body{background:#fff}.card{box-shadow:none;border:1px solid #ccc}
-}
+@media print{.top,.savebar,.hero .btn,.row-btns,.noprint{display:none!important}body{background:#fff}.card{box-shadow:none;border:1px solid #ccc}}
 </style>
 </head>
 <body>
 
-<header class="top">
-  <div class="wrap row">
-    <div class="brand" onclick="go('home')">
-      <span class="mk"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/><circle cx="12" cy="12" r="3.4" fill="#fff"/></svg></span>
-      <b>ESPO<span>focus</span></b>
-    </div>
-    <span class="sp"></span>
-    <div class="kidpick" id="kidpick" onclick="openKids()" style="display:none">
-      <span class="av" id="kidAv">–</span><span id="kidName">—</span>
-      <svg viewBox="0 0 24 24" fill="none"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
+<header class="top"><div class="wrap row">
+  <div class="brand" onclick="go('home')">
+    <span class="mk"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/><circle cx="12" cy="12" r="3.4" fill="#fff"/></svg></span>
+    <b>ESPO<span>focus</span></b>
   </div>
-</header>
+  <span class="sp"></span>
+  <div class="kidpick" id="kidpick" onclick="openKids()" style="display:none"><span class="av" id="kidAv">–</span><span id="kidName">—</span>
+    <svg viewBox="0 0 24 24" fill="none"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+</div></header>
 
 <main class="wrap">
 
-  <!-- ONBOARDING (no child yet) -->
+  <!-- ONBOARDING -->
   <section class="view" id="v-onboard">
     <div class="sec"></div>
-    <div class="card hero">
-      <div class="k">Welcome</div>
-      <h1>See whether the plan is working.</h1>
-      <p>Each week, you and your child's teacher or behavior specialist rate the same 15 things. ESPOfocus charts the trend so the question “is this helping?” becomes a line you can see — and share with your provider.</p>
+    <div class="card hero"><div class="k">Welcome</div>
+      <h1>A minute a day. See if it's working.</h1>
+      <p>Check in each day — you, the teacher, or a behavior specialist rate the same 15 things. ESPOfocus rolls the days up into the weekly report your provider asked for, and charts whether the plan is helping.</p>
       <button class="btn g" onclick="openAddKid()">Add your child →</button>
     </div>
-    <div class="disc"><b>Not a diagnosis.</b> ESPOfocus is a private monitoring aid to bring to your provider — it doesn't diagnose or treat. Based on the widely used weekly ADHD monitoring report (SNAP‑IV/Vanderbilt lineage).</div>
-    <p class="foot">Private by design · first name or initials only · no ads, no tracking · <b>Accelerated Experiences, LLC</b></p>
+    <div class="disc"><b>Not a diagnosis.</b> ESPOfocus is a private monitoring aid to bring to your provider — it doesn't diagnose or treat. Based on the widely used weekly ADHD monitoring report (SNAP‑IV / Vanderbilt lineage). No‑shame by design — nobody's in trouble.</div>
+    <p class="foot">Private · first name or initials only · no ads, no tracking · <b>Accelerated Experiences, LLC</b></p>
   </section>
 
-  <!-- HOME / DASHBOARD -->
+  <!-- HOME -->
   <section class="view" id="v-home">
     <div class="sec"></div>
     <div class="card hero">
-      <div class="k" id="homeK">This week</div>
-      <h1 id="homeTitle">Log this week's report</h1>
-      <p id="homeSub">A minute of tapping. Do it yourself, or send the teacher a link.</p>
+      <div id="streakWrap"></div>
+      <div class="k" id="homeK">Today</div>
+      <h1 id="homeTitle">Log today</h1>
+      <p id="homeSub">A quick tap-through — about a minute, less on easy days.</p>
       <div class="row-btns">
-        <button class="btn g" onclick="startEntry()">＋ Log this week</button>
-        <button class="btn ghost" onclick="openShare()" style="color:#fff;background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.25)">🔗 Send a rater link</button>
+        <button class="btn g" id="todayBtn" onclick="logDay(todayISO())">＋ Log today</button>
+        <button class="btn" onclick="openShare()" style="background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25)">🔗 Rater link</button>
+        <button class="btn" onclick="remindMe()" style="background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25)">⏰ Daily reminder</button>
       </div>
+    </div>
+
+    <div class="sec card" style="padding:16px 15px 15px">
+      <div class="charthead" style="margin:0 2px 12px"><h2 id="weekLabel">This week</h2><span class="pill" id="weekCount">—</span></div>
+      <div class="strip" id="dayStrip"></div>
     </div>
 
     <div class="sec stats" id="statCards"></div>
@@ -196,379 +187,275 @@ label.lb{display:block;font-size:12.5px;font-weight:800;letter-spacing:.04em;tex
     <div class="sec card chartcard">
       <div class="charthead"><h2>Trend</h2><span class="pill" id="trendPill">—</span></div>
       <div id="chartArea"></div>
-      <div class="legend">
-        <i><b style="background:var(--indigo)"></b>Inattention</i>
-        <i><b style="background:var(--s3)"></b>Hyperactivity / impulsivity</i>
-        <i><b style="background:var(--good)"></b>Positive (higher = better)</i>
-      </div>
+      <div class="legend"><i><b style="background:var(--indigo)"></b>Inattention</i><i><b style="background:var(--s3)"></b>Hyper / impulsive</i><i><b style="background:var(--good)"></b>Positive (higher = better)</i></div>
+      <p class="mutp" style="margin:8px 4px 0">Each dot is a day. Dashed lines are treatment changes.</p>
     </div>
 
     <div class="sec">
-      <div class="charthead" style="margin:0 2px 10px"><h2>Weekly reports</h2><button class="btn ghost sm" onclick="startEntry()">＋ Add</button></div>
+      <div class="charthead" style="margin:0 2px 10px"><h2>Weekly report</h2><span class="pill">for your provider</span></div>
       <div class="card" id="weeksList"></div>
+      <p class="mutp" style="margin:8px 4px">Each week is the average of the days you logged — the report the NP asked for, built for you.</p>
     </div>
 
     <div class="sec">
       <div class="charthead" style="margin:0 2px 10px"><h2>Treatment markers</h2><button class="btn ghost sm" onclick="openAddMarker()">＋ Mark a change</button></div>
       <div class="card" id="markersList"></div>
-      <p class="mutp" style="margin:8px 4px">Note a dose change or a new plan — then watch whether the line moves.</p>
     </div>
 
-    <div class="sec row-btns">
-      <button class="btn ghost block" onclick="go('report')">📄 Printable report for the appointment</button>
-    </div>
+    <div class="sec row-btns"><button class="btn ghost block" onclick="go('report')">📄 Printable report for the appointment</button></div>
     <p class="foot"><b>Not a diagnosis</b> · a monitoring aid to share with your provider · private, no ads, no tracking · <b>Accelerated Experiences, LLC</b></p>
   </section>
 
-  <!-- NEW ENTRY -->
+  <!-- ENTRY -->
   <section class="view" id="v-entry">
     <div class="sec"></div>
-    <div class="charthead" style="margin:6px 2px 4px"><h1 style="font-size:23px">This week's report</h1><button class="btn ghost sm" onclick="go('home')">Cancel</button></div>
-    <p class="mutp" style="margin:0 2px 14px">Rate each item based on the past week. It takes about a minute.</p>
+    <div class="charthead" style="margin:6px 2px 4px"><h1 style="font-size:23px" id="entryTitle">Today</h1><button class="btn ghost sm" onclick="go('home')">Cancel</button></div>
+    <p class="mutp" style="margin:0 2px 14px">Rate each item for this day. Tap a quick day first, then tweak anything.</p>
 
     <div class="card" style="padding:15px">
+      <label class="lb">Quick day <span style="color:var(--mut);font-weight:600;text-transform:none;letter-spacing:0">— fills all 15, then adjust</span></label>
+      <div class="quick" id="quickRow">
+        <button class="qb smooth" data-p="smooth" onclick="quickFill('smooth')"><span class="e">🙂</span>Smooth</button>
+        <button class="qb mixed" data-p="mixed" onclick="quickFill('mixed')"><span class="e">😐</span>Mixed</button>
+        <button class="qb rough" data-p="rough" onclick="quickFill('rough')"><span class="e">😮‍💨</span>Rough</button>
+      </div>
+      <div style="height:14px"></div>
       <label class="lb">Who's rating?</label>
       <div class="rolerow" id="roleRow">
         <button class="rolebtn" data-role="Parent" onclick="pickRole(this)">👤 Parent</button>
         <button class="rolebtn" data-role="Teacher" onclick="pickRole(this)">🍎 Teacher</button>
         <button class="rolebtn" data-role="Specialist" onclick="pickRole(this)">🧩 Specialist</button>
       </div>
-      <div style="height:12px"></div>
-      <label class="lb">Week of</label>
-      <input class="field" type="date" id="weekOf">
     </div>
 
     <div class="sec card" id="qCard"></div>
 
     <div class="sec card" style="padding:15px">
-      <label class="lb">Anything notable this week? (optional)</label>
-      <textarea class="field" id="entryNote" rows="2" placeholder="e.g. rough week — school field trip, missed a dose Tuesday"></textarea>
+      <label class="lb">Anything notable today? (optional)</label>
+      <textarea class="field" id="entryNote" rows="2" placeholder="e.g. missed the morning dose · field trip · slept badly"></textarea>
     </div>
 
-    <div class="savebar">
-      <div class="progbar"><i id="prog"></i></div>
-      <div style="height:10px"></div>
-      <button class="btn block" id="saveBtn" onclick="saveEntry()">Save this week</button>
-    </div>
+    <div class="savebar"><div class="progbar"><i id="prog"></i></div><div style="height:10px"></div>
+      <button class="btn block" id="saveBtn" onclick="saveEntry()">Save this day</button></div>
   </section>
 
   <!-- REPORT -->
   <section class="view" id="v-report">
     <div class="sec"></div>
     <div class="charthead" style="margin:6px 2px 12px"><h1 style="font-size:23px">Report</h1>
-      <div class="row-btns noprint"><button class="btn ghost sm" onclick="go('home')">Back</button><button class="btn sm" onclick="window.print()">🖨 Print / save PDF</button></div>
-    </div>
+      <div class="row-btns noprint"><button class="btn ghost sm" onclick="go('home')">Back</button><button class="btn sm" onclick="window.print()">🖨 Print / PDF</button></div></div>
     <div id="reportBody"></div>
   </section>
-
 </main>
 
-<!-- KIDS SHEET -->
 <div class="scrim" id="scrim" onclick="closeSheets()"></div>
-<div class="sheet" id="sheetKids">
-  <div class="grab"></div>
-  <h2>Children</h2>
-  <div id="kidsList"></div>
-  <div style="height:12px"></div>
-  <button class="btn g block" onclick="openAddKid()">＋ Add a child</button>
-</div>
-
-<!-- ADD KID SHEET -->
-<div class="sheet" id="sheetAddKid">
-  <div class="grab"></div>
-  <h2>Add a child</h2>
-  <p class="mutp" style="margin:0 0 14px">First name or initials only — nothing else is needed, and nothing else is stored.</p>
-  <label class="lb">Name or initials</label>
-  <input class="field" id="kidInput" maxlength="24" placeholder="e.g. Ellie, or E.J.">
-  <div style="height:14px"></div>
-  <button class="btn block" onclick="saveKid()">Save</button>
-</div>
-
-<!-- SHARE SHEET -->
-<div class="sheet" id="sheetShare">
-  <div class="grab"></div>
-  <h2>Send a rater link</h2>
-  <p class="mutp" style="margin:0 0 14px">Send this to the teacher or behavior specialist. They rate this week in about a minute — no account, and they only see this week's form, never the history.</p>
-  <div class="card" style="padding:12px 14px;background:var(--soft);border:0;display:flex;gap:10px;align-items:center">
-    <input class="field" id="shareLink" readonly style="border:0;background:#fff">
-    <button class="btn sm" onclick="copyShare()">Copy</button>
-  </div>
-  <p class="mutp" id="shareNote" style="margin:12px 2px 0"></p>
-</div>
-
-<!-- ADD MARKER SHEET -->
-<div class="sheet" id="sheetMarker">
-  <div class="grab"></div>
-  <h2>Mark a treatment change</h2>
-  <label class="lb">What changed?</label>
-  <input class="field" id="mkLabel" maxlength="60" placeholder="e.g. Started 10mg · New behavior plan · Stopped meds">
-  <div style="height:12px"></div>
-  <label class="lb">Date</label>
-  <input class="field" type="date" id="mkDate">
-  <div style="height:14px"></div>
-  <button class="btn block" onclick="saveMarker()">Add marker</button>
-</div>
+<div class="sheet" id="sheetKids"><div class="grab"></div><h2>Children</h2><div id="kidsList"></div><div style="height:12px"></div><button class="btn g block" onclick="openAddKid()">＋ Add a child</button></div>
+<div class="sheet" id="sheetAddKid"><div class="grab"></div><h2>Add a child</h2><p class="mutp" style="margin:0 0 14px">First name or initials only — nothing else is stored.</p><label class="lb">Name or initials</label><input class="field" id="kidInput" maxlength="24" placeholder="e.g. Ellie, or E.J."><div style="height:14px"></div><button class="btn block" onclick="saveKid()">Save</button></div>
+<div class="sheet" id="sheetShare"><div class="grab"></div><h2>Send a rater link</h2><p class="mutp" style="margin:0 0 14px">Send to the teacher or behavior specialist. They rate a day in about a minute — no account, and they only see the day's form, never the history.</p><div class="card" style="padding:12px 14px;background:var(--soft);border:0;display:flex;gap:10px;align-items:center"><input class="field" id="shareLink" readonly style="border:0;background:#fff"><button class="btn sm" onclick="copyShare()">Copy</button></div><p class="mutp" id="shareNote" style="margin:12px 2px 0"></p></div>
+<div class="sheet" id="sheetMarker"><div class="grab"></div><h2>Mark a treatment change</h2><label class="lb">What changed?</label><input class="field" id="mkLabel" maxlength="60" placeholder="e.g. Started 10mg · New behavior plan · Stopped meds"><div style="height:12px"></div><label class="lb">Date</label><input class="field" type="date" id="mkDate"><div style="height:14px"></div><button class="btn block" onclick="saveMarker()">Add marker</button></div>
 
 <script>
-/* ===== ESPOfocus — the 15 items (verbatim from the ADDitude Weekly Monitoring Report,
-   SNAP-IV / Vanderbilt lineage). Items 12–14 (Q13–15) are POSITIVE: higher = better. ===== */
-var ITEMS = [
-  "Fidgets with hands or feet or squirms in seat",
-  "Difficulty remaining seated",
-  "Difficulty waiting turn",
-  "Talks excessively",
-  "Interrupts others",
-  'Always "on the go"',
-  "Easily distracted",
-  "Fails to complete assigned tasks",
-  "Trouble paying attention",
-  "Careless / messy work",
-  "Does not seem to listen when spoken to",
-  "Difficulty following directions",
-  "Follows class rules",
-  "Gets along with peers",
-  "Seems happy and in good mood"
-];
-var HYPER=[0,1,2,3,4,5];        // Q1-6 hyperactivity/impulsivity
-var INATT=[6,7,8,9,10,11];      // Q7-12 inattention
-var POS=[12,13,14];             // Q13-15 positive (reverse)
-var SCALE=[["Not at all",""],["A little",""],["Pretty much",""],["Very much",""]];
-var SC=['var(--s0)','var(--s1)','var(--s2)','var(--s3)'];
+/* ===== 15 items (verbatim ADDitude weekly report — SNAP-IV/Vanderbilt lineage).
+   Items 13–15 (index 12–14) are POSITIVE: higher = better. ===== */
+var ITEMS=["Fidgets with hands or feet or squirms in seat","Difficulty remaining seated","Difficulty waiting turn","Talks excessively","Interrupts others",'Always "on the go"',"Easily distracted","Fails to complete assigned tasks","Trouble paying attention","Careless / messy work","Does not seem to listen when spoken to","Difficulty following directions","Follows class rules","Gets along with peers","Seems happy and in good mood"];
+var HYPER=[0,1,2,3,4,5], INATT=[6,7,8,9,10,11], POS=[12,13,14];
+var SCALE=["Not at all","A little","Pretty much","Very much"];
+var SC=['#43b581','#7cc36a','#e0a63a','#d97a4e'];
+/* quick-day presets: [symptom value for Q1-12, positive value for Q13-15] */
+var PRESET={ smooth:[1,3], mixed:[2,2], rough:[3,1] };
 
-/* ===== Data layer. localStorage today; swaps to /api/espofocus/* (Vercel Postgres) next.
-   All methods async so the UI never changes when the real database goes in. ===== */
-var LS='espofocus.v1';
+/* ===== data layer — localStorage now, /api/espofocus (Vercel Postgres) next. Entries are DAILY. ===== */
+var LS='espofocus.v2';
 function load(){ try{return JSON.parse(localStorage.getItem(LS))||{}}catch(e){return{}} }
 function persist(d){ try{localStorage.setItem(LS,JSON.stringify(d))}catch(e){} }
-var Store = {
-  _d:function(){ var d=load(); d.kids=d.kids||[]; d.entries=d.entries||[]; d.markers=d.markers||[]; d.cur=d.cur||null; return d; },
-  kids:async function(){ return this._d().kids; },
-  cur:async function(){ var d=this._d(); return d.cur; },
-  setCur:async function(id){ var d=this._d(); d.cur=id; persist(d); },
-  addKid:async function(name){ var d=this._d(); var k={id:uid(),name:name.trim()}; d.kids.push(k); d.cur=k.id; persist(d); return k; },
-  entries:async function(kid){ return this._d().entries.filter(function(e){return e.kid===kid}).sort(function(a,b){return a.week<b.week?-1:1}); },
-  addEntry:async function(e){ var d=this._d(); e.id=uid(); e.at=Date.now(); d.entries.push(e); persist(d); return e; },
-  markers:async function(kid){ return this._d().markers.filter(function(m){return m.kid===kid}).sort(function(a,b){return a.date<b.date?-1:1}); },
-  addMarker:async function(m){ var d=this._d(); m.id=uid(); d.markers.push(m); persist(d); return m; },
-  delMarker:async function(id){ var d=this._d(); d.markers=d.markers.filter(function(m){return m.id!==id}); persist(d); }
+var Store={
+  _d:function(){var d=load();d.kids=d.kids||[];d.days=d.days||[];d.markers=d.markers||[];d.cur=d.cur||null;return d;},
+  kids:async function(){return this._d().kids;},
+  cur:async function(){return this._d().cur;},
+  setCur:async function(id){var d=this._d();d.cur=id;persist(d);},
+  addKid:async function(name){var d=this._d();var k={id:uid(),name:name.trim()};d.kids.push(k);d.cur=k.id;persist(d);return k;},
+  days:async function(kid){return this._d().days.filter(function(e){return e.kid===kid;}).sort(function(a,b){return a.date<b.date?-1:1;});},
+  dayOn:async function(kid,date){return this._d().days.find(function(e){return e.kid===kid&&e.date===date;})||null;},
+  saveDay:async function(e){var d=this._d();var i=d.days.findIndex(function(x){return x.kid===e.kid&&x.date===e.date;}); if(i>=0){e.id=d.days[i].id;d.days[i]=e;}else{e.id=uid();d.days.push(e);} persist(d);return e;},
+  markers:async function(kid){return this._d().markers.filter(function(m){return m.kid===kid;}).sort(function(a,b){return a.date<b.date?-1:1;});},
+  addMarker:async function(m){var d=this._d();m.id=uid();d.markers.push(m);persist(d);return m;},
+  delMarker:async function(id){var d=this._d();d.markers=d.markers.filter(function(m){return m.id!==id;});persist(d);}
 };
-function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
 
-/* ===== scoring ===== */
-function sum(scores,idx){ var t=0; idx.forEach(function(i){ t+=(scores[i]||0); }); return t; }
-function core(scores){ return sum(scores,HYPER)+sum(scores,INATT); } // 0-36, lower better
-function band(avg){ // avg per item 0-3
-  if(avg<1.35) return ['Not clinically significant','var(--good)'];
-  if(avg<2)    return ['Mild','var(--s2)'];
-  if(avg<2.5)  return ['Moderate','var(--s3)'];
-  return ['Marked','var(--s3)'];
-}
-function fmtWeek(d){ var x=new Date(d+'T00:00:00'); return x.toLocaleDateString(undefined,{month:'short',day:'numeric'}); }
-function initials(name){ var p=name.trim().split(/\s+/); return ((p[0]||'?')[0]+(p[1]?p[1][0]:'')).toUpperCase(); }
+/* ===== dates & scoring ===== */
+function todayISO(){var d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());}
+function p2(n){return (n<10?'0':'')+n;}
+function parseD(s){return new Date(s+'T00:00:00');}
+function fmtD(s){return parseD(s).toLocaleDateString(undefined,{month:'short',day:'numeric'});}
+function addDays(s,n){var d=parseD(s);d.setDate(d.getDate()+n);return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());}
+function mondayOf(s){var d=parseD(s);var wd=(d.getDay()+6)%7;d.setDate(d.getDate()-wd);return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());}
+function sum(sc,idx){var t=0;idx.forEach(function(i){t+=(sc[i]||0);});return t;}
+function core(sc){return sum(sc,HYPER)+sum(sc,INATT);} // 0-36
+function band(avg){ if(avg<1.35)return['Not clinically significant','#1fb6a6']; if(avg<2)return['Mild','#e0a63a']; if(avg<2.5)return['Moderate','#d97a4e']; return['Marked','#d97a4e']; }
+function initials(name){var p=name.trim().split(/\s+/);return((p[0]||'?')[0]+(p[1]?p[1][0]:'')).toUpperCase();}
+function esc(s){return(s||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+/* week rollup: average each item across the week's logged days */
+function weekAvgScores(days){ var out=new Array(15).fill(0); if(!days.length)return out; for(var i=0;i<15;i++){var t=0;days.forEach(function(e){t+=(e.scores[i]||0);});out[i]=t/days.length;} return out; }
+function groupWeeks(days){ var map={}; days.forEach(function(e){var wk=mondayOf(e.date);(map[wk]=map[wk]||[]).push(e);}); return Object.keys(map).sort().map(function(wk){return{week:wk,days:map[wk]};}); }
+function streak(days){ if(!days.length)return 0; var set={}; days.forEach(function(e){set[e.date]=1;}); var c=0, cur=todayISO(); if(!set[cur])cur=addDays(cur,-1); while(set[cur]){c++;cur=addDays(cur,-1);} return c; }
 
-/* ===== view routing ===== */
 var VIEWS=['onboard','home','entry','report'];
-function go(v){ VIEWS.forEach(function(x){ document.getElementById('v-'+x).classList.toggle('on', x===v); }); window.scrollTo(0,0); }
-
-/* ===== state ===== */
+function go(v){VIEWS.forEach(function(x){document.getElementById('v-'+x).classList.toggle('on',x===v);});window.scrollTo(0,0);if(v==='report')buildReport();}
 var CUR=null, DRAFT=null;
 
 async function boot(){
   var kids=await Store.kids();
-  var q=new URLSearchParams(location.search);
-  if(!kids.length){ document.getElementById('kidpick').style.display='none'; go('onboard'); return; }
-  CUR=await Store.cur(); if(!CUR||!kids.find(function(k){return k.id===CUR})){ CUR=kids[0].id; await Store.setCur(CUR); }
+  if(!kids.length){document.getElementById('kidpick').style.display='none';go('onboard');return;}
+  CUR=await Store.cur(); if(!CUR||!kids.find(function(k){return k.id===CUR;})){CUR=kids[0].id;await Store.setCur(CUR);}
   await renderHome();
 }
 
 async function renderHome(){
-  var kids=await Store.kids(); var kid=kids.find(function(k){return k.id===CUR});
+  var kids=await Store.kids(); var kid=kids.find(function(k){return k.id===CUR;});
   document.getElementById('kidpick').style.display='flex';
   document.getElementById('kidAv').textContent=initials(kid.name);
   document.getElementById('kidName').textContent=kid.name;
-  var entries=await Store.entries(CUR); var markers=await Store.markers(CUR);
+  var days=await Store.days(CUR), markers=await Store.markers(CUR);
+  var loggedToday=days.some(function(e){return e.date===todayISO();});
+  var st=streak(days);
 
-  // stat cards
-  var latest=entries[entries.length-1], prev=entries[entries.length-2];
+  document.getElementById('streakWrap').innerHTML = st>0 ? '<div class="streak">🔥 '+st+'-day streak'+(loggedToday?'':' · keep it going')+'</div>' : '';
+  document.getElementById('homeTitle').textContent = loggedToday?"Today's logged ✓":'Log today';
+  document.getElementById('homeSub').textContent = loggedToday?'Nice. Come back tomorrow — or edit today if something changed.':'A quick tap-through — about a minute, less on easy days.';
+  document.getElementById('todayBtn').innerHTML = loggedToday?'✎ Edit today':'＋ Log today';
+
+  // day strip (current week Mon-Sun)
+  var mon=mondayOf(todayISO()); var strip='';
+  var DL=['M','T','W','T','F','S','S']; var logged=0;
+  for(var i=0;i<7;i++){ var ds=addDays(mon,i); var e=days.find(function(x){return x.date===ds;});
+    var future = ds>todayISO(); if(e)logged++;
+    var c=e?core(e.scores):null; var col=e?band(c/12)[1]:null;
+    strip+='<div class="day'+(ds===todayISO()?' today':'')+(future?' future':'')+'" onclick="logDay(\''+ds+'\')">'
+      +'<div class="dl">'+DL[i]+'</div><div class="dd'+(e?' filled':'')+'" style="'+(e?'background:'+col:'')+'">'+(e?c:(future?'':'·'))+'</div></div>';
+  }
+  document.getElementById('dayStrip').innerHTML=strip;
+  document.getElementById('weekCount').textContent=logged+' of 7 days';
+
+  // stats — this week average
+  var wkDays=days.filter(function(e){return e.date>=mon && e.date<=addDays(mon,6);});
   var sc=document.getElementById('statCards');
-  if(!entries.length){
-    sc.innerHTML='';
-    document.getElementById('homeK').textContent='Get started';
-    document.getElementById('homeTitle').textContent='Log the first week';
-  }else{
-    var c=core(latest.scores), avg=c/12;
-    var b=band(avg);
-    var tr=''; if(prev){ var pc=core(prev.scores); tr= c<pc? '<div class="trend down">▼ improving</div>' : c>pc? '<div class="trend up">▲ up from last week</div>':'<div class="trend flat">— steady</div>'; }
-    sc.innerHTML=
-      statCard('Core symptoms', c+'<span style="font-size:15px;color:var(--mut)">/36</span>', b[0], b[1], tr)
-      + statCard('Inattention', sum(latest.scores,INATT)+'<span style="font-size:15px;color:var(--mut)">/18</span>','', 'var(--indigo)','')
-      + statCard('Hyper / impulsive', sum(latest.scores,HYPER)+'<span style="font-size:15px;color:var(--mut)">/18</span>','', 'var(--s3)','');
-    document.getElementById('homeK').textContent='This week';
-    document.getElementById('homeTitle').textContent='Log this week’s report';
-  }
+  if(!wkDays.length){ sc.innerHTML=''; }
+  else{ var avg=weekAvgScores(wkDays); var c=core(avg), b=band(c/12);
+    sc.innerHTML=statCard('Core (wk avg)',Math.round(c)+'<span style="font-size:15px;color:var(--mut)">/36</span>',b[0],b[1])
+      +statCard('Inattention',Math.round(sum(avg,INATT))+'<span style="font-size:15px;color:var(--mut)">/18</span>','','var(--indigo)')
+      +statCard('Hyper / impulsive',Math.round(sum(avg,HYPER))+'<span style="font-size:15px;color:var(--mut)">/18</span>','','var(--s3)'); }
 
-  // chart
-  document.getElementById('chartArea').innerHTML = entries.length ? chartSVG(entries,markers) : emptyBox('No weeks yet','Log a week and the trend line appears here.');
-  var tp=document.getElementById('trendPill');
-  tp.textContent = entries.length>=2 ? (core(entries[entries.length-1].scores)<core(entries[0].scores)?'Improving overall':'Watching') : (entries.length+' week'+(entries.length===1?'':'s'));
+  // chart — daily, last up to 21 days
+  document.getElementById('chartArea').innerHTML = days.length ? chartSVG(days.slice(-21),markers) : emptyBox('📊','No days yet','Log a day and the trend appears here.');
+  document.getElementById('trendPill').textContent = days.length? (days.length+' day'+(days.length===1?'':'s')+' logged') : '—';
 
-  // weeks list
-  var wl=document.getElementById('weeksList');
-  if(!entries.length){ wl.innerHTML=emptyBox('No reports yet','Tap “Log this week”.'); }
-  else{
-    wl.innerHTML=entries.slice().reverse().map(function(e){
-      var c=core(e.scores), avg=c/12, b=band(avg);
-      return '<div class="wk"><div class="dot" style="background:'+b[1]+'">'+c+'</div>'
-        +'<div class="m"><b>Week of '+fmtWeek(e.week)+'</b><span><span class="rolechip">'+e.role+'</span> &nbsp;'+b[0]+(e.note?' · “'+esc(e.note).slice(0,40)+(e.note.length>40?'…':'')+'”':'')+'</span></div>'
-        +'<div class="sc" style="color:'+b[1]+'">'+c+'</div></div>';
-    }).join('');
-  }
+  // weekly report rollup
+  var weeks=groupWeeks(days); var wl=document.getElementById('weeksList');
+  wl.innerHTML = weeks.length ? weeks.slice().reverse().map(function(w){ var avg=weekAvgScores(w.days); var c=core(avg), b=band(c/12);
+    return '<div class="wk"><div class="dot" style="background:'+b[1]+'">'+Math.round(c)+'</div><div class="m"><b>Week of '+fmtD(w.week)+'</b><span>'+w.days.length+' of 7 days · '+b[0]+'</span></div><div class="sc">In '+Math.round(sum(avg,INATT))+' · Hy '+Math.round(sum(avg,HYPER))+'<br><span style="color:var(--good)">Pos '+Math.round(sum(avg,POS))+'</span></div></div>';
+  }).join('') : emptyBox('🗓️','No weeks yet','Log a few days and your weekly report builds itself.');
 
   // markers
   var ml=document.getElementById('markersList');
-  ml.innerHTML = markers.length ? markers.slice().reverse().map(function(m){
-    return '<div class="mk-item"><div class="pin">📍</div><div class="m"><b>'+esc(m.label)+'</b><span>'+fmtWeek(m.date)+'</span></div><div class="x" onclick="delMarker(\''+m.id+'\')">×</div></div>';
-  }).join('') : emptyBox('No markers yet','Note a dose or plan change to see its effect.');
+  ml.innerHTML = markers.length ? markers.slice().reverse().map(function(m){return '<div class="mk-item"><div class="pin">📍</div><div class="m"><b>'+esc(m.label)+'</b><span>'+fmtD(m.date)+'</span></div><div class="x" onclick="delMarker(\''+m.id+'\')">×</div></div>';}).join('') : emptyBox('📍','No markers yet','Note a dose or plan change to see its effect on the line.');
 
   go('home');
 }
-function statCard(lab,big,sub,color,trend){
-  return '<div class="card stat"><div class="lab">'+lab+'</div><div class="big" style="color:'+(color||'var(--ink)')+'">'+big+'</div>'
-    +(sub?'<div class="sub" style="color:'+color+';font-weight:700">'+sub+'</div>':'')+ (trend||'') +'</div>';
-}
-function emptyBox(t,s){ return '<div class="empty"><div class="em">📊</div><h2>'+t+'</h2><p class="mutp">'+s+'</p></div>'; }
-function esc(s){ return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function statCard(lab,big,sub,color){return '<div class="card stat"><div class="lab">'+lab+'</div><div class="big" style="color:'+(color||'var(--ink)')+'">'+big+'</div>'+(sub?'<div class="sub" style="color:'+color+'">'+sub+'</div>':'')+'</div>';}
+function emptyBox(icon,t,s){return '<div class="empty"><div class="em">'+icon+'</div><h2>'+t+'</h2><p class="mutp">'+s+'</p></div>';}
 
-/* ===== chart: core symptoms + subscores over weeks, markers as pins ===== */
-function chartSVG(entries,markers){
-  var W=700,H=210,pl=34,pr=14,pt=14,pb=26, iw=W-pl-pr, ih=H-pt-pb;
-  var n=entries.length; var xstep = n>1? iw/(n-1) : 0;
-  function X(i){ return pl + (n>1? i*xstep : iw/2); }
-  function Yc(v,max){ return pt + ih - (v/max)*ih; } // core/sub max 18 or 36
-  var g='';
-  // gridlines (core 0..36 scaled to 0..18 axis? use two axes conceptually; plot subs on /18, core on /36 mapped to same height)
-  [0,.25,.5,.75,1].forEach(function(f){ var y=pt+ih*f; g+='<line x1="'+pl+'" y1="'+y+'" x2="'+(W-pr)+'" y2="'+y+'" stroke="var(--line)" stroke-width="1"/>'; });
-  function line(vals,max,color,w){ var d=vals.map(function(v,i){return (i?'L':'M')+X(i).toFixed(1)+' '+Yc(v,max).toFixed(1);}).join(' ');
-    return '<path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="'+w+'" stroke-linecap="round" stroke-linejoin="round"/>'; }
-  function dots(vals,max,color){ return vals.map(function(v,i){return '<circle cx="'+X(i).toFixed(1)+'" cy="'+Yc(v,max).toFixed(1)+'" r="3.4" fill="#fff" stroke="'+color+'" stroke-width="2"/>';}).join(''); }
-  var inatt=entries.map(function(e){return sum(e.scores,INATT)});
-  var hyper=entries.map(function(e){return sum(e.scores,HYPER)});
-  var pos=entries.map(function(e){return sum(e.scores,POS)});
-  // subscales on /18; positive on /9 → scale to /18 for shared axis (×2)
+/* ===== chart: daily points ===== */
+function chartSVG(days,markers){
+  var W=700,H=200,pl=30,pr=14,pt=14,pb=24,iw=W-pl-pr,ih=H-pt-pb,n=days.length;
+  function X(i){return pl+(n>1?i*(iw/(n-1)):iw/2);}
+  function Y(v,max){return pt+ih-(v/max)*ih;}
+  var g='';[0,.25,.5,.75,1].forEach(function(f){var y=pt+ih*f;g+='<line x1="'+pl+'" y1="'+y+'" x2="'+(W-pr)+'" y2="'+y+'" stroke="#e6e8f4"/>';});
+  function line(vals,max,col,w){return '<path d="'+vals.map(function(v,i){return(i?'L':'M')+X(i).toFixed(1)+' '+Y(v,max).toFixed(1);}).join(' ')+'" fill="none" stroke="'+col+'" stroke-width="'+w+'" stroke-linecap="round" stroke-linejoin="round"/>';}
+  function dots(vals,max,col){return vals.map(function(v,i){return '<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v,max).toFixed(1)+'" r="3" fill="#fff" stroke="'+col+'" stroke-width="2"/>';}).join('');}
+  var inatt=days.map(function(e){return sum(e.scores,INATT);}), hyper=days.map(function(e){return sum(e.scores,HYPER);}), pos=days.map(function(e){return sum(e.scores,POS)*2;});
   var svg='<svg class="chart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none">'+g;
-  // marker pins (map by nearest week index by date)
-  markers.forEach(function(m){
-    var idx=nearestWeek(entries,m.date); if(idx<0) return; var x=X(idx);
-    svg+='<line x1="'+x.toFixed(1)+'" y1="'+pt+'" x2="'+x.toFixed(1)+'" y2="'+(pt+ih)+'" stroke="var(--indigo)" stroke-width="1" stroke-dasharray="3 3" opacity=".5"/>'
-      +'<circle cx="'+x.toFixed(1)+'" cy="'+(pt+4)+'" r="3" fill="var(--indigo)"/>';
-  });
-  svg+= line(inatt,18,'var(--indigo)',2.6)+ line(hyper,18,'var(--s3)',2.6)+ line(pos.map(function(v){return v*2}),18,'var(--good)',2.2);
-  svg+= dots(inatt,18,'var(--indigo)')+dots(hyper,18,'var(--s3)')+dots(pos.map(function(v){return v*2}),18,'var(--good)');
-  // x labels (first, mid, last)
-  [0, Math.floor((n-1)/2), n-1].filter(function(v,i,a){return a.indexOf(v)===i;}).forEach(function(i){
-    svg+='<text x="'+X(i).toFixed(1)+'" y="'+(H-8)+'" fill="var(--mut)" font-size="11" text-anchor="middle" font-family="Inter">'+fmtWeek(entries[i].week)+'</text>';
-  });
-  svg+='</svg>';
-  return svg;
+  (markers||[]).forEach(function(m){var idx=nearest(days,m.date);if(idx<0)return;var x=X(idx);svg+='<line x1="'+x.toFixed(1)+'" y1="'+pt+'" x2="'+x.toFixed(1)+'" y2="'+(pt+ih)+'" stroke="#4c63d2" stroke-width="1" stroke-dasharray="3 3" opacity=".5"/><circle cx="'+x.toFixed(1)+'" cy="'+(pt+4)+'" r="3" fill="#4c63d2"/>';});
+  svg+=line(inatt,18,'#4c63d2',2.4)+line(hyper,18,'#d97a4e',2.4)+line(pos,18,'#1fb6a6',2)+dots(inatt,18,'#4c63d2')+dots(hyper,18,'#d97a4e')+dots(pos,18,'#1fb6a6');
+  [0,Math.floor((n-1)/2),n-1].filter(function(v,i,a){return a.indexOf(v)===i&&v>=0;}).forEach(function(i){svg+='<text x="'+X(i).toFixed(1)+'" y="'+(H-7)+'" fill="#6b7299" font-size="11" text-anchor="middle" font-family="Inter">'+fmtD(days[i].date)+'</text>';});
+  return svg+'</svg>';
 }
-function nearestWeek(entries,date){ if(!entries.length) return -1; var best=0,bd=1e15; entries.forEach(function(e,i){ var diff=Math.abs(new Date(e.week)-new Date(date)); if(diff<bd){bd=diff;best=i;} }); return best; }
+function nearest(days,date){if(!days.length)return -1;var b=0,bd=1e15;days.forEach(function(e,i){var d=Math.abs(parseD(e.date)-parseD(date));if(d<bd){bd=d;b=i;}});return b;}
 
-/* ===== entry flow ===== */
-function todayISO(){ return new Date().toISOString().slice(0,10); }
-function startEntry(){
-  DRAFT={role:'Parent', week:todayISO(), scores:new Array(15).fill(null), note:''};
-  document.querySelectorAll('#roleRow .rolebtn').forEach(function(b){ b.classList.toggle('sel', b.dataset.role==='Parent'); });
-  document.getElementById('weekOf').value=DRAFT.week;
-  document.getElementById('entryNote').value='';
+/* ===== entry ===== */
+async function logDay(date){
+  var existing=await Store.dayOn(CUR,date);
+  DRAFT={date:date, role:(existing&&existing.role)||'Parent', scores:existing?existing.scores.slice():new Array(15).fill(null), note:existing?existing.note:'', preset:null};
+  document.getElementById('entryTitle').textContent = date===todayISO()?'Today':('Day of '+fmtD(date));
+  document.querySelectorAll('#roleRow .rolebtn').forEach(function(b){b.classList.toggle('sel',b.dataset.role===DRAFT.role);});
+  document.querySelectorAll('#quickRow .qb').forEach(function(b){b.classList.remove('sel');});
+  document.getElementById('entryNote').value=DRAFT.note||'';
   renderQs(); go('entry'); updProg();
 }
-function pickRole(b){ DRAFT.role=b.dataset.role; document.querySelectorAll('#roleRow .rolebtn').forEach(function(x){x.classList.remove('sel');}); b.classList.add('sel'); }
-document.getElementById('weekOf').addEventListener('change',function(){ DRAFT.week=this.value; });
-document.getElementById('entryNote').addEventListener('input',function(){ DRAFT.note=this.value; });
+function pickRole(b){DRAFT.role=b.dataset.role;document.querySelectorAll('#roleRow .rolebtn').forEach(function(x){x.classList.remove('sel');});b.classList.add('sel');}
+function quickFill(p){ var pr=PRESET[p]; for(var i=0;i<15;i++){ DRAFT.scores[i]= POS.indexOf(i)>=0?pr[1]:pr[0]; }
+  document.querySelectorAll('#quickRow .qb').forEach(function(b){b.classList.toggle('sel',b.dataset.p===p);});
+  renderQs(); updProg(); }
+document.getElementById('entryNote').addEventListener('input',function(){DRAFT.note=this.value;});
 function renderQs(){
   var h=''; ITEMS.forEach(function(q,qi){
-    if(qi===12){ h+='<div class="posnote">✓ For the next three, <b>higher is better</b> — these are strengths.</div>'; }
+    if(qi===12)h+='<div class="posnote">✓ For the next three, <b>higher is better</b> — these are strengths.</div>';
     h+='<div class="q"><div class="qt"><i>'+(qi+1)+'.</i><span>'+q+'</span></div><div class="scale">';
-    for(var s=0;s<4;s++){
-      var pos=POS.indexOf(qi)>=0;
-      h+='<div class="opt" data-q="'+qi+'" data-s="'+s+'" onclick="pickScore('+qi+','+s+')"><span class="n">'+s+'</span><span class="t">'+SCALE[s][0]+'</span></div>';
-    }
+    for(var s=0;s<4;s++){var sel=DRAFT.scores[qi]===s;h+='<div class="opt'+(sel?' sel':'')+'" data-q="'+qi+'" data-s="'+s+'" style="'+(sel?'background:'+SC[s]:'')+'" onclick="pickScore('+qi+','+s+')"><span class="n">'+s+'</span><span class="t">'+SCALE[s]+'</span></div>';}
     h+='</div></div>';
   });
   document.getElementById('qCard').innerHTML=h;
 }
-function pickScore(qi,s){
-  DRAFT.scores[qi]=s;
-  document.querySelectorAll('.opt[data-q="'+qi+'"]').forEach(function(o){
-    var on=+o.dataset.s===s; o.classList.toggle('sel',on);
-    o.style.background = on ? SC[s] : '#fff';
-  });
-  updProg();
-}
-function updProg(){
-  var done=DRAFT.scores.filter(function(x){return x!==null;}).length;
-  document.getElementById('prog').style.width=(done/15*100)+'%';
-  var btn=document.getElementById('saveBtn');
-  btn.textContent = done<15 ? ('Save this week ('+done+'/15)') : 'Save this week';
-}
+function pickScore(qi,s){DRAFT.scores[qi]=s;document.querySelectorAll('.opt[data-q="'+qi+'"]').forEach(function(o){var on=+o.dataset.s===s;o.classList.toggle('sel',on);o.style.background=on?SC[s]:'#fff';});updProg();}
+function updProg(){var done=DRAFT.scores.filter(function(x){return x!==null;}).length;document.getElementById('prog').style.width=(done/15*100)+'%';document.getElementById('saveBtn').textContent=done<15?('Save this day ('+done+'/15)'):'Save this day';}
 async function saveEntry(){
   var done=DRAFT.scores.filter(function(x){return x!==null;}).length;
-  if(done<15){ var first=DRAFT.scores.indexOf(null); var el=document.querySelector('.opt[data-q="'+first+'"]'); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); toast('Please answer all 15 — '+ (15-done)+' left'); return; }
-  await Store.addEntry({kid:CUR, role:DRAFT.role, week:DRAFT.week, scores:DRAFT.scores.slice(), note:DRAFT.note});
+  if(done<15){var first=DRAFT.scores.indexOf(null);var el=document.querySelector('.opt[data-q="'+first+'"]');if(el)el.scrollIntoView({behavior:'smooth',block:'center'});toast((15-done)+' left — or tap a quick day');return;}
+  await Store.saveDay({kid:CUR,date:DRAFT.date,role:DRAFT.role,scores:DRAFT.scores.slice(),note:DRAFT.note});
   toast('Saved ✓'); await renderHome();
 }
 
-/* ===== markers ===== */
-function openAddMarker(){ document.getElementById('mkLabel').value=''; document.getElementById('mkDate').value=todayISO(); openSheet('sheetMarker'); }
-async function saveMarker(){ var l=document.getElementById('mkLabel').value.trim(); if(!l){toast('What changed?');return;} await Store.addMarker({kid:CUR,label:l,date:document.getElementById('mkDate').value||todayISO()}); closeSheets(); await renderHome(); }
-async function delMarker(id){ await Store.delMarker(id); await renderHome(); }
+/* markers / kids / share */
+function openAddMarker(){document.getElementById('mkLabel').value='';document.getElementById('mkDate').value=todayISO();openSheet('sheetMarker');}
+async function saveMarker(){var l=document.getElementById('mkLabel').value.trim();if(!l){toast('What changed?');return;}await Store.addMarker({kid:CUR,label:l,date:document.getElementById('mkDate').value||todayISO()});closeSheets();await renderHome();}
+async function delMarker(id){await Store.delMarker(id);await renderHome();}
+async function openKids(){var kids=await Store.kids();document.getElementById('kidsList').innerHTML=kids.map(function(k){return '<div class="wk" style="cursor:pointer" onclick="switchKid(\''+k.id+'\')"><div class="dot" style="background:linear-gradient(150deg,var(--indigo),var(--teal))">'+initials(k.name)+'</div><div class="m"><b>'+esc(k.name)+'</b><span>'+(k.id===CUR?'Selected':'Tap to switch')+'</span></div>'+(k.id===CUR?'<span class="pill">✓</span>':'')+'</div>';}).join('');openSheet('sheetKids');}
+async function switchKid(id){CUR=id;await Store.setCur(id);closeSheets();await renderHome();}
+function openAddKid(){document.getElementById('kidInput').value='';openSheet('sheetAddKid');setTimeout(function(){document.getElementById('kidInput').focus();},250);}
+async function saveKid(){var n=document.getElementById('kidInput').value.trim();if(!n){toast('Enter a name or initials');return;}var k=await Store.addKid(n);CUR=k.id;closeSheets();await renderHome();}
+async function openShare(){var link=location.origin+location.pathname.replace(/index\.html?$/,'')+'rate/?c='+CUR;document.getElementById('shareLink').value=link;document.getElementById('shareNote').innerHTML='Rater links go live with the shared database (next step). For now you can log every day yourself on this device.';openSheet('sheetShare');}
+function copyShare(){var i=document.getElementById('shareLink');i.select();try{navigator.clipboard&&navigator.clipboard.writeText(i.value);}catch(e){}toast('Link copied');}
 
-/* ===== kids ===== */
-async function openKids(){ var kids=await Store.kids(); document.getElementById('kidsList').innerHTML=kids.map(function(k){
-    return '<div class="wk" style="cursor:pointer" onclick="switchKid(\''+k.id+'\')"><div class="dot" style="background:linear-gradient(150deg,var(--indigo),var(--teal))">'+initials(k.name)+'</div><div class="m"><b>'+esc(k.name)+'</b><span>'+(k.id===CUR?'Selected':'Tap to switch')+'</span></div>'+(k.id===CUR?'<span class="pill">✓</span>':'')+'</div>';
-  }).join(''); openSheet('sheetKids'); }
-async function switchKid(id){ CUR=id; await Store.setCur(id); closeSheets(); await renderHome(); }
-function openAddKid(){ document.getElementById('kidInput').value=''; openSheet('sheetAddKid'); setTimeout(function(){document.getElementById('kidInput').focus();},250); }
-async function saveKid(){ var n=document.getElementById('kidInput').value.trim(); if(!n){toast('Enter a name or initials');return;} var k=await Store.addKid(n); CUR=k.id; closeSheets(); await renderHome(); }
-
-/* ===== share (wired to token API next; placeholder link for now) ===== */
-async function openShare(){
-  var kids=await Store.kids(); var kid=kids.find(function(k){return k.id===CUR});
-  var link=location.origin+location.pathname.replace(/index\.html?$/,'')+'rate/?c='+CUR; // real token comes with the API
-  document.getElementById('shareLink').value=link;
-  document.getElementById('shareNote').innerHTML='Rater links go live with the shared database (next step). For now you can log every week yourself from this device.';
-  openSheet('sheetShare');
+/* daily reminder via downloadable recurring calendar event (real, no backend) */
+async function remindMe(){
+  var kids=await Store.kids(); var kid=kids.find(function(k){return k.id===CUR;});
+  var dt=new Date(); dt.setHours(19,30,0,0); // 7:30pm
+  function z(n){return(n<10?'0':'')+n;} function stamp(d){return d.getUTCFullYear()+z(d.getUTCMonth()+1)+z(d.getUTCDate())+'T'+z(d.getUTCHours())+z(d.getUTCMinutes())+'00Z';}
+  var ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//ESPOfocus//EN','BEGIN:VEVENT','UID:'+uid()+'@espofocus','DTSTAMP:'+stamp(new Date()),'DTSTART:'+stamp(dt),'RRULE:FREQ=DAILY','SUMMARY:ESPOfocus — log '+(kid?kid.name:'today'),'DESCRIPTION:Open ESPOfocus and log the day.','BEGIN:VALARM','TRIGGER:PT0M','ACTION:DISPLAY','DESCRIPTION:Log today','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+  var blob=new Blob([ics],{type:'text/calendar'}); var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;a.download='espofocus-daily-reminder.ics';document.body.appendChild(a);a.click();a.remove();
+  toast('Reminder added — open it to save to your calendar');
 }
-function copyShare(){ var i=document.getElementById('shareLink'); i.select(); try{document.execCommand('copy');navigator.clipboard&&navigator.clipboard.writeText(i.value);}catch(e){} toast('Link copied'); }
 
-/* ===== report ===== */
+/* report */
 async function buildReport(){
-  var kids=await Store.kids(); var kid=kids.find(function(k){return k.id===CUR});
-  var entries=await Store.entries(CUR), markers=await Store.markers(CUR);
+  var kids=await Store.kids(); if(!kids.length)return; var kid=kids.find(function(k){return k.id===CUR;});
+  var days=await Store.days(CUR), markers=await Store.markers(CUR), weeks=groupWeeks(days);
   var b=document.getElementById('reportBody');
-  if(!entries.length){ b.innerHTML='<div class="card empty"><h2>No data yet</h2><p class="mutp">Log a week first.</p></div>'; return; }
-  var latest=entries[entries.length-1];
-  var rows=entries.slice().reverse().map(function(e){var c=core(e.scores);return '<div class="wk"><div class="m"><b>Week of '+fmtWeek(e.week)+'</b><span><span class="rolechip">'+e.role+'</span></span></div><div class="sc">In '+sum(e.scores,INATT)+' · Hy '+sum(e.scores,HYPER)+' · Pos '+sum(e.scores,POS)+' · Core '+c+'/36</div></div>';}).join('');
-  b.innerHTML='<div class="card" style="padding:18px 18px 8px">'
-    +'<h2>ESPOfocus weekly monitoring — '+esc(kid.name)+'</h2>'
-    +'<p class="mutp">'+entries.length+' weekly reports · generated '+new Date().toLocaleDateString()+'</p>'
-    +'<div class="chartcard" style="padding:10px 0 0">'+chartSVG(entries,markers)+'</div>'
-    +'<div class="legend"><i><b style="background:var(--indigo)"></b>Inattention</i><i><b style="background:var(--s3)"></b>Hyper/impulsive</i><i><b style="background:var(--good)"></b>Positive</i></div>'
-    +'</div>'
-    +(markers.length?'<div class="card sec" style="padding:6px 0">'+markers.slice().reverse().map(function(m){return '<div class="mk-item"><div class="pin">📍</div><div class="m"><b>'+esc(m.label)+'</b><span>'+fmtWeek(m.date)+'</span></div></div>';}).join('')+'</div>':'')
-    +'<div class="card sec">'+rows+'</div>'
-    +'<div class="disc">Scores: 0–3 per item, summed. Inattention & Hyper/impulsive /18 (lower is better); Positive /9 (higher is better); Core /36. A monitoring aid based on the standard weekly ADHD report — <b>not a diagnosis</b>. Share with your provider.</div>';
+  if(!days.length){b.innerHTML='<div class="card empty"><div class="em">📄</div><h2>No data yet</h2><p class="mutp">Log a day first.</p></div>';return;}
+  var rows=weeks.slice().reverse().map(function(w){var avg=weekAvgScores(w.days);var c=core(avg);return '<div class="wk"><div class="m"><b>Week of '+fmtD(w.week)+'</b><span>'+w.days.length+' of 7 days logged</span></div><div class="sc">In '+Math.round(sum(avg,INATT))+' · Hy '+Math.round(sum(avg,HYPER))+' · Pos '+Math.round(sum(avg,POS))+' · Core '+Math.round(c)+'/36</div></div>';}).join('');
+  b.innerHTML='<div class="card" style="padding:18px 18px 8px"><h2>ESPOfocus — '+esc(kid.name)+'</h2><p class="mutp">'+days.length+' days logged across '+weeks.length+' week'+(weeks.length===1?'':'s')+' · generated '+new Date().toLocaleDateString()+'</p><div class="chartcard" style="padding:10px 0 0">'+chartSVG(days.slice(-28),markers)+'</div><div class="legend"><i><b style="background:var(--indigo)"></b>Inattention</i><i><b style="background:var(--s3)"></b>Hyper/impulsive</i><i><b style="background:var(--good)"></b>Positive</i></div></div>'
+    +(markers.length?'<div class="card sec" style="padding:6px 0">'+markers.slice().reverse().map(function(m){return '<div class="mk-item"><div class="pin">📍</div><div class="m"><b>'+esc(m.label)+'</b><span>'+fmtD(m.date)+'</span></div></div>';}).join('')+'</div>':'')
+    +'<div class="card sec"><div class="wk" style="border:0"><div class="m"><b>Weekly averages</b><span>each week = average of the days logged</span></div></div>'+rows+'</div>'
+    +'<div class="disc">0–3 per item, summed. Inattention & Hyper/impulsive /18 (lower better); Positive /9 (higher better); Core /36. Weeks are averages of logged days. A monitoring aid based on the standard weekly ADHD report — <b>not a diagnosis</b>. Share with your provider.</div>';
 }
 
-/* ===== sheets / toast ===== */
-function openSheet(id){ document.getElementById('scrim').classList.add('on'); document.getElementById(id).classList.add('on'); }
-function closeSheets(){ document.getElementById('scrim').classList.remove('on'); document.querySelectorAll('.sheet').forEach(function(s){s.classList.remove('on');}); }
-function toast(msg){ var t=document.createElement('div'); t.textContent=msg; t.style.cssText='position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#171a33;color:#fff;padding:11px 18px;border-radius:999px;font-weight:700;font-size:14px;z-index:99;box-shadow:0 10px 30px rgba(0,0,0,.25)'; document.body.appendChild(t); setTimeout(function(){t.style.opacity='0';t.style.transition='.4s';},1400); setTimeout(function(){t.remove();},1900); }
-
-var _go=go; go=function(v){ _go(v); if(v==='report') buildReport(); };
+function openSheet(id){document.getElementById('scrim').classList.add('on');document.getElementById(id).classList.add('on');}
+function closeSheets(){document.getElementById('scrim').classList.remove('on');document.querySelectorAll('.sheet').forEach(function(s){s.classList.remove('on');});}
+function toast(msg){var t=document.createElement('div');t.textContent=msg;t.style.cssText='position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#171a33;color:#fff;padding:11px 18px;border-radius:999px;font-weight:700;font-size:14px;z-index:99;box-shadow:0 10px 30px rgba(0,0,0,.25)';document.body.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transition='.4s';},1500);setTimeout(function(){t.remove();},2000);}
 
 boot();
-if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(function(){}); }
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
 </script>
 </body>
 </html>
