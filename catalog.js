@@ -63,6 +63,13 @@
       price:'$400/mo', priceNote:'3 tiers · annual $4,000/yr (2 months free)',
       svg:'<circle cx="24" cy="24" r="15"/><path d="M24 9v30M9 24h30"/><path d="M13 13l22 22M35 13L13 35"/>' },
 
+    { id:'toolbelt', mark:'/os-icons/Toolbelt_OS.png', name:'Toolbelt OS', img:'/Toolbelt_OS.png', tag:'HVAC \u00b7 plumbing \u00b7 electrical', genre:'business', state:'live',
+      tiers:[ ['Truck',450,3900,'1\u20133 trucks \u2014 the whole system for an owner still turning wrenches'], ['Shop',950,8200,'A real shop with a dispatcher \u2014 referral CRM, recruiting, books, agent org'], ['Grandsuite',2200,16000,'Multi-location, multi-trade, dedicated environment, branded tech app'] ],
+      acc:'#e4832b', url:'/apps/toolbelt/', pricing:'/hubs/field-service.html',
+      blurb:'Dispatch with a match engine that shows its reasons, proof of service, licence and permit gates, truck stock, and the three-line money engine \u2014 for HVAC, plumbing and electrical shops.',
+      price:'$450/mo', priceNote:'3 tiers \u00b7 the whole spine in every tier',
+      svg:'<path d="M6 30h28v10H6z"/><path d="M34 32h4l4 6v2h-8z"/><circle cx="14" cy="41" r="4"/><circle cx="36" cy="41" r="4"/><path d="M10 24h20"/><path d="M10 20h20"/>' },
+
     { id:'stayathome', mark:'/os-icons/StayAtHome_OS.png', name:'Stay@Home OS', img:'/StayAtHome_OS.png', tag:'Home care agencies', genre:'business', state:'live',
       tiers:[ ['Office',550,4800,'One office \u2014 the whole system, sized for a single territory'], ['Agency',1150,9500,'Multi-office + referral CRM + books + the AI department org'], ['Grandsuite',2600,18000,'Multi-state + dedicated environment + migration + branded caregiver app'] ],
       acc:'#2e7f7c', url:'/apps/stayathome/', pricing:'/hubs/home-care.html',
