@@ -199,6 +199,8 @@ svg.avatar.talking .mouth{animation:talk .26s ease-in-out infinite}
 .floaty{position:fixed; z-index:52; font-size:26px; pointer-events:none; will-change:transform,opacity; animation:floatup .9s ease-out forwards}
 .floaty.word{font-family:'Baloo 2'; font-weight:800; font-size:21px; color:var(--pink-deep); text-shadow:0 2px 8px rgba(255,255,255,.9)}
 @keyframes floatup{0%{opacity:0; transform:translate(-50%,12px) scale(.6)}25%{opacity:1}100%{opacity:0; transform:translate(-50%,-64px) scale(1.15)}}
+.tooltouch{position:fixed; z-index:53; font-size:32px; pointer-events:none; will-change:transform,opacity; animation:dab .62s ease}
+@keyframes dab{0%{opacity:0; transform:translate(-50%,-115%) rotate(-18deg) scale(.7)}38%{opacity:1; transform:translate(-50%,-52%) rotate(0) scale(1.12)}58%{transform:translate(-50%,-44%) rotate(2deg) scale(1)}100%{opacity:0; transform:translate(-50%,-78%) rotate(-8deg) scale(.85)}}
 #faceView.react{animation:react .42s ease}
 @keyframes react{0%{transform:scale(1)}35%{transform:scale(1.045) rotate(-1deg)}70%{transform:scale(.99)}100%{transform:scale(1)}}
 .hint{position:absolute; left:50%; transform:translateX(-50%); bottom:6px; z-index:5; background:var(--pink-deep); color:#fff;
@@ -670,40 +672,36 @@ function faceSVG(L, reveal){
   s+=armsAndHands(L, reveal);
   return '<svg class="avatar" viewBox="24 24 252 398" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Customer">'+s+'</svg>';
 }
-/* a cute up-facing hand with 4 painted nails + thumb; flip mirrors it */
+/* an up-facing hand: palm, four fingers of varying length with painted nails, and a thumb */
 function avatarHand(x,y,sc,flip,skin,base,art){
   var g='<g transform="translate('+x+' '+y+') scale('+(flip?-sc:sc)+' '+sc+')">';
-  g+='<path d="M-16 22 C-18 6 -14 -4 -6 -6 L8 -6 C16 -4 18 8 16 22 C14 30 -14 30 -16 22 Z" fill="'+skin+'"/>';
-  var fx=[-11,-4,4,11], fh=[15,21,21,15];
-  for(var i=0;i<4;i++){ var xx=fx[i], h=fh[i];
-    g+='<rect x="'+(xx-4)+'" y="'+(-6-h)+'" width="8" height="'+(h+9)+'" rx="4" fill="'+skin+'"/>';
-    g+='<rect x="'+(xx-3.4)+'" y="'+(-6-h)+'" width="6.8" height="8.4" rx="3.2" fill="'+base+'"/>';
-    g+=nailOverlay(art,(xx-3.4),(-6-h),6.8,8.4,base);
-    g+='<rect x="'+(xx-2.4)+'" y="'+(-5-h)+'" width="2.2" height="3" rx="1.1" fill="rgba(255,255,255,.4)"/>';
+  g+='<path d="M-13 24 C-15 6 -11 0 0 0 C11 0 15 6 13 24 C11 33 -11 33 -13 24 Z" fill="'+skin+'"/>';
+  var F=[[-9,-15],[-2.5,-22],[4,-19],[10.5,-10]];
+  for(var i=0;i<4;i++){ var fx=F[i][0], ty=F[i][1], h=(3-ty);
+    g+='<rect x="'+(fx-2.6)+'" y="'+ty+'" width="5.2" height="'+h+'" rx="2.6" fill="'+skin+'"/>';
+    g+='<rect x="'+(fx-2.3)+'" y="'+ty+'" width="4.6" height="6" rx="2.3" fill="'+base+'"/>';
+    g+=nailOverlay(art,(fx-2.3),ty,4.6,6,base);
   }
-  g+='<path d="M-16 8 C-25 6 -27 17 -20 20 C-15 22 -11 16 -13 11 Z" fill="'+skin+'"/>';
+  g+='<path d="M-13 8 C-24 5 -25 15 -18 18 C-13 20 -9 14 -11 9 Z" fill="'+skin+'"/>';
+  g+='<ellipse cx="-19.5" cy="10.5" rx="2.6" ry="3.4" fill="'+base+'"/>';
   g+='</g>';
   return g;
 }
 function armsAndHands(L, reveal){
   var skin=L.skin, base=L.nail, art=L.nailArt, col=L.outfitColor||'#ff5fa8';
   var s='';
-  if(reveal){
-    // sleeves up
-    s+='<path d="M86 340 C68 300 82 240 104 206" stroke="'+col+'" stroke-width="27" fill="none" stroke-linecap="round"/>';
-    s+='<path d="M214 340 C232 300 218 240 196 206" stroke="'+col+'" stroke-width="27" fill="none" stroke-linecap="round"/>';
-    // forearm skin
-    s+='<path d="M104 210 C100 190 104 172 108 158" stroke="'+skin+'" stroke-width="21" fill="none" stroke-linecap="round"/>';
-    s+='<path d="M196 210 C200 190 196 172 192 158" stroke="'+skin+'" stroke-width="21" fill="none" stroke-linecap="round"/>';
-    s+=avatarHand(108,150,1.05,false,skin,base,art);
-    s+=avatarHand(192,150,1.05,true,skin,base,art);
-  } else {
-    // arms resting, hands held up on the lap showing the nails while you style
-    s+='<path d="M92 344 C98 364 114 378 132 384" stroke="'+col+'" stroke-width="26" fill="none" stroke-linecap="round"/>';
-    s+='<path d="M208 344 C202 364 186 378 168 384" stroke="'+col+'" stroke-width="26" fill="none" stroke-linecap="round"/>';
-    s+=avatarHand(130,392,0.64,false,skin,base,art);
-    s+=avatarHand(170,392,0.64,true,skin,base,art);
-  }
+  var hy = reveal? 300 : 336;            // hand height — always below the chin (294) so it never covers the face
+  var hxL = reveal? 112 : 122, hxR = reveal? 188 : 178;
+  var sc = reveal? 0.98 : 0.78;
+  // upper-arm sleeve caps at the shoulders
+  s+='<ellipse cx="82" cy="340" rx="21" ry="24" fill="'+col+'"/>';
+  s+='<ellipse cx="218" cy="340" rx="21" ry="24" fill="'+col+'"/>';
+  // skin forearms curving from the shoulders in to the hands
+  s+='<path d="M84 342 C72 322 92 '+(hy+16)+' '+hxL+' '+(hy+10)+'" stroke="'+skin+'" stroke-width="19" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M216 342 C228 322 208 '+(hy+16)+' '+hxR+' '+(hy+10)+'" stroke="'+skin+'" stroke-width="19" fill="none" stroke-linecap="round"/>';
+  // hands, presenting the nails toward you
+  s+=avatarHand(hxL,hy,sc,false,skin,base,art);
+  s+=avatarHand(hxR,hy,sc,true,skin,base,art);
   return s;
 }
 
@@ -750,12 +748,12 @@ function renderMiniHands(){ $('#miniHandsSvg').innerHTML=handSVG(look.nail,look.
 /* ---------------- build tool trays ---------------- */
 function swatch(color,active,fn){
   var b=el('button','swatch'); b.style.background=color; b.setAttribute('aria-pressed',active?'true':'false');
-  b.onclick=function(){ sPop(); fn(); delight(); };
+  b.onclick=function(){ sPop(); fn(); delight(); applyTouch(activeCat); };
   return b;
 }
 function optBtn(label,em,active,fn){
   var b=el('button','opt'); b.innerHTML='<span class="em">'+em+'</span>'+label; b.setAttribute('aria-pressed',active?'true':'false');
-  b.onclick=function(){ sPop(); fn(); delight(); };
+  b.onclick=function(){ sPop(); fn(); delight(); applyTouch(activeCat); };
   return b;
 }
 /* a little burst of love every time she gets styled — no-fail, all encouragement */
@@ -769,6 +767,19 @@ function delight(){
   e.style.top=(window.innerHeight*0.40)+'px';
   fx.appendChild(e); setTimeout(function(){ e.remove(); },900);
   var h=$('#hint'); if(h && h.classList.contains('on')){ h.classList.remove('on'); STORE.set('seenHint',true); }
+}
+/* the tool that "touches" the customer — a lipstick, brush, comb… dabs the right spot */
+var TOOL={ style:'✂️', color:'🖌️', acc:'🎀', lips:'💄', eyes:'🖌️', cheeks:'🖌️', ncolor:'💅', nart:'💅', outfit:'👗', ocolor:'👗', oart:'👗', skin:'🧴' };
+var TOOLFRAC={ style:0.12, color:0.16, acc:0.10, lips:0.45, eyes:0.35, cheeks:0.40, outfit:0.82, ocolor:0.82, oart:0.82, skin:0.40, ncolor:0.5, nart:0.5 };
+function applyTouch(cat){
+  var t=TOOL[cat]; if(!t) return;
+  var host=(cat==='ncolor'||cat==='nart') ? document.querySelector('#nailsView svg') : document.querySelector('#faceView svg');
+  if(!host) return;
+  var r=host.getBoundingClientRect();
+  var e=el('div','tooltouch'); e.textContent=t;
+  e.style.left=(r.left + r.width*0.5)+'px';
+  e.style.top=(r.top + r.height*(TOOLFRAC[cat]||0.4))+'px';
+  $('#fx').appendChild(e); setTimeout(function(){ e.remove(); },620);
 }
 function fill(id,nodes){ var t=$(id); t.innerHTML=''; nodes.forEach(function(n){t.appendChild(n);}); }
 
