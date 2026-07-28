@@ -144,7 +144,11 @@ svg.avatar.talking .mouth{animation:talk .26s ease-in-out infinite}
   overflow:auto; padding:18px 18px 16px; text-align:center; border:4px solid #fff; position:relative}
 .card h2{margin:2px 0 2px; font-size:26px; color:var(--pink-deep)}
 .card .sub{font-weight:700; color:var(--ink-soft); margin-bottom:8px; font-size:15px}
-.reveal-photo{width:min(70vw,230px); margin:0 auto; background:#fff; border-radius:20px; padding:8px; box-shadow:var(--shadow); border:3px solid #ffe0ef}
+.reveal-photo{width:min(76vw,262px); margin:0 auto; background:#fff; border-radius:20px; padding:8px; box-shadow:var(--shadow); border:3px solid #ffe0ef; animation:tada .7s cubic-bezier(.2,1.2,.4,1)}
+@keyframes tada{0%{transform:scale(.7) rotate(-5deg); opacity:0}45%{opacity:1}65%{transform:scale(1.05) rotate(2deg)}100%{transform:scale(1) rotate(0)}}
+.summary-title{font-family:'Baloo 2'; font-weight:800; color:var(--pink-deep); font-size:15px; margin:10px 0 4px}
+.summary{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:2px 0 4px}
+.sc{background:#fff4fa; border:2px solid #ffd9ec; color:var(--ink); font-weight:800; font-size:12px; padding:4px 11px; border-radius:999px}
 .reveal-photo svg{width:100%; height:auto; display:block}
 .stars{font-size:30px; letter-spacing:4px; margin:8px 0 2px}
 .reward{display:flex; align-items:center; justify-content:center; gap:8px; font-family:'Baloo 2'; font-weight:800;
@@ -861,6 +865,20 @@ function matchedWishes(){
 }
 var STICKERS=['🌟','💖','🌈','🦄','🎀','👑','🌸','💎','🧁','🍭','🌺','✨','🐱','🦋','🍩','⭐'];
 
+function hairColorName(c){ for(var i=0;i<HAIRCOLORS.length;i++) if(HAIRCOLORS[i].c===c) return HAIRCOLORS[i].n; return ''; }
+function idName(arr,id){ for(var i=0;i<arr.length;i++) if(arr[i].id===id) return arr[i].n; return ''; }
+function workSummary(L){
+  var c=[];
+  c.push('💇 '+HAIRLABEL[L.hairStyle]+(hairColorName(L.hairColor)?(' · '+hairColorName(L.hairColor)):''));
+  c.push('💅 '+(L.nailArt!=='plain'? idName(NAILART,L.nailArt)+' ':'')+'nails');
+  if(L.lip) c.push('💄 Lips');
+  if(L.eyeshadow) c.push('👁️ Eyeshadow');
+  if(L.blush) c.push('🌸 Blush');
+  if(L.gem) c.push('💎 Gems');
+  c.push('👗 '+OUTFITLABEL[L.outfit]);
+  if(L.accessory && L.accessory!=='none') c.push('🎀 '+idName(ACCESSORIES,L.accessory));
+  return '<div class="summary">'+c.map(function(x){return '<span class="sc">'+x+'</span>';}).join('')+'</div>';
+}
 $('#doneBtn').onclick=function(){
   var matched=matchedWishes(), total=customer.wish.length;
   var base=10, bonus=matched*5, tip=5;
@@ -878,11 +896,13 @@ $('#doneBtn').onclick=function(){
 
   var card=$('#revealCard');
   card.innerHTML=
-    '<h2>'+customer.name+' is thrilled! 🎉</h2>'+
+    '<h2>Ta-da! '+customer.name+' is thrilled! 🎉</h2>'+
     '<div class="sub">"'+praise+'"</div>'+
     '<div class="reveal-photo" id="photoBox">'+faceSVG(look, true)+'</div>'+
     '<div class="stars">'+stars+'</div>'+
     matchLine+
+    '<div class="summary-title">Look at everything you did! 💕</div>'+
+    workSummary(look)+
     '<div class="reward">🪙 +'+earned+' coins &nbsp;•&nbsp; '+sticker+' new sticker!</div>'+
     '<div class="mini-actions">'+
       '<button class="btn ghost" id="savePhoto" style="flex:1;color:var(--ink)">📸 Save photo</button>'+
