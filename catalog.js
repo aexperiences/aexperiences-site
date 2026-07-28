@@ -307,3 +307,66 @@
     appShop: { build: 99, terms: 'Half up front, half on delivery', turnaround: '3 days' }
   };
 })(window);
+
+/* ── SEO: structured data for the App Shop (JSON-LD) ─────────────────────────
+   Emits an ItemList of SoftwareApplication entries built from the SAME catalog
+   the grid renders — LIVE products only, REAL prices only (honesty rules).
+   Googlebot renders JS and reads this, so the shop can appear as a rich
+   app-catalog result. Wrapped so SEO can never break the store. */
+(function (root) {
+  function onReady(fn){ if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
+  onReady(function () {
+    try {
+      var S = root.AEShop; if (!S || !S.CATALOG) return;
+      var path = (location.pathname || '').toLowerCase();
+      if (path.indexOf('shop') === -1 && path !== '/') return;   // shop page only
+      if (document.getElementById('ae-shop-jsonld')) return;     // inject once
+      var BASE = 'https://www.aexperiences.com';
+      function abs(u){ if (!u) return BASE + '/shop.html'; return u.charAt(0) === '/' ? BASE + u : u; }
+      function priceNum(p){ if (!p) return null; var m = String(p).match(/\$\s*([\d,]+)\s*(k)?/i); if (!m) return null; var n = parseInt(m[1].replace(/,/g, ''), 10); if (m[2]) n *= 1000; return isNaN(n) ? null : n; }
+      var live = S.CATALOG.filter(function (a) { return a.state === 'live'; });
+      var items = live.map(function (a, i) {
+        var app = {
+          "@type": "SoftwareApplication",
+          "name": a.name,
+          "applicationCategory": a.genre === 'business' ? "BusinessApplication" : "WebApplication",
+          "operatingSystem": "Web-based",
+          "url": abs(a.url),
+          "description": a.blurb || a.tag || a.name,
+          "provider": { "@type": "Organization", "name": "Accelerated Experiences LLC", "url": BASE }
+        };
+        var pn = priceNum(a.price);
+        app.offers = {
+          "@type": "Offer",
+          "price": pn !== null ? String(pn) : "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "url": abs(a.url)
+        };
+        if (pn !== null && /\/mo/i.test(a.price)) {
+          app.offers.priceSpecification = {
+            "@type": "UnitPriceSpecification",
+            "price": String(pn), "priceCurrency": "USD",
+            "billingIncrement": 1, "unitCode": "MON", "unitText": "month"
+          };
+        }
+        return { "@type": "ListItem", "position": i + 1, "item": app };
+      });
+      var graph = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "AE App Shop — Accelerated Experiences LLC",
+        "url": BASE + "/shop.html",
+        "description": "Every app and business OS built by Accelerated Experiences LLC. Walk in and use the real thing — no demo, no sales call, no download.",
+        "isPartOf": { "@type": "WebSite", "name": "Accelerated Experiences LLC", "url": BASE },
+        "publisher": { "@type": "Organization", "name": "Accelerated Experiences LLC", "url": BASE, "logo": BASE + "/ae-disc.png" },
+        "mainEntity": { "@type": "ItemList", "numberOfItems": items.length, "itemListElement": items }
+      };
+      var s = document.createElement('script');
+      s.type = 'application/ld+json';
+      s.id = 'ae-shop-jsonld';
+      s.textContent = JSON.stringify(graph);
+      document.head.appendChild(s);
+    } catch (e) { /* SEO must never break the store */ }
+  });
+})(window);
