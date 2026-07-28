@@ -116,7 +116,7 @@
       blurb:'A quiet place for a real group — private chat, live video, and Tag for the conversations that do not fit a live call.', priceNote:'Paid plans not switched on yet' },
 
     { id:'the-narcs', name:'The Narcs', tag:'Fine print, decoded', genre:'money', state:'live',
-      acc:'#2f8f7a', url:'https://marketnarc.com/', img:'/logo-narcs.png',
+      acc:'#2f8f7a', url:'https://marketnarc.com/open', img:'/logo-narcs.png',
       blurb:'Two tools in one app: The Narc reads the fine print you were handed, MarketNarc watches the tickers you own.',
       price:'Free right now', priceNote:'Paid plans not switched on yet' },
 
