@@ -224,7 +224,12 @@
       acc:'#ff5fa8', img:'/apps/sparklesalon/icon.png', family:'AE Games', url:'/apps/sparklesalon/', age:'Kids',
       shots:['/shots/sparklesalon.png','/shots/sparklesalon-reveal.png','/shots/sparklesalon-2.png','/shots/sparklesalon-4.png'],
       blurb:'Run your very own salon — give every happy customer amazing hair, nails, makeup and outfits. The customers talk out loud, so it works even before kids can read. No losing, no timers, no ads, nothing collected, and it works offline.',
-      price:'Free', priceNote:'A free kids’ game — no ads, no accounts, nothing to buy, nothing collected' }
+      price:'Free', priceNote:'A free kids’ game — no ads, no accounts, nothing to buy, nothing collected' },
+
+    { id:'espofocus', name:'ESPOfocus', tag:'ADHD weekly tracker', genre:'family', state:'live',
+      acc:'#4c63d2', mark:'/apps/espofocus/icon.svg', url:'/apps/espofocus/',
+      blurb:'The weekly ADHD monitoring report your provider asks for — parents, teachers and behavior specialists rate the same 15 things each week, and ESPOfocus charts whether the plan is working. Not a diagnosis; private, initials only.',
+      price:'Free right now', priceNote:'A private monitoring aid — no ads, no tracking. Paid plans not switched on yet.' }
   ];
 
   var GENRES = [
