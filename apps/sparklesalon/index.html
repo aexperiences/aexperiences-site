@@ -373,30 +373,34 @@ function fetchBuf(id){
     .then(function(ab){ return new Promise(function(res,rej){ c.decodeAudioData(ab, function(b){ BUF[id]=b; res(b); }, rej); }); });
 }
 function preloadVoices(){ VOICE_IDS.forEach(function(id){ fetchBuf(id).catch(function(){}); }); }
-function playLine(id,text,pitch){
-  if(muted) return;
+function playLine(id,text,pitch,onEnd){
+  var done=false; function fin(){ if(done) return; done=true; if(onEnd) onEnd(); }
+  if(muted){ fin(); return; }
   hush();
   var c=actx(); if(c && c.state==='suspended'){ try{ c.resume(); }catch(e){} }
   fetchBuf(id).then(function(b){
-    if(muted || !c) return;
+    if(muted || !c){ fin(); return; }
     var s=c.createBufferSource(); s.buffer=b; s.connect(c.destination); curSrc=s;
     var sv=document.querySelector('#faceView svg'); if(sv) sv.classList.add('talking');
-    s.onended=function(){ if(sv) sv.classList.remove('talking'); };
+    s.onended=function(){ if(sv) sv.classList.remove('talking'); fin(); };
     s.start();
-  }).catch(function(){ say(text,pitch,1); });
+  }).catch(function(){ say(text,pitch,1); setTimeout(fin, 1400); });
 }
 
 /* ---------------- palettes ---------------- */
 var SKINS=['#ffe0c4','#f6c9a0','#e0a878','#c98a5c','#a8683f','#7d4a2b'];
 var HAIRCOLORS=[
-  {n:'Brown',c:'#6b4423'},{n:'Black',c:'#2b2320'},{n:'Blonde',c:'#e9c46a'},{n:'Auburn',c:'#a3441f'},
-  {n:'Bubblegum',c:'#ff8fce'},{n:'Grape',c:'#b57edc'},{n:'Ocean',c:'#5fb3e8'},{n:'Mint',c:'#6fd7bf'},
-  {n:'Cherry',c:'#e0456a'},{n:'Silver',c:'#cfcfe0'},{n:'Sunset',c:'url(#gRainbow)'}
+  {n:'Brown',c:'#6b4423'},{n:'Dark',c:'#3a2418'},{n:'Black',c:'#2b2320'},{n:'Chestnut',c:'#7a4a2a'},
+  {n:'Blonde',c:'#e9c46a'},{n:'Honey',c:'#d99a3a'},{n:'Auburn',c:'#a3441f'},{n:'Copper',c:'#c66a2e'},
+  {n:'Bubblegum',c:'#ff8fce'},{n:'Rose',c:'#ff5fa8'},{n:'Grape',c:'#b57edc'},{n:'Lavender',c:'#c9b6f0'},
+  {n:'Ocean',c:'#5fb3e8'},{n:'Blue',c:'#5a6ee8'},{n:'Mint',c:'#6fd7bf'},{n:'Teal',c:'#2fb3a0'},
+  {n:'Green',c:'#6fbf4a'},{n:'Cherry',c:'#e0456a'},{n:'Burgundy',c:'#7a2038'},{n:'Silver',c:'#cfcfe0'},
+  {n:'Platinum',c:'#ece6e0'},{n:'Sunset',c:'url(#gRainbow)'}
 ];
-var NAILCOLORS=['#ff5fa8','#ff9e57','#ffd646','#7fd977','#5fc9e8','#8f7bff','#c46bff','#ff6f6f','#ffffff','#2b2540','#ff2d7a','#00c2a8'];
-var LIPS=['#ff5fa8','#e0456a','#ff7f66','#c94f8f','#a03f7a','#ff9aa8','#d64545'];
-var EYESHADOW=['#c46bff','#ff8fce','#5fc9e8','#6fd7bf','#ffd646','#cfcfe0','#ff9e57'];
-var BLUSH=['#ff9ec7','#ff8f7a','#ffb59e','#ff7fa8'];
+var NAILCOLORS=['#ff5fa8','#ff2d7a','#ff9ec7','#ff6f6f','#e0456a','#ff9e57','#ffb54a','#ffd646','#fff2a0','#c8f57f','#7fd977','#3fbf7a','#00c2a8','#5fc9e8','#5a9ee8','#8f7bff','#c46bff','#e0b6ff','#ffffff','#f0d9c0','#b0b6c8','#5a6070','#2b2540','#111018'];
+var LIPS=['#ff5fa8','#ff2d7a','#e0456a','#d64545','#ff7f66','#ff9aa8','#c94f8f','#a03f7a','#8a2f5a','#b5766a'];
+var EYESHADOW=['#c46bff','#8f7bff','#ff8fce','#ff5fa8','#5fc9e8','#5a9ee8','#6fd7bf','#7fd977','#ffd646','#ff9e57','#cfcfe0','#b5766a'];
+var BLUSH=['#ff9ec7','#ff7fa8','#ff8f7a','#ffb59e','#ff6f9e','#e0708a','#ffa6c9','#ff8fce'];
 
 /* hair styles registry */
 var HAIRSTYLES=['long','wavy','curly','pony','bun','braids','bob','pixie'];
@@ -404,18 +408,21 @@ var HAIRLABEL={long:'Long',wavy:'Wavy',curly:'Curly',pony:'Pony',bun:'Top Bun',b
 var HAIREMOJI={long:'💁‍♀️',wavy:'🌊',curly:'🌀',pony:'🎀',bun:'🧋',braids:'🪢',bob:'💇‍♀️',pixie:'✂️'};
 var ACCESSORIES=[
   {id:'none',n:'None',em:'🚫'},{id:'bow',n:'Bow',em:'🎀'},{id:'flower',n:'Flower',em:'🌸'},
-  {id:'band',n:'Band',em:'👑'},{id:'crown',n:'Crown',em:'👑'},{id:'star',n:'Star',em:'⭐'},{id:'clips',n:'Clips',em:'✨'}
+  {id:'band',n:'Band',em:'👑'},{id:'crown',n:'Crown',em:'👑'},{id:'star',n:'Star',em:'⭐'},{id:'clips',n:'Clips',em:'✨'},
+  {id:'hearts',n:'Hearts',em:'💕'},{id:'sunnies',n:'Sunnies',em:'🕶️'},{id:'earrings',n:'Earrings',em:'💎'}
 ];
 var NAILART=[
   {id:'plain',n:'Plain',em:'⬤'},{id:'dots',n:'Dots',em:'🔵'},{id:'stripe',n:'Stripe',em:'➖'},
-  {id:'glitter',n:'Glitter',em:'✨'},{id:'heart',n:'Hearts',em:'💖'},{id:'star',n:'Stars',em:'⭐'},{id:'french',n:'French',em:'🤍'}
+  {id:'glitter',n:'Glitter',em:'✨'},{id:'heart',n:'Hearts',em:'💖'},{id:'star',n:'Stars',em:'⭐'},
+  {id:'gem',n:'Gem',em:'💎'},{id:'swirl',n:'Swirl',em:'🌀'},{id:'french',n:'French',em:'🤍'}
 ];
 var OUTFITS=[
   {id:'tee',n:'T-shirt',em:'👕'},{id:'dress',n:'Dress',em:'👗'},{id:'hoodie',n:'Hoodie',em:'🧥'},
-  {id:'tutu',n:'Tutu',em:'🩰'},{id:'overalls',n:'Overalls',em:'🧵'},{id:'sparkle',n:'Sparkle',em:'✨'},{id:'super',n:'Hero cape',em:'🦸'}
+  {id:'jacket',n:'Jacket',em:'🧥'},{id:'romper',n:'Romper',em:'🩱'},{id:'tutu',n:'Tutu',em:'🩰'},
+  {id:'overalls',n:'Overalls',em:'🧵'},{id:'sparkle',n:'Sparkle',em:'✨'},{id:'super',n:'Hero cape',em:'🦸'}
 ];
-var OUTFITLABEL={tee:'T-shirt',dress:'Dress',hoodie:'Hoodie',tutu:'Tutu',overalls:'Overalls',sparkle:'Sparkle top',super:'Hero cape'};
-var OUTFITCOLORS=['#ff5fa8','#ff9e57','#ffd646','#7fd977','#5fc9e8','#8f7bff','#c46bff','#ff6f6f','#ffffff','#2b2540','#ff2d7a','#00c2a8'];
+var OUTFITLABEL={tee:'T-shirt',dress:'Dress',hoodie:'Hoodie',jacket:'Jacket',romper:'Romper',tutu:'Tutu',overalls:'Overalls',sparkle:'Sparkle top',super:'Hero cape'};
+var OUTFITCOLORS=['#ff5fa8','#ff2d7a','#ff9ec7','#ff6f6f','#e0456a','#ff9e57','#ffb54a','#ffd646','#c8f57f','#7fd977','#3fbf7a','#00c2a8','#5fc9e8','#5a6ee8','#8f7bff','#c46bff','#e0b6ff','#ffffff','#f0d9c0','#b0b6c8','#5a6070','#2b2540','#1c6b4a','#7a2038'];
 var OUTFITART=[
   {id:'plain',n:'Plain',em:'⬤'},{id:'stripes',n:'Stripes',em:'➖'},{id:'hearts',n:'Hearts',em:'💖'},{id:'stars',n:'Stars',em:'⭐'},{id:'dots',n:'Dots',em:'🔵'}
 ];
@@ -562,9 +569,13 @@ function accessorySVG(acc,col){
     case 'crown': return '<g transform="translate(150,42)"><path d="M-42 12 L-42 -16 L-22 0 L0 -22 L22 0 L42 -16 L42 12 Z" fill="'+col+'"/><path d="M-42 12 L42 12 L42 5 L-42 5 Z" fill="#000" opacity=".12"/><circle cx="0" cy="-3" r="4" fill="#fff"/><circle cx="-24" cy="3" r="3" fill="#fff" opacity=".85"/><circle cx="24" cy="3" r="3" fill="#fff" opacity=".85"/></g>';
     case 'star': return '<g transform="translate(206,74)">'+star(15,col)+'<g transform="translate(-1,-1)">'+star(5,'#fff')+'</g></g>';
     case 'clips': return '<g><g transform="translate(98,90)">'+star(9,col)+'</g><g transform="translate(206,86)">'+star(9,'#ff8fce')+'</g><g transform="translate(122,74)">'+star(6,'#ffd646')+'</g></g>';
+    case 'hearts': return '<g transform="translate(114,84)">'+heartShape(9,col)+'</g><g transform="translate(188,84)">'+heartShape(9,'#ff5fa8')+'</g>';
+    case 'sunnies': return '<g transform="translate(150,92)"><rect x="-30" y="-8" width="24" height="15" rx="6" fill="#2b2540"/><rect x="6" y="-8" width="24" height="15" rx="6" fill="#2b2540"/><rect x="-8" y="-4" width="16" height="4" rx="2" fill="#2b2540"/><rect x="-27" y="-6" width="8" height="5" rx="2" fill="#fff" opacity=".3"/><rect x="9" y="-6" width="8" height="5" rx="2" fill="#fff" opacity=".3"/></g>';
+    case 'earrings': return '<circle cx="86" cy="181" r="3.6" fill="'+col+'"/><circle cx="214" cy="181" r="3.6" fill="'+col+'"/><circle cx="84.8" cy="179.8" r="1.3" fill="#fff" opacity=".7"/><circle cx="212.8" cy="179.8" r="1.3" fill="#fff" opacity=".7"/>';
   }
   return '';
 }
+function heartShape(r,c){ var k=(r/8).toFixed(3); return '<path transform="scale('+k+')" d="M0 6 C-7 -3 -16 3 0 14 C16 3 7 -3 0 6 Z" fill="'+c+'"/>'; }
 function spark(x,y,r,c){ var i=r*0.3; return '<g transform="translate('+x+','+y+')" fill="'+(c||'#fff')+'"><path d="M0 '+(-r)+' L'+i+' '+(-i)+' L'+r+' 0 L'+i+' '+i+' L0 '+r+' L'+(-i)+' '+i+' L'+(-r)+' 0 L'+(-i)+' '+(-i)+' Z"/></g>'; }
 function outfitPattern(art){
   var s='',x,y;
@@ -592,6 +603,15 @@ function outfitSVG(style,color,art){
   if(style==='tutu'){ s+='<g fill="#fff" opacity=".9"><path d="M64 404 L96 372 L120 408 Z"/><path d="M108 410 L138 376 L158 412 Z"/><path d="M154 412 L172 376 L204 410 Z"/><path d="M192 408 L216 372 L246 404 Z"/></g><path d="M112 352 Q150 368 188 352" stroke="#fff" stroke-width="4" fill="none" opacity=".7"/>'; }
   if(style==='sparkle'){ var sp=''; for(var i=0;i<30;i++){ sp+='<circle cx="'+(62+Math.random()*176).toFixed(1)+'" cy="'+(308+Math.random()*106).toFixed(1)+'" r="'+(0.8+Math.random()*1.7).toFixed(1)+'" fill="#fff" opacity=".85"/>'; } s+='<g clip-path="url(#clipTorso)">'+sp+'</g>'; }
   if(style==='super'){ s+='<g transform="translate(150,362)">'+star(18,'#ffd646')+'</g>'; }
+  if(style==='jacket'){ s+='<path d="M138 302 L150 318 L162 302 L162 418 L138 418 Z" fill="#fff" opacity=".2"/>'
+    +'<path d="M150 300 L150 418" stroke="#000" stroke-opacity=".18" stroke-width="4"/>'
+    +'<path d="M120 300 L150 318 L180 300 L174 291 L150 306 L126 291 Z" fill="#000" opacity=".14"/>'
+    +'<rect x="104" y="360" width="20" height="16" rx="3" fill="#000" opacity=".12"/><rect x="176" y="360" width="20" height="16" rx="3" fill="#000" opacity=".12"/>'; }
+  if(style==='romper'){ s+='<path d="M112 302 Q150 292 188 302 Q150 315 112 302 Z" fill="#000" opacity=".08"/>'
+    +'<line x1="128" y1="301" x2="133" y2="332" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".65"/>'
+    +'<line x1="172" y1="301" x2="167" y2="332" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".65"/>'
+    +'<circle cx="133" cy="332" r="3" fill="#ffd646"/><circle cx="167" cy="332" r="3" fill="#ffd646"/>'
+    +'<path d="M150 372 L138 418 M150 372 L162 418" stroke="#000" stroke-opacity=".12" stroke-width="4"/>'; }
   // neckline shadow + sheen
   s+='<path d="M126 302 Q150 320 174 302 L168 296 Q150 308 132 296 Z" fill="#000" opacity=".08"/>';
   s+='<path d="M150 298 C124 298 102 306 88 322 C112 310 132 306 150 306 C168 306 188 310 212 322 C198 306 176 298 150 298 Z" fill="#ffffff" opacity=".18"/>';
@@ -710,9 +730,6 @@ function armsAndHands(L, reveal){
   var hy = reveal? 300 : 336;            // hand height — always below the chin (294) so it never covers the face
   var hxL = reveal? 112 : 122, hxR = reveal? 188 : 178;
   var sc = reveal? 0.98 : 0.78;
-  // upper-arm sleeve caps at the shoulders
-  s+='<ellipse cx="82" cy="340" rx="21" ry="24" fill="'+col+'"/>';
-  s+='<ellipse cx="218" cy="340" rx="21" ry="24" fill="'+col+'"/>';
   // skin forearms curving from the shoulders in to the hands
   s+='<path d="M84 342 C72 322 92 '+(hy+16)+' '+hxL+' '+(hy+10)+'" stroke="'+skin+'" stroke-width="19" fill="none" stroke-linecap="round"/>';
   s+='<path d="M216 342 C228 322 208 '+(hy+16)+' '+hxR+' '+(hy+10)+'" stroke="'+skin+'" stroke-width="19" fill="none" stroke-linecap="round"/>';
@@ -734,6 +751,8 @@ function nailOverlay(art,x,y,w,h,base){
   else if(art==='glitter'){ for(var i=0;i<7;i++){ s+='<circle cx="'+(x+2+Math.random()*(w-4)).toFixed(1)+'" cy="'+(y+2+Math.random()*(h-4)).toFixed(1)+'" r="'+(0.9+Math.random()).toFixed(1)+'" fill="#fff"/>'; } }
   else if(art==='heart'){ s+='<path transform="translate('+cx+','+cy+') scale(.5)" d="M0 3 C-4 -3 -9 1 0 7 C9 1 4 -3 0 3 Z" fill="'+light+'"/>'; }
   else if(art==='star'){ s+='<g transform="translate('+cx+','+cy+')">'+star(4,light)+'</g>'; }
+  else if(art==='gem'){ s+='<circle cx="'+cx+'" cy="'+cy+'" r="2.6" fill="#fff"/><circle cx="'+cx+'" cy="'+cy+'" r="2.6" fill="none" stroke="rgba(150,110,200,.55)" stroke-width="1"/><circle cx="'+(cx-0.8)+'" cy="'+(cy-0.9)+'" r="0.9" fill="#fff"/>'; }
+  else if(art==='swirl'){ s+='<path d="M'+(cx-3)+' '+(cy+2)+' Q'+cx+' '+(cy-4)+' '+(cx+3)+' '+(cy+1)+' Q'+cx+' '+(cy+4)+' '+(cx-1.5)+' '+(cy+1)+'" stroke="'+light+'" stroke-width="1.3" fill="none"/>'; }
   else if(art==='french'){ s+='<path d="M'+x+' '+(y+4)+' Q'+cx+' '+(y-2)+' '+(x+w)+' '+(y+4)+' L'+(x+w)+' '+y+' L'+x+' '+y+' Z" fill="#fff"/>'; }
   return s;
 }
@@ -1063,8 +1082,9 @@ function startGame(m){
   $('#intro').classList.add('hide');
   $('#app').setAttribute('aria-hidden','false');
   sSparkle();
-  playLine('welcome', WELCOME_TEXT, 1.35);
-  setTimeout(function(){ next(); }, owner?900:200);
+  var kicked=false; function kick(){ if(kicked) return; kicked=true; next(); }
+  playLine('welcome', WELCOME_TEXT, 1.35, function(){ setTimeout(kick, 250); });
+  setTimeout(kick, 4600); // safety if audio is blocked/slow
 }
 $('#startCustomers').onclick=function(){ startGame('customers'); };
 $('#startFree').onclick=function(){ startGame('free'); };
