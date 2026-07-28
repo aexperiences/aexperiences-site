@@ -28,6 +28,42 @@
   ],
   "rewrites": [
     {
+      "source": "/apps/abode/",
+      "destination": "https://ae-abode-showroom.vercel.app/index.html"
+    },
+    {
+      "source": "/apps/buttress/",
+      "destination": "https://ae-buttress-showroom.vercel.app/index.html"
+    },
+    {
+      "source": "/apps/truss/",
+      "destination": "https://ae-truss-showroom.vercel.app/index.html"
+    },
+    {
+      "source": "/apps/musical/",
+      "destination": "https://ae-musical-showroom.vercel.app/index.html"
+    },
+    {
+      "source": "/apps/8mm/",
+      "destination": "https://ae-8mm-showroom.vercel.app/index.html"
+    },
+    {
+      "source": "/apps/amphitheater/",
+      "destination": "https://ae-concert-hub.vercel.app/index.html"
+    },
+    {
+      "source": "/apps/lilninja/",
+      "destination": "https://ae-lilninja-showroom.vercel.app/index.html"
+    },
+    {
+      "source": "/apps/4barrel/",
+      "destination": "https://ae-showroom-hub.vercel.app/index.html"
+    },
+    {
+      "source": "/apps/targeted/",
+      "destination": "https://ae-targeted-showroom.vercel.app/dashboard"
+    },
+    {
       "source": "/apps/abode/:path*",
       "destination": "https://ae-abode-showroom.vercel.app/:path*"
     },
