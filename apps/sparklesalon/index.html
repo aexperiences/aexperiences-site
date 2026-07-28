@@ -208,6 +208,8 @@ svg.avatar.talking .mouth{animation:talk .26s ease-in-out infinite}
 .applyshine{position:fixed; z-index:52; width:46px; height:46px; border-radius:50%; pointer-events:none;
   background:radial-gradient(circle, rgba(255,255,255,.95), rgba(255,220,245,.5) 45%, rgba(255,255,255,0) 72%); animation:shineburst .5s ease-out}
 @keyframes shineburst{0%{transform:translate(-50%,-50%) scale(.2); opacity:0}30%{opacity:1}100%{transform:translate(-50%,-50%) scale(1.5); opacity:0}}
+.filetool{position:fixed; z-index:53; font-size:30px; pointer-events:none; will-change:transform,opacity; animation:fileSweep .9s ease-in-out}
+@keyframes fileSweep{0%{opacity:0; transform:translate(-88px,-50%) rotate(-20deg)}15%{opacity:1}40%{transform:translate(60px,-50%) rotate(18deg)}65%{transform:translate(-58px,-50%) rotate(-16deg)}85%{transform:translate(42px,-50%) rotate(12deg)}100%{opacity:0; transform:translate(60px,-50%) rotate(0)}}
 #faceView.react{animation:react .42s ease}
 @keyframes react{0%{transform:scale(1)}35%{transform:scale(1.045) rotate(-1deg)}70%{transform:scale(.99)}100%{transform:scale(1)}}
 .hint{position:absolute; left:50%; transform:translateX(-50%); bottom:6px; z-index:5; background:var(--pink-deep); color:#fff;
@@ -435,6 +437,7 @@ function freshLook(seed){
     accessory:'none', accColor:pick(['#ff5fa8','#ffd646','#8f7bff','#5fc9e8']),
     lip:null, eyeshadow:null, blush:null, gem:false,
     nail:'#ff5fa8', nailArt:'plain',
+    nailSet:[0,1,2,3,4].map(function(){ return {c:'#ff5fa8', art:'plain'}; }),
     outfit:pick(['tee','dress','hoodie']), outfitColor:pick(OUTFITCOLORS), outfitArt:'plain'
   };
 }
@@ -743,16 +746,21 @@ function handSVG(base,art,big){
   s+='<path d="M76 240 C60 206 64 154 78 126 C74 156 76 200 94 232 C88 240 82 242 76 240 Z" fill="#fff" opacity=".14"/>';
   // 5 nails at fingertips: positions {x,y,w,h}
   var nails=[ {x:92,y:108,w:16,h:20}, {x:126,y:82,w:16,h:22}, {x:158,y:70,w:16,h:22}, {x:188,y:88,w:16,h:20}, {x:214,y:120,w:15,h:18} ];
+  var set=(big && look && look.nailSet) ? look.nailSet : null;   // per-nail state on the big hand
+  var hits='';
   for(var i=0;i<nails.length;i++){ var n=nails[i];
-    s+='<rect x="'+n.x+'" y="'+n.y+'" rx="7" ry="8" width="'+n.w+'" height="'+n.h+'" fill="'+base+'"/>';
+    var nc=set?set[i].c:base, na=set?set[i].art:art;
+    s+='<rect x="'+n.x+'" y="'+n.y+'" rx="7" ry="8" width="'+n.w+'" height="'+n.h+'" fill="'+nc+'"/>';
     // shiny moon at the base
     s+='<path d="M'+n.x+' '+(n.y+5)+' Q'+(n.x+n.w/2)+' '+(n.y-1)+' '+(n.x+n.w)+' '+(n.y+5)+' L'+(n.x+n.w)+' '+n.y+' L'+n.x+' '+n.y+' Z" fill="#fff" opacity=".22"/>';
-    s+=nailOverlay(art,n.x,n.y,n.w,n.h,base);
+    s+=nailOverlay(na,n.x,n.y,n.w,n.h,nc);
     // gloss streak + base shade
     s+='<rect x="'+(n.x+2.5)+'" y="'+(n.y+2)+'" rx="3" width="'+(n.w-9)+'" height="'+(n.h*0.52).toFixed(1)+'" fill="#fff" opacity=".32"/>';
     s+='<rect x="'+n.x+'" y="'+(n.y+n.h*0.66).toFixed(1)+'" rx="6" width="'+n.w+'" height="'+(n.h*0.34).toFixed(1)+'" fill="#000" opacity=".06"/>';
+    // big tappable hit area (transparent), on top
+    if(big) hits+='<rect class="nailhit" data-nail="'+i+'" x="'+(n.x-7)+'" y="'+(n.y-9)+'" width="'+(n.w+14)+'" height="'+(n.h+18)+'" rx="10" fill="rgba(0,0,0,0)" style="cursor:pointer"/>';
   }
-  return '<svg viewBox="40 55 210 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Nails"><g transform="rotate(-8 150 160)">'+s+'</g></svg>';
+  return '<svg viewBox="40 55 210 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Nails"><g transform="rotate(-8 150 160)">'+s+hits+'</g></svg>';
 }
 
 function renderFace(){ $('#faceView').innerHTML=faceSVG(look); }
@@ -808,11 +816,18 @@ function fill(id,nodes){ var t=$(id); t.innerHTML=''; nodes.forEach(function(n){
 /* ---------------- one condensed control row: category chips + a single option scroller ---------------- */
 var CATS={
   hair:[{id:'skin',label:'Skin'},{id:'style',label:'Style'},{id:'color',label:'Hair color'},{id:'acc',label:'Accessory'}],
-  nails:[{id:'ncolor',label:'Polish'},{id:'nart',label:'Nail art'}],
+  nails:[{id:'file',label:'File'},{id:'ncolor',label:'Polish'},{id:'nart',label:'Nail art'}],
   makeup:[{id:'lips',label:'Lips'},{id:'eyes',label:'Eyeshadow'},{id:'cheeks',label:'Cheeks & gems'}],
   dress:[{id:'outfit',label:'Outfit'},{id:'ocolor',label:'Color'},{id:'oart',label:'Pattern'}]
 };
 var activeTab='hair', activeCat='skin';
+/* nail salon: a "brush" you carry, plus tap a single nail to paint just that one */
+var nailBrush={kind:'color', v:'#ff5fa8'}, nailTipShown=false;
+function paintAllNails(key,v){ for(var i=0;i<look.nailSet.length;i++){ if(key==='c') look.nailSet[i].c=v; else look.nailSet[i].art=v; } }
+function allNailsAre(key,v){ return look.nailSet.every(function(n){ return (key==='c'?n.c:n.art)===v; }); }
+function fileNails(){ if(!muted) sSparkle(); var host=document.querySelector('#nailsView svg'); if(host){ var r=host.getBoundingClientRect();
+  var e=el('div','filetool'); e.textContent='💅'; e.style.left=(r.left+r.width*0.5)+'px'; e.style.top=(r.top+r.height*0.34)+'px';
+  $('#fx').appendChild(e); setTimeout(function(){e.remove();},900); } toast('Nails filed & shaped! ✨'); }
 function optionsFor(tab,cat){
   var f=renderOptRow;
   if(tab==='hair'){
@@ -822,8 +837,9 @@ function optionsFor(tab,cat){
     if(cat==='acc')   return ACCESSORIES.map(function(a){ return optBtn(a.n,a.em,look.accessory===a.id,function(){look.accessory=a.id;renderFace();f();}); });
   }
   if(tab==='nails'){
-    if(cat==='ncolor') return NAILCOLORS.map(function(c){ return swatch(c,look.nail===c,function(){look.nail=c;renderNailsBig();renderMiniHands();f();}); });
-    if(cat==='nart')   return NAILART.map(function(a){ return optBtn(a.n,a.em,look.nailArt===a.id,function(){look.nailArt=a.id;renderNailsBig();renderMiniHands();f();}); });
+    if(cat==='file') return [ optBtn('Shape all','💅',false,function(){ fileNails(); }) ];
+    if(cat==='ncolor') return NAILCOLORS.map(function(c){ return swatch(c,allNailsAre('c',c),function(){ nailBrush={kind:'color',v:c}; paintAllNails('c',c); look.nail=c; renderNailsBig();renderMiniHands();f(); }); });
+    if(cat==='nart')   return NAILART.map(function(a){ return optBtn(a.n,a.em,allNailsAre('art',a.id),function(){ nailBrush={kind:'art',v:a.id}; paintAllNails('art',a.id); look.nailArt=a.id; renderNailsBig();renderMiniHands();f(); }); });
   }
   if(tab==='makeup'){
     if(cat==='lips'){ var n=[optBtn('None','🚫',!look.lip,function(){look.lip=null;renderFace();f();})]; LIPS.forEach(function(c){ n.push(swatch(c,look.lip===c,function(){look.lip=c;renderFace();f();})); }); return n; }
@@ -851,11 +867,23 @@ function setTab(which){
   $('#nailsView').style.display=nails?'grid':'none';
   $('#faceView').style.display=nails?'none':'grid';
   $('#miniHands').style.display=nails?'none':'grid';
-  if(nails) renderNailsBig();
+  if(nails){ renderNailsBig(); if(!nailTipShown){ nailTipShown=true; setTimeout(function(){ toast('Tip: tap one nail to paint just that one! 💅'); }, 300); } }
   renderControls();
 }
 ['hair','nails','makeup','dress'].forEach(function(t){ $('#tab-'+t).onclick=function(){ sTab(); setTab(t); }; });
 $('#collapseBtn').onclick=function(){ sTab(); var d=$('#dock'); var c=d.classList.toggle('collapsed'); $('#handleIcon').textContent=c?'▴':'▾'; $('#handleTxt').textContent=c?'Show tools':'Hide tools'; };
+/* tap a single nail to paint just that one with the current brush */
+$('#nailsView').addEventListener('click', function(e){
+  var t=e.target, idx=t && t.getAttribute && t.getAttribute('data-nail');
+  if(idx==null) return; idx=+idx;
+  if(activeCat==='file'){ fileNails(); return; }
+  var r=t.getBoundingClientRect();
+  if(nailBrush.kind==='color'){ look.nailSet[idx].c=nailBrush.v; look.nail=nailBrush.v; }
+  else if(nailBrush.kind==='art'){ look.nailSet[idx].art=nailBrush.v; }
+  sPop(); renderNailsBig(); renderMiniHands(); delight();
+  var e2=el('div','tooltouch'); e2.textContent='💅'; e2.style.left=(r.left+r.width/2)+'px'; e2.style.top=(r.top+r.height/2)+'px';
+  $('#fx').appendChild(e2); setTimeout(function(){e2.remove();},560);
+});
 
 /* ---------------- surprise ---------------- */
 $('#surpriseBtn').onclick=function(){
@@ -864,6 +892,7 @@ $('#surpriseBtn').onclick=function(){
   look=freshLook(keepSkin);
   look.lip=pick(LIPS); look.eyeshadow=pick(EYESHADOW); look.blush=pick(BLUSH);
   look.nail=pick(NAILCOLORS); look.nailArt=pick(NAILART).id;
+  look.nailSet=[0,1,2,3,4].map(function(){ return {c:pick(NAILCOLORS), art:pick(NAILART).id}; });
   look.accessory=pick(ACCESSORIES).id; look.gem=Math.random()<0.5;
   renderFace(); renderMiniHands(); renderNailsBig(); buildTrays();
   burstSparkles(10);
