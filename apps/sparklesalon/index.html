@@ -428,7 +428,8 @@ function updateBrand(){ $('#brand').innerHTML = '💅 ' + salonTitle(); }
 function freshLook(seed){
   return {
     skin: seed?seed.skin:pick(SKINS),
-    eye: seed?seed.eye:pick(['#5a3a2a','#3a6a8a','#3a7a4a','#6a4a7a']),
+    eye: seed?seed.eye:pick(['#6b4a2e','#3a6a8a','#3a7a4a','#6a4a7a','#4a7a6a']),
+    freckles: seed?seed.freckles:(Math.random()<0.4),
     hairStyle: pick(HAIRSTYLES),
     hairColor: pick(HAIRCOLORS).c,
     accessory:'none', accColor:pick(['#ff5fa8','#ffd646','#8f7bff','#5fc9e8']),
@@ -630,42 +631,48 @@ function faceSVG(L, reveal){
   // soft shading + highlight (any skin tone)
   s+='<path d="M88 148 C88 108 104 86 122 80 C108 96 100 120 100 150 C100 190 120 214 146 226 C112 220 88 196 88 148 Z" fill="#000" opacity=".05"/>';
   s+='<ellipse cx="150" cy="116" rx="30" ry="17" fill="#fff" opacity=".14"/>';
-  // blush
-  if(L.blush){ s+='<g>'
-    +'<ellipse cx="118" cy="181" rx="16" ry="11" fill="'+L.blush+'" opacity=".26"/><ellipse cx="118" cy="181" rx="9.5" ry="6.5" fill="'+L.blush+'" opacity=".34"/>'
-    +'<ellipse cx="182" cy="181" rx="16" ry="11" fill="'+L.blush+'" opacity=".26"/><ellipse cx="182" cy="181" rx="9.5" ry="6.5" fill="'+L.blush+'" opacity=".34"/></g>'; }
+  // soft rosy cheeks (doll default) + any makeup blush on top
+  s+='<ellipse cx="117" cy="186" rx="16" ry="10.5" fill="#ff9ec7" opacity=".26"/><ellipse cx="183" cy="186" rx="16" ry="10.5" fill="#ff9ec7" opacity=".26"/>';
+  if(L.blush){ s+='<ellipse cx="117" cy="186" rx="15" ry="10" fill="'+L.blush+'" opacity=".3"/><ellipse cx="117" cy="186" rx="9" ry="6" fill="'+L.blush+'" opacity=".38"/>'
+    +'<ellipse cx="183" cy="186" rx="15" ry="10" fill="'+L.blush+'" opacity=".3"/><ellipse cx="183" cy="186" rx="9" ry="6" fill="'+L.blush+'" opacity=".38"/>'; }
+  // freckles
+  if(L.freckles){ var frk=[[132,180],[138,184],[128,186],[143,181],[168,180],[162,184],[172,186],[157,181],[150,189],[135,191],[165,191]];
+    s+='<g fill="#a86a45" opacity=".45">'; for(var fi=0;fi<frk.length;fi++){ s+='<circle cx="'+frk[fi][0]+'" cy="'+frk[fi][1]+'" r="1.3"/>'; } s+='</g>'; }
   // eyeshadow
-  if(L.eyeshadow){ s+='<path d="M106 150 Q124 133 143 149" stroke="'+L.eyeshadow+'" stroke-width="10" fill="none" stroke-linecap="round" opacity=".7"/>'
-    +'<path d="M157 149 Q176 133 194 150" stroke="'+L.eyeshadow+'" stroke-width="10" fill="none" stroke-linecap="round" opacity=".7"/>'; }
-  // eyes
+  if(L.eyeshadow){ s+='<path d="M105 152 Q123 133 143 150" stroke="'+L.eyeshadow+'" stroke-width="10" fill="none" stroke-linecap="round" opacity=".65"/>'
+    +'<path d="M157 150 Q177 133 195 152" stroke="'+L.eyeshadow+'" stroke-width="10" fill="none" stroke-linecap="round" opacity=".65"/>'; }
+  // eyes — big, glossy, lashed (doll style)
   s+='<g class="eyes">';
-  s+='<ellipse cx="124" cy="160" rx="13.5" ry="15.5" fill="#fff"/><ellipse cx="176" cy="160" rx="13.5" ry="15.5" fill="#fff"/>';
-  s+='<circle cx="125" cy="161" r="10" fill="'+L.eye+'"/><circle cx="175" cy="161" r="10" fill="'+L.eye+'"/>';
-  s+='<circle cx="125" cy="164" r="6" fill="#fff" opacity=".16"/><circle cx="175" cy="164" r="6" fill="#fff" opacity=".16"/>';
-  s+='<circle cx="125" cy="161" r="10" fill="none" stroke="#000" stroke-opacity=".18" stroke-width="1.6"/><circle cx="175" cy="161" r="10" fill="none" stroke="#000" stroke-opacity=".18" stroke-width="1.6"/>';
-  s+='<circle cx="125" cy="162" r="4.6" fill="#241a24"/><circle cx="175" cy="162" r="4.6" fill="#241a24"/>';
-  s+='<circle cx="121.6" cy="157.6" r="3" fill="#fff"/><circle cx="171.6" cy="157.6" r="3" fill="#fff"/>';
-  s+='<circle cx="127.8" cy="164.6" r="1.6" fill="#fff" opacity=".85"/><circle cx="177.8" cy="164.6" r="1.6" fill="#fff" opacity=".85"/>';
-  s+='<path d="M108 150 Q124 137 141 149" stroke="#3a2233" stroke-width="3.6" fill="none" stroke-linecap="round"/>';
-  s+='<path d="M159 149 Q176 137 192 150" stroke="#3a2233" stroke-width="3.6" fill="none" stroke-linecap="round"/>';
-  s+='<path d="M139 147 l7 -3 M141 151 l7 -1" stroke="#3a2233" stroke-width="2" fill="none" stroke-linecap="round"/>';
-  s+='<path d="M161 147 l-7 -3 M159 151 l-7 -1" stroke="#3a2233" stroke-width="2" fill="none" stroke-linecap="round"/>';
+  s+='<ellipse cx="123" cy="162" rx="15" ry="16.5" fill="#fff"/><ellipse cx="177" cy="162" rx="15" ry="16.5" fill="#fff"/>';
+  s+='<circle cx="124" cy="164" r="12.5" fill="'+L.eye+'"/><circle cx="176" cy="164" r="12.5" fill="'+L.eye+'"/>';
+  s+='<circle cx="124" cy="168" r="7" fill="#fff" opacity=".18"/><circle cx="176" cy="168" r="7" fill="#fff" opacity=".18"/>';
+  s+='<circle cx="124" cy="164" r="12.5" fill="none" stroke="#2a1a1a" stroke-opacity=".28" stroke-width="2"/><circle cx="176" cy="164" r="12.5" fill="none" stroke="#2a1a1a" stroke-opacity=".28" stroke-width="2"/>';
+  s+='<circle cx="124" cy="164" r="5.4" fill="#201618"/><circle cx="176" cy="164" r="5.4" fill="#201618"/>';
+  s+='<circle cx="119.5" cy="159" r="3.6" fill="#fff"/><circle cx="171.5" cy="159" r="3.6" fill="#fff"/>';
+  s+='<circle cx="127" cy="168" r="1.8" fill="#fff" opacity=".85"/><circle cx="179" cy="168" r="1.8" fill="#fff" opacity=".85"/>';
+  s+='<path d="M106 160 Q123 142 141 156 Q145 154 147 150" stroke="#2b1c26" stroke-width="3.6" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M194 160 Q177 142 159 156 Q155 154 153 150" stroke="#2b1c26" stroke-width="3.6" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M110 154 l-4 -4 M116 149 l-3 -4 M138 150 l4 -4" stroke="#2b1c26" stroke-width="1.8" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M190 154 l4 -4 M184 149 l3 -4 M162 150 l-4 -4" stroke="#2b1c26" stroke-width="1.8" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M113 172 Q123 178 135 173" stroke="#5a3a44" stroke-opacity=".5" stroke-width="1.4" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M165 173 Q177 178 187 172" stroke="#5a3a44" stroke-opacity=".5" stroke-width="1.4" fill="none" stroke-linecap="round"/>';
   s+='</g>';
-  // brows
-  s+='<path d="M109 133 Q124 125 141 131" stroke="#7a5647" stroke-width="4" fill="none" stroke-linecap="round"/>';
-  s+='<path d="M159 131 Q176 125 191 133" stroke="#7a5647" stroke-width="4" fill="none" stroke-linecap="round"/>';
-  // nose
-  s+='<path d="M150 168 q6 9 -3 14" stroke="rgba(110,64,54,.32)" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
-  // lips (wrapped for the talking animation)
+  // brows (soft, natural, gently arched)
+  s+='<path d="M108 140 Q124 130 141 137" stroke="#8a6a52" stroke-width="3.4" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M159 137 Q176 130 192 140" stroke="#8a6a52" stroke-width="3.4" fill="none" stroke-linecap="round"/>';
+  // nose (small, soft)
+  s+='<path d="M150 168 q4 10 -4 14 q4 2 8 0" stroke="rgba(110,64,54,.26)" stroke-width="2.4" fill="none" stroke-linecap="round"/>';
+  // mouth
   s+='<g class="mouth">';
   if(L.lip){
-    s+='<path d="M132 197 Q141 191 150 193 Q159 191 168 197 Q159 201 150 201 Q141 201 132 197 Z" fill="'+L.lip+'"/>';
-    s+='<path d="M132 197 Q150 200 168 197 Q150 215 132 197 Z" fill="'+L.lip+'"/>';
-    s+='<path d="M132 197 Q150 200 168 197" stroke="rgba(0,0,0,.16)" stroke-width="1.4" fill="none"/>';
-    s+='<ellipse cx="145" cy="206" rx="6.5" ry="2.6" fill="#fff" opacity=".38"/>';
+    s+='<path d="M132 198 Q141 192 150 194 Q159 192 168 198 Q159 202 150 202 Q141 202 132 198 Z" fill="'+L.lip+'"/>';
+    s+='<path d="M132 198 Q150 201 168 198 Q150 214 132 198 Z" fill="'+L.lip+'"/>';
+    s+='<path d="M132 198 Q150 201 168 198" stroke="rgba(0,0,0,.16)" stroke-width="1.4" fill="none"/>';
+    s+='<ellipse cx="145" cy="207" rx="6.5" ry="2.6" fill="#fff" opacity=".38"/>';
   } else {
-    s+='<path d="M139 200 Q150 207 161 200" stroke="#cd7a86" stroke-width="3" fill="none" stroke-linecap="round"/>';
-    s+='<path d="M143 198 Q150 201 157 198" stroke="#e6a3ad" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>';
+    s+='<path d="M143 203 Q150 208 157 203 Q150 205 143 203 Z" fill="#e69aa4" opacity=".75"/>';
+    s+='<path d="M140 201 Q150 210 160 201" stroke="#c56d7a" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    s+='<path d="M141 200 Q150 197 159 200" stroke="#d98f9a" stroke-opacity=".5" stroke-width="1.6" fill="none" stroke-linecap="round"/>';
   }
   s+='</g>';
   // cheek gems
