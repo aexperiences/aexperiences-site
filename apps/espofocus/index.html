@@ -264,24 +264,34 @@ var SC=['#43b581','#7cc36a','#e0a63a','#d97a4e'];
 /* quick-day presets: [symptom value for Q1-12, positive value for Q13-15] */
 var PRESET={ smooth:[1,3], mixed:[2,2], rough:[3,1] };
 
-/* ===== data layer — localStorage now, /api/espofocus (Vercel Postgres) next. Entries are DAILY. ===== */
-var LS='espofocus.v2';
-function load(){ try{return JSON.parse(localStorage.getItem(LS))||{}}catch(e){return{}} }
-function persist(d){ try{localStorage.setItem(LS,JSON.stringify(d))}catch(e){} }
-var Store={
-  _d:function(){var d=load();d.kids=d.kids||[];d.days=d.days||[];d.markers=d.markers||[];d.cur=d.cur||null;return d;},
-  kids:async function(){return this._d().kids;},
-  cur:async function(){return this._d().cur;},
-  setCur:async function(id){var d=this._d();d.cur=id;persist(d);},
-  addKid:async function(name){var d=this._d();var k={id:uid(),name:name.trim()};d.kids.push(k);d.cur=k.id;persist(d);return k;},
-  days:async function(kid){return this._d().days.filter(function(e){return e.kid===kid;}).sort(function(a,b){return a.date<b.date?-1:1;});},
-  dayOn:async function(kid,date){return this._d().days.find(function(e){return e.kid===kid&&e.date===date;})||null;},
-  saveDay:async function(e){var d=this._d();var i=d.days.findIndex(function(x){return x.kid===e.kid&&x.date===e.date;}); if(i>=0){e.id=d.days[i].id;d.days[i]=e;}else{e.id=uid();d.days.push(e);} persist(d);return e;},
-  markers:async function(kid){return this._d().markers.filter(function(m){return m.kid===kid;}).sort(function(a,b){return a.date<b.date?-1:1;});},
-  addMarker:async function(m){var d=this._d();m.id=uid();d.markers.push(m);persist(d);return m;},
-  delMarker:async function(id){var d=this._d();d.markers=d.markers.filter(function(m){return m.id!==id;});persist(d);}
-};
+/* ===== data layer: the real shared database (/api/espofocus, Upstash) when it's connected,
+   else fully on-device (localStorage). Reads come from an in-memory STATE cache; writes go to
+   the server (source of truth) and update the cache. Entries are DAILY (id = kid+date+role). ===== */
+var API='/api/espofocus', LS='espofocus.v2', SPACEKEY='espofocus.space';
+var MODE='local', STATE={kids:[],days:[],markers:[],cur:null};
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function normalize(st){return{kids:(st&&st.kids)||[],days:(st&&st.days)||[],markers:(st&&st.markers)||[],cur:(st&&st.cur)||null};}
+function space(){var s;try{s=localStorage.getItem(SPACEKEY);}catch(e){} if(!s){s='ef'+Date.now().toString(36)+Math.random().toString(36).slice(2,14);try{localStorage.setItem(SPACEKEY,s);}catch(e){}} return s;}
+function cacheLocal(){try{localStorage.setItem(LS,JSON.stringify(STATE));}catch(e){}}
+function loadLocal(){try{var d=JSON.parse(localStorage.getItem(LS));if(d)STATE=normalize(d);}catch(e){}}
+async function api(action,opts){opts=opts||{};var init={method:opts.body?'POST':'GET'};if(opts.body){init.headers={'content-type':'application/json'};init.body=JSON.stringify(opts.body);}var r=await fetch(API+'?action='+action+(opts.qs||''),init);return r.json();}
+var Store={
+  init:async function(){ loadLocal();
+    try{ var p=await api('ping'); if(p&&p.enabled){ MODE='api'; var r=await api('load',{qs:'&space='+encodeURIComponent(space())}); if(r&&r.ok&&r.state){ STATE=normalize(r.state); cacheLocal(); } } else { MODE='local'; } }
+    catch(e){ MODE='local'; }
+  },
+  _apply:function(st){ if(st){ STATE=normalize(st); cacheLocal(); } },
+  kids:async function(){return STATE.kids;},
+  cur:async function(){return STATE.cur;},
+  setCur:async function(id){ STATE.cur=id; cacheLocal(); if(MODE==='api'){try{await api('cur.set',{body:{space:space(),cur:id}});}catch(e){}} },
+  addKid:async function(name){ if(MODE==='api'){ var r=await api('kid.add',{body:{space:space(),name:name}}); this._apply(r.state); return r.kid; } var k={id:uid(),name:name.trim()}; STATE.kids.push(k); STATE.cur=k.id; cacheLocal(); return k; },
+  days:async function(kid){ return STATE.days.filter(function(e){return e.kid===kid;}).sort(function(a,b){return a.date<b.date?-1:1;}); },
+  dayOn:async function(kid,date){ return STATE.days.find(function(e){return e.kid===kid&&e.date===date;})||null; },
+  saveDay:async function(e){ if(MODE==='api'){ var r=await api('day.save',{body:{space:space(),kid:e.kid,date:e.date,role:e.role,scores:e.scores,note:e.note}}); this._apply(r.state); return; } var i=STATE.days.findIndex(function(x){return x.kid===e.kid&&x.date===e.date&&x.role===e.role;}); if(i>=0){e.id=STATE.days[i].id;STATE.days[i]=e;}else{e.id=uid();STATE.days.push(e);} cacheLocal(); },
+  markers:async function(kid){ return STATE.markers.filter(function(m){return m.kid===kid;}).sort(function(a,b){return a.date<b.date?-1:1;}); },
+  addMarker:async function(m){ if(MODE==='api'){ var r=await api('marker.add',{body:{space:space(),kid:m.kid,label:m.label,date:m.date}}); this._apply(r.state); return; } m.id=uid(); STATE.markers.push(m); cacheLocal(); },
+  delMarker:async function(id){ if(MODE==='api'){ var r=await api('marker.del',{body:{space:space(),id:id}}); this._apply(r.state); return; } STATE.markers=STATE.markers.filter(function(m){return m.id!==id;}); cacheLocal(); }
+};
 
 /* ===== dates & scoring ===== */
 function todayISO(){var d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());}
@@ -305,6 +315,7 @@ function go(v){VIEWS.forEach(function(x){document.getElementById('v-'+x).classLi
 var CUR=null, DRAFT=null;
 
 async function boot(){
+  await Store.init();
   var kids=await Store.kids();
   if(!kids.length){document.getElementById('kidpick').style.display='none';go('onboard');return;}
   CUR=await Store.cur(); if(!CUR||!kids.find(function(k){return k.id===CUR;})){CUR=kids[0].id;await Store.setCur(CUR);}
@@ -423,7 +434,22 @@ async function openKids(){var kids=await Store.kids();document.getElementById('k
 async function switchKid(id){CUR=id;await Store.setCur(id);closeSheets();await renderHome();}
 function openAddKid(){document.getElementById('kidInput').value='';openSheet('sheetAddKid');setTimeout(function(){document.getElementById('kidInput').focus();},250);}
 async function saveKid(){var n=document.getElementById('kidInput').value.trim();if(!n){toast('Enter a name or initials');return;}var k=await Store.addKid(n);CUR=k.id;closeSheets();await renderHome();}
-async function openShare(){var link=location.origin+location.pathname.replace(/index\.html?$/,'')+'rate/?c='+CUR;document.getElementById('shareLink').value=link;document.getElementById('shareNote').innerHTML='Rater links go live with the shared database (next step). For now you can log every day yourself on this device.';openSheet('sheetShare');}
+async function openShare(){
+  var base=location.origin+location.pathname.replace(/index\.html?$/,'')+'rate/';
+  if(MODE==='api'){
+    var kid=STATE.kids.find(function(k){return k.id===CUR;});
+    document.getElementById('shareLink').value='Creating link…'; openSheet('sheetShare');
+    try{ var r=await api('share.create',{body:{space:space(),kid:CUR}});
+      if(r&&r.ok){ document.getElementById('shareLink').value=base+'?t='+r.token;
+        document.getElementById('shareNote').innerHTML='Anyone with this link can rate <b>'+esc(kid?kid.name:'this child')+'</b> for a day — no account, and they never see the history. Send it to the teacher or behavior specialist.'; }
+      else{ document.getElementById('shareLink').value='(could not create link — try again)'; }
+    }catch(e){ document.getElementById('shareLink').value='(offline — try again)'; }
+  } else {
+    document.getElementById('shareLink').value=base;
+    document.getElementById('shareNote').innerHTML='Rater links switch on the moment the shared database is connected. Until then you can log every day yourself on this device.';
+    openSheet('sheetShare');
+  }
+}
 function copyShare(){var i=document.getElementById('shareLink');i.select();try{navigator.clipboard&&navigator.clipboard.writeText(i.value);}catch(e){}toast('Link copied');}
 
 /* daily reminder via downloadable recurring calendar event (real, no backend) */
