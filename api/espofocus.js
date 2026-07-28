@@ -18,12 +18,15 @@ var SP = 'ef:sp:';   // space state:  ef:sp:<space> -> JSON {kids,days,markers,c
 var TK = 'ef:tk:';   // rater token:  ef:tk:<token> -> JSON {space,kid}
 var MAXDAYS = 800;   // generous cap per space
 
-function enabled() {
-  return !!((process.env.UPSTASH_REDIS_REST_URL || '').trim() && (process.env.UPSTASH_REDIS_REST_TOKEN || '').trim());
-}
+// Reads whichever names this Vercel project uses for its Upstash Redis store:
+//   Vercel KV integration -> KV_REST_API_URL / KV_REST_API_TOKEN  (what aexperiences-site has)
+//   Upstash direct        -> UPSTASH_REDIS_REST_URL / _TOKEN
+function storeUrl() { return (process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || '').trim(); }
+function storeTok() { return (process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || '').trim(); }
+function enabled() { return !!(storeUrl() && storeTok()); }
 async function redis(cmds) {
-  var url = (process.env.UPSTASH_REDIS_REST_URL || '').trim();
-  var tok = (process.env.UPSTASH_REDIS_REST_TOKEN || '').trim();
+  var url = storeUrl();
+  var tok = storeTok();
   var r = await fetch(url + '/pipeline', {
     method: 'POST',
     headers: { authorization: 'Bearer ' + tok, 'content-type': 'application/json' },
