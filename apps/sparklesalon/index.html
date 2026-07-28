@@ -205,6 +205,9 @@ svg.avatar.talking .mouth{animation:talk .26s ease-in-out infinite}
 @keyframes floatup{0%{opacity:0; transform:translate(-50%,12px) scale(.6)}25%{opacity:1}100%{opacity:0; transform:translate(-50%,-64px) scale(1.15)}}
 .tooltouch{position:fixed; z-index:53; font-size:32px; pointer-events:none; will-change:transform,opacity; animation:dab .62s ease}
 @keyframes dab{0%{opacity:0; transform:translate(-50%,-115%) rotate(-18deg) scale(.7)}38%{opacity:1; transform:translate(-50%,-52%) rotate(0) scale(1.12)}58%{transform:translate(-50%,-44%) rotate(2deg) scale(1)}100%{opacity:0; transform:translate(-50%,-78%) rotate(-8deg) scale(.85)}}
+.applyshine{position:fixed; z-index:52; width:46px; height:46px; border-radius:50%; pointer-events:none;
+  background:radial-gradient(circle, rgba(255,255,255,.95), rgba(255,220,245,.5) 45%, rgba(255,255,255,0) 72%); animation:shineburst .5s ease-out}
+@keyframes shineburst{0%{transform:translate(-50%,-50%) scale(.2); opacity:0}30%{opacity:1}100%{transform:translate(-50%,-50%) scale(1.5); opacity:0}}
 #faceView.react{animation:react .42s ease}
 @keyframes react{0%{transform:scale(1)}35%{transform:scale(1.045) rotate(-1deg)}70%{transform:scale(.99)}100%{transform:scale(1)}}
 .hint{position:absolute; left:50%; transform:translateX(-50%); bottom:6px; z-index:5; background:var(--pink-deep); color:#fff;
@@ -772,18 +775,26 @@ function delight(){
   fx.appendChild(e); setTimeout(function(){ e.remove(); },900);
   var h=$('#hint'); if(h && h.classList.contains('on')){ h.classList.remove('on'); STORE.set('seenHint',true); }
 }
-/* the tool that "touches" the customer — a lipstick, brush, comb… dabs the right spot */
-var TOOL={ style:'✂️', color:'🖌️', acc:'🎀', lips:'💄', eyes:'🖌️', cheeks:'🖌️', ncolor:'💅', nart:'💅', outfit:'👗', ocolor:'👗', oart:'👗', skin:'🧴' };
-var TOOLFRAC={ style:0.12, color:0.16, acc:0.10, lips:0.45, eyes:0.35, cheeks:0.40, outfit:0.82, ocolor:0.82, oart:0.82, skin:0.40, ncolor:0.5, nart:0.5 };
+/* the tool that "touches" the customer — a lipstick, brush, comb… lands right ON the feature */
+var TOOL={ style:'✂️', color:'🖌️', acc:'🎀', lips:'💄', eyes:'🖌️', cheeks:'🌸', ncolor:'💅', nart:'💅', outfit:'👗', ocolor:'👗', oart:'👗', skin:'🧴' };
+/* exact spot on the character, in SVG coordinates (face viewBox 24..276 × 24..422; nails viewBox 40..250 × 55..265) */
+var TOOLPT={ style:[150,66], color:[110,116], acc:[150,54], lips:[150,199], eyes:[150,158], cheeks:[118,181],
+  skin:[150,150], outfit:[150,352], ocolor:[150,352], oart:[150,352], ncolor:[160,92], nart:[160,92] };
+function svgPointToScreen(svg, vx, vy){
+  try{ var pt=svg.createSVGPoint(); pt.x=vx; pt.y=vy; var p=pt.matrixTransform(svg.getScreenCTM()); return {x:p.x,y:p.y}; }
+  catch(e){ var r=svg.getBoundingClientRect(); return {x:r.left+r.width*0.5, y:r.top+r.height*0.4}; }
+}
 function applyTouch(cat){
   var t=TOOL[cat]; if(!t) return;
-  var host=(cat==='ncolor'||cat==='nart') ? document.querySelector('#nailsView svg') : document.querySelector('#faceView svg');
+  var isNail=(cat==='ncolor'||cat==='nart');
+  var host=document.querySelector(isNail?'#nailsView svg':'#faceView svg');
   if(!host) return;
-  var r=host.getBoundingClientRect();
+  var pt=TOOLPT[cat]||[150,180], sp=svgPointToScreen(host, pt[0], pt[1]);
   var e=el('div','tooltouch'); e.textContent=t;
-  e.style.left=(r.left + r.width*0.5)+'px';
-  e.style.top=(r.top + r.height*(TOOLFRAC[cat]||0.4))+'px';
-  $('#fx').appendChild(e); setTimeout(function(){ e.remove(); },620);
+  e.style.left=sp.x+'px'; e.style.top=sp.y+'px';
+  $('#fx').appendChild(e); setTimeout(function(){ e.remove(); },560);
+  var sh=el('div','applyshine'); sh.style.left=sp.x+'px'; sh.style.top=sp.y+'px';
+  $('#fx').appendChild(sh); setTimeout(function(){ sh.remove(); },520);
 }
 function fill(id,nodes){ var t=$(id); t.innerHTML=''; nodes.forEach(function(n){t.appendChild(n);}); }
 
