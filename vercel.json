@@ -25,5 +25,43 @@
       "destination": "/marks/ae-mark.svg",
       "permanent": false
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/apps/abode/:path*",
+      "destination": "https://ae-abode-showroom.vercel.app/:path*"
+    },
+    {
+      "source": "/apps/buttress/:path*",
+      "destination": "https://ae-buttress-showroom.vercel.app/:path*"
+    },
+    {
+      "source": "/apps/truss/:path*",
+      "destination": "https://ae-truss-showroom.vercel.app/:path*"
+    },
+    {
+      "source": "/apps/musical/:path*",
+      "destination": "https://ae-musical-showroom.vercel.app/:path*"
+    },
+    {
+      "source": "/apps/8mm/:path*",
+      "destination": "https://ae-8mm-showroom.vercel.app/:path*"
+    },
+    {
+      "source": "/apps/amphitheater/:path*",
+      "destination": "https://ae-concert-hub.vercel.app/:path*"
+    },
+    {
+      "source": "/apps/lilninja/:path*",
+      "destination": "https://ae-lilninja-showroom.vercel.app/:path*"
+    },
+    {
+      "source": "/apps/4barrel/:path*",
+      "destination": "https://ae-showroom-hub.vercel.app/:path*"
+    },
+    {
+      "source": "/apps/targeted/:path*",
+      "destination": "https://ae-targeted-showroom.vercel.app/:path*"
+    }
   ]
 }
