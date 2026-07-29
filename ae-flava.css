@@ -1,0 +1,128 @@
+/* =============================================================================
+   ae-flava.css — the Command Center polish layer, shared by the whole AE fleet.
+   Accelerated Experiences LLC.
+
+   Loaded AFTER each product's own stylesheet, so it inherits that product's
+   palette variables and adapts automatically. No per-product colour is hardcoded
+   here — a new vertical picks this up correctly the day it ships.
+
+   What it fixes, in order of how much it matters:
+     1. Six identical stat boxes are unscannable. Each now carries a colour rail.
+     2. A number with nothing to compare it to means nothing. The note line under
+        each value is now typeset as a benchmark, not an afterthought.
+     3. Section headings were labels. They are now the sentence that explains why
+        the section exists.
+     4. A bar with its value stranded at the far margin makes the eye travel. The
+        value now rides the fill.
+   ============================================================================= */
+
+/* ---------- 1 · KPI cards: a colour rail, cycling the product's own accents ---- */
+.stats > .stat,
+.statrow > .stat{
+  position:relative;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-left:3px solid var(--tang);
+  border-radius:var(--r,12px);
+  padding:13px 15px 12px;
+  overflow:hidden;
+  transition:transform .16s cubic-bezier(.2,.7,.3,1), box-shadow .16s;
+}
+.stats > .stat:hover,
+.statrow > .stat:hover{ transform:translateY(-1px); box-shadow:var(--sh); }
+.stats > .stat:nth-child(6n+2), .statrow > .stat:nth-child(6n+2){ border-left-color:var(--teal); }
+.stats > .stat:nth-child(6n+3), .statrow > .stat:nth-child(6n+3){ border-left-color:var(--gold); }
+.stats > .stat:nth-child(6n+4), .statrow > .stat:nth-child(6n+4){ border-left-color:var(--tang-3, var(--tang)); }
+.stats > .stat:nth-child(6n+5), .statrow > .stat:nth-child(6n+5){ border-left-color:var(--good); }
+.stats > .stat:nth-child(6n+6), .statrow > .stat:nth-child(6n+6){ border-left-color:var(--a-portal, var(--teal-2, var(--teal))); }
+/* an explicit health band always wins over the decorative cycle */
+.stats > .stat.good, .statrow > .stat.good{ border-left-color:var(--good)!important; }
+.stats > .stat.watch,.statrow > .stat.watch{ border-left-color:var(--watch)!important; }
+.stats > .stat.bad,  .statrow > .stat.bad  { border-left-color:var(--bad)!important; }
+
+.stat .s-l{
+  font-size:10.5px; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--mut); font-weight:700; margin-bottom:5px; line-height:1.35;
+}
+.stat .s-v{
+  font-family:var(--mono); font-size:26px; font-weight:600; letter-spacing:-.025em;
+  color:var(--ink); line-height:1.1; font-variant-numeric:tabular-nums;
+}
+.stat.good .s-v{ color:var(--good); }
+.stat.watch .s-v{ color:var(--gold-2, var(--watch)); }
+.stat.bad  .s-v{ color:var(--bad); }
+/* the note is a BENCHMARK — give it a rule so the eye reads it as a comparison */
+.stat .s-n{
+  font-size:11.5px; color:var(--mut); line-height:1.5; margin-top:7px;
+  padding-top:6px; border-top:1px solid var(--line-2, var(--line));
+}
+
+/* ---------- 2 · card headings carry an accent tick ------------------------- */
+.card > h2:first-child,
+.card > h2{
+  position:relative; padding-left:13px;
+  font-size:17.5px; letter-spacing:-.015em; line-height:1.3;
+}
+.card > h2::before{
+  content:""; position:absolute; left:0; top:.22em; bottom:.22em; width:3px;
+  border-radius:2px; background:var(--tang); opacity:.85;
+}
+.card.urgent > h2::before{ background:var(--bad); }
+.card > p.sub, .card > .sub{ max-width:82ch; }
+
+/* ---------- 3 · cards get depth without getting loud ---------------------- */
+.card{
+  border-radius:var(--r-lg,16px);
+  box-shadow:0 1px 2px rgba(0,0,0,.03);
+  transition:box-shadow .18s;
+}
+.card:hover{ box-shadow:var(--sh); }
+.card.urgent{ border-color:rgba(190,70,60,.34); background:linear-gradient(180deg,var(--bad-w) 0%,var(--card) 62%); }
+
+/* ---------- 4 · bars: gradient fill, value riding the fill ---------------- */
+.barwrap{
+  position:relative; height:15px; border-radius:8px; overflow:hidden;
+  background:var(--sunk); border:1px solid var(--line-2, var(--line));
+}
+.barwrap .bar{
+  height:100%; border-radius:8px;
+  background:linear-gradient(90deg, var(--tang) 0%, var(--tang-3, var(--tang)) 100%);
+  transition:width .5s cubic-bezier(.2,.7,.3,1);
+}
+.barwrap .bar.warn{ background:linear-gradient(90deg, var(--gold-2, var(--watch)) 0%, var(--gold, var(--watch)) 100%); }
+.barwrap .bar.good{ background:linear-gradient(90deg, var(--teal-2, var(--good)) 0%, var(--teal, var(--good)) 100%); }
+.barwrap .bar.bad { background:linear-gradient(90deg, var(--bad) 0%, var(--tang-3, var(--bad)) 100%); }
+
+/* ---------- 5 · tables read as data, not as prose ------------------------- */
+.card table th{
+  font-size:10.5px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--mut); font-weight:700;
+}
+.card table td.right, .card table td.r{ font-variant-numeric:tabular-nums; }
+.card table tbody tr:hover td{ background:var(--sunk); }
+
+/* ---------- 6 · blockers and advisories look different at a glance -------- */
+.blockers{ border-left:3px solid var(--bad); }
+.mods{ border-left:3px solid var(--watch); }
+
+/* ---------- 7 · the money split strip ------------------------------------ */
+.moneysplit .ms, .hourly .h{
+  border-left:3px solid var(--line);
+  transition:border-color .16s;
+}
+.moneysplit .ms:first-child, .hourly .h:first-child{ border-left-color:var(--tang); }
+.moneysplit .ms.neg, .hourly .h.real{ border-left-color:var(--bad); }
+.hourly .h.real.ok{ border-left-color:var(--good); }
+
+/* ---------- 8 · the sample-data ribbon, quieter and out of the way -------- */
+.ribbon{
+  font-size:12.6px; line-height:1.6;
+  background:linear-gradient(90deg, var(--gold-wash, rgba(200,150,50,.12)) 0%, transparent 78%);
+  border-bottom:1px solid var(--line);
+}
+.ribbon .live{ letter-spacing:.14em; }
+
+@media (prefers-reduced-motion:reduce){
+  .stats > .stat, .statrow > .stat, .card, .barwrap .bar{ transition:none; }
+  .stats > .stat:hover, .statrow > .stat:hover{ transform:none; }
+}
