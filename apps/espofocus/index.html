@@ -121,6 +121,13 @@ label.lb{display:block;font-size:12.5px;font-weight:800;letter-spacing:.04em;tex
 .rolerow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .rolebtn{border:1.5px solid var(--line2);background:#fff;border-radius:12px;padding:11px 8px;cursor:pointer;font-weight:700;font-size:13.5px;color:var(--ink2);text-align:center}
 .rolebtn.sel{background:var(--indigo);color:#fff;border-color:transparent}
+.raterrow{display:flex;flex-wrap:wrap;gap:8px}
+.raterbtn{border:1.5px solid var(--line2);background:#fff;border-radius:999px;padding:9px 14px;cursor:pointer;font-weight:700;font-size:13.5px;color:var(--ink2);white-space:nowrap}
+.raterbtn.sel{background:var(--indigo);color:#fff;border-color:transparent}
+.raterbtn.add{border-style:dashed;color:var(--indigo)}
+.seg-tog{display:inline-flex;background:var(--soft);border-radius:11px;padding:3px;gap:2px}
+.seg-tog .seg{border:0;background:transparent;border-radius:9px;padding:6px 13px;cursor:pointer;font-weight:800;font-size:13px;color:var(--ink2)}
+.seg-tog .seg.on{background:#fff;color:var(--indigo);box-shadow:0 1px 4px rgba(30,40,90,.12)}
 .progbar{height:7px;background:var(--soft);border-radius:999px;overflow:hidden}
 .progbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--indigo),var(--teal));width:0;transition:width .25s}
 .savebar{position:sticky;bottom:0;background:linear-gradient(180deg,transparent,var(--bg) 22%);padding:14px 0 16px;margin-top:6px}
@@ -206,6 +213,9 @@ svg.chart circle{opacity:0;animation:fadein .01s ease .95s forwards}
       <h1>A minute a day. See if it's working.</h1>
       <p>Check in each day — you, the teacher, or a behavior specialist rate the same 15 things. ESPOfocus rolls the days up into the weekly report your provider asked for, and charts whether the plan is helping.</p>
       <button class="btn g" onclick="openAddKid()">Add your child →</button>
+      <div style="height:10px"></div>
+      <button class="btn ghost block" onclick="joinPrompt()">👥 Co-parent? Enter your invite code</button>
+      <p class="mutp" style="margin:10px 2px 0">Already added the app to your home screen? If the invite link opened your browser instead of the app, just paste the code here to join the shared account.</p>
     </div>
     <div class="disc"><b>Not a diagnosis.</b> ESPOfocus is a private monitoring aid to bring to your provider — it doesn't diagnose or treat. Based on the widely used weekly ADHD monitoring report (SNAP‑IV / Vanderbilt lineage). No‑shame by design — nobody's in trouble.</div>
     <p class="foot">Private · first name or initials only · no ads, no tracking · <b>Accelerated Experiences, LLC</b></p>
@@ -232,16 +242,25 @@ svg.chart circle{opacity:0;animation:fadein .01s ease .95s forwards}
     <div class="sec stats" id="statCards"></div>
 
     <div class="sec card chartcard">
-      <div class="charthead"><h2>Trend</h2><span class="pill" id="trendPill">—</span></div>
+      <div class="charthead"><h2>Trend</h2>
+        <div class="seg-tog" id="periodTog">
+          <button class="seg on" data-p="day" onclick="setPeriod('day')">Day</button>
+          <button class="seg" data-p="week" onclick="setPeriod('week')">Week</button>
+          <button class="seg" data-p="month" onclick="setPeriod('month')">Month</button>
+        </div>
+      </div>
+      <div style="margin:2px 2px 10px"><span class="pill" id="trendPill">—</span></div>
       <div id="chartArea"></div>
       <div class="legend"><i><b style="background:var(--indigo)"></b>Inattention</i><i><b style="background:var(--s3)"></b>Hyper / impulsive</i><i><b style="background:var(--good)"></b>Positive (higher = better)</i></div>
-      <p class="mutp" style="margin:8px 4px 0">Each dot is a day. Dashed lines are treatment changes.</p>
+      <p class="mutp" style="margin:8px 4px 0">Averaged across everyone who logged. Dashed lines are treatment changes.</p>
     </div>
 
+    <div class="sec" id="peopleCard" style="display:none"></div>
+
     <div class="sec">
-      <div class="charthead" style="margin:0 2px 10px"><h2>Weekly report</h2><span class="pill">for your provider</span></div>
+      <div class="charthead" style="margin:0 2px 10px"><h2 id="weeksTitle">Weekly report</h2><span class="pill">for your provider</span></div>
       <div class="card" id="weeksList"></div>
-      <p class="mutp" style="margin:8px 4px">Each week is the average of the days you logged — the report the NP asked for, built for you.</p>
+      <p class="mutp" style="margin:8px 4px">Each period is the average of the days you logged — the report the NP asked for, built for you.</p>
     </div>
 
     <div class="sec">
@@ -267,12 +286,8 @@ svg.chart circle{opacity:0;animation:fadein .01s ease .95s forwards}
         <button class="qb rough" data-p="rough" onclick="quickFill('rough')"><span class="e">😮‍💨</span>Rough</button>
       </div>
       <div style="height:14px"></div>
-      <label class="lb">Who's rating?</label>
-      <div class="rolerow" id="roleRow">
-        <button class="rolebtn" data-role="Parent" onclick="pickRole(this)">👤 Parent</button>
-        <button class="rolebtn" data-role="Teacher" onclick="pickRole(this)">🍎 Teacher</button>
-        <button class="rolebtn" data-role="Specialist" onclick="pickRole(this)">🧩 Specialist</button>
-      </div>
+      <label class="lb">Who's rating? <span style="color:var(--mut);font-weight:600;text-transform:none;letter-spacing:0">— each person logs their own read</span></label>
+      <div class="raterrow" id="raterRow"></div>
     </div>
 
     <div class="sec card" id="qCard"></div>
@@ -377,8 +392,8 @@ var Store={
   setCur:async function(id){ STATE.cur=id; cacheLocal(); if(MODE==='api'){try{await api('cur.set',{body:{space:space(),cur:id}});}catch(e){}} },
   addKid:async function(name){ if(MODE==='api'){ var r=await api('kid.add',{body:{space:space(),name:name}}); this._apply(r.state); return r.kid; } var k={id:uid(),name:name.trim()}; STATE.kids.push(k); STATE.cur=k.id; cacheLocal(); return k; },
   days:async function(kid){ return STATE.days.filter(function(e){return e.kid===kid;}).sort(function(a,b){return a.date<b.date?-1:1;}); },
-  dayOn:async function(kid,date){ return STATE.days.find(function(e){return e.kid===kid&&e.date===date;})||null; },
-  saveDay:async function(e){ if(MODE==='api'){ var r=await api('day.save',{body:{space:space(),kid:e.kid,date:e.date,role:e.role,scores:e.scores,note:e.note}}); this._apply(r.state); return; } var i=STATE.days.findIndex(function(x){return x.kid===e.kid&&x.date===e.date&&x.role===e.role;}); if(i>=0){e.id=STATE.days[i].id;STATE.days[i]=e;}else{e.id=uid();STATE.days.push(e);} cacheLocal(); },
+  dayOn:async function(kid,date,rater){ return STATE.days.find(function(e){return e.kid===kid&&e.date===date&&(rater?((e.rater||e.role)===rater):true);})||null; },
+  saveDay:async function(e){ if(MODE==='api'){ var r=await api('day.save',{body:{space:space(),kid:e.kid,date:e.date,role:e.role,rater:e.rater,scores:e.scores,note:e.note}}); this._apply(r.state); return; } var key=e.rater||e.role; var i=STATE.days.findIndex(function(x){return x.kid===e.kid&&x.date===e.date&&(x.rater||x.role)===key;}); if(i>=0){e.id=STATE.days[i].id;STATE.days[i]=e;}else{e.id=uid();STATE.days.push(e);} cacheLocal(); },
   markers:async function(kid){ return STATE.markers.filter(function(m){return m.kid===kid;}).sort(function(a,b){return a.date<b.date?-1:1;}); },
   addMarker:async function(m){ if(MODE==='api'){ var r=await api('marker.add',{body:{space:space(),kid:m.kid,label:m.label,date:m.date}}); this._apply(r.state); return; } m.id=uid(); STATE.markers.push(m); cacheLocal(); },
   delMarker:async function(id){ if(MODE==='api'){ var r=await api('marker.del',{body:{space:space(),id:id}}); this._apply(r.state); return; } STATE.markers=STATE.markers.filter(function(m){return m.id!==id;}); cacheLocal(); }
@@ -400,6 +415,27 @@ function esc(s){return(s||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','
 function weekAvgScores(days){ var out=new Array(15).fill(0); if(!days.length)return out; for(var i=0;i<15;i++){var t=0;days.forEach(function(e){t+=(e.scores[i]||0);});out[i]=t/days.length;} return out; }
 function groupWeeks(days){ var map={}; days.forEach(function(e){var wk=mondayOf(e.date);(map[wk]=map[wk]||[]).push(e);}); return Object.keys(map).sort().map(function(wk){return{week:wk,days:map[wk]};}); }
 function streak(days){ if(!days.length)return 0; var set={}; days.forEach(function(e){set[e.date]=1;}); var c=0, cur=todayISO(); if(!set[cur])cur=addDays(cur,-1); while(set[cur]){c++;cur=addDays(cur,-1);} return c; }
+/* ===== multiple raters (each parent / step-parent / specialist) + Day/Week/Month rollups ===== */
+var PERIOD='day';
+var DEFAULT_RATERS=[{n:'Mom',r:'Parent'},{n:'Dad',r:'Parent'},{n:'Step-parent',r:'Parent'},{n:'Teacher',r:'Teacher'},{n:'Specialist',r:'Specialist'}];
+function customRaters(){try{return JSON.parse(localStorage.getItem('espofocus.raters'))||[];}catch(e){return[];}}
+function addCustomRater(n,r){var c=customRaters();if(!c.find(function(x){return x.n===n;})){c.push({n:n,r:r||'Parent'});try{localStorage.setItem('espofocus.raters',JSON.stringify(c));}catch(e){}}}
+function lastRater(){try{return localStorage.getItem('espofocus.myrater')||'';}catch(e){return'';}}
+function setLastRater(n){try{localStorage.setItem('espofocus.myrater',n);}catch(e){}}
+function knownRaters(){ var map={}; DEFAULT_RATERS.forEach(function(x){map[x.n]={n:x.n,r:x.r};}); customRaters().forEach(function(x){map[x.n]={n:x.n,r:x.r||'Parent'};}); STATE.days.filter(function(e){return e.kid===CUR;}).forEach(function(e){var n=e.rater||e.role||'Parent';if(!map[n])map[n]={n:n,r:e.role||'Parent'};}); return Object.keys(map).map(function(k){return map[k];}); }
+function raterOf(e){return e.rater||e.role||'Parent';}
+function raterRole(n){var k=knownRaters().find(function(x){return x.n===n;});return k?k.r:'Parent';}
+function avgScores(entries){return weekAvgScores(entries);}
+function groupBy(days,keyfn){var map={};days.forEach(function(e){var k=keyfn(e);(map[k]=map[k]||[]).push(e);});return Object.keys(map).sort().map(function(k){return{key:k,entries:map[k]};});}
+function monthOf(s){return s.slice(0,7);}
+function fmtMonthK(s){var d=new Date(s+'-01T00:00:00');return d.toLocaleDateString(undefined,{month:'short',year:'2-digit'});}
+function periodPoints(days){ if(!days.length)return [];
+  if(PERIOD==='week') return groupBy(days,function(e){return mondayOf(e.date);}).map(function(g){return{scores:avgScores(g.entries),label:fmtD(g.key),date:g.key,n:g.entries.length};});
+  if(PERIOD==='month') return groupBy(days,function(e){return monthOf(e.date);}).map(function(g){return{scores:avgScores(g.entries),label:fmtMonthK(g.key),date:g.key+'-15',n:g.entries.length};});
+  return groupBy(days,function(e){return e.date;}).map(function(g){return{scores:avgScores(g.entries),label:fmtD(g.key),date:g.key,n:g.entries.length};});
+}
+function perRater(days){ return groupBy(days,raterOf).map(function(x){var avg=avgScores(x.entries);return{name:x.key,core:core(avg),avg:avg,n:x.entries.length};}); }
+function setPeriod(p){PERIOD=p;renderHome();}
 
 var VIEWS=['onboard','home','entry','report'];
 function go(v){VIEWS.forEach(function(x){document.getElementById('v-'+x).classList.toggle('on',x===v);});window.scrollTo(0,0);if(v==='report')buildReport();
@@ -435,36 +471,50 @@ async function renderHome(){
   document.getElementById('homeSub').textContent = loggedToday?'Nice. Come back tomorrow — or edit today if something changed.':'A quick tap-through — about a minute, less on easy days.';
   document.getElementById('todayBtn').innerHTML = loggedToday?'✎ Edit today':'＋ Log today';
 
-  // day strip (current week Mon-Sun)
-  var mon=mondayOf(todayISO()); var strip='';
-  var DL=['M','T','W','T','F','S','S']; var logged=0;
-  for(var i=0;i<7;i++){ var ds=addDays(mon,i); var e=days.find(function(x){return x.date===ds;});
-    var future = ds>todayISO(); if(e)logged++;
-    var c=e?core(e.scores):null; var col=e?band(c/12)[1]:null;
+  // day strip — each day = average across everyone who logged it
+  var mon=mondayOf(todayISO()); var strip=''; var DL=['M','T','W','T','F','S','S']; var logged=0;
+  for(var i=0;i<7;i++){ var ds=addDays(mon,i); var ents=days.filter(function(x){return x.date===ds;});
+    var future=ds>todayISO(); if(ents.length)logged++;
+    var c=ents.length?core(avgScores(ents)):null; var col=ents.length?band(c/12)[1]:null;
     strip+='<div class="day'+(ds===todayISO()?' today':'')+(future?' future':'')+'" onclick="logDay(\''+ds+'\')">'
-      +'<div class="dl">'+DL[i]+'</div><div class="dd'+(e?' filled':'')+'" style="'+(e?'background:'+col:'')+'">'+(e?c:(future?'':'·'))+'</div></div>';
+      +'<div class="dl">'+DL[i]+'</div><div class="dd'+(ents.length?' filled':'')+'" style="'+(ents.length?'background:'+col:'')+'">'+(ents.length?Math.round(c):(future?'':'·'))+'</div></div>';
   }
   document.getElementById('dayStrip').innerHTML=strip;
   document.getElementById('weekCount').textContent=logged+' of 7 days';
 
-  // stats — this week average
-  var wkDays=days.filter(function(e){return e.date>=mon && e.date<=addDays(mon,6);});
-  var sc=document.getElementById('statCards');
-  if(!wkDays.length){ sc.innerHTML=''; }
-  else{ var avg=weekAvgScores(wkDays); var c=core(avg), b=band(c/12);
-    sc.innerHTML=statCard('Core (wk avg)',Math.round(c)+'<span style="font-size:15px;color:var(--mut)">/36</span>',b[0],b[1])
+  // period rollup points (day / week / month), each averaged across all raters
+  var pts=periodPoints(days);
+  [].forEach.call(document.querySelectorAll('#periodTog .seg'),function(b){b.classList.toggle('on',b.getAttribute('data-p')===PERIOD);});
+
+  // stats — most recent bucket of the chosen period
+  var sc=document.getElementById('statCards'); var latest=pts.length?pts[pts.length-1]:null;
+  if(!latest){ sc.innerHTML=''; }
+  else{ var avg=latest.scores, c=core(avg), b=band(c/12);
+    var slab = PERIOD==='day'?'Latest day':(PERIOD==='week'?'This week avg':'This month avg');
+    sc.innerHTML=statCard(slab,Math.round(c)+'<span style="font-size:15px;color:var(--mut)">/36</span>',b[0],b[1])
       +statCard('Inattention',Math.round(sum(avg,INATT))+'<span style="font-size:15px;color:var(--mut)">/18</span>','','var(--indigo)')
       +statCard('Hyper / impulsive',Math.round(sum(avg,HYPER))+'<span style="font-size:15px;color:var(--mut)">/18</span>','','var(--s3)'); }
 
-  // chart — daily, last up to 21 days
-  document.getElementById('chartArea').innerHTML = days.length ? chartSVG(days.slice(-21),markers) : emptyBox('📊','No days yet','Log a day and the trend appears here.');
-  document.getElementById('trendPill').textContent = days.length? (days.length+' day'+(days.length===1?'':'s')+' logged') : '—';
+  // chart — points for the chosen period
+  document.getElementById('chartArea').innerHTML = pts.length ? chartSVG(PERIOD==='day'?pts.slice(-21):pts.slice(-16),markers) : emptyBox('📊','No days yet','Log a day and the trend appears here.');
+  document.getElementById('trendPill').textContent = pts.length+' '+(PERIOD==='day'?'day':PERIOD==='week'?'week':'month')+(pts.length===1?'':'s');
 
-  // weekly report rollup
-  var weeks=groupWeeks(days); var wl=document.getElementById('weeksList');
-  wl.innerHTML = weeks.length ? weeks.slice().reverse().map(function(w){ var avg=weekAvgScores(w.days); var c=core(avg), b=band(c/12);
-    return '<div class="wk"><div class="dot" style="background:'+b[1]+'">'+Math.round(c)+'</div><div class="m"><b>Week of '+fmtD(w.week)+'</b><span>'+w.days.length+' of 7 days · '+b[0]+'</span></div><div class="sc">In '+Math.round(sum(avg,INATT))+' · Hy '+Math.round(sum(avg,HYPER))+'<br><span style="color:var(--good)">Pos '+Math.round(sum(avg,POS))+'</span></div></div>';
-  }).join('') : emptyBox('🗓️','No weeks yet','Log a few days and your weekly report builds itself.');
+  // by-person breakdown (each parent / step-parent / specialist, separately)
+  var pr=perRater(days); var pc=document.getElementById('peopleCard');
+  if(pc){ if(pr.length>1){ pc.style.display='block';
+    pc.innerHTML='<div class="charthead" style="margin:0 2px 10px"><h2>By person</h2><span class="pill">'+pr.length+' logging</span></div><div class="card">'+
+      pr.map(function(p){var b=band(p.core/12);return '<div class="wk"><div class="dot" style="background:'+b[1]+'">'+Math.round(p.core)+'</div><div class="m"><b>'+esc(p.name)+'</b><span>'+p.n+' entr'+(p.n===1?'y':'ies')+' · avg core '+Math.round(p.core)+'/36 · '+b[0]+'</span></div></div>';}).join('')+'</div><p class="mutp" style="margin:8px 4px">Everyone logs their own read; the trend above averages them together.</p>';
+  } else { pc.style.display='none'; } }
+
+  // period report list
+  var wl=document.getElementById('weeksList'), wlab=document.getElementById('weeksTitle');
+  if(wlab) wlab.textContent = PERIOD==='month'?'Monthly report':(PERIOD==='day'?'Daily log':'Weekly report');
+  var rows=pts.slice().reverse();
+  wl.innerHTML = rows.length ? rows.map(function(w){ var c=core(w.scores), b=band(c/12);
+      var title = PERIOD==='month'?('Month of '+w.label):(PERIOD==='day'?fmtD(w.date):('Week of '+w.label));
+      var sub = PERIOD==='day'?(w.n+' '+(w.n===1?'person':'people')+' · '+b[0]):(w.n+' entr'+(w.n===1?'y':'ies')+' · '+b[0]);
+      return '<div class="wk"><div class="dot" style="background:'+b[1]+'">'+Math.round(c)+'</div><div class="m"><b>'+title+'</b><span>'+sub+'</span></div><div class="sc">In '+Math.round(sum(w.scores,INATT))+' · Hy '+Math.round(sum(w.scores,HYPER))+'<br><span style="color:var(--good)">Pos '+Math.round(sum(w.scores,POS))+'</span></div></div>';
+    }).join('') : emptyBox('🗓️','Nothing yet','Log a few days and this builds itself.');
 
   // markers
   var ml=document.getElementById('markersList');
@@ -500,22 +550,41 @@ function chartSVG(days,markers){
     svg+='<path class="area" d="'+sp+' L'+X(n-1).toFixed(1)+' '+base+' L'+X(0).toFixed(1)+' '+base+' Z" fill="url(#'+s.g+')" stroke="none"/>';
     svg+='<path class="ln" d="'+sp+'" fill="none" stroke="'+s.col+'" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>';});
   series.forEach(function(s){pts(s.vals,s.max).forEach(function(q){svg+='<circle cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="3.1" fill="#fff" stroke="'+s.col+'" stroke-width="2"/>';});});
-  [0,Math.floor((n-1)/2),n-1].filter(function(v,i,a){return a.indexOf(v)===i&&v>=0;}).forEach(function(i){svg+='<text x="'+X(i).toFixed(1)+'" y="'+(H-7)+'" fill="#9aa0c0" font-size="11" text-anchor="middle" font-family="Inter">'+fmtD(days[i].date)+'</text>';});
+  [0,Math.floor((n-1)/2),n-1].filter(function(v,i,a){return a.indexOf(v)===i&&v>=0;}).forEach(function(i){svg+='<text x="'+X(i).toFixed(1)+'" y="'+(H-7)+'" fill="#9aa0c0" font-size="11" text-anchor="middle" font-family="Inter">'+(days[i].label||fmtD(days[i].date))+'</text>';});
   return svg+'</svg>';
 }
 function nearest(days,date){if(!days.length)return -1;var b=0,bd=1e15;days.forEach(function(e,i){var d=Math.abs(parseD(e.date)-parseD(date));if(d<bd){bd=d;b=i;}});return b;}
 
 /* ===== entry ===== */
 async function logDay(date){
-  var existing=await Store.dayOn(CUR,date);
-  DRAFT={date:date, role:(existing&&existing.role)||'Parent', scores:existing?existing.scores.slice():new Array(15).fill(null), note:existing?existing.note:'', preset:null};
+  DRAFT={date:date, rater:lastRater()||'Mom', role:'Parent', scores:new Array(15).fill(null), note:'', preset:null};
   document.getElementById('entryTitle').textContent = date===todayISO()?'Today':('Day of '+fmtD(date));
-  document.querySelectorAll('#roleRow .rolebtn').forEach(function(b){b.classList.toggle('sel',b.dataset.role===DRAFT.role);});
+  await loadRaterDraft();
+  renderRaters();
   document.querySelectorAll('#quickRow .qb').forEach(function(b){b.classList.remove('sel');});
-  document.getElementById('entryNote').value=DRAFT.note||'';
-  renderQs(); go('entry'); updProg();
+  go('entry');
 }
-function pickRole(b){DRAFT.role=b.dataset.role;document.querySelectorAll('#roleRow .rolebtn').forEach(function(x){x.classList.remove('sel');});b.classList.add('sel');}
+function renderRaters(){
+  var list=knownRaters(); var h='';
+  list.forEach(function(r){ var logged=STATE.days.some(function(e){return e.kid===CUR&&e.date===DRAFT.date&&raterOf(e)===r.n;});
+    h+='<button class="raterbtn'+(r.n===DRAFT.rater?' sel':'')+'" onclick="pickRater(\''+r.n.replace(/'/g,"\\'")+'\')">'+esc(r.n)+(logged?' ✓':'')+'</button>'; });
+  h+='<button class="raterbtn add" onclick="openAddPerson()">＋ Add person</button>';
+  document.getElementById('raterRow').innerHTML=h;
+}
+async function loadRaterDraft(){
+  var existing=await Store.dayOn(CUR,DRAFT.date,DRAFT.rater);
+  DRAFT.role=raterRole(DRAFT.rater);
+  DRAFT.scores=existing?existing.scores.slice():new Array(15).fill(null);
+  DRAFT.note=existing?(existing.note||''):'';
+  document.getElementById('entryNote').value=DRAFT.note;
+  document.querySelectorAll('#quickRow .qb').forEach(function(b){b.classList.remove('sel');});
+  renderQs(); updProg();
+}
+async function pickRater(n){ DRAFT.rater=n; setLastRater(n); await loadRaterDraft(); renderRaters(); }
+function openAddPerson(){ var n=(prompt('Add a person who rates this child\n(e.g. Dad, Grandma, Aunt Kim, Mr. Lopez):')||'').trim().slice(0,40); if(!n)return;
+  var role='Parent'; var low=n.toLowerCase();
+  if(/teacher|mr\.|mrs\.|ms\.|class/.test(low))role='Teacher'; else if(/therap|specialist|counsel|psych|coach|dr\.|behav/.test(low))role='Specialist';
+  addCustomRater(n,role); DRAFT.rater=n; setLastRater(n); loadRaterDraft(); renderRaters(); }
 function quickFill(p){ var pr=PRESET[p]; for(var i=0;i<15;i++){ DRAFT.scores[i]= POS.indexOf(i)>=0?pr[1]:pr[0]; }
   document.querySelectorAll('#quickRow .qb').forEach(function(b){b.classList.toggle('sel',b.dataset.p===p);});
   renderQs(); updProg(); }
@@ -534,8 +603,9 @@ function updProg(){var done=DRAFT.scores.filter(function(x){return x!==null;}).l
 async function saveEntry(){
   var done=DRAFT.scores.filter(function(x){return x!==null;}).length;
   if(done<15){var first=DRAFT.scores.indexOf(null);var el=document.querySelector('.opt[data-q="'+first+'"]');if(el)el.scrollIntoView({behavior:'smooth',block:'center'});toast((15-done)+' left — or tap a quick day');return;}
-  await Store.saveDay({kid:CUR,date:DRAFT.date,role:DRAFT.role,scores:DRAFT.scores.slice(),note:DRAFT.note});
-  toast('Saved ✓'); await renderHome();
+  setLastRater(DRAFT.rater);
+  await Store.saveDay({kid:CUR,date:DRAFT.date,role:DRAFT.role,rater:DRAFT.rater,scores:DRAFT.scores.slice(),note:DRAFT.note});
+  toast('Saved ✓ — '+DRAFT.rater); await renderHome();
 }
 
 /* markers / kids / share */
@@ -574,7 +644,9 @@ function openAccount(){
 }
 function copyInvite(){var i=document.getElementById('inviteLink');i.select();try{navigator.clipboard&&navigator.clipboard.writeText(i.value);}catch(e){}toast('Invite link copied');}
 function copyCode(){var i=document.getElementById('acctCode');i.select();try{navigator.clipboard&&navigator.clipboard.writeText(i.value);}catch(e){}toast('Account code copied');}
-function joinAccount(){var c=(document.getElementById('joinInput').value||'').replace(/[^a-z0-9]/gi,'').slice(0,48);if(c.length<8){toast('That code looks too short');return;}try{localStorage.setItem(SPACEKEY,c);}catch(e){}toast('Switching account…');setTimeout(function(){location.href=location.origin+location.pathname;},450);}
+function joinAccount(){joinWith(document.getElementById('joinInput').value);}
+function joinPrompt(){var v=prompt('Paste your invite code\n(the other parent sends it from More → Account & sharing):');if(v!=null)joinWith(v);}
+function joinWith(v){var c=(v||'').replace(/[^a-z0-9]/gi,'').slice(0,48);if(c.length<8){toast('That code looks too short');return;}try{localStorage.setItem(SPACEKEY,c);}catch(e){}toast('Joining the shared account…');setTimeout(function(){location.href=location.origin+location.pathname;},450);}
 
 /* daily reminder — real web-push if available, calendar as fallback */
 function remindMe(){
@@ -616,9 +688,13 @@ async function buildReport(){
   var days=await Store.days(CUR), markers=await Store.markers(CUR), weeks=groupWeeks(days);
   var b=document.getElementById('reportBody');
   if(!days.length){b.innerHTML='<div class="card empty"><div class="em">📄</div><h2>No data yet</h2><p class="mutp">Log a day first.</p></div>';return;}
-  var rows=weeks.slice().reverse().map(function(w){var avg=weekAvgScores(w.days);var c=core(avg);return '<div class="wk"><div class="m"><b>Week of '+fmtD(w.week)+'</b><span>'+w.days.length+' of 7 days logged</span></div><div class="sc">In '+Math.round(sum(avg,INATT))+' · Hy '+Math.round(sum(avg,HYPER))+' · Pos '+Math.round(sum(avg,POS))+' · Core '+Math.round(c)+'/36</div></div>';}).join('');
-  b.innerHTML='<div class="card" style="padding:18px 18px 8px"><h2>ESPOfocus — '+esc(kid.name)+'</h2><p class="mutp">'+days.length+' days logged across '+weeks.length+' week'+(weeks.length===1?'':'s')+' · generated '+new Date().toLocaleDateString()+'</p><div class="chartcard" style="padding:10px 0 0">'+chartSVG(days.slice(-28),markers)+'</div><div class="legend"><i><b style="background:var(--indigo)"></b>Inattention</i><i><b style="background:var(--s3)"></b>Hyper/impulsive</i><i><b style="background:var(--good)"></b>Positive</i></div></div>'
+  var dayPts=groupBy(days,function(e){return e.date;}).map(function(g){return{scores:avgScores(g.entries),date:g.key};});
+  var pr=perRater(days);
+  var rows=weeks.slice().reverse().map(function(w){var avg=weekAvgScores(w.days);var c=core(avg);var raters={};w.days.forEach(function(e){raters[raterOf(e)]=1;});var rc=Object.keys(raters).length;return '<div class="wk"><div class="m"><b>Week of '+fmtD(w.week)+'</b><span>'+w.days.length+' entr'+(w.days.length===1?'y':'ies')+' · '+rc+' rater'+(rc===1?'':'s')+'</span></div><div class="sc">In '+Math.round(sum(avg,INATT))+' · Hy '+Math.round(sum(avg,HYPER))+' · Pos '+Math.round(sum(avg,POS))+' · Core '+Math.round(c)+'/36</div></div>';}).join('');
+  var peopleBlock = pr.length>1 ? '<div class="card sec"><div class="wk" style="border:0"><div class="m"><b>By person</b><span>each rater\'s own average — the trend line averages them together</span></div></div>'+pr.map(function(p){var bd=band(p.core/12);return '<div class="wk"><div class="dot" style="background:'+bd[1]+'">'+Math.round(p.core)+'</div><div class="m"><b>'+esc(p.name)+'</b><span>'+p.n+' entr'+(p.n===1?'y':'ies')+' · '+bd[0]+'</span></div><div class="sc">In '+Math.round(sum(p.avg,INATT))+' · Hy '+Math.round(sum(p.avg,HYPER))+' · Pos '+Math.round(sum(p.avg,POS))+'</div></div>';}).join('')+'</div>' : '';
+  b.innerHTML='<div class="card" style="padding:18px 18px 8px"><h2>ESPOfocus — '+esc(kid.name)+'</h2><p class="mutp">'+days.length+' entr'+(days.length===1?'y':'ies')+' across '+weeks.length+' week'+(weeks.length===1?'':'s')+(pr.length>1?' · '+pr.length+' people logging':'')+' · generated '+new Date().toLocaleDateString()+'</p><div class="chartcard" style="padding:10px 0 0">'+chartSVG(dayPts.slice(-28),markers)+'</div><div class="legend"><i><b style="background:var(--indigo)"></b>Inattention</i><i><b style="background:var(--s3)"></b>Hyper/impulsive</i><i><b style="background:var(--good)"></b>Positive</i></div></div>'
     +(markers.length?'<div class="card sec" style="padding:6px 0">'+markers.slice().reverse().map(function(m){return '<div class="mk-item"><div class="pin">📍</div><div class="m"><b>'+esc(m.label)+'</b><span>'+fmtD(m.date)+'</span></div></div>';}).join('')+'</div>':'')
+    +peopleBlock
     +'<div class="card sec"><div class="wk" style="border:0"><div class="m"><b>Weekly averages</b><span>each week = average of the days logged</span></div></div>'+rows+'</div>'
     +'<div class="disc">0–3 per item, summed. Inattention & Hyper/impulsive /18 (lower better); Positive /9 (higher better); Core /36. Weeks are averages of logged days. A monitoring aid based on the standard weekly ADHD report — <b>not a diagnosis</b>. Share with your provider.</div>';
 }
