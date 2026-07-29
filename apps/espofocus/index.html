@@ -23,7 +23,7 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;min-height:100%}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:env(safe-area-inset-bottom)}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:calc(82px + env(safe-area-inset-bottom))}
 a{color:var(--indigo);text-decoration:none}
 button{font-family:inherit}
 .wrap{max-width:760px;margin:0 auto;padding:0 16px}
@@ -133,6 +133,23 @@ label.lb{display:block;font-size:12.5px;font-weight:800;letter-spacing:.04em;tex
 .foot{color:var(--mut);font-size:11.5px;text-align:center;line-height:1.6;padding:26px 12px 30px}
 .foot b{color:var(--ink2)}
 .disc{background:#fff7ed;border:1px solid #f5dcae;color:#8a5a12;border-radius:14px;padding:12px 14px;font-size:12.5px;line-height:1.5;margin:14px 0}
+/* bottom tab bar — phone-first navigation */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;display:none;
+  background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line);
+  padding:5px 6px calc(5px + env(safe-area-inset-bottom))}
+.tabbar.on{display:flex}
+.tabbar .in{max-width:760px;margin:0 auto;width:100%;display:flex;justify-content:space-around}
+.tabb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;background:transparent;
+  color:var(--mut);font-family:var(--sans);font-size:11px;font-weight:800;letter-spacing:.01em;cursor:pointer;padding:6px 2px;border-radius:14px;min-height:56px;transition:.12s}
+.tabb .ic{font-size:20px;line-height:1}
+.tabb:active{transform:scale(.94)}
+.tabb.on{color:var(--indigo)}
+.tabb.log .ic{width:38px;height:38px;margin-top:-2px;border-radius:50%;background:linear-gradient(120deg,var(--indigo),var(--teal));color:#fff;display:grid;place-items:center;font-size:23px;box-shadow:0 6px 16px rgba(76,99,210,.36)}
+.tabb.log{color:var(--indigo)}
+.mrow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:1px solid var(--line2);border-radius:14px;padding:14px 15px;cursor:pointer;font:inherit;font-size:15px;font-weight:700;color:var(--ink);margin-bottom:9px;box-shadow:var(--shadow)}
+.mrow:active{transform:scale(.99)}
+.mrow .mi{font-size:20px;width:26px;text-align:center}
+.mrow .ma{margin-left:auto;color:var(--mut)}
 @media print{.top,.savebar,.hero .btn,.row-btns,.noprint{display:none!important}body{background:#fff}.card{box-shadow:none;border:1px solid #ccc}}
 </style>
 </head>
@@ -172,8 +189,6 @@ label.lb{display:block;font-size:12.5px;font-weight:800;letter-spacing:.04em;tex
       <p id="homeSub">A quick tap-through — about a minute, less on easy days.</p>
       <div class="row-btns">
         <button class="btn g" id="todayBtn" onclick="logDay(todayISO())">＋ Log today</button>
-        <button class="btn" onclick="openShare()" style="background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25)">🔗 Rater link</button>
-        <button class="btn" onclick="remindMe()" style="background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25)">⏰ Daily reminder</button>
       </div>
     </div>
 
@@ -247,6 +262,27 @@ label.lb{display:block;font-size:12.5px;font-weight:800;letter-spacing:.04em;tex
     <div id="reportBody"></div>
   </section>
 </main>
+
+<nav class="tabbar" id="tabbar"><div class="in">
+  <button class="tabb" data-t="today" onclick="navTo('today')"><span class="ic">🏠</span>Today</button>
+  <button class="tabb" data-t="report" onclick="navTo('report')"><span class="ic">📈</span>Trends</button>
+  <button class="tabb log" data-t="log" onclick="navTo('log')"><span class="ic">＋</span>Log</button>
+  <button class="tabb" data-t="more" onclick="navTo('more')"><span class="ic">☰</span>More</button>
+</div></nav>
+
+<div class="sheet" id="sheetMore"><div class="grab"></div>
+  <div style="display:flex;align-items:center;gap:11px;margin-bottom:16px">
+    <span id="moreAv" style="width:38px;height:38px;border-radius:50%;background:linear-gradient(150deg,var(--indigo),var(--teal));color:#fff;display:grid;place-items:center;font-weight:800">–</span>
+    <div><b id="moreKid" style="font-weight:800;font-size:16px">—</b><div class="mutp" style="margin:0">Current child</div></div>
+    <button class="btn ghost sm" style="margin-left:auto" onclick="openKids()">Switch</button>
+  </div>
+  <button class="mrow" onclick="closeSheets();openShare()"><span class="mi">🔗</span>Send a rater link<span class="ma">›</span></button>
+  <button class="mrow" onclick="closeSheets();remindMe()"><span class="mi">⏰</span>Daily reminder<span class="ma">›</span></button>
+  <button class="mrow" onclick="openAccount()"><span class="mi">👥</span>Account &amp; sharing<span class="ma">›</span></button>
+  <button class="mrow" onclick="closeSheets();go('report')"><span class="mi">📄</span>Printable report<span class="ma">›</span></button>
+  <button class="mrow" onclick="closeSheets();openAddKid()"><span class="mi">＋</span>Add a child<span class="ma">›</span></button>
+  <p class="foot" style="padding:14px 4px 2px"><b>Not a diagnosis</b> · private, no ads, no tracking · Accelerated Experiences, LLC</p>
+</div>
 
 <div class="scrim" id="scrim" onclick="closeSheets()"></div>
 <div class="sheet" id="sheetKids"><div class="grab"></div><h2>Children</h2><div id="kidsList"></div><div style="height:12px"></div><button class="btn g block" onclick="openAddKid()">＋ Add a child</button><div style="height:8px"></div><button class="btn ghost block" onclick="openAccount()">👥 Account &amp; sharing</button></div>
@@ -334,7 +370,13 @@ function groupWeeks(days){ var map={}; days.forEach(function(e){var wk=mondayOf(
 function streak(days){ if(!days.length)return 0; var set={}; days.forEach(function(e){set[e.date]=1;}); var c=0, cur=todayISO(); if(!set[cur])cur=addDays(cur,-1); while(set[cur]){c++;cur=addDays(cur,-1);} return c; }
 
 var VIEWS=['onboard','home','entry','report'];
-function go(v){VIEWS.forEach(function(x){document.getElementById('v-'+x).classList.toggle('on',x===v);});window.scrollTo(0,0);if(v==='report')buildReport();}
+function go(v){VIEWS.forEach(function(x){document.getElementById('v-'+x).classList.toggle('on',x===v);});window.scrollTo(0,0);if(v==='report')buildReport();
+  var tb=document.getElementById('tabbar');
+  if(v==='home'||v==='report'){ tb.classList.add('on'); setTab(v==='report'?'report':'today'); } else { tb.classList.remove('on'); }
+}
+function setTab(t){ var n=document.getElementById('tabbar'); if(!n)return; [].forEach.call(n.querySelectorAll('.tabb'),function(b){ b.classList.toggle('on', b.getAttribute('data-t')===t); }); }
+function navTo(t){ if(t==='log'){ logDay(todayISO()); return; } if(t==='more'){ openMore(); return; } if(t==='today'){ go('home'); } else if(t==='report'){ go('report'); } }
+async function openMore(){ var kids=await Store.kids(); var kid=kids.find(function(k){return k.id===CUR;}); document.getElementById('moreKid').textContent=kid?kid.name:'—'; document.getElementById('moreAv').textContent=kid?initials(kid.name):'–'; closeSheets(); openSheet('sheetMore'); }
 var CUR=null, DRAFT=null;
 
 async function boot(){
