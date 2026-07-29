@@ -85,14 +85,17 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 .door .dn{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-top:5px}
 
 /* segmented aisle switch — stays with you as you scroll */
-.seg{display:flex;gap:4px;background:rgba(255,255,255,.06);border:1px solid var(--line-2);border-radius:12px;padding:4px;margin-bottom:11px}
+.seg{display:flex;gap:4px;background:rgba(255,255,255,.06);border:1px solid var(--line-2);border-radius:12px;padding:4px;margin-bottom:0}
 .seg button{flex:1;min-height:38px;border-radius:9px;font-size:14px;font-weight:700;color:var(--cream-2);white-space:nowrap}
 .seg button[aria-selected="true"]{background:var(--gold);color:#231a06}
 .aisle-note{font-size:13.5px;color:var(--mute);line-height:1.5;margin:0 0 16px;max-width:60ch}
 .pricesrc{font-family:var(--mono);font-size:11px;color:var(--mute);margin-left:8px}
 
 /* ── search + genre rail ─────────────────────────────── */
-.tools{position:sticky;top:58px;z-index:50;background:rgba(18,42,24,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:11px 0 0}
+.tools{padding:11px 0 0}
+/* only the aisle switch stays pinned; search + categories + count scroll away (used once, at the start) */
+.aislebar{position:sticky;top:58px;z-index:50;background:rgba(18,42,24,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);margin:0 -16px 11px;padding:11px 16px}
+@media(min-width:700px){ .aislebar{margin:0 -24px 11px;padding:11px 24px} }
 .search{position:relative;display:flex;align-items:center}
 .search svg{position:absolute;left:14px;width:19px;height:19px;stroke:var(--mute);fill:none;stroke-width:2;pointer-events:none}
 .search input{width:100%;min-height:var(--tap);padding:0 44px 0 42px;border-radius:13px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.06);font-size:16px;font-family:var(--sans);color:var(--cream)}
@@ -118,10 +121,10 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
     .rail[hidden]{display:none!important}
     .chip .cn{margin-left:7px;opacity:.6;font-weight:500;font-variant-numeric:tabular-nums}
     .clrall{margin-left:10px;color:var(--gold);background:none;border:0;font:inherit;font-size:12.5px;cursor:pointer;text-decoration:underline;padding:0}
-    @media (max-width:640px){
-      .findrow{flex-wrap:wrap}
-      .findrow .search{flex:1 1 100%}
-      .sortsel{flex:1 1 auto}
+    /* find row stays a single 44px row on phones — search shrinks, sort + Categories keep their width */
+    @media (max-width:420px){
+      .catbtn{padding:0 11px}
+      .sortsel{padding:0 26px 0 10px}
     }
 
 /* ── shelves ─────────────────────────────────────────── */
@@ -348,10 +351,12 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
 
 <section class="tools">
   <div class="wrap">
-    <div class="seg" id="seg" role="tablist" aria-label="Which part of the shop">
-      <button role="tab" data-aisle="business">Business</button>
-      <button role="tab" data-aisle="personal">Personal</button>
-      <button role="tab" data-aisle="all">Everything</button>
+    <div class="aislebar">
+      <div class="seg" id="seg" role="tablist" aria-label="Which part of the shop">
+        <button role="tab" data-aisle="business">Business</button>
+        <button role="tab" data-aisle="personal">Personal</button>
+        <button role="tab" data-aisle="all">Everything</button>
+      </div>
     </div>
     <div class="findrow">
       <div class="search">
