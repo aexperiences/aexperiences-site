@@ -554,6 +554,18 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     return got;
   }
 
+  /* Pasting a filter link into a tab that already has the shop open is a same-document
+     navigation: the script never re-runs, so without this the link silently does nothing. */
+  window.addEventListener('hashchange',function(){
+    var h=(location.hash||'').replace(/^#/,'');
+    if(h && C.byId(h)) return;                      // product deep-link, handled elsewhere
+    genre='all'; term=''; sortBy='featured'; aisle='all';
+    q.value=''; sortSel.value='featured'; clr.classList.remove('on');
+    readHash();
+    [].forEach.call(seg.children,function(b){ b.setAttribute('aria-selected', b.dataset.aisle===aisle); });
+    hashLock=true; buildRail(); render(); hashLock=false;
+  });
+
   document.addEventListener('keydown',function(e){
     var t=e.target, typing = t && (t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT');
     if(e.key==='/' && !typing && !e.metaKey && !e.ctrlKey){ e.preventDefault(); q.focus(); q.select(); }
