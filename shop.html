@@ -183,6 +183,7 @@ main{padding:24px 0 40px}
    every product added. A grid shows a dozen at once, which is what every app
    store settled on. The icon carries recognition before the name is read. */
 .row-app{
+  text-decoration:none; color:inherit;
   display:flex; flex-direction:column; align-items:flex-start;
   width:100%; text-align:left; padding:14px 13px 13px;
   border:1px solid var(--line); border-radius:18px;
@@ -471,8 +472,14 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     return a.price || '';
   }
 
+  /* Each tile is also a real, crawlable link to the product's listing page. The click
+     still opens the sheet — but a search engine (and anyone middle-clicking) now has a
+     URL to follow, which a <button> never gave them. */
+  function listingHref(a){ return '/app/'+a.id+'.html'; }
+  function hasListing(a){ return a.genre && a.genre!=='business' && a.state==='live'; }
   function rowApp(a){
-    var b=document.createElement('button');
+    var b=document.createElement(hasListing(a)?'a':'button');
+    if(hasListing(a)) b.setAttribute('href', listingHref(a));
     b.className='row-app'+(a.genre==='business'?' hubrow':'');
     if(a.acc) b.style.setProperty('--rowacc', a.acc);
     b.setAttribute('aria-label', a.name+' — '+(a.state==='dev'?'in production, not for sale yet':'open it'));
@@ -480,7 +487,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
       +'<div class="meta"><div class="nm">'+esc(a.name)+(a.age?'<span class="badge-age">'+esc(a.age)+'</span>':'')+'</div>'
       +'<div class="tg">'+esc(a.tag)+'</div><div class="pr">'+esc(subline(a))+'</div></div>'
       +verb(a);
-    b.addEventListener('click',function(){ open(a.id); });
+    b.addEventListener('click',function(e){ if(e.preventDefault) e.preventDefault(); open(a.id); });
     return b;
   }
 
