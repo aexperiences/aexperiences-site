@@ -215,6 +215,8 @@ svg.chart circle{opacity:0;animation:fadein .01s ease .95s forwards}
       <button class="btn g" onclick="openAddKid()">Add your child →</button>
       <div style="height:10px"></div>
       <button class="btn ghost block" onclick="joinPrompt()">👥 Co-parent? Enter your invite code</button>
+      <div style="height:8px"></div>
+      <button class="btn ghost block" onclick="recoverPrompt()">🔒 Coming back? Restore with email + PIN</button>
       <p class="mutp" style="margin:10px 2px 0">Already added the app to your home screen? If the invite link opened your browser instead of the app, just paste the code here to join the shared account.</p>
     </div>
     <div class="disc"><b>Not a diagnosis.</b> ESPOfocus is a private monitoring aid to bring to your provider — it doesn't diagnose or treat. Based on the widely used weekly ADHD monitoring report (SNAP‑IV / Vanderbilt lineage). No‑shame by design — nobody's in trouble.</div>
@@ -347,6 +349,19 @@ svg.chart circle{opacity:0;animation:fadein .01s ease .95s forwards}
   <input class="field" id="joinInput" placeholder="Paste the account code here">
   <div style="height:10px"></div>
   <button class="btn ghost block" onclick="joinAccount()">Switch to that account</button>
+
+  <div style="height:22px"></div>
+  <div style="border-top:1px solid var(--line);margin:0 0 16px"></div>
+  <label class="lb">🔒 Never lose this account <span id="recStatus" style="color:var(--good);font-weight:700;text-transform:none;letter-spacing:0"></span></label>
+  <p class="mutp" style="margin:0 0 10px">Add a recovery email + a 4‑digit PIN. If you ever lose your phone or the code, restore everything with these two. <b>Nothing is emailed</b> — the email is just a lookup, the PIN is your secret.</p>
+  <input class="field" id="recEmail" type="email" autocomplete="email" placeholder="you@email.com">
+  <div style="height:8px"></div>
+  <input class="field" id="recPin" inputmode="numeric" maxlength="4" placeholder="4‑digit PIN">
+  <div style="height:10px"></div>
+  <button class="btn block" onclick="saveRecovery()">Turn on recovery</button>
+  <div style="height:16px"></div>
+  <label class="lb">Lost your account? Restore it</label>
+  <button class="btn ghost block" onclick="recoverPrompt()">Restore with email + PIN</button>
 </div>
 <div class="sheet" id="sheetAddKid"><div class="grab"></div><h2>Add a child</h2><p class="mutp" style="margin:0 0 14px">First name or initials only — nothing else is stored.</p><label class="lb">Name or initials</label><input class="field" id="kidInput" maxlength="24" placeholder="e.g. Ellie, or E.J."><div style="height:14px"></div><button class="btn block" onclick="saveKid()">Save</button></div>
 <div class="sheet" id="sheetShare"><div class="grab"></div><h2>Send a rater link</h2><p class="mutp" style="margin:0 0 14px">Send to the teacher or behavior specialist. They rate a day in about a minute — no account, and they only see the day's form, never the history.</p><div class="card" style="padding:12px 14px;background:var(--soft);border:0;display:flex;gap:10px;align-items:center"><input class="field" id="shareLink" readonly style="border:0;background:#fff"><button class="btn sm" onclick="copyShare()">Copy</button></div><p class="mutp" id="shareNote" style="margin:12px 2px 0"></p></div>
@@ -376,7 +391,7 @@ var PRESET={ smooth:[1,3], mixed:[2,2], rough:[3,1] };
 var API='/api/espofocus', LS='espofocus.v2', SPACEKEY='espofocus.space';
 var MODE='local', STATE={kids:[],days:[],markers:[],cur:null};
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
-function normalize(st){return{kids:(st&&st.kids)||[],days:(st&&st.days)||[],markers:(st&&st.markers)||[],cur:(st&&st.cur)||null};}
+function normalize(st){return{kids:(st&&st.kids)||[],days:(st&&st.days)||[],markers:(st&&st.markers)||[],cur:(st&&st.cur)||null,rec:(st&&st.rec)||null};}
 function space(){var s;try{s=localStorage.getItem(SPACEKEY);}catch(e){} if(!s){s='ef'+Date.now().toString(36)+Math.random().toString(36).slice(2,14);try{localStorage.setItem(SPACEKEY,s);}catch(e){}} return s;}
 function cacheLocal(){try{localStorage.setItem(LS,JSON.stringify(STATE));}catch(e){}}
 function loadLocal(){try{var d=JSON.parse(localStorage.getItem(LS));if(d)STATE=normalize(d);}catch(e){}}
@@ -640,6 +655,8 @@ function openAccount(){
   document.getElementById('inviteLink').value=base+'?join='+space();
   document.getElementById('acctCode').value=space();
   document.getElementById('joinInput').value='';
+  document.getElementById('recEmail').value=''; document.getElementById('recPin').value='';
+  setRecStatus(STATE.rec&&STATE.rec.em);
   closeSheets(); openSheet('sheetAccount');
 }
 function copyInvite(){var i=document.getElementById('inviteLink');i.select();try{navigator.clipboard&&navigator.clipboard.writeText(i.value);}catch(e){}toast('Invite link copied');}
@@ -647,6 +664,28 @@ function copyCode(){var i=document.getElementById('acctCode');i.select();try{nav
 function joinAccount(){joinWith(document.getElementById('joinInput').value);}
 function joinPrompt(){var v=prompt('Paste your invite code\n(the other parent sends it from More → Account & sharing):');if(v!=null)joinWith(v);}
 function joinWith(v){var c=(v||'').replace(/[^a-z0-9]/gi,'').slice(0,48);if(c.length<8){toast('That code looks too short');return;}try{localStorage.setItem(SPACEKEY,c);}catch(e){}toast('Joining the shared account…');setTimeout(function(){location.href=location.origin+location.pathname;},450);}
+
+/* ---- account recovery (email + PIN; nothing is emailed) ---- */
+async function saveRecovery(){
+  if(MODE!=='api'){toast('Recovery needs the online account');return;}
+  var em=(document.getElementById('recEmail').value||'').trim();
+  var pin=(document.getElementById('recPin').value||'').replace(/\D/g,'');
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){toast('Enter a valid email');return;}
+  if(pin.length<4){toast('Pick a 4‑digit PIN');return;}
+  var r=await api('recovery.set',{body:{space:space(),email:em,pin:pin}});
+  if(r&&r.ok){ if(r.state)Store._apply(r.state); document.getElementById('recPin').value=''; setRecStatus(r.masked); toast('Recovery on ✓ — you won’t get locked out'); }
+  else toast('Could not turn on recovery');
+}
+function setRecStatus(masked){var el=document.getElementById('recStatus');if(el)el.textContent=masked?('· on for '+masked):'';}
+async function recoverPrompt(){
+  var em=(prompt('Restore your account\n\nEnter the recovery email you set:')||'').trim();
+  if(!em)return;
+  var pin=(prompt('Enter your 4‑digit PIN:')||'').replace(/\D/g,'');
+  if(pin.length<4){toast('That PIN looks too short');return;}
+  var r=await api('recovery.get',{body:{email:em,pin:pin}});
+  if(r&&r.ok&&r.space){ try{localStorage.setItem(SPACEKEY,r.space);}catch(e){} toast('Account restored ✓'); setTimeout(function(){location.href=location.origin+location.pathname;},500); }
+  else toast('No match — check the email and PIN');
+}
 
 /* daily reminder — real web-push if available, calendar as fallback */
 function remindMe(){
