@@ -22,7 +22,7 @@
   position:relative;
   background:var(--card);
   border:1px solid var(--line);
-  border-left:3px solid var(--tang);
+  border-left:3px solid var(--tang, var(--blue, var(--accent, var(--primary, var(--brand, var(--a-money, #4a7fa5))))));
   border-radius:var(--r,12px);
   padding:13px 15px 12px;
   overflow:hidden;
@@ -30,15 +30,15 @@
 }
 .stats > .stat:hover,
 .statrow > .stat:hover{ transform:translateY(-1px); box-shadow:var(--sh); }
-.stats > .stat:nth-child(6n+2), .statrow > .stat:nth-child(6n+2){ border-left-color:var(--teal); }
-.stats > .stat:nth-child(6n+3), .statrow > .stat:nth-child(6n+3){ border-left-color:var(--gold); }
-.stats > .stat:nth-child(6n+4), .statrow > .stat:nth-child(6n+4){ border-left-color:var(--tang-3, var(--tang)); }
-.stats > .stat:nth-child(6n+5), .statrow > .stat:nth-child(6n+5){ border-left-color:var(--good); }
-.stats > .stat:nth-child(6n+6), .statrow > .stat:nth-child(6n+6){ border-left-color:var(--a-portal, var(--teal-2, var(--teal))); }
+.stats > .stat:nth-child(6n+2), .statrow > .stat:nth-child(6n+2){ border-left-color:var(--teal, var(--green, var(--good, #2f7f6a))); }
+.stats > .stat:nth-child(6n+3), .statrow > .stat:nth-child(6n+3){ border-left-color:var(--gold, var(--amber, var(--watch, #c9871f))); }
+.stats > .stat:nth-child(6n+4), .statrow > .stat:nth-child(6n+4){ border-left-color:var(--tang-3, var(--blue-2, var(--brand-2, var(--accent-2, var(--tang, var(--blue, var(--accent, var(--primary, var(--brand, var(--a-money, #4a7fa5)))))))))); }
+.stats > .stat:nth-child(6n+5), .statrow > .stat:nth-child(6n+5){ border-left-color:var(--good, var(--teal, #2f7f6a)); }
+.stats > .stat:nth-child(6n+6), .statrow > .stat:nth-child(6n+6){ border-left-color:var(--a-portal, var(--teal, var(--green, var(--good, #2f7f6a)))); }
 /* an explicit health band always wins over the decorative cycle */
-.stats > .stat.good, .statrow > .stat.good{ border-left-color:var(--good)!important; }
-.stats > .stat.watch,.statrow > .stat.watch{ border-left-color:var(--watch)!important; }
-.stats > .stat.bad,  .statrow > .stat.bad  { border-left-color:var(--bad)!important; }
+.stats > .stat.good, .statrow > .stat.good{ border-left-color:var(--good, var(--teal, #2f7f6a))!important; }
+.stats > .stat.watch,.statrow > .stat.watch{ border-left-color:var(--watch, var(--gold, var(--amber, var(--watch, #c9871f))))!important; }
+.stats > .stat.bad,  .statrow > .stat.bad  { border-left-color:var(--bad, var(--red, var(--rose, #d1614f)))!important; }
 
 .stat .s-l{
   font-size:10.5px; letter-spacing:.11em; text-transform:uppercase;
@@ -48,9 +48,9 @@
   font-family:var(--mono); font-size:26px; font-weight:600; letter-spacing:-.025em;
   color:var(--ink); line-height:1.1; font-variant-numeric:tabular-nums;
 }
-.stat.good .s-v{ color:var(--good); }
-.stat.watch .s-v{ color:var(--gold-2, var(--watch)); }
-.stat.bad  .s-v{ color:var(--bad); }
+.stat.good .s-v{ color:var(--good, var(--teal, #2f7f6a)); }
+.stat.watch .s-v{ color:var(--gold-2, var(--amber-3, var(--gold, var(--amber, var(--watch, #c9871f))))); }
+.stat.bad  .s-v{ color:var(--bad, var(--red, var(--rose, #d1614f))); }
 /* the note is a BENCHMARK — give it a rule so the eye reads it as a comparison */
 .stat .s-n{
   font-size:11.5px; color:var(--mut); line-height:1.5; margin-top:7px;
@@ -62,17 +62,18 @@
    it a level deeper. Match both, or the accent tick only lands on half the fleet. */
 .card > h2:first-child,
 .card h2,
-.card > h2{
-  position:relative; padding-left:13px;
+.card > h2,
+section.card h2{
+  position:relative; padding-left:13px!important;
   font-size:17.5px; letter-spacing:-.015em; line-height:1.3;
 }
 .card h2::before,
 .card > h2::before{
   content:""; position:absolute; left:0; top:.22em; bottom:.22em; width:3px;
-  border-radius:2px; background:var(--tang); opacity:.85;
+  border-radius:2px; background:var(--tang, var(--blue, var(--accent, var(--primary, var(--brand, var(--a-money, #4a7fa5)))))); opacity:.85;
 }
 .card.urgent h2::before,
-.card.urgent > h2::before{ background:var(--bad); }
+.card.urgent > h2::before{ background:var(--bad, var(--red, var(--rose, #d1614f))); }
 .card > p.sub, .card > .sub{ max-width:82ch; }
 
 /* ---------- 3 · cards get depth without getting loud ---------------------- */
@@ -91,12 +92,12 @@
 }
 .barwrap .bar{
   height:100%; border-radius:8px;
-  background:linear-gradient(90deg, var(--tang) 0%, var(--tang-3, var(--tang)) 100%);
+  background:linear-gradient(90deg, var(--tang, var(--blue, var(--accent, var(--primary, var(--brand, var(--a-money, #4a7fa5)))))) 0%, var(--tang-3, var(--blue-2, var(--brand-2, var(--accent-2, var(--tang, var(--blue, var(--accent, var(--primary, var(--brand, var(--a-money, #4a7fa5)))))))))) 100%);
   transition:width .5s cubic-bezier(.2,.7,.3,1);
 }
-.barwrap .bar.warn{ background:linear-gradient(90deg, var(--gold-2, var(--watch)) 0%, var(--gold, var(--watch)) 100%); }
-.barwrap .bar.good{ background:linear-gradient(90deg, var(--teal-2, var(--good)) 0%, var(--teal, var(--good)) 100%); }
-.barwrap .bar.bad { background:linear-gradient(90deg, var(--bad) 0%, var(--tang-3, var(--bad)) 100%); }
+.barwrap .bar.warn{ background:linear-gradient(90deg, var(--gold-2, var(--amber-3, var(--gold, var(--amber, var(--watch, #c9871f))))) 0%, var(--gold, var(--amber, var(--watch, #c9871f))) 100%); }
+.barwrap .bar.good{ background:linear-gradient(90deg, var(--teal, var(--green, var(--good, #2f7f6a))) 0%, var(--good, var(--teal, #2f7f6a)) 100%); }
+.barwrap .bar.bad { background:linear-gradient(90deg, var(--bad, var(--red, var(--rose, #d1614f))) 0%, var(--tang-3, var(--blue-2, var(--brand-2, var(--accent-2, var(--tang, var(--blue, var(--accent, var(--primary, var(--brand, var(--a-money, #4a7fa5)))))))))) 100%); }
 
 /* ---------- 5 · tables read as data, not as prose ------------------------- */
 .card table th{
@@ -107,17 +108,17 @@
 .card table tbody tr:hover td{ background:var(--sunk); }
 
 /* ---------- 6 · blockers and advisories look different at a glance -------- */
-.blockers{ border-left:3px solid var(--bad); }
-.mods{ border-left:3px solid var(--watch); }
+.blockers{ border-left:3px solid var(--bad, var(--red, var(--rose, #d1614f))); }
+.mods{ border-left:3px solid var(--watch, var(--gold, var(--amber, var(--watch, #c9871f)))); }
 
 /* ---------- 7 · the money split strip ------------------------------------ */
 .moneysplit .ms, .hourly .h{
   border-left:3px solid var(--line);
   transition:border-color .16s;
 }
-.moneysplit .ms:first-child, .hourly .h:first-child{ border-left-color:var(--tang); }
-.moneysplit .ms.neg, .hourly .h.real{ border-left-color:var(--bad); }
-.hourly .h.real.ok{ border-left-color:var(--good); }
+.moneysplit .ms:first-child, .hourly .h:first-child{ border-left-color:var(--tang, var(--blue, var(--accent, var(--primary, var(--brand, var(--a-money, #4a7fa5)))))); }
+.moneysplit .ms.neg, .hourly .h.real{ border-left-color:var(--bad, var(--red, var(--rose, #d1614f))); }
+.hourly .h.real.ok{ border-left-color:var(--good, var(--teal, #2f7f6a)); }
 
 /* ---------- 8 · the sample-data ribbon, quieter and out of the way -------- */
 .ribbon{
