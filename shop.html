@@ -295,6 +295,27 @@ main{padding:24px 0 40px}
  transform:translateY(-3px);
  box-shadow:0 6px 18px rgba(130,200,155,.45), 0 1px 0 rgba(255,255,255,.9) inset, 0 -6px 14px -8px rgba(14,36,22,.5) inset}
 .dock .roll{animation:diceroll .5s ease}
+
+/* ---- bottom find bar — search where your thumb already is (the Apple way) ----
+   Tapping Search in the dock raises this above the dock; the keyboard slides up
+   underneath it (visualViewport keeps it pinned above the keys), and the shelves
+   filter live behind it as you type. Cancel puts the shop back the way it was. */
+.findbar{position:fixed;left:10px;right:10px;z-index:72;display:flex;align-items:center;gap:8px;
+ bottom:calc(var(--fbb,88px) + env(safe-area-inset-bottom));
+ max-width:560px;margin:0 auto;padding:8px 8px 8px 14px;border-radius:20px;
+ background:linear-gradient(180deg,rgba(24,48,32,.9),rgba(9,22,13,.94));
+ backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);
+ border:1px solid rgba(255,255,255,.14);box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.findbar[hidden]{display:none!important}
+.findbar svg{width:18px;height:18px;flex:none;stroke:var(--mute);fill:none;stroke-width:2}
+.findbar input{flex:1;min-width:0;border:0;background:none;color:var(--cream);
+ font-size:16px;font-family:var(--sans);min-height:40px;padding:0}
+.findbar input:focus{outline:none}
+.findbar input::placeholder{color:var(--mute)}
+.fbcount{flex:none;font-family:var(--mono);font-size:11px;color:var(--gold);min-width:2ch;text-align:right}
+.fbcancel{flex:none;min-height:40px;padding:0 13px;border-radius:14px;border:0;cursor:pointer;
+ background:rgba(255,255,255,.1);color:var(--cream-2);font:700 12.5px/1 inherit}
+@media(min-width:900px){ .findbar{display:none!important} }
 @keyframes diceroll{0%{transform:rotate(0)}40%{transform:rotate(-14deg) scale(1.08)}
 
 footer{background:var(--forest-dd);color:var(--mute);padding:32px 0 40px;font-size:13.5px;line-height:1.7;border-top:1px solid var(--line)}
@@ -388,6 +409,14 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
 </section>
 
 <main id="shelves"><div class="wrap" id="shelfHost"></div></main>
+
+<div class="findbar" id="findbar" hidden>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+  <label class="sr" for="q2">Search the shop</label>
+  <input id="q2" type="search" placeholder="Search the shop…" autocomplete="off" enterkeyhint="search">
+  <span class="fbcount" id="fbcount" aria-live="polite"></span>
+  <button class="fbcancel" id="fbcancel" type="button">Cancel</button>
+</div>
 
 <nav class="tabbar" aria-label="Shop dock">
  <div class="dock">
@@ -725,9 +754,6 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
 
   q.addEventListener('input',function(){ term=q.value.trim().toLowerCase(); clr.classList.toggle('on',!!term); render(); });
   clr.addEventListener('click',function(){ q.value=''; term=''; clr.classList.remove('on'); render(); q.focus(); });
-  var tabSearch=document.getElementById('tabSearch'); if(tabSearch) tabSearch.addEventListener('click',function(){
-    window.scrollTo({top:0,behavior:'smooth'}); setTimeout(function(){ q.focus(); },260);
-  });
 
   var sheet=document.getElementById('sheet'), scrim=document.getElementById('scrim'), lastFocus=null;
   function open(id){
@@ -802,8 +828,40 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
  var biz=document.getElementById("dkBiz"),me=document.getElementById("dkMe");
  biz.onclick=function(){buzz();segClick("business");setOn(biz);window.scrollTo({top:document.getElementById("shelves").offsetTop-140,behavior:"smooth"})};
  me.onclick=function(){buzz();segClick("personal");setOn(me);window.scrollTo({top:document.getElementById("shelves").offsetTop-140,behavior:"smooth"})};
- document.getElementById("dkFind").onclick=function(){buzz();var q=document.getElementById("q");
-   window.scrollTo({top:0,behavior:"smooth"});setTimeout(function(){q.focus()},350)};
+ /* Search rises from the bottom, Apple-style — never send a thumb to the top of the page. */
+ var fb=document.getElementById("findbar"),q2=document.getElementById("q2"),
+     fbc=document.getElementById("fbcount"),fbx=document.getElementById("fbcancel"),
+     dkFind=document.getElementById("dkFind"),topQ=document.getElementById("q");
+ function fbCount(){var m=(document.getElementById("count").textContent||"").match(/^\d+/);fbc.textContent=m?m[0]:"";}
+ function fbSync(v){topQ.value=v;topQ.dispatchEvent(new Event("input",{bubbles:true}));fbCount();}
+ function openFind(){
+   fb.hidden=false;dkFind.classList.add("on");q2.value=topQ.value;fbCount();
+   var sh=document.getElementById("shelves");
+   if(window.scrollY>sh.offsetTop-80)window.scrollTo({top:Math.max(0,sh.offsetTop-80)});
+   q2.focus();
+ }
+ function closeFind(){
+   fb.hidden=true;dkFind.classList.remove("on");q2.blur();
+   if(topQ.value)fbSync("");
+   document.documentElement.style.setProperty("--fbb","88px");
+ }
+ dkFind.onclick=function(){buzz();fb.hidden?openFind():closeFind()};
+ fbx.onclick=function(){buzz();closeFind()};
+ q2.addEventListener("input",function(){fbSync(this.value)});
+ q2.addEventListener("keydown",function(e){
+   if(e.key==="Enter")this.blur();
+   else if(e.key==="Escape")closeFind();
+ });
+ /* keep the bar pinned just above the iOS keyboard */
+ if(window.visualViewport){
+   var vv=window.visualViewport;
+   var kbFix=function(){
+     if(fb.hidden)return;
+     var kb=Math.max(0,window.innerHeight-vv.height-vv.offsetTop);
+     document.documentElement.style.setProperty("--fbb",kb>40?(kb+10)+"px":"88px");
+   };
+   vv.addEventListener("resize",kbFix);vv.addEventListener("scroll",kbFix);
+ }
  document.getElementById("dkLucky").onclick=function(){
    buzz([10,30,10]);this.classList.remove("roll");void this.offsetWidth;this.classList.add("roll");
    try{
