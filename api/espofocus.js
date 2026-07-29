@@ -61,7 +61,9 @@ function send(res, code, obj) { res.statusCode = code; res.setHeader('content-ty
 
 /* upsert a day into a space state (identity = kid + date + role) */
 function upsertDay(state, e) {
-  var i = state.days.findIndex(function (d) { return d.kid === e.kid && d.date === e.date && d.role === e.role; });
+  // identity = kid + date + PERSON (rater). Each parent/step-parent/specialist logs separately.
+  var key = e.rater || e.role || 'Parent';
+  var i = state.days.findIndex(function (d) { return d.kid === e.kid && d.date === e.date && ((d.rater || d.role) === key); });
   if (i >= 0) { e.id = state.days[i].id; state.days[i] = e; } else { e.id = uid(); state.days.push(e); }
   if (state.days.length > MAXDAYS) state.days = state.days.slice(-MAXDAYS);
 }
@@ -96,7 +98,7 @@ module.exports = async function (req, res) {
       var space = cleanId(body.space); if (!space) return send(res, 400, { ok: false, reason: 'space' });
       var sc = clampScores(body.scores); if (!sc) return send(res, 400, { ok: false, reason: 'scores' });
       var st = await getJSON(SP + space, emptySpace());
-      upsertDay(st, { kid: str(body.kid, 40), date: str(body.date, 10) || today(), role: str(body.role, 16) || 'Parent', scores: sc, note: str(body.note, 400) });
+      upsertDay(st, { kid: str(body.kid, 40), date: str(body.date, 10) || today(), role: str(body.role, 16) || 'Parent', rater: str(body.rater, 40), scores: sc, note: str(body.note, 400) });
       await setJSON(SP + space, st); return send(res, 200, { ok: true, state: st });
     }
     if (action === 'marker.add') {
