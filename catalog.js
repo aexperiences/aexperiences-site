@@ -63,6 +63,12 @@
       price:'$400/mo', priceNote:'3 tiers · annual $4,000/yr (2 months free)',
       svg:'<circle cx="24" cy="24" r="15"/><path d="M24 9v30M9 24h30"/><path d="M13 13l22 22M35 13L13 35"/>' },
 
+    { id:'moments', mark:'/os-icons/Moments_OS.png', name:'Moments OS', img:'/Moments_OS.png', tag:'Photographers & videographers', genre:'business', state:'live',
+      tiers:[ ['Starter',99,600,'One person \u2014 shoots, clients, contracts, galleries, invoices, and the video editor'], ['Studio',199,1200,'A second shooter, print sales, usage licensing and a branded client portal'], ['Signature',329,2000,'Commercial work \u2014 larger storage, your own domain, a dedicated environment'] ],
+      acc:'#6b5bb5', url:'/apps/moments/', pricing:'/hubs/photo-video.html',
+      blurb:'The shoot was eight hours. The job was thirty-seven once you counted culling, editing, driving and the third revision. Moments OS computes what you actually earn an hour \u2014 before you send the quote. Usage licensing, galleries, contracts, e-sign, and a real video editor in every tier.',
+      price:'$99/mo', priceNote:'3 tiers \u00b7 Cutlabs video editor included in all of them',
+      svg:'<rect x="8" y="16" width="32" height="22" rx="6"/><circle cx="24" cy="27" r="8"/>' },
     { id:'smiley', mark:'/os-icons/Smiley_OS.png', name:'Smiley OS', img:'/Smiley_OS.png', tag:'Dental practices', genre:'business', state:'live',
       tiers:[ ['Solo',350,3200,'One doctor and a hygiene chair \u2014 the whole system where the owner is also the office manager'], ['Practice',750,6400,'Two to four operatories with an office manager \u2014 insurance verification and claims aging come in here'], ['Grandsuite',1500,12000,'Multi-provider, multi-location, the ortho module switched on, branded patient portal'] ],
       acc:'#0e7c93', url:'/apps/smiley/', pricing:'/hubs/dental.html',

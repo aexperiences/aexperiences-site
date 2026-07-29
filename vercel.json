@@ -80,6 +80,10 @@
       "destination": "https://ae-smiley-showroom.vercel.app/index.html"
     },
     {
+      "source": "/apps/moments/",
+      "destination": "https://ae-moments-showroom.vercel.app/index.html"
+    },
+    {
       "source": "/apps/abode/:path*",
       "destination": "https://ae-abode-showroom.vercel.app/:path*"
     },
@@ -130,6 +134,10 @@
     {
       "source": "/apps/smiley/:path*",
       "destination": "https://ae-smiley-showroom.vercel.app/:path*"
+    },
+    {
+      "source": "/apps/moments/:path*",
+      "destination": "https://ae-moments-showroom.vercel.app/:path*"
     }
   ],
   "crons": [
