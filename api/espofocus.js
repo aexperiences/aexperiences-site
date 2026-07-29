@@ -16,7 +16,12 @@
 
 var SP = 'ef:sp:';   // space state:  ef:sp:<space> -> JSON {kids,days,markers,cur}
 var TK = 'ef:tk:';   // rater token:  ef:tk:<token> -> JSON {space,kid}
+var REC = 'ef:rec:'; // recovery:     ef:rec:<emailKey> -> JSON {space, ph}  (ph = hash of email|pin)
 var MAXDAYS = 800;   // generous cap per space
+
+function emailKey(em) { return String(em || '').trim().toLowerCase().replace(/[^a-z0-9@._+-]/g, '').slice(0, 120); }
+function maskEmail(em) { var s = String(em || ''); var i = s.indexOf('@'); if (i < 1) return '•••'; var u = s.slice(0, i); return u[0] + '•••@' + s.slice(i + 1); }
+async function sha(s) { var b = await crypto.subtle.digest('SHA-256', Buffer.from(String(s), 'utf8')); return Buffer.from(b).toString('hex'); }
 
 // Reads whichever names this Vercel project uses for its Upstash Redis store:
 //   Vercel KV integration -> KV_REST_API_URL / KV_REST_API_TOKEN  (what aexperiences-site has)
@@ -132,6 +137,28 @@ module.exports = async function (req, res) {
       var role = str(body.role, 16); if (['Teacher', 'Specialist', 'Parent'].indexOf(role) < 0) role = 'Teacher';
       upsertDay(st, { kid: link.kid, date: today(), role: role, scores: sc, note: str(body.note, 400) });
       await setJSON(SP + link.space, st); return send(res, 200, { ok: true });
+    }
+
+    /* ---- optional account recovery (email + PIN; NOTHING is emailed) ----
+       email = the lookup key, PIN = the secret. Lets a parent restore their account code
+       on a new phone without us storing a password or sending mail. Opt-in only. */
+    if (action === 'recovery.set') {
+      var space = cleanId(body.space); if (!space) return send(res, 400, { ok: false, reason: 'space' });
+      var em = String(body.email || '').trim().toLowerCase(); var pin = String(body.pin || '').replace(/\D/g, '');
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) return send(res, 400, { ok: false, reason: 'email' });
+      if (pin.length < 4) return send(res, 400, { ok: false, reason: 'pin' });
+      var ph = await sha(em + '|' + pin);
+      await setJSON(REC + emailKey(em), { space: space, ph: ph });
+      var st = await getJSON(SP + space, emptySpace()); st.rec = { em: maskEmail(em) }; await setJSON(SP + space, st);
+      return send(res, 200, { ok: true, masked: maskEmail(em), state: st });
+    }
+    if (action === 'recovery.get') {
+      var em = String(body.email || '').trim().toLowerCase(); var pin = String(body.pin || '').replace(/\D/g, '');
+      var rec = await getJSON(REC + emailKey(em), null);
+      if (!rec) return send(res, 404, { ok: false, reason: 'nomatch' });
+      var ph = await sha(em + '|' + pin);
+      if (ph !== rec.ph) return send(res, 403, { ok: false, reason: 'nomatch' });
+      return send(res, 200, { ok: true, space: rec.space });
     }
 
     return send(res, 400, { ok: false, reason: 'action' });
