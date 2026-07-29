@@ -58,15 +58,20 @@
 }
 
 /* ---------- 2 · card headings carry an accent tick ------------------------- */
+/* The newer products put h2 as a direct child of .card; the twelve older ones nest
+   it a level deeper. Match both, or the accent tick only lands on half the fleet. */
 .card > h2:first-child,
+.card h2,
 .card > h2{
   position:relative; padding-left:13px;
   font-size:17.5px; letter-spacing:-.015em; line-height:1.3;
 }
+.card h2::before,
 .card > h2::before{
   content:""; position:absolute; left:0; top:.22em; bottom:.22em; width:3px;
   border-radius:2px; background:var(--tang); opacity:.85;
 }
+.card.urgent h2::before,
 .card.urgent > h2::before{ background:var(--bad); }
 .card > p.sub, .card > .sub{ max-width:82ch; }
 
@@ -126,3 +131,7 @@
   .stats > .stat, .statrow > .stat, .card, .barwrap .bar{ transition:none; }
   .stats > .stat:hover, .statrow > .stat:hover{ transform:none; }
 }
+
+/* nested widget headings are labels, not sections — no tick, no left padding */
+#aeChartCard h2, .tiermenu h2, .manualpanel h2, .mp-head b{ padding-left:0; }
+#aeChartCard h2::before, .tiermenu h2::before, .manualpanel h2::before{ display:none; }
