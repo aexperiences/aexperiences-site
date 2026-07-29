@@ -211,7 +211,7 @@
       price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr unlimited — vs DocuSign’s $120/yr for 5 documents' },
 
     { id:'espovineyard', name:'ESPOvineyard', tag:'Wine journal · 21+', genre:'savor', state:'live',
-      acc:'#2E0D19', mark:M+'espovineyard.svg', family:'ESPOsavor', age:'21+', url:'/apps/espovineyard/',
+      acc:'#2E0D19', mark:'/apps/espovineyard/icon.png', family:'ESPOsavor', age:'21+', url:'/apps/espovineyard/',
       blurb:'A calm wine journal with a real Wine Country Notebook inside — no ads, no marketplace, a cellar that is actually yours.',
       price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — journal, cellar & Notebook stay free' },
     { id:'espostogie', name:'ESPOstogie', tag:'Cigar journal · 21+', genre:'savor', state:'live',
