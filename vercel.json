@@ -123,5 +123,11 @@
       "source": "/apps/sleeves/:path*",
       "destination": "https://ae-sleeves-showroom.vercel.app/:path*"
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/espofocus-nudge",
+      "schedule": "0 * * * *"
+    }
   ]
 }
