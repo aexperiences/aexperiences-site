@@ -249,7 +249,22 @@ label.lb{display:block;font-size:12.5px;font-weight:800;letter-spacing:.04em;tex
 </main>
 
 <div class="scrim" id="scrim" onclick="closeSheets()"></div>
-<div class="sheet" id="sheetKids"><div class="grab"></div><h2>Children</h2><div id="kidsList"></div><div style="height:12px"></div><button class="btn g block" onclick="openAddKid()">＋ Add a child</button></div>
+<div class="sheet" id="sheetKids"><div class="grab"></div><h2>Children</h2><div id="kidsList"></div><div style="height:12px"></div><button class="btn g block" onclick="openAddKid()">＋ Add a child</button><div style="height:8px"></div><button class="btn ghost block" onclick="openAccount()">👥 Account &amp; sharing</button></div>
+<div class="sheet" id="sheetAccount"><div class="grab"></div>
+  <h2>Account &amp; sharing</h2>
+  <p class="mutp" style="margin:0 0 14px">Both parents and your specialist can use the <b>same account</b> — everyone sees the same children and the same trends, live, from their own phone.</p>
+  <label class="lb">Invite the other parent or specialist</label>
+  <div class="card" style="padding:12px 14px;background:var(--soft);border:0;display:flex;gap:10px;align-items:center"><input class="field" id="inviteLink" readonly style="border:0;background:#fff"><button class="btn sm" onclick="copyInvite()">Copy</button></div>
+  <p class="mutp" style="margin:8px 2px 0">One tap opens ESPOfocus on their device, already signed in. Treat it like a house key — anyone with it can see your child's data.</p>
+  <div style="height:16px"></div>
+  <label class="lb">Or share your account code</label>
+  <div class="card" style="padding:12px 14px;background:var(--soft);border:0;display:flex;gap:10px;align-items:center"><input class="field" id="acctCode" readonly style="border:0;background:#fff"><button class="btn sm" onclick="copyCode()">Copy</button></div>
+  <div style="height:18px"></div>
+  <label class="lb">Joining from another device?</label>
+  <input class="field" id="joinInput" placeholder="Paste the account code here">
+  <div style="height:10px"></div>
+  <button class="btn ghost block" onclick="joinAccount()">Switch to that account</button>
+</div>
 <div class="sheet" id="sheetAddKid"><div class="grab"></div><h2>Add a child</h2><p class="mutp" style="margin:0 0 14px">First name or initials only — nothing else is stored.</p><label class="lb">Name or initials</label><input class="field" id="kidInput" maxlength="24" placeholder="e.g. Ellie, or E.J."><div style="height:14px"></div><button class="btn block" onclick="saveKid()">Save</button></div>
 <div class="sheet" id="sheetShare"><div class="grab"></div><h2>Send a rater link</h2><p class="mutp" style="margin:0 0 14px">Send to the teacher or behavior specialist. They rate a day in about a minute — no account, and they only see the day's form, never the history.</p><div class="card" style="padding:12px 14px;background:var(--soft);border:0;display:flex;gap:10px;align-items:center"><input class="field" id="shareLink" readonly style="border:0;background:#fff"><button class="btn sm" onclick="copyShare()">Copy</button></div><p class="mutp" id="shareNote" style="margin:12px 2px 0"></p></div>
 <div class="sheet" id="sheetMarker"><div class="grab"></div><h2>Mark a treatment change</h2><label class="lb">What changed?</label><input class="field" id="mkLabel" maxlength="60" placeholder="e.g. Started 10mg · New behavior plan · Stopped meds"><div style="height:12px"></div><label class="lb">Date</label><input class="field" type="date" id="mkDate"><div style="height:14px"></div><button class="btn block" onclick="saveMarker()">Add marker</button></div>
@@ -315,6 +330,8 @@ function go(v){VIEWS.forEach(function(x){document.getElementById('v-'+x).classLi
 var CUR=null, DRAFT=null;
 
 async function boot(){
+  var jn=new URLSearchParams(location.search).get('join');
+  if(jn){ try{localStorage.setItem(SPACEKEY,jn.replace(/[^a-z0-9]/gi,'').slice(0,48));}catch(e){} try{history.replaceState(null,'',location.pathname);}catch(e){} }
   await Store.init();
   var kids=await Store.kids();
   if(!kids.length){document.getElementById('kidpick').style.display='none';go('onboard');return;}
@@ -451,6 +468,18 @@ async function openShare(){
   }
 }
 function copyShare(){var i=document.getElementById('shareLink');i.select();try{navigator.clipboard&&navigator.clipboard.writeText(i.value);}catch(e){}toast('Link copied');}
+
+/* ===== shared account access: multiple parents / specialists, same child ===== */
+function openAccount(){
+  var base=location.origin+location.pathname.replace(/index\.html?$/,'');
+  document.getElementById('inviteLink').value=base+'?join='+space();
+  document.getElementById('acctCode').value=space();
+  document.getElementById('joinInput').value='';
+  closeSheets(); openSheet('sheetAccount');
+}
+function copyInvite(){var i=document.getElementById('inviteLink');i.select();try{navigator.clipboard&&navigator.clipboard.writeText(i.value);}catch(e){}toast('Invite link copied');}
+function copyCode(){var i=document.getElementById('acctCode');i.select();try{navigator.clipboard&&navigator.clipboard.writeText(i.value);}catch(e){}toast('Account code copied');}
+function joinAccount(){var c=(document.getElementById('joinInput').value||'').replace(/[^a-z0-9]/gi,'').slice(0,48);if(c.length<8){toast('That code looks too short');return;}try{localStorage.setItem(SPACEKEY,c);}catch(e){}toast('Switching account…');setTimeout(function(){location.href=location.origin+location.pathname;},450);}
 
 /* daily reminder via downloadable recurring calendar event (real, no backend) */
 async function remindMe(){
