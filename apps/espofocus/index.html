@@ -268,6 +268,14 @@ label.lb{display:block;font-size:12.5px;font-weight:800;letter-spacing:.04em;tex
 <div class="sheet" id="sheetAddKid"><div class="grab"></div><h2>Add a child</h2><p class="mutp" style="margin:0 0 14px">First name or initials only — nothing else is stored.</p><label class="lb">Name or initials</label><input class="field" id="kidInput" maxlength="24" placeholder="e.g. Ellie, or E.J."><div style="height:14px"></div><button class="btn block" onclick="saveKid()">Save</button></div>
 <div class="sheet" id="sheetShare"><div class="grab"></div><h2>Send a rater link</h2><p class="mutp" style="margin:0 0 14px">Send to the teacher or behavior specialist. They rate a day in about a minute — no account, and they only see the day's form, never the history.</p><div class="card" style="padding:12px 14px;background:var(--soft);border:0;display:flex;gap:10px;align-items:center"><input class="field" id="shareLink" readonly style="border:0;background:#fff"><button class="btn sm" onclick="copyShare()">Copy</button></div><p class="mutp" id="shareNote" style="margin:12px 2px 0"></p></div>
 <div class="sheet" id="sheetMarker"><div class="grab"></div><h2>Mark a treatment change</h2><label class="lb">What changed?</label><input class="field" id="mkLabel" maxlength="60" placeholder="e.g. Started 10mg · New behavior plan · Stopped meds"><div style="height:12px"></div><label class="lb">Date</label><input class="field" type="date" id="mkDate"><div style="height:14px"></div><button class="btn block" onclick="saveMarker()">Add marker</button></div>
+<div class="sheet" id="sheetRemind"><div class="grab"></div>
+  <h2>Daily reminder</h2>
+  <p class="mutp" id="remindMsg" style="margin:0 0 14px">A gentle nudge each evening so the check-in doesn't slip.</p>
+  <button class="btn g block" onclick="turnOnPush()">🔔 Turn on phone reminders</button>
+  <div id="iosNote" class="disc" style="display:none;margin:14px 0 0">On iPhone: tap the Share icon → <b>Add to Home Screen</b>, open ESPOfocus from there, then turn reminders on. (Apple only allows notifications for installed apps.)</div>
+  <div style="height:12px"></div>
+  <button class="btn ghost block" onclick="icsReminder()">📅 Add to my calendar instead</button>
+</div>
 
 <script>
 /* ===== 15 items (verbatim ADDitude weekly report — SNAP-IV/Vanderbilt lineage).
@@ -481,8 +489,31 @@ function copyInvite(){var i=document.getElementById('inviteLink');i.select();try
 function copyCode(){var i=document.getElementById('acctCode');i.select();try{navigator.clipboard&&navigator.clipboard.writeText(i.value);}catch(e){}toast('Account code copied');}
 function joinAccount(){var c=(document.getElementById('joinInput').value||'').replace(/[^a-z0-9]/gi,'').slice(0,48);if(c.length<8){toast('That code looks too short');return;}try{localStorage.setItem(SPACEKEY,c);}catch(e){}toast('Switching account…');setTimeout(function(){location.href=location.origin+location.pathname;},450);}
 
-/* daily reminder via downloadable recurring calendar event (real, no backend) */
-async function remindMe(){
+/* daily reminder — real web-push if available, calendar as fallback */
+function remindMe(){
+  var ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  var standalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||window.navigator.standalone;
+  var canPush=('serviceWorker' in navigator)&&('PushManager' in window);
+  document.getElementById('iosNote').style.display=(ios&&!standalone)?'block':'none';
+  document.getElementById('remindMsg').textContent=canPush?'A gentle nudge each evening so the check-in doesn’t slip. It only says “log today” — nothing personal.':'This browser can’t send phone reminders — use the calendar option below.';
+  openSheet('sheetRemind');
+}
+function urlB64ToUint8(s){var pad='='.repeat((4-s.length%4)%4);var b=(s+pad).replace(/-/g,'+').replace(/_/g,'/');var raw=atob(b);var arr=new Uint8Array(raw.length);for(var i=0;i<raw.length;i++)arr[i]=raw.charCodeAt(i);return arr;}
+async function turnOnPush(){
+  if(!('serviceWorker' in navigator)||!('PushManager' in window)){ toast('This device can’t — use calendar'); return; }
+  try{
+    var reg=await navigator.serviceWorker.ready;
+    var perm=await Notification.requestPermission();
+    if(perm!=='granted'){ toast('Reminders need notification permission'); return; }
+    var kr=await fetch('/api/espofocus-push?action=key').then(function(r){return r.json();});
+    if(!kr.enabled||!kr.publicKey){ toast('Reminders switch on with the store'); return; }
+    var sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlB64ToUint8(kr.publicKey)});
+    var offMin=new Date().getTimezoneOffset(); var utchour=Math.floor(((((19*60+offMin)%1440)+1440)%1440)/60);
+    var r=await fetch('/api/espofocus-push?action=subscribe',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({space:space(),endpoint:sub.endpoint,utchour:utchour})}).then(function(r){return r.json();});
+    if(r.ok){ closeSheets(); toast('Daily reminders on ✓'); } else { toast('Could not turn on — try calendar'); }
+  }catch(e){ toast('Could not turn on reminders'); }
+}
+async function icsReminder(){
   var kids=await Store.kids(); var kid=kids.find(function(k){return k.id===CUR;});
   var dt=new Date(); dt.setHours(19,30,0,0); // 7:30pm
   function z(n){return(n<10?'0':'')+n;} function stamp(d){return d.getUTCFullYear()+z(d.getUTCMonth()+1)+z(d.getUTCDate())+'T'+z(d.getUTCHours())+z(d.getUTCMinutes())+'00Z';}
