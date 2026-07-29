@@ -150,7 +150,39 @@ label.lb{display:block;font-size:12.5px;font-weight:800;letter-spacing:.04em;tex
 .mrow:active{transform:scale(.99)}
 .mrow .mi{font-size:20px;width:26px;text-align:center}
 .mrow .ma{margin-left:auto;color:var(--mut)}
-@media print{.top,.savebar,.hero .btn,.row-btns,.noprint{display:none!important}body{background:#fff}.card{box-shadow:none;border:1px solid #ccc}}
+/* ===== slick polish pass ===== */
+.hero{isolation:isolate}
+.hero::before{content:"";position:absolute;inset:-45%;z-index:0;pointer-events:none;
+  background:radial-gradient(38% 38% at 18% 22%,rgba(76,99,210,.6),transparent 62%),radial-gradient(34% 34% at 86% 12%,rgba(31,182,166,.52),transparent 62%),radial-gradient(46% 46% at 72% 92%,rgba(124,99,220,.42),transparent 62%);
+  filter:blur(8px);animation:aurora 16s ease-in-out infinite alternate}
+.hero>*{position:relative;z-index:1}
+@keyframes aurora{0%{transform:translate3d(-4%,-2%,0) scale(1.05) rotate(0)}100%{transform:translate3d(5%,4%,0) scale(1.18) rotate(9deg)}}
+.view.on>.card,.view.on>.sec,.view.on #reportBody>*{animation:rise .5s cubic-bezier(.2,.75,.2,1) both}
+.view.on>.sec:nth-child(3){animation-delay:.05s}.view.on>.sec:nth-child(4){animation-delay:.1s}.view.on>.sec:nth-child(5){animation-delay:.14s}.view.on>.sec:nth-child(n+6){animation-delay:.18s}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.btn{position:relative;overflow:hidden}
+.btn::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.28),transparent 68%);transform:translateX(-130%)}
+.btn:hover::after{transform:translateX(130%);transition:transform .6s}
+.btn:active{transform:scale(.97)}
+.card{transition:box-shadow .2s,transform .2s}
+.wk,.mrow,.door,.act,.opt,.qb,.rolebtn,.day,.subj{transition:transform .14s,background .14s,border-color .14s,box-shadow .14s}
+.tabb.on::before{content:"";position:absolute;top:2px;width:20px;height:3px;border-radius:999px;background:linear-gradient(90deg,var(--indigo),var(--teal))}
+.tabb .ic{transition:transform .18s cubic-bezier(.3,1.4,.5,1)}
+.tabb.on .ic{transform:translateY(-1px) scale(1.08)}
+.day.today .dd{box-shadow:0 0 0 2px var(--indigo),0 6px 14px rgba(76,99,210,.24);animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 2px var(--indigo),0 4px 10px rgba(76,99,210,.18)}50%{box-shadow:0 0 0 2px var(--indigo),0 9px 22px rgba(76,99,210,.4)}}
+.day:active .dd{transform:scale(.9)}
+.day .dd.filled{box-shadow:0 4px 12px rgba(30,38,90,.18)}
+.stat{position:relative;overflow:hidden}.stat::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:999px;background:var(--acc,var(--indigo));opacity:.9}
+.streak{animation:rise .5s .1s both}
+svg.chart path.ln{stroke-dasharray:2200;stroke-dashoffset:2200;animation:draw 1.15s cubic-bezier(.3,.7,.2,1) forwards}
+svg.chart path.area{opacity:0;animation:fadein .7s ease .35s forwards}
+svg.chart circle{opacity:0;animation:fadein .01s ease .95s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}@keyframes fadein{to{opacity:1}}
+.kidpick:active,.brand:active{transform:scale(.96)}
+.scrim{transition:opacity .22s}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{.top,.savebar,.hero .btn,.row-btns,.noprint,.tabbar{display:none!important}body{background:#fff;padding-bottom:0}.card{box-shadow:none;border:1px solid #ccc}.hero::before{display:none}}
 </style>
 </head>
 <body>
@@ -440,22 +472,35 @@ async function renderHome(){
 
   go('home');
 }
-function statCard(lab,big,sub,color){return '<div class="card stat"><div class="lab">'+lab+'</div><div class="big" style="color:'+(color||'var(--ink)')+'">'+big+'</div>'+(sub?'<div class="sub" style="color:'+color+'">'+sub+'</div>':'')+'</div>';}
+function statCard(lab,big,sub,color){return '<div class="card stat" style="--acc:'+(color||'var(--indigo)')+'"><div class="lab">'+lab+'</div><div class="big" style="color:'+(color||'var(--ink)')+'">'+big+'</div>'+(sub?'<div class="sub" style="color:'+color+'">'+sub+'</div>':'')+'</div>';}
 function emptyBox(icon,t,s){return '<div class="empty"><div class="em">'+icon+'</div><h2>'+t+'</h2><p class="mutp">'+s+'</p></div>';}
 
 /* ===== chart: daily points ===== */
 function chartSVG(days,markers){
-  var W=700,H=200,pl=30,pr=14,pt=14,pb=24,iw=W-pl-pr,ih=H-pt-pb,n=days.length;
+  var W=700,H=200,pl=28,pr=14,pt=16,pb=24,iw=W-pl-pr,ih=H-pt-pb,n=days.length,base=pt+ih;
   function X(i){return pl+(n>1?i*(iw/(n-1)):iw/2);}
-  function Y(v,max){return pt+ih-(v/max)*ih;}
-  var g='';[0,.25,.5,.75,1].forEach(function(f){var y=pt+ih*f;g+='<line x1="'+pl+'" y1="'+y+'" x2="'+(W-pr)+'" y2="'+y+'" stroke="#e6e8f4"/>';});
-  function line(vals,max,col,w){return '<path d="'+vals.map(function(v,i){return(i?'L':'M')+X(i).toFixed(1)+' '+Y(v,max).toFixed(1);}).join(' ')+'" fill="none" stroke="'+col+'" stroke-width="'+w+'" stroke-linecap="round" stroke-linejoin="round"/>';}
-  function dots(vals,max,col){return vals.map(function(v,i){return '<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v,max).toFixed(1)+'" r="3" fill="#fff" stroke="'+col+'" stroke-width="2"/>';}).join('');}
-  var inatt=days.map(function(e){return sum(e.scores,INATT);}), hyper=days.map(function(e){return sum(e.scores,HYPER);}), pos=days.map(function(e){return sum(e.scores,POS)*2;});
-  var svg='<svg class="chart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none">'+g;
-  (markers||[]).forEach(function(m){var idx=nearest(days,m.date);if(idx<0)return;var x=X(idx);svg+='<line x1="'+x.toFixed(1)+'" y1="'+pt+'" x2="'+x.toFixed(1)+'" y2="'+(pt+ih)+'" stroke="#4c63d2" stroke-width="1" stroke-dasharray="3 3" opacity=".5"/><circle cx="'+x.toFixed(1)+'" cy="'+(pt+4)+'" r="3" fill="#4c63d2"/>';});
-  svg+=line(inatt,18,'#4c63d2',2.4)+line(hyper,18,'#d97a4e',2.4)+line(pos,18,'#1fb6a6',2)+dots(inatt,18,'#4c63d2')+dots(hyper,18,'#d97a4e')+dots(pos,18,'#1fb6a6');
-  [0,Math.floor((n-1)/2),n-1].filter(function(v,i,a){return a.indexOf(v)===i&&v>=0;}).forEach(function(i){svg+='<text x="'+X(i).toFixed(1)+'" y="'+(H-7)+'" fill="#6b7299" font-size="11" text-anchor="middle" font-family="Inter">'+fmtD(days[i].date)+'</text>';});
+  function Y(v,max){return pt+ih-(Math.max(0,Math.min(max,v))/max)*ih;}
+  function pts(vals,max){return vals.map(function(v,i){return [X(i),Y(v,max)];});}
+  function smooth(p){ if(!p.length)return''; if(p.length<2)return 'M'+p[0][0].toFixed(1)+' '+p[0][1].toFixed(1);
+    var d='M'+p[0][0].toFixed(1)+' '+p[0][1].toFixed(1);
+    for(var i=0;i<p.length-1;i++){var p0=p[i-1]||p[i],p1=p[i],p2=p[i+1],p3=p[i+2]||p2;
+      var c1x=p1[0]+(p2[0]-p0[0])/6,c1y=p1[1]+(p2[1]-p0[1])/6,c2x=p2[0]-(p3[0]-p1[0])/6,c2y=p2[1]-(p3[1]-p1[1])/6;
+      d+=' C'+c1x.toFixed(1)+' '+c1y.toFixed(1)+','+c2x.toFixed(1)+' '+c2y.toFixed(1)+','+p2[0].toFixed(1)+' '+p2[1].toFixed(1);}
+    return d; }
+  var series=[
+    {vals:days.map(function(e){return sum(e.scores,INATT);}),max:18,col:'#4c63d2',g:'efgi'},
+    {vals:days.map(function(e){return sum(e.scores,HYPER);}),max:18,col:'#d97a4e',g:'efgh'},
+    {vals:days.map(function(e){return sum(e.scores,POS)*2;}),max:18,col:'#1fb6a6',g:'efgp'}
+  ];
+  var defs='<defs>'+series.map(function(s){return '<linearGradient id="'+s.g+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+s.col+'" stop-opacity=".26"/><stop offset="1" stop-color="'+s.col+'" stop-opacity="0"/></linearGradient>';}).join('')+'</defs>';
+  var grid='';[0,.25,.5,.75,1].forEach(function(f){var y=(pt+ih*f).toFixed(1);grid+='<line x1="'+pl+'" y1="'+y+'" x2="'+(W-pr)+'" y2="'+y+'" stroke="#eceef7" stroke-width="1"/>';});
+  var svg='<svg class="chart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none">'+defs+grid;
+  (markers||[]).forEach(function(m){var idx=nearest(days,m.date);if(idx<0)return;var x=X(idx).toFixed(1);svg+='<line x1="'+x+'" y1="'+pt+'" x2="'+x+'" y2="'+base+'" stroke="#4c63d2" stroke-width="1.2" stroke-dasharray="2 4" opacity=".45"/><circle cx="'+x+'" cy="'+(pt+3)+'" r="3" fill="#4c63d2"/>';});
+  series.forEach(function(s){var sp=smooth(pts(s.vals,s.max));
+    svg+='<path class="area" d="'+sp+' L'+X(n-1).toFixed(1)+' '+base+' L'+X(0).toFixed(1)+' '+base+' Z" fill="url(#'+s.g+')" stroke="none"/>';
+    svg+='<path class="ln" d="'+sp+'" fill="none" stroke="'+s.col+'" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>';});
+  series.forEach(function(s){pts(s.vals,s.max).forEach(function(q){svg+='<circle cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="3.1" fill="#fff" stroke="'+s.col+'" stroke-width="2"/>';});});
+  [0,Math.floor((n-1)/2),n-1].filter(function(v,i,a){return a.indexOf(v)===i&&v>=0;}).forEach(function(i){svg+='<text x="'+X(i).toFixed(1)+'" y="'+(H-7)+'" fill="#9aa0c0" font-size="11" text-anchor="middle" font-family="Inter">'+fmtD(days[i].date)+'</text>';});
   return svg+'</svg>';
 }
 function nearest(days,date){if(!days.length)return -1;var b=0,bd=1e15;days.forEach(function(e,i){var d=Math.abs(parseD(e.date)-parseD(date));if(d<bd){bd=d;b=i;}});return b;}
