@@ -106,6 +106,23 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 .chip{flex:none;scroll-snap-align:start;min-height:40px;padding:0 15px;border-radius:20px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.05);font-size:14px;font-weight:600;color:var(--cream-2);white-space:nowrap;display:inline-flex;align-items:center}
 .chip[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#231a06}
 .count{font-size:12.5px;color:var(--mute);padding:0 0 11px;font-family:var(--mono)}
+    .findrow{display:flex;gap:9px;align-items:stretch;margin-bottom:2px}
+    .findrow .search{flex:1 1 auto;min-width:0}
+    .sortsel{flex:none;min-height:44px;border-radius:12px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.05);color:var(--cream-2);font:600 13.5px/1 inherit;padding:0 30px 0 12px;cursor:pointer;
+      -webkit-appearance:none;appearance:none;
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23cfd8cf' stroke-width='1.8' stroke-linecap='round'/></svg>");
+      background-repeat:no-repeat;background-position:right 11px center;background-size:11px}
+    .sortsel option{background:#12281a;color:#eef3ea}
+    .catbtn{flex:none;min-height:44px;padding:0 14px;border-radius:12px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.05);color:var(--cream-2);font:600 13.5px/1 inherit;cursor:pointer}
+    .catbtn[aria-expanded="false"]{opacity:.72}
+    .rail[hidden]{display:none!important}
+    .chip .cn{margin-left:7px;opacity:.6;font-weight:500;font-variant-numeric:tabular-nums}
+    .clrall{margin-left:10px;color:var(--gold);background:none;border:0;font:inherit;font-size:12.5px;cursor:pointer;text-decoration:underline;padding:0}
+    @media (max-width:640px){
+      .findrow{flex-wrap:wrap}
+      .findrow .search{flex:1 1 100%}
+      .sortsel{flex:1 1 auto}
+    }
 
 /* ── shelves ─────────────────────────────────────────── */
 main{padding:24px 0 40px}
@@ -265,11 +282,23 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
       <button role="tab" data-aisle="personal">Personal</button>
       <button role="tab" data-aisle="all">Everything</button>
     </div>
-    <div class="search">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
-      <label class="sr" for="q">Search the shop</label>
-      <input id="q" type="search" placeholder="Search…" autocomplete="off" enterkeyhint="search">
-      <button class="clr" id="clr" aria-label="Clear search">×</button>
+    <div class="findrow">
+      <div class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+        <label class="sr" for="q">Search the shop</label>
+        <input id="q" type="search" placeholder="Search the shop…  (press / )" autocomplete="off" enterkeyhint="search">
+        <button class="clr" id="clr" aria-label="Clear search">×</button>
+      </div>
+      <label class="sr" for="sortBy">Sort</label>
+      <select id="sortBy" class="sortsel" title="Sort">
+        <option value="featured">Featured</option>
+        <option value="az">Name A–Z</option>
+        <option value="za">Name Z–A</option>
+        <option value="plo">Price: low to high</option>
+        <option value="phi">Price: high to low</option>
+        <option value="free">Free to try first</option>
+      </select>
+      <button class="catbtn" id="catbtn" aria-expanded="true" aria-controls="rail">Categories</button>
     </div>
     <div class="rail" id="rail" role="group" aria-label="Filter by category"></div>
     <div class="count" id="count"></div>
@@ -319,8 +348,41 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
   var C=window.AEShop, host=document.getElementById('shelfHost');
   var q=document.getElementById('q'), clr=document.getElementById('clr');
   var rail=document.getElementById('rail'), countEl=document.getElementById('count');
-  var genre='all', term='', aisle='all';
+  var genre='all', term='', aisle='all', sortBy='featured';
   var seg=document.getElementById('seg');
+  var sortSel=document.getElementById('sortBy'), catbtn=document.getElementById('catbtn');
+
+  /* Sorting by price needs a NUMBER, and the catalog stores price as display text
+     ('$250/mo', 'Free', 'From $5.99/mo'). Business OS carry a tiers array whose first
+     tier is the entry price — that is the honest number to sort on. Anything still in
+     production has no price at all and must sort last rather than sort as zero. */
+  function priceNum(a){
+    if(a.state==='dev') return Infinity;
+    if(a.tiers && a.tiers.length && a.tiers[0] && typeof a.tiers[0][1]==='number') return a.tiers[0][1];
+    var t=String(a.price||'');
+    if(/free/i.test(t)) return 0;
+    var m=t.replace(/,/g,'').match(/([0-9]+(?:\.[0-9]+)?)/);
+    return m ? parseFloat(m[1]) : Infinity;
+  }
+  function isFree(a){ return a.state!=='dev' && priceNum(a)===0; }
+  function sortList(list){
+    var out=list.slice();
+    if(sortBy==='az')  out.sort(function(x,y){ return x.name.localeCompare(y.name); });
+    else if(sortBy==='za') out.sort(function(x,y){ return y.name.localeCompare(x.name); });
+    else if(sortBy==='plo') out.sort(function(x,y){ return priceNum(x)-priceNum(y) || x.name.localeCompare(y.name); });
+    else if(sortBy==='phi') out.sort(function(x,y){
+      var a=priceNum(x), b=priceNum(y);
+      if(a===Infinity && b!==Infinity) return 1;
+      if(b===Infinity && a!==Infinity) return -1;
+      return b-a || x.name.localeCompare(y.name); });
+    else if(sortBy==='free') out.sort(function(x,y){ return (isFree(y)-isFree(x)) || x.name.localeCompare(y.name); });
+    return out;
+  }
+  function filtersOn(){ return !!term || genre!=='all' || aisle!=='all' || sortBy!=='featured'; }
+  function clearAll(){
+    term=''; genre='all'; sortBy='featured'; q.value=''; sortSel.value='featured';
+    clr.classList.remove('on'); setAisle('all', false);
+  }
 
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   function iconHTML(a){
@@ -372,7 +434,6 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     [].forEach.call(seg.children, function(b){ b.setAttribute('aria-selected', b.dataset.aisle===aisle); });
     buildRail();
     render();
-    if(history.replaceState) history.replaceState(null,'', aisle==='all' ? location.pathname : location.pathname+'#'+aisle);
     if(scroll) document.getElementById('shelves').scrollIntoView({behavior:'smooth',block:'start'});
   }
   function shelf(title,sub,items){
@@ -388,7 +449,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     var note=document.createElement('p'); note.className='aisle-note'; note.innerHTML=aisleNote();
     host.appendChild(note);
 
-    var shown=C.CATALOG.filter(matches);
+    var shown=sortList(C.CATALOG.filter(matches));
     var liveOnes=shown.filter(function(a){return a.state==='live';});
     var devOnes=shown.filter(function(a){return a.state==='dev';});
     var hubs=liveOnes.filter(function(a){return a.genre==='business';});
@@ -405,12 +466,17 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
 
     if(!shown.length){
       var e=document.createElement('p'); e.className='empty';
-      e.innerHTML='Nothing matches that.<br>Try another word, or tap <b>Everything</b> above.';
+      e.innerHTML='Nothing matches that.<br><button class="clrall" id="clrall2" type="button">Clear every filter and start again</button>';
       host.appendChild(e);
+      var c2=document.getElementById('clrall2'); if(c2) c2.addEventListener('click', clearAll);
+      e=null;
     }
     countEl.innerHTML = shown.length+(shown.length===1?' product':' products')
       + (liveOnes.length?' · '+liveOnes.length+' you can open today':'')
-      + (C.priceSource==='live' ? '<span class="pricesrc">live pricing</span>' : '');
+      + (C.priceSource==='live' ? '<span class="pricesrc">live pricing</span>' : '')
+      + (filtersOn() ? '<button class="clrall" id="clrall" type="button">Clear filters</button>' : '');
+    var ca=document.getElementById('clrall'); if(ca) ca.addEventListener('click', clearAll);
+    syncHash();
   }
 
   // genres are rebuilt per aisle — never offer a filter that would empty the page
@@ -420,11 +486,17 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     var gs = C.GENRES.filter(function(g){
       return g.id==='all' || pool.some(function(a){ return a.genre===g.id; });
     });
-    if(gs.length<=2){ rail.style.display='none'; return; }
-    rail.style.display='';
+    if(gs.length<=2){ rail.hidden=true; catbtn.hidden=true; return; }
+    catbtn.hidden=false;
+    rail.hidden = catbtn.getAttribute('aria-expanded')==='false';
     gs.forEach(function(g){
       var c=document.createElement('button');
-      c.className='chip'; c.textContent=g.label; c.setAttribute('aria-pressed', g.id===genre);
+      /* A filter chip that does not say how much is behind it makes people click to find
+         out, and most of these categories hold one or two things. Show the count. */
+      var n = g.id==='all' ? pool.length : pool.filter(function(a){ return a.genre===g.id; }).length;
+      c.className='chip';
+      c.innerHTML=esc(g.label)+'<span class="cn">'+n+'</span>';
+      c.setAttribute('aria-pressed', g.id===genre);
       c.addEventListener('click',function(){
         genre=g.id;
         [].forEach.call(rail.children,function(x){ x.setAttribute('aria-pressed', x===c); });
@@ -443,6 +515,49 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
   });
   [].forEach.call(seg.children, function(b){
     b.addEventListener('click', function(){ setAisle(b.dataset.aisle, true); });
+  });
+
+  sortSel.addEventListener('change',function(){ sortBy=sortSel.value; render(); });
+
+  catbtn.addEventListener('click',function(){
+    var open = catbtn.getAttribute('aria-expanded')!=='false';
+    catbtn.setAttribute('aria-expanded', String(!open));
+    rail.hidden = open;
+    try{ localStorage.setItem('aeshop.cats', open?'0':'1'); }catch(e){}
+  });
+  try{ if(localStorage.getItem('aeshop.cats')==='0'){ catbtn.setAttribute('aria-expanded','false'); rail.hidden=true; } }catch(e){}
+
+  /* A filtered view should survive being sent to somebody. Keep aisle, category, search
+     and sort in the hash so the link reproduces exactly what is on screen. */
+  var hashLock=false;
+  function syncHash(){
+    if(hashLock || !history.replaceState) return;
+    var p=[];
+    if(aisle!=='all') p.push('a='+aisle);
+    if(genre!=='all') p.push('c='+genre);
+    if(term) p.push('q='+encodeURIComponent(term));
+    if(sortBy!=='featured') p.push('s='+sortBy);
+    history.replaceState(null,'', p.length ? location.pathname+'#'+p.join('&') : location.pathname);
+  }
+  function readHash(){
+    var h=(location.hash||'').replace(/^#/,''); if(!h) return false;
+    if(/^(business|personal|all)$/.test(h)){ aisle=h; return true; }   // legacy #business links
+    var got=false;
+    h.split('&').forEach(function(kv){
+      var i=kv.indexOf('='); if(i<0) return;
+      var k=kv.slice(0,i), v=decodeURIComponent(kv.slice(i+1));
+      if(k==='a'&&/^(business|personal|all)$/.test(v)){ aisle=v; got=true; }
+      else if(k==='c'){ genre=v; got=true; }
+      else if(k==='q'){ term=v.toLowerCase(); q.value=v; clr.classList.add('on'); got=true; }
+      else if(k==='s'){ sortBy=v; sortSel.value=v; got=true; }
+    });
+    return got;
+  }
+
+  document.addEventListener('keydown',function(e){
+    var t=e.target, typing = t && (t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT');
+    if(e.key==='/' && !typing && !e.metaKey && !e.ctrlKey){ e.preventDefault(); q.focus(); q.select(); }
+    else if(e.key==='Escape' && t===q && q.value){ q.value=''; term=''; clr.classList.remove('on'); render(); }
   });
 
   q.addEventListener('input',function(){ term=q.value.trim().toLowerCase(); clr.classList.toggle('on',!!term); render(); });
@@ -494,16 +609,17 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     sheet.classList.remove('on'); scrim.classList.remove('on');
     document.body.style.overflow='';
     setTimeout(function(){ sheet.hidden=true; },270);
-    if(history.replaceState) history.replaceState(null,'',location.pathname);
+    syncHash();
     if(lastFocus) lastFocus.focus();
   }
   document.getElementById('shX').addEventListener('click',close);
   scrim.addEventListener('click',close);
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!sheet.hidden) close(); });
 
-  // deep links: #business / #personal open an aisle, #<product-id> opens a product
+  // deep links: #a=..&c=..&q=..&s=.. restores a filtered view; #<product-id> opens a product
   var h=location.hash.replace('#','');
-  if(h==='business'||h==='personal'||h==='hubs'){ aisle = (h==='hubs'?'business':h); }
+  if(h==='hubs') aisle='business';
+  else readHash();
   [].forEach.call(seg.children,function(b){ b.setAttribute('aria-selected', b.dataset.aisle===aisle); });
   buildRail();
   render();
