@@ -76,6 +76,10 @@
       "destination": "https://ae-sleeves-showroom.vercel.app/index.html"
     },
     {
+      "source": "/apps/smiley/",
+      "destination": "https://ae-smiley-showroom.vercel.app/index.html"
+    },
+    {
       "source": "/apps/abode/:path*",
       "destination": "https://ae-abode-showroom.vercel.app/:path*"
     },
@@ -122,6 +126,10 @@
     {
       "source": "/apps/sleeves/:path*",
       "destination": "https://ae-sleeves-showroom.vercel.app/:path*"
+    },
+    {
+      "source": "/apps/smiley/:path*",
+      "destination": "https://ae-smiley-showroom.vercel.app/:path*"
     }
   ],
   "crons": [

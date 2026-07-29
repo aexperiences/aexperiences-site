@@ -63,6 +63,12 @@
       price:'$400/mo', priceNote:'3 tiers · annual $4,000/yr (2 months free)',
       svg:'<circle cx="24" cy="24" r="15"/><path d="M24 9v30M9 24h30"/><path d="M13 13l22 22M35 13L13 35"/>' },
 
+    { id:'smiley', mark:'/os-icons/Smiley_OS.png', name:'Smiley OS', img:'/Smiley_OS.png', tag:'Dental practices', genre:'business', state:'live',
+      tiers:[ ['Solo',350,3200,'One doctor and a hygiene chair \u2014 the whole system where the owner is also the office manager'], ['Practice',750,6400,'Two to four operatories with an office manager \u2014 insurance verification and claims aging come in here'], ['Grandsuite',1500,12000,'Multi-provider, multi-location, the ortho module switched on, branded patient portal'] ],
+      acc:'#0e7c93', url:'/apps/smiley/', pricing:'/hubs/dental.html',
+      blurb:'Production, the PPO write-off and the patient portion kept apart \u2014 because adding them together is how a practice reads a record month and cannot make payroll. Insurance checked before the visit, and ortho as a module with its own contract ledger.',
+      price:'$350/mo', priceNote:'3 tiers \u00b7 the whole spine in every tier',
+      svg:'<rect x="10" y="16" width="28" height="18" rx="9"/><path d="M10 24h28"/>' },
     { id:'sleeves', mark:'/os-icons/Sleeves_OS.png', name:'Sleeves OS', img:'/Sleeves_OS.png', tag:'Tattoo studios', genre:'business', state:'live',
       tiers:[ ['Chair',250,2400,'A single artist \u2014 the whole system for someone who is also the front desk'], ['Studio',650,5600,'A real shop with booth renters \u2014 books, metrics and the AI department org'], ['Grandsuite',1400,11000,'Multi-location, guest artists, dedicated environment, branded booking site'] ],
       acc:'#b8324a', url:'/apps/sleeves/', pricing:'/hubs/tattoo.html',
