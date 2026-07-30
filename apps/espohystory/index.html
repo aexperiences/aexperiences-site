@@ -1128,5 +1128,27 @@ if("serviceWorker" in navigator)navigator.serviceWorker.register("/apps/espohyst
 })();
 </script>
 <script src="/apps/espohystory/roz-narration.js"></script>
+<script>(function(){
+  function label(txt){var t=(txt||'').toLowerCase();if(t.indexOf('kinder')>-1)return'K';var m=t.match(/(\d+)(st|nd|rd|th)/);return m?m[1]:'•';}
+  var STYLE='#ehnav{position:sticky;top:0;z-index:50;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:9px 12px;background:rgba(251,243,228,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #E5D5B8;margin-bottom:8px}#ehnav a{display:inline-flex;align-items:center;justify-content:center;min-width:40px;height:40px;padding:0 13px;border-radius:999px;font-weight:800;font-size:15px;text-decoration:none;color:#2C4763;background:#fff;border:1.5px solid #E5D5B8;transition:background .15s,color .15s,border-color .15s}#ehnav a:hover{border-color:#C9603B;color:#C9603B}#ehnav a.on{background:#C9603B;color:#fff;border-color:#C9603B}';
+  var styleEl;
+  function build(){
+    var secs=document.querySelectorAll('.gsec');
+    var nav=document.getElementById('ehnav');
+    if(!secs.length){ if(nav) nav.remove(); return; }
+    if(nav && nav.dataset.n==String(secs.length)) return;
+    if(nav) nav.remove();
+    if(!styleEl){ styleEl=document.createElement('style'); styleEl.textContent=STYLE; document.head.appendChild(styleEl); }
+    nav=document.createElement('div'); nav.id='ehnav'; nav.dataset.n=String(secs.length);
+    nav.setAttribute('aria-label','Jump to a grade');
+    secs.forEach(function(s,i){ if(!s.id) s.id='ehgrade-'+i; var gh=s.querySelector('.gh'); var a=document.createElement('a'); a.href='#'+s.id; a.textContent=gh?label(gh.textContent):'•'; a.addEventListener('click',function(e){e.preventDefault(); var y=s.getBoundingClientRect().top+window.scrollY-58; window.scrollTo({top:y<0?0:y,behavior:'smooth'});}); nav.appendChild(a); });
+    var hd=document.querySelector('header'); if(hd&&hd.parentNode) hd.parentNode.insertBefore(nav,hd.nextSibling); else document.body.insertBefore(nav,document.body.firstChild);
+    spy();
+  }
+  function spy(){ var links=[].slice.call(document.querySelectorAll('#ehnav a')); if(!links.length) return; var cur=links[0]; links.forEach(function(a){ var t=document.getElementById(a.getAttribute('href').slice(1)); if(t && t.getBoundingClientRect().top<=90) cur=a; }); links.forEach(function(a){ a.classList.toggle('on',a===cur); }); }
+  var t; var mo=new MutationObserver(function(){ clearTimeout(t); t=setTimeout(build,120); });
+  function boot(){ build(); mo.observe(document.body,{childList:true,subtree:true}); window.addEventListener('scroll',spy,{passive:true}); }
+  if(document.readyState!=='loading') boot(); else document.addEventListener('DOMContentLoaded',boot);
+})();</script>
 </body>
 </html>
