@@ -1,0 +1,4 @@
+{ "name":"The Thread — Neuro Divulge","short_name":"Thread","description":"It holds the thread when the doorway wipes it. By Accelerated Experiences, LLC.",
+  "start_url":"/apps/thread/","scope":"/apps/thread/","display":"standalone",
+  "background_color":"#221d18","theme_color":"#221d18",
+  "icons":[{"src":"icon.png","sizes":"1024x1024","type":"image/png","purpose":"any"},{"src":"icon.png","sizes":"1024x1024","type":"image/png","purpose":"maskable"}] }

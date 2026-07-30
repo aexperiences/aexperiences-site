@@ -1,0 +1,250 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Thread — Neuro Divulge</title>
+<meta name="description" content="The app that holds the thread when the doorway wipes it. One thing on screen, quests for the kids, homes for the things. By Accelerated Experiences, LLC.">
+<link rel="icon" href="/apps/thread/icon.png"><link rel="apple-touch-icon" href="/apps/thread/icon.png"><link rel="manifest" href="/apps/thread/manifest.webmanifest">
+<style>
+:root{--bg:#221d18;--panel:#2c2620;--line:#ffffff24;--cream:#f4ecdd;--mut:#b9ac97;--gold:#e6b45c;--green:#7fae7a;--blue:#7d9db8;--tap:52px}
+*{margin:0;box-sizing:border-box}button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+body{font-family:-apple-system,'Segoe UI',Verdana,sans-serif;background:var(--bg);color:var(--cream);min-height:100vh;font-size:19px;line-height:1.6;letter-spacing:.01em}
+.wrap{max-width:760px;margin:0 auto;padding:0 18px 120px}
+header{padding:22px 0 6px;display:flex;align-items:center;gap:12px}
+header img{width:46px;height:46px;border-radius:12px}
+h1{font-size:24px}h1 span{color:var(--gold)}
+.tag{font-size:14px;color:var(--mut)}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:#1a1512ee;backdrop-filter:blur(10px);border-top:1px solid var(--line);z-index:50}
+nav button{flex:1;min-height:64px;font-size:17px;font-weight:800;color:var(--mut);display:flex;flex-direction:column;gap:2px;align-items:center;justify-content:center}
+nav button.on{color:var(--gold)}
+nav .ic{font-size:22px}
+section{display:none;padding-top:10px}section.on{display:block}
+.big{font-size:clamp(26px,7vw,40px);font-weight:900;line-height:1.25}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px;margin:14px 0}
+.btn{min-height:var(--tap);padding:0 22px;border-radius:15px;font-weight:800;font-size:19px;display:inline-flex;align-items:center;justify-content:center;gap:10px}
+.btn-gold{background:linear-gradient(180deg,#e6b45c,#c9973c);color:#241a08}
+.btn-ghost{border:2px solid var(--line);color:var(--cream)}
+.btn-big{width:100%;min-height:64px;font-size:22px;margin:8px 0}
+.modes{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:12px 0}
+.mode{min-height:74px;border-radius:16px;border:2px solid var(--line);font-size:19px;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.mode .e{font-size:26px}
+.mode.on{border-color:var(--gold);background:#e6b45c22}
+input[type=text]{width:100%;min-height:var(--tap);border-radius:14px;border:2px solid var(--line);background:#ffffff0e;color:var(--cream);padding:0 16px;font-size:19px}
+.mut{color:var(--mut);font-size:16px}
+.elapsed{font-family:ui-monospace,Menlo,monospace;color:var(--gold);font-size:22px;font-weight:700}
+.park{border-left:4px solid var(--blue);border-radius:0 12px 12px 0;background:#ffffff09;padding:10px 14px;margin:8px 0;font-size:17px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.kid{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);width:100%;text-align:left}
+.kid .dot{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:19px;color:#241a08}
+.stepcard{text-align:center;padding:44px 20px}
+.stepcard .e{font-size:76px;display:block;margin-bottom:10px}
+.progress{display:flex;gap:6px;justify-content:center;margin-top:18px}
+.pip{width:14px;height:14px;border-radius:50%;background:#ffffff22}.pip.done{background:var(--green)}
+.home{display:flex;gap:14px;align-items:center;border:1px solid var(--line);border-radius:16px;padding:12px;margin:10px 0}
+.home img{width:74px;height:74px;object-fit:cover;border-radius:12px}
+.home .ph{width:74px;height:74px;border-radius:12px;background:#ffffff10;display:flex;align-items:center;justify-content:center;font-size:30px}
+.star{font-size:90px;animation:pop .6s ease}
+@keyframes pop{0%{transform:scale(.2)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
+footer{font-size:13px;color:var(--mut);padding:26px 0;text-align:center}
+dialog{border:1px solid var(--line);border-radius:20px;background:#2c2620;color:var(--cream);max-width:520px;width:94vw;padding:24px;font-size:19px}
+dialog::backdrop{background:#000000b5}
+.chip{display:inline-flex;min-height:40px;padding:0 14px;border-radius:20px;border:2px solid var(--line);align-items:center;font-size:16px;font-weight:700;margin:3px}
+.chip.on{border-color:var(--gold);background:#e6b45c22}
+</style></head><body>
+<div class="wrap">
+<header><img src="/apps/thread/icon.png" alt=""><div><h1>The <span>Thread</span></h1><div class="tag">Neuro Divulge · it holds what the doorway wipes</div></div></header>
+
+<!-- NOW -->
+<section id="now" class="on">
+  <div class="card" id="threadCard"></div>
+  <div class="card">
+    <div style="font-weight:900;font-size:20px">🅿️ Park a thought</div>
+    <div class="mut">Something popped in? Park it here and keep the thread.</div>
+    <div style="display:flex;gap:8px;margin-top:10px"><input type="text" id="parkIn" placeholder="Type it and let it go…"><button class="btn btn-gold" id="parkBtn">Park</button></div>
+    <div id="parkList"></div>
+  </div>
+  <div class="card">
+    <div style="font-weight:900;font-size:20px">⏭ Next up (just one)</div>
+    <div style="display:flex;gap:8px;margin-top:10px"><input type="text" id="nextIn" placeholder="The one thing after this…"><button class="btn btn-ghost" id="nextBtn">Set</button></div>
+    <div id="nextShow" class="mut" style="margin-top:8px"></div>
+  </div>
+</section>
+
+<!-- QUESTS -->
+<section id="quests">
+  <div class="card" id="kidsHome"></div>
+</section>
+
+<!-- FIND -->
+<section id="find">
+  <div class="card">
+    <div class="big" style="font-size:26px">Where things live</div>
+    <div class="mut" style="margin:6px 0 12px">When your eyes blank it out, don't scan the room — look up its home. Teach the kids the same move.</div>
+    <div style="display:flex;gap:8px"><input type="text" id="findQ" placeholder="Search: phone, keys, glue stick…"></div>
+    <div id="homes"></div>
+    <button class="btn btn-ghost btn-big" id="addHome">+ Give something a home</button>
+    <input type="file" id="homePhoto" accept="image/*" capture="environment" hidden>
+  </div>
+</section>
+
+<footer>Powered by <b>Accelerated Experiences, LLC</b> · everything stays on this device · no accounts, nothing collected<br>Part of <b>Neuro Divulge</b> — the store, the memoir, the podcast, and this.</footer>
+</div>
+<nav>
+  <button data-s="now" class="on"><span class="ic">🧵</span>Now</button>
+  <button data-s="quests"><span class="ic">⭐</span>Quests</button>
+  <button data-s="find"><span class="ic">🔍</span>Find</button>
+</nav>
+<dialog id="dlg"></dialog>
+<script>
+var DB_KEY='thread.v1';
+function db(){try{return JSON.parse(localStorage.getItem(DB_KEY))||{}}catch(e){return{}}}
+function put(d){localStorage.setItem(DB_KEY,JSON.stringify(d))}
+var S=db(); S.park=S.park||[]; S.kids=S.kids||[]; S.homes=S.homes||[]; put(S);
+var MODES=[['🍳','Cooking'],['👶','Baby'],['🏠','House'],['🌿','Yard'],['📚','School'],['💼','Business'],['☕','Break']];
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+[].forEach.call(document.querySelectorAll('nav button'),function(b){
+  b.onclick=function(){
+    [].forEach.call(document.querySelectorAll('nav button'),function(x){x.classList.toggle('on',x===b)});
+    [].forEach.call(document.querySelectorAll('section'),function(s){s.classList.toggle('on',s.id===b.dataset.s)});
+  };
+});
+/* ---------- NOW ---------- */
+var tick=null;
+function fmt(ms){var m=Math.floor(ms/60000),h=Math.floor(m/60);m=m%60;return (h?h+'h ':'')+m+'m'}
+function drawThread(){
+  var host=document.getElementById('threadCard');
+  clearInterval(tick);
+  if(!S.thread){
+    host.innerHTML='<div class="big">What are you doing right now?</div>'
+      +'<div class="mut" style="margin-top:4px">Two taps. Then go do it — the Thread remembers so you don\'t have to.</div>'
+      +'<div class="modes">'+MODES.map(function(m,i){return '<button class="mode" data-i="'+i+'"><span class="e">'+m[0]+'</span>'+m[1]+'</button>'}).join('')+'</div>'
+      +'<input type="text" id="what" placeholder="Optional: the specific thing (\'brown the beef\')" style="margin-top:6px">'
+      +'<button class="btn btn-gold btn-big" id="startBtn">Hold this thread →</button>';
+    var mi=-1;
+    [].forEach.call(host.querySelectorAll('.mode'),function(b){b.onclick=function(){mi=+b.dataset.i;[].forEach.call(host.querySelectorAll('.mode'),function(x){x.classList.toggle('on',x===b)})}});
+    document.getElementById('startBtn').onclick=function(){
+      if(mi<0){alert('Pick a mode first — one tap.');return}
+      S.thread={m:mi,what:document.getElementById('what').value.trim(),at:Date.now()};put(S);drawThread();
+    };
+  }else{
+    var m=MODES[S.thread.m];
+    host.innerHTML='<div class="mut">YOU ARE MID-THREAD</div>'
+      +'<div class="big" style="margin:6px 0"><span style="font-size:44px">'+m[0]+'</span> '+m[1]+(S.thread.what?' — '+esc(S.thread.what):'')+'</div>'
+      +'<div class="elapsed" id="el"></div>'
+      +'<button class="btn btn-gold btn-big" id="lostBtn">🚪 I walked into another room…</button>'
+      +'<div style="display:flex;gap:10px"><button class="btn btn-ghost btn-big" id="doneBtn">✓ Done — drop the thread</button>'
+      +'<button class="btn btn-ghost btn-big" id="switchBtn">↷ Switch</button></div>';
+    function up(){document.getElementById('el').textContent='holding for '+fmt(Date.now()-S.thread.at)}
+    up(); tick=setInterval(up,30000);
+    document.getElementById('lostBtn').onclick=function(){
+      var d=document.getElementById('dlg');
+      d.innerHTML='<div class="mut">THE DOORWAY WIPED IT. HERE IS YOUR THREAD:</div>'
+        +'<div class="big" style="margin:12px 0"><span style="font-size:52px">'+m[0]+'</span><br>'+m[1]+(S.thread.what?'<br>'+esc(S.thread.what):'')+'</div>'
+        +'<button class="btn btn-gold btn-big" id="keepBtn">Got it — back to it →</button>';
+      d.showModal();
+      document.getElementById('keepBtn').onclick=function(){d.close()};
+    };
+    document.getElementById('doneBtn').onclick=function(){S.thread=null;put(S);drawThread()};
+    document.getElementById('switchBtn').onclick=function(){S.thread=null;put(S);drawThread()};
+  }
+}
+document.getElementById('parkBtn').onclick=function(){
+  var v=document.getElementById('parkIn').value.trim(); if(!v)return;
+  S.park.unshift({t:v,at:Date.now()}); S.park=S.park.slice(0,30); put(S);
+  document.getElementById('parkIn').value=''; drawPark();
+};
+function drawPark(){
+  document.getElementById('parkList').innerHTML=S.park.map(function(p,i){
+    return '<div class="park"><span>'+esc(p.t)+'</span><button class="btn btn-ghost" style="min-height:38px" data-i="'+i+'">✓</button></div>';
+  }).join('');
+  [].forEach.call(document.querySelectorAll('.park button'),function(b){
+    b.onclick=function(){S.park.splice(+b.dataset.i,1);put(S);drawPark()};
+  });
+}
+document.getElementById('nextBtn').onclick=function(){
+  S.next=document.getElementById('nextIn').value.trim();put(S);
+  document.getElementById('nextIn').value='';drawNext();
+};
+function drawNext(){document.getElementById('nextShow').innerHTML=S.next?('After this: <b style="color:var(--cream)">'+esc(S.next)+'</b>'):''}
+/* ---------- QUESTS ---------- */
+var PRESETS={
+ 'Morning':[['👕','Get dressed'],['🦷','Brush teeth'],['🧦','Socks and shoes'],['🛏','Bed pulled up']],
+ 'School blocks':[['📖','Reading'],['🔢','Math'],['🧃','Break'],['✏️','Writing'],['🎨','Make something']],
+ 'Evening':[['🧸','Toys away'],['🛁','Bath'],['🦷','Teeth again'],['📕','Story time']]
+};
+var HUES=['#e6b45c','#7fae7a','#7d9db8','#c98a8a','#a98ac9'];
+function drawKids(){
+  var host=document.getElementById('kidsHome');
+  var h='<div class="big" style="font-size:26px">Whose quest?</div><div class="mut" style="margin:4px 0 8px">One card at a time. No timers, no red, no losing — just the next step.</div>';
+  h+=S.kids.map(function(k,i){
+    return '<button class="kid" data-i="'+i+'"><span class="dot" style="background:'+HUES[i%5]+'">'+esc(k.n[0].toUpperCase())+'</span><span style="font-size:21px;font-weight:800">'+esc(k.n)+'</span><span class="mut" style="margin-left:auto">'+Object.keys(PRESETS).length+' quests ›</span></button>';
+  }).join('');
+  h+='<button class="btn btn-ghost btn-big" id="addKid" style="margin-top:12px">+ Add a kid</button>';
+  host.innerHTML=h;
+  document.getElementById('addKid').onclick=function(){
+    var n=prompt('First name (that\'s all we keep):'); if(!n)return;
+    S.kids.push({n:n.trim()});put(S);drawKids();
+  };
+  [].forEach.call(host.querySelectorAll('.kid'),function(b){
+    b.onclick=function(){pickQuest(+b.dataset.i)};
+  });
+}
+function pickQuest(ki){
+  var d=document.getElementById('dlg');
+  d.innerHTML='<div class="big" style="font-size:24px">'+esc(S.kids[ki].n)+' — pick the quest</div>'
+    +Object.keys(PRESETS).map(function(q){return '<button class="btn btn-ghost btn-big" data-q="'+q+'">'+q+' · '+PRESETS[q].length+' steps</button>'}).join('')
+    +'<button class="btn btn-gold btn-big" id="closeQ">Close</button>';
+  d.showModal();
+  document.getElementById('closeQ').onclick=function(){d.close()};
+  [].forEach.call(d.querySelectorAll('[data-q]'),function(b){
+    b.onclick=function(){d.close();runQuest(ki,b.dataset.q)};
+  });
+}
+function runQuest(ki,q){
+  var steps=PRESETS[q],i=0,d=document.getElementById('dlg');
+  function step(){
+    if(i>=steps.length){
+      d.innerHTML='<div class="stepcard"><span class="star">⭐</span><div class="big">'+esc(S.kids[ki].n)+' did it!</div><div class="mut">'+q+' — every step. That\'s the whole quest.</div><button class="btn btn-gold btn-big" id="yay">🎉 High five</button></div>';
+      document.getElementById('yay').onclick=function(){d.close()};
+      return;
+    }
+    var s=steps[i];
+    d.innerHTML='<div class="stepcard"><span class="e">'+s[0]+'</span><div class="big">'+s[1]+'</div>'
+      +'<button class="btn btn-gold btn-big" id="didIt" style="margin-top:18px">Did it ✓</button>'
+      +'<div class="progress">'+steps.map(function(_,j){return '<span class="pip'+(j<i?' done':'')+'"></span>'}).join('')+'</div>'
+      +'<button class="btn btn-ghost" id="bail" style="margin-top:12px;min-height:40px">pause quest</button></div>';
+    document.getElementById('didIt').onclick=function(){i++;step()};
+    document.getElementById('bail').onclick=function(){d.close()};
+  }
+  step(); d.showModal();
+}
+/* ---------- FIND ---------- */
+var pendingHome=null;
+document.getElementById('addHome').onclick=function(){
+  var thing=prompt('What thing? (e.g. "Phone")'); if(!thing)return;
+  var where=prompt('Where does it LIVE? (e.g. "kitchen charger, left of stove")'); if(!where)return;
+  pendingHome={t:thing.trim(),w:where.trim(),p:null};
+  if(confirm('Add a photo of its home? (OK = camera, Cancel = skip)')){document.getElementById('homePhoto').click()}
+  else{S.homes.unshift(pendingHome);put(S);pendingHome=null;drawHomes()}
+};
+document.getElementById('homePhoto').addEventListener('change',function(){
+  var f=this.files[0]; this.value=''; if(!f||!pendingHome){return}
+  var img=new Image(); img.onload=function(){
+    var m=420/Math.max(img.width,img.height),c=document.createElement('canvas');
+    c.width=Math.round(img.width*Math.min(1,m));c.height=Math.round(img.height*Math.min(1,m));
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    pendingHome.p=c.toDataURL('image/jpeg',0.7);
+    S.homes.unshift(pendingHome);put(S);pendingHome=null;drawHomes();
+  }; img.src=URL.createObjectURL(f);
+});
+document.getElementById('findQ').addEventListener('input',drawHomes);
+function drawHomes(){
+  var q=(document.getElementById('findQ').value||'').toLowerCase();
+  document.getElementById('homes').innerHTML=S.homes.filter(function(h){return !q||(h.t+' '+h.w).toLowerCase().indexOf(q)>-1})
+    .map(function(h,i){return '<div class="home">'+(h.p?'<img src="'+h.p+'">':'<span class="ph">📍</span>')
+      +'<div><div style="font-weight:900;font-size:20px">'+esc(h.t)+'</div><div class="mut">lives: '+esc(h.w)+'</div></div>'
+      +'<button class="btn btn-ghost" style="margin-left:auto;min-height:40px" data-i="'+i+'">✕</button></div>'}).join('')
+    ||'<div class="mut" style="padding:14px 0">Nothing has a home yet. Give the phone one first — you know why.</div>';
+  [].forEach.call(document.querySelectorAll('.home button'),function(b){
+    b.onclick=function(){S.homes.splice(+b.dataset.i,1);put(S);drawHomes()};
+  });
+}
+drawThread();drawPark();drawNext();drawKids();drawHomes();
+</script></body></html>
