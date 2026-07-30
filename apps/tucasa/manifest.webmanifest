@@ -1,0 +1,4 @@
+{ "name":"Tu Casa OS","short_name":"Tu Casa","description":"The home operating system — it fills itself. By Accelerated Experiences, LLC.",
+  "start_url":"/apps/tucasa/","scope":"/apps/tucasa/","display":"standalone",
+  "background_color":"#1c221c","theme_color":"#1c221c",
+  "icons":[{"src":"icon.png","sizes":"1024x1024","type":"image/png","purpose":"any"},{"src":"icon.png","sizes":"1024x1024","type":"image/png","purpose":"maskable"}] }

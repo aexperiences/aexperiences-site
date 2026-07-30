@@ -1,0 +1,193 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tu Casa OS — the home operating system</title>
+<meta name="description" content="The wall screen that fills itself. Photograph a school flyer — it lands on the calendar. Photograph the fridge — the list writes itself. By Accelerated Experiences, LLC.">
+<link rel="icon" href="/apps/tucasa/icon.png"><link rel="apple-touch-icon" href="/apps/tucasa/icon.png"><link rel="manifest" href="/apps/tucasa/manifest.webmanifest">
+<style>
+:root{--bg:#1c221c;--panel:#252c25;--line:#ffffff22;--cream:#f2ecdc;--mut:#a8b3a2;--gold:#e2b45a;--terra:#c45c3c;--green:#7fae7a;--tap:52px}
+*{margin:0;box-sizing:border-box}button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+body{font-family:-apple-system,'Segoe UI',Verdana,sans-serif;background:var(--bg);color:var(--cream);min-height:100vh;font-size:19px;line-height:1.55}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px 120px}
+header{padding:20px 0 8px;display:flex;align-items:center;gap:12px}
+header img{width:46px;height:46px;border-radius:12px}
+h1{font-size:24px}h1 span{color:var(--gold)}
+.tag{font-size:14px;color:var(--mut)}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:#141a14ee;backdrop-filter:blur(10px);border-top:1px solid var(--line);z-index:50}
+nav button{flex:1;min-height:64px;font-size:16px;font-weight:800;color:var(--mut);display:flex;flex-direction:column;gap:2px;align-items:center;justify-content:center}
+nav button.on{color:var(--gold)}.ic{font-size:22px}
+section{display:none;padding-top:8px}section.on{display:block}
+.big{font-size:clamp(24px,6vw,36px);font-weight:900;line-height:1.25}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:20px;margin:14px 0}
+.btn{min-height:var(--tap);padding:0 20px;border-radius:15px;font-weight:800;font-size:18px;display:inline-flex;align-items:center;justify-content:center;gap:10px}
+.btn-gold{background:linear-gradient(180deg,#e2b45a,#c69336);color:#241a08}
+.btn-terra{background:linear-gradient(180deg,#c45c3c,#a34a30);color:#fff}
+.btn-ghost{border:2px solid var(--line);color:var(--cream)}
+.btn-big{width:100%;min-height:60px;font-size:20px;margin:7px 0}
+input[type=text],input[type=date],input[type=time]{min-height:var(--tap);border-radius:14px;border:2px solid var(--line);background:#ffffff0e;color:var(--cream);padding:0 14px;font-size:18px}
+.mut{color:var(--mut);font-size:16px}
+.ev{display:flex;gap:14px;align-items:center;border-left:5px solid var(--gold);background:#ffffff09;border-radius:0 14px 14px 0;padding:12px 14px;margin:9px 0}
+.ev .d{font-family:ui-monospace,Menlo,monospace;font-weight:700;color:var(--gold);min-width:96px}
+.gro{display:flex;gap:12px;align-items:center;padding:12px 4px;border-bottom:1px solid var(--line);font-size:20px}
+.gro.done{opacity:.4;text-decoration:line-through}
+.clock{font-size:clamp(46px,12vw,84px);font-weight:900;letter-spacing:-.02em}
+.date{font-size:20px;color:var(--mut)}
+.rooms{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:8px}
+.room{min-height:96px;border-radius:16px;border:2px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-weight:800;font-size:17px;text-decoration:none;color:var(--cream)}
+.room .e{font-size:30px}
+.scanrow{display:flex;gap:10px;overflow-x:auto;margin:10px 0}.scanrow img{height:80px;border-radius:9px}
+dialog{border:1px solid var(--line);border-radius:20px;background:#252c25;color:var(--cream);max-width:560px;width:94vw;padding:22px;font-size:18px}
+dialog::backdrop{background:#000000b5}
+.spin{display:inline-block;width:18px;height:18px;border:3px solid #24180f;border-top-color:transparent;border-radius:50%;animation:sp 1s linear infinite;vertical-align:-4px}
+@keyframes sp{to{transform:rotate(360deg)}}
+footer{font-size:13px;color:var(--mut);padding:24px 0;text-align:center}
+</style></head><body>
+<div class="wrap">
+<header><img src="/apps/tucasa/icon.png" alt=""><div><h1>Tu <span>Casa</span> OS</h1><div class="tag">the home operating system · it fills itself</div></div></header>
+
+<section id="wall" class="on">
+  <div class="card" style="text-align:center">
+    <div class="clock" id="clock"></div><div class="date" id="today"></div>
+  </div>
+  <div class="card"><div style="font-weight:900;font-size:20px">📅 Today &amp; next</div><div id="wallEvents"></div></div>
+  <div class="card"><div style="font-weight:900;font-size:20px">🍽 Dinner tonight</div>
+    <div style="display:flex;gap:8px;margin-top:8px"><input type="text" id="dinnerIn" placeholder="What are we eating?" style="flex:1"><button class="btn btn-ghost" id="dinnerBtn">Set</button></div>
+    <div id="dinnerShow" class="big" style="font-size:26px;margin-top:8px"></div></div>
+  <div class="card"><div style="font-weight:900;font-size:20px">🏠 The rooms</div>
+    <div class="rooms">
+      <a class="room" href="/apps/thread/"><span class="e">🧵</span>The Thread<span class="mut" style="font-size:13px">what was I doing</span></a>
+      <a class="room" href="/apps/thread/"><span class="e">⭐</span>Kid quests<span class="mut" style="font-size:13px">in The Thread</span></a>
+      <a class="room" href="/apps/esponest/"><span class="e">👶</span>Baby log<span class="mut" style="font-size:13px">ESPOnest</span></a>
+      <button class="room" data-go="cal"><span class="e">📅</span>Calendar</button>
+      <button class="room" data-go="food"><span class="e">🛒</span>Food</button>
+    </div></div>
+</section>
+
+<section id="cal">
+  <div class="card">
+    <div class="big" style="font-size:26px">The calendar that fills itself</div>
+    <div class="mut" style="margin:6px 0 10px">Photograph the school flyer, the practice schedule, the invitation — Tu Casa reads it and the events land here.</div>
+    <button class="btn btn-terra btn-big" id="scanFlyer">📷 Scan a flyer</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px">
+      <input type="text" id="evT" placeholder="Or type: what">
+      <input type="date" id="evD">
+    </div>
+    <button class="btn btn-ghost btn-big" id="evAdd">+ Add by hand</button>
+    <div id="evList"></div>
+  </div>
+</section>
+
+<section id="food">
+  <div class="card">
+    <div class="big" style="font-size:26px">Food</div>
+    <div class="mut" style="margin:6px 0 10px">Photograph the fridge or pantry — Tu Casa writes the list of what's missing and what dinner it can see in there.</div>
+    <button class="btn btn-terra btn-big" id="scanFridge">📷 Scan the fridge / pantry</button>
+    <div style="display:flex;gap:8px;margin-top:6px"><input type="text" id="groIn" placeholder="Add to the list…" style="flex:1"><button class="btn btn-ghost" id="groBtn">Add</button></div>
+    <div id="groList"></div>
+    <div class="card" style="margin:14px 0 0;background:#ffffff08" id="mealIdeas" hidden></div>
+  </div>
+</section>
+
+<footer>Powered by <b>Accelerated Experiences, LLC</b> · everything stays on this device · the scan booth reads photos and forgets them</footer>
+</div>
+<nav>
+  <button data-s="wall" class="on"><span class="ic">🏠</span>Wall</button>
+  <button data-s="cal"><span class="ic">📅</span>Calendar</button>
+  <button data-s="food"><span class="ic">🛒</span>Food</button>
+</nav>
+<input type="file" id="camF" accept="image/*" capture="environment" hidden>
+<dialog id="dlg"></dialog>
+<script>
+var KEY='tucasa.v1';
+function db(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function put(d){localStorage.setItem(KEY,JSON.stringify(d))}
+var S=db(); S.events=S.events||[]; S.gro=S.gro||[]; put(S);
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function go(id){[].forEach.call(document.querySelectorAll('nav button'),function(x){x.classList.toggle('on',x.dataset.s===id)});
+  [].forEach.call(document.querySelectorAll('section'),function(s){s.classList.toggle('on',s.id===id)})}
+[].forEach.call(document.querySelectorAll('nav button'),function(b){b.onclick=function(){go(b.dataset.s)}});
+[].forEach.call(document.querySelectorAll('[data-go]'),function(b){b.onclick=function(){go(b.dataset.go)}});
+/* clock */
+function clk(){var n=new Date();
+  document.getElementById('clock').textContent=n.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+  document.getElementById('today').textContent=n.toLocaleDateString([],{weekday:'long',month:'long',day:'numeric'});}
+clk();setInterval(clk,15000);
+/* dinner */
+function drawDinner(){var t=S.dinner&&S.dinner.day===new Date().toDateString()?S.dinner.t:'';
+  document.getElementById('dinnerShow').textContent=t}
+document.getElementById('dinnerBtn').onclick=function(){
+  S.dinner={t:document.getElementById('dinnerIn').value.trim(),day:new Date().toDateString()};put(S);
+  document.getElementById('dinnerIn').value='';drawDinner()};
+/* events */
+function fmtD(iso){var d=new Date(iso+'T12:00');return d.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'})}
+function drawEvents(){
+  S.events.sort(function(a,b){return a.d<b.d?-1:1});
+  var today=new Date().toISOString().slice(0,10);
+  S.events=S.events.filter(function(e){return e.d>=today});put(S);
+  var h=S.events.map(function(e,i){return '<div class="ev"><span class="d">'+fmtD(e.d)+'</span><span style="flex:1">'+esc(e.t)+'</span><button class="btn btn-ghost" style="min-height:38px" data-i="'+i+'">✕</button></div>'}).join('');
+  document.getElementById('evList').innerHTML=h||'<div class="mut" style="padding:12px 0">Nothing coming up. Scan a flyer and watch it fill.</div>';
+  document.getElementById('wallEvents').innerHTML=S.events.slice(0,5).map(function(e){return '<div class="ev"><span class="d">'+fmtD(e.d)+'</span><span>'+esc(e.t)+'</span></div>'}).join('')||'<div class="mut" style="padding:10px 0">Clear day. Imagine that.</div>';
+  [].forEach.call(document.querySelectorAll('#evList .ev button'),function(b){
+    b.onclick=function(){S.events.splice(+b.dataset.i,1);put(S);drawEvents()}});
+}
+document.getElementById('evAdd').onclick=function(){
+  var t=document.getElementById('evT').value.trim(),d=document.getElementById('evD').value;
+  if(!t||!d){alert('Need the what and the when.');return}
+  S.events.push({t:t,d:d});put(S);
+  document.getElementById('evT').value='';drawEvents()};
+/* groceries */
+function drawGro(){
+  document.getElementById('groList').innerHTML=S.gro.map(function(g,i){
+    return '<div class="gro'+(g.x?' done':'')+'"><button data-i="'+i+'" style="font-size:24px">'+(g.x?'✅':'⬜')+'</button><span style="flex:1">'+esc(g.t)+'</span><button data-del="'+i+'" class="mut">✕</button></div>'}).join('')
+    ||'<div class="mut" style="padding:12px 0">List\'s empty. Scan the fridge — it knows what\'s missing.</div>';
+  [].forEach.call(document.querySelectorAll('.gro [data-i]'),function(b){b.onclick=function(){S.gro[+b.dataset.i].x=!S.gro[+b.dataset.i].x;put(S);drawGro()}});
+  [].forEach.call(document.querySelectorAll('.gro [data-del]'),function(b){b.onclick=function(){S.gro.splice(+b.dataset.del,1);put(S);drawGro()}});
+}
+document.getElementById('groBtn').onclick=function(){
+  var v=document.getElementById('groIn').value.trim();if(!v)return;
+  S.gro.push({t:v});put(S);document.getElementById('groIn').value='';drawGro()};
+/* ---- THE SCANS ---- */
+var scanMode=null;
+document.getElementById('scanFlyer').onclick=function(){scanMode='flyer';document.getElementById('camF').click()};
+document.getElementById('scanFridge').onclick=function(){scanMode='fridge';document.getElementById('camF').click()};
+document.getElementById('camF').addEventListener('change',function(){
+  var f=this.files[0];this.value='';if(!f)return;
+  var img=new Image();img.onload=function(){
+    var m=1100/Math.max(img.width,img.height),c=document.createElement('canvas');
+    c.width=Math.round(img.width*Math.min(1,m));c.height=Math.round(img.height*Math.min(1,m));
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    sendScan(c.toDataURL('image/jpeg',0.82));
+  };img.src=URL.createObjectURL(f);
+});
+function sendScan(dataUrl){
+  var d=document.getElementById('dlg');
+  d.innerHTML='<div class="big" style="font-size:24px"><span class="spin"></span> Reading it…</div><div class="mut" style="margin-top:8px">'+(scanMode==='flyer'?'Looking for dates, times and the thing itself.':'Taking stock of what\'s in there.')+'</div>';
+  d.showModal();
+  fetch('https://aexperiences.studio/api/tucasa-scan',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({mode:scanMode,image:dataUrl,today:new Date().toISOString().slice(0,10)})})
+  .then(function(r){return r.json()}).then(function(j){
+    if(!j.ok){d.innerHTML='<div class="big" style="font-size:22px">Couldn\'t read that one.</div><div class="mut" style="margin:8px 0">'+esc(j.message||'Try a straighter shot with more light — or add it by hand.')+'</div><button class="btn btn-gold btn-big" id="k">OK</button>';document.getElementById('k').onclick=function(){d.close()};return}
+    if(scanMode==='flyer'){
+      var evs=j.events||[];
+      d.innerHTML='<div class="big" style="font-size:24px">Found '+evs.length+' event'+(evs.length===1?'':'s')+'</div>'
+        +evs.map(function(e){return '<div class="ev"><span class="d">'+esc(e.date)+'</span><span>'+esc(e.title)+'</span></div>'}).join('')
+        +'<button class="btn btn-gold btn-big" id="k">Put them on the calendar →</button><button class="btn btn-ghost btn-big" id="x">Never mind</button>';
+      document.getElementById('k').onclick=function(){
+        evs.forEach(function(e){if(e.date&&e.title)S.events.push({t:e.title+(e.time?' · '+e.time:''),d:e.date})});
+        put(S);drawEvents();d.close();go('cal');
+      };
+      document.getElementById('x').onclick=function(){d.close()};
+    }else{
+      var need=j.missing||[],ideas=j.meals||[];
+      d.innerHTML='<div class="big" style="font-size:24px">The fridge report</div>'
+        +(need.length?'<div class="mut" style="margin:8px 0">Looks like you\'re out of:</div>'+need.map(function(x){return '<div class="gro">🛒 <span>'+esc(x)+'</span></div>'}).join(''):'<div class="mut" style="margin:8px 0">Nothing obviously missing.</div>')
+        +(ideas.length?'<div class="mut" style="margin:8px 0">Dinner it can see in there:</div>'+ideas.map(function(x){return '<div class="ev"><span>🍽</span><span>'+esc(x)+'</span></div>'}).join(''):'')
+        +'<button class="btn btn-gold btn-big" id="k">Add missing to the list →</button><button class="btn btn-ghost btn-big" id="x">Close</button>';
+      document.getElementById('k').onclick=function(){need.forEach(function(x){S.gro.push({t:x})});put(S);drawGro();d.close();go('food')};
+      document.getElementById('x').onclick=function(){d.close()};
+    }
+  }).catch(function(){
+    d.innerHTML='<div class="big" style="font-size:22px">The scan booth is warming up.</div><div class="mut" style="margin:8px 0">Try again in a minute — or add it by hand, it still counts.</div><button class="btn btn-gold btn-big" id="k">OK</button>';
+    document.getElementById('k').onclick=function(){d.close()};
+  });
+}
+drawDinner();drawEvents();drawGro();
+</script></body></html>
