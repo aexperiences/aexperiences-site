@@ -1,0 +1,4 @@
+{ "name":"Revolver OS","short_name":"Revolver","description":"Your record collection — scan a shelf, Revolver files it. By Accelerated Experiences, LLC.",
+  "start_url":"/apps/revolver/","scope":"/apps/revolver/","display":"standalone",
+  "background_color":"#241810","theme_color":"#241810",
+  "icons":[{"src":"icon.png","sizes":"1024x1024","type":"image/png","purpose":"any"},{"src":"icon.png","sizes":"1024x1024","type":"image/png","purpose":"maskable"}] }

@@ -1,0 +1,220 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Revolver OS — your record collection</title>
+<meta name="description" content="Point your camera at the crate. Revolver OS identifies your vinyl — even a whole shelf at once — and files it by genre. Your collection stays on your device.">
+<link rel="icon" href="/apps/revolver/icon.png"><link rel="apple-touch-icon" href="/apps/revolver/icon.png"><link rel="manifest" href="/apps/revolver/manifest.webmanifest">
+<style>
+:root{--bg:#241810;--bg2:#2e2015;--card:#33241735;--line:#ffffff22;--cream:#f2e8d8;--mut:#b9a68d;--gold:#e2b45a;--wax:#151212;--tap:44px}
+*{margin:0;box-sizing:border-box}button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+body{font-family:-apple-system,'Segoe UI',Roboto,sans-serif;background:linear-gradient(160deg,#241810,#2e2015 60%,#1c140c);color:var(--cream);min-height:100vh}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+header{padding:26px 0 10px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo img{width:52px;height:52px;border-radius:13px}
+h1{font-size:26px;letter-spacing:-.02em}
+h1 span{color:var(--gold)}
+.sub{color:var(--mut);font-size:13.5px;margin-top:2px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 8px}
+.btn{min-height:var(--tap);padding:0 18px;border-radius:13px;font-weight:700;display:inline-flex;align-items:center;gap:8px}
+.btn-gold{background:linear-gradient(180deg,#e2b45a,#c69336);color:#241a08}
+.btn-ghost{border:1.5px solid var(--line);color:var(--cream)}
+input[type=search],select{min-height:var(--tap);border-radius:12px;border:1.5px solid var(--line);background:#ffffff10;color:var(--cream);padding:0 12px;font-size:15px}
+select option{background:#2e2015}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0;scrollbar-width:none}
+.chip{flex:none;min-height:36px;padding:0 14px;border-radius:18px;border:1.5px solid var(--line);color:var(--mut);font-size:13.5px;font-weight:600;display:inline-flex;align-items:center}
+.chip.on{background:var(--gold);border-color:var(--gold);color:#241a08}
+.count{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--mut);margin:4px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;padding-bottom:90px}
+.sleeve{border-radius:12px;overflow:hidden;text-align:left;border:1px solid var(--line);background:#00000030;transition:transform .15s}
+.sleeve:hover{transform:translateY(-3px)}
+.art{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:30px;color:#00000080;position:relative}
+.art .vinyl{position:absolute;right:-16px;top:12%;width:76%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 50% 50%,#e2b45a 0 14%,#151212 15% 100%);box-shadow:inset 0 0 0 3px #00000060;opacity:.9}
+.meta{padding:9px 10px}
+.t{font-size:13px;font-weight:700;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.a{font-size:11.5px;color:var(--mut);margin-top:2px}
+.g{font-family:ui-monospace,Menlo,monospace;font-size:10px;color:var(--gold);margin-top:4px}
+.empty{color:var(--mut);text-align:center;padding:70px 10px;line-height:1.7}
+dialog{border:1px solid var(--line);border-radius:18px;background:#2c1f13;color:var(--cream);max-width:520px;width:92vw;padding:22px}
+dialog::backdrop{background:#000000a8}
+.scanrow{display:flex;gap:10px;overflow-x:auto;margin:12px 0}
+.scanrow img{height:86px;border-radius:9px}
+.idcard{border:1px solid var(--line);border-radius:13px;padding:12px;margin:10px 0;background:#ffffff08}
+.idcard input,.idcard select{width:100%;margin-top:6px;min-height:38px}
+.idrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.note{font-size:12.5px;color:var(--mut);line-height:1.55;margin-top:10px}
+.spin{display:inline-block;width:18px;height:18px;border:3px solid #24180f;border-top-color:transparent;border-radius:50%;animation:sp 1s linear infinite;vertical-align:-4px}
+@keyframes sp{to{transform:rotate(360deg)}}
+footer{position:fixed;left:0;right:0;bottom:0;background:#1a120bd9;backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px 16px;font-size:12px;color:var(--mut);display:flex;justify-content:space-between;gap:10px;align-items:center}
+footer b{color:var(--cream)}
+.stat{font-family:ui-monospace,Menlo,monospace}
+</style></head><body>
+<div class="wrap">
+<header>
+  <div class="logo"><img src="/apps/revolver/icon.png" alt=""><div>
+  <h1>Revolver <span>OS</span></h1>
+  <div class="sub">Your record collection — point the camera at the crate. Everything stays on this device.</div>
+  </div></div>
+  <div class="bar">
+    <button class="btn btn-gold" id="scanBtn">📷 Scan your records</button>
+    <button class="btn btn-ghost" id="handBtn">Add by hand</button>
+    <button class="btn btn-ghost" id="exportBtn">Export</button>
+    <input type="search" id="q" placeholder="Search artist or album…" style="flex:1;min-width:150px">
+    <select id="sortBy"><option value="added">Newest first</option><option value="artist">Artist A–Z</option><option value="title">Title A–Z</option><option value="year">Year, oldest</option><option value="yeard">Year, newest</option></select>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="count" id="count"></div>
+</header>
+<main><div class="grid" id="grid"></div><div class="empty" id="empty" hidden>Nothing on the platter yet.<br><b>Scan your records</b> — snap one album or a whole shelf —<br>and Revolver files them for you.</div></main>
+</div>
+<input type="file" id="cam" accept="image/*" capture="environment" multiple hidden>
+<input type="file" id="pick" accept="image/*" multiple hidden>
+<dialog id="scanDlg">
+  <h2 style="font-size:19px">Identify the records</h2>
+  <div class="scanrow" id="thumbs"></div>
+  <div id="idResults"></div>
+  <div class="note" id="scanNote">Up to 4 photos per pass. A shelf shot works — Revolver reads every cover it can see.</div>
+  <div class="bar" style="margin-top:14px">
+    <button class="btn btn-gold" id="goIdent">Identify →</button>
+    <button class="btn btn-ghost" id="fileAll" hidden>File them into the collection</button>
+    <button class="btn btn-ghost" id="closeDlg">Close</button>
+  </div>
+</dialog>
+<footer>
+  <div>Powered by <b>Accelerated Experiences, LLC</b> · nothing you scan is stored on our side</div>
+  <div class="stat" id="stat"></div>
+</footer>
+<script>
+var KEY='revolver.v1';
+var GENRES=['Rock','Jazz','Soul & Funk','Hip-Hop','Country & Folk','Blues','Classical','Electronic','Pop','Reggae','Latin','Soundtrack','Other'];
+var HUES={'Rock':'#c43c36','Jazz':'#466e56','Soul & Funk':'#a0547 8'.replace(' ',''),'Hip-Hop':'#484f78','Country & Folk':'#8a6b3c','Blues':'#3c5a78','Classical':'#d6d6ce','Electronic':'#5a8a8a','Pop':'#e2b45a','Reggae':'#4f7842','Latin':'#c26a3a','Soundtrack':'#6b5a78','Other':'#60524a'};
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
+function save(v){localStorage.setItem(KEY,JSON.stringify(v))}
+var crate=load(), genre='All', term='', sortBy='added';
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function chips(){
+  var host=document.getElementById('chips'); host.innerHTML='';
+  var counts={}; crate.forEach(function(r){counts[r.genre]=(counts[r.genre]||0)+1});
+  ['All'].concat(GENRES.filter(function(g){return counts[g]})).forEach(function(g){
+    var b=document.createElement('button'); b.className='chip'+(genre===g?' on':'');
+    b.textContent=g+(g==='All'?' '+crate.length:' '+counts[g]);
+    b.onclick=function(){genre=g;render()}; host.appendChild(b);
+  });
+}
+function render(){
+  chips();
+  var list=crate.filter(function(r){
+    if(genre!=='All'&&r.genre!==genre)return false;
+    if(!term)return true;
+    return (r.artist+' '+r.title).toLowerCase().indexOf(term)>-1;
+  });
+  if(sortBy==='artist')list.sort(function(a,b){return a.artist.localeCompare(b.artist)});
+  else if(sortBy==='title')list.sort(function(a,b){return a.title.localeCompare(b.title)});
+  else if(sortBy==='year')list.sort(function(a,b){return (a.year||9999)-(b.year||9999)});
+  else if(sortBy==='yeard')list.sort(function(a,b){return (b.year||0)-(a.year||0)});
+  else list.sort(function(a,b){return b.added-a.added});
+  var g=document.getElementById('grid'); g.innerHTML='';
+  list.forEach(function(r){
+    var el=document.createElement('button'); el.className='sleeve';
+    var hue=HUES[r.genre]||HUES.Other;
+    var init=(r.artist||'?').split(/\s+/).map(function(w){return w[0]||''}).join('').slice(0,2).toUpperCase();
+    el.innerHTML='<div class="art" style="background:'+hue+'"><span>'+esc(init)+'</span><span class="vinyl"></span></div>'
+      +'<div class="meta"><div class="t">'+esc(r.title)+'</div><div class="a">'+esc(r.artist)+(r.year?' · '+r.year:'')+'</div><div class="g">'+esc(r.genre)+'</div></div>';
+    el.onclick=function(){editRec(r.id)};
+    g.appendChild(el);
+  });
+  document.getElementById('empty').hidden=!!crate.length;
+  document.getElementById('count').textContent=list.length+' of '+crate.length+' records'+(genre!=='All'?' · '+genre:'')+(term?' · “'+term+'”':'');
+  var yrs=crate.filter(function(r){return r.year}).map(function(r){return r.year});
+  document.getElementById('stat').textContent=crate.length+' records'+(yrs.length?' · '+Math.min.apply(null,yrs)+'–'+Math.max.apply(null,yrs):'');
+}
+document.getElementById('q').addEventListener('input',function(){term=this.value.trim().toLowerCase();render()});
+document.getElementById('sortBy').addEventListener('change',function(){sortBy=this.value;render()});
+function editRec(id){
+  var r=crate.find(function(x){return x.id===id}); if(!r)return;
+  var nv=prompt('Edit “Artist — Title — Year — Genre”, or type DELETE',r.artist+' — '+r.title+' — '+(r.year||'')+' — '+r.genre);
+  if(nv==null)return;
+  if(nv.trim()==='DELETE'){crate=crate.filter(function(x){return x.id!==id});save(crate);render();return}
+  var p=nv.split('—').map(function(s){return s.trim()});
+  if(p[0])r.artist=p[0]; if(p[1])r.title=p[1]; r.year=parseInt(p[2])||r.year; if(p[3]&&GENRES.indexOf(p[3])>-1)r.genre=p[3];
+  save(crate);render();
+}
+document.getElementById('handBtn').onclick=function(){
+  var nv=prompt('Artist — Title — Year — Genre\n(genres: '+GENRES.join(', ')+')','');
+  if(!nv)return; var p=nv.split('—').map(function(s){return s.trim()});
+  if(!p[0]||!p[1]){alert('Need at least “Artist — Title”.');return}
+  crate.push({id:Date.now()+''+Math.random(),artist:p[0],title:p[1],year:parseInt(p[2])||null,genre:(GENRES.indexOf(p[3])>-1?p[3]:'Other'),added:Date.now()});
+  save(crate);render();
+};
+document.getElementById('exportBtn').onclick=function(){
+  var csv='artist,title,year,genre\n'+crate.map(function(r){return '"'+r.artist.replace(/"/g,'""')+'","'+r.title.replace(/"/g,'""')+'",'+(r.year||'')+','+r.genre}).join('\n');
+  var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download='revolver-collection.csv'; a.click();
+};
+/* ---- the scan ---- */
+var dlg=document.getElementById('scanDlg'), files=[], pending=[];
+document.getElementById('scanBtn').onclick=function(){
+  var mob=/Mobi|Android|iPhone|iPad/.test(navigator.userAgent);
+  document.getElementById(mob?'cam':'pick').click();
+};
+function onFiles(fl){
+  files=[].slice.call(fl,0,4); if(!files.length)return;
+  var th=document.getElementById('thumbs'); th.innerHTML='';
+  files.forEach(function(f){var i=document.createElement('img');i.src=URL.createObjectURL(f);th.appendChild(i)});
+  document.getElementById('idResults').innerHTML='';
+  document.getElementById('fileAll').hidden=true;
+  document.getElementById('goIdent').hidden=false;
+  document.getElementById('scanNote').textContent='Up to 4 photos per pass. A shelf shot works — Revolver reads every cover it can see.';
+  dlg.showModal();
+}
+document.getElementById('cam').addEventListener('change',function(){onFiles(this.files);this.value=''});
+document.getElementById('pick').addEventListener('change',function(){onFiles(this.files);this.value=''});
+document.getElementById('closeDlg').onclick=function(){dlg.close()};
+function shrink(file){return new Promise(function(res){
+  var img=new Image(); img.onload=function(){
+    var m=1100/Math.max(img.width,img.height), w=Math.round(img.width*Math.min(1,m)), h=Math.round(img.height*Math.min(1,m));
+    var c=document.createElement('canvas'); c.width=w;c.height=h;
+    c.getContext('2d').drawImage(img,0,0,w,h);
+    res(c.toDataURL('image/jpeg',0.82));
+  }; img.src=URL.createObjectURL(file);
+})}
+document.getElementById('goIdent').onclick=function(){
+  var btn=this; btn.innerHTML='<span class="spin"></span> Listening to the covers…'; btn.disabled=true;
+  Promise.all(files.map(shrink)).then(function(imgs){
+    return fetch('https://aexperiences.studio/api/revolver-scan',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({images:imgs})});
+  }).then(function(r){return r.json()}).then(function(j){
+    btn.innerHTML='Identify →'; btn.disabled=false;
+    if(!j.ok||!j.records||!j.records.length){
+      document.getElementById('scanNote').textContent=j.message||'Could not read any covers in those photos — try a straighter shot with more light.';
+      return;
+    }
+    pending=j.records;
+    var host=document.getElementById('idResults'); host.innerHTML='';
+    pending.forEach(function(r,i){
+      var c=document.createElement('div'); c.className='idcard';
+      c.innerHTML='<b>'+(i+1)+'.</b> <input value="'+esc(r.artist||'')+'" data-i="'+i+'" data-f="artist" placeholder="Artist">'
+        +'<input value="'+esc(r.title||'')+'" data-i="'+i+'" data-f="title" placeholder="Album title">'
+        +'<div class="idrow"><input value="'+esc(r.year||'')+'" data-i="'+i+'" data-f="year" placeholder="Year">'
+        +'<select data-i="'+i+'" data-f="genre">'+GENRES.map(function(g){return '<option'+(g===r.genre?' selected':'')+'>'+g+'</option>'}).join('')+'</select></div>';
+      host.appendChild(c);
+    });
+    host.addEventListener('input',function(e){
+      var t=e.target, i=+t.dataset.i, f=t.dataset.f; if(pending[i]==null)return;
+      pending[i][f]= f==='year'?(parseInt(t.value)||null):t.value;
+    });
+    document.getElementById('goIdent').hidden=true;
+    document.getElementById('fileAll').hidden=false;
+    document.getElementById('fileAll').textContent='File '+pending.length+' into the collection →';
+    document.getElementById('scanNote').textContent='Check the cards — fix anything Revolver misheard, then file them.';
+  }).catch(function(){
+    btn.innerHTML='Identify →'; btn.disabled=false;
+    document.getElementById('scanNote').textContent='The listening booth is unreachable right now — try again in a minute, or add by hand.';
+  });
+};
+document.getElementById('fileAll').onclick=function(){
+  pending.forEach(function(r){
+    if(!r.artist&&!r.title)return;
+    crate.push({id:Date.now()+''+Math.random(),artist:r.artist||'Unknown',title:r.title||'Untitled',year:r.year||null,genre:(GENRES.indexOf(r.genre)>-1?r.genre:'Other'),added:Date.now()});
+  });
+  save(crate); pending=[]; dlg.close(); render();
+};
+render();
+</script></body></html>
