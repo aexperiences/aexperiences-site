@@ -175,6 +175,11 @@
       blurb:'For heads that lose the thread at the doorway. One thing on screen, a parking lot for stray thoughts, tap-through quests for the kids (no fail states), and homes for the things you can never find. Built by a neurodivergent founder for his own house.',
       price:'Free right now', priceNote:'Part of the Neuro Divulge family' },
 
+    { id:'tucasa', name:'Tu Casa OS', tag:'The home operating system', genre:'family', state:'live',
+      acc:'#c45c3c', mark:'/apps/tucasa/icon.png', family:'Tu Casa', url:'/apps/tucasa/',
+      blurb:'The wall screen that fills itself. Photograph the school flyer — the events land on the calendar. Photograph the fridge — the list writes itself and dinner suggests itself. The Thread, kid quests and the baby log are rooms inside.',
+      price:'Free right now', priceNote:'Family edition — pricing lands with the fleet model' },
+
     { id:'espovocab', name:'ESPOvocab', tag:'Words worth keeping', genre:'learning', state:'live',
       acc:'#1E2A24', mark:M+'espovocab.svg', family:'ESPOgraduate', url:'/apps/espovocab/',
       shots:['/shots/espovocab.png'],
