@@ -170,6 +170,11 @@
       blurb:'Point your camera at the shelf — Revolver identifies your vinyl, even several covers in one photo, and files them by genre. Your collection stays on your device, export free.',
       price:'Free right now', priceNote:'Photo identification runs on our AI — free while we tune it' },
 
+    { id:'thread', name:'The Thread', tag:'Holds what the doorway wipes', genre:'mind', state:'live',
+      acc:'#c8965a', mark:'/apps/thread/icon.png', family:'Neuro Divulge', url:'/apps/thread/',
+      blurb:'For heads that lose the thread at the doorway. One thing on screen, a parking lot for stray thoughts, tap-through quests for the kids (no fail states), and homes for the things you can never find. Built by a neurodivergent founder for his own house.',
+      price:'Free right now', priceNote:'Part of the Neuro Divulge family' },
+
     { id:'espovocab', name:'ESPOvocab', tag:'Words worth keeping', genre:'learning', state:'live',
       acc:'#1E2A24', mark:M+'espovocab.svg', family:'ESPOgraduate', url:'/apps/espovocab/',
       shots:['/shots/espovocab.png'],
