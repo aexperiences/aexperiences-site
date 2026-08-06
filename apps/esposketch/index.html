@@ -334,6 +334,41 @@ var BODIES={
   none: {say:"We're stopping at the head today. A great head beats a rushed body every single time.",shapes:function(){return []}}
 };
 
+/* ---- AUTHORED BUILDS ----------------------------------------------------
+   Some characters are simply not built on a circle, and pretending otherwise
+   is why a drawing looks wrong no matter how good the details are. A Simpsons
+   head is TWO OVERLAPPING EYEBALLS with a jaw hooked under them — the skull is
+   drawn around the eyes, not the other way round. These are hand-authored
+   construction orders. Anything not in here goes through the generic engine.
+   ------------------------------------------------------------------------ */
+function simpsonBuild(nm,spikeCount,spikeLen){
+  var ex1=.455, ex2=.585, ey=.365, er=.105;   /* the two eyeballs = the anchor */
+  return {name:nm,steps:[
+   {say:nm+" is NOT built on a circle — that's the mistake everybody makes. Start with the eyes: two big circles side by side that OVERLAP in the middle. Those two circles are the whole head. Everything else hangs off them.",
+    s:[C(ex1,ey,er),C(ex2,ey,er)]},
+   {say:"Now the skull, and there's no smooth top to it — it's "+spikeCount+" spikes straight off the top of those eyeballs. Zig-zag them across and make them uneven. That jagged crown is doing all the work.",
+    s:spikes(spikeCount,.52,.385,.185,spikeLen)},
+   {say:"Here's the part that makes it him. Hook the jaw UNDER the eyes: down the left cheek, around a small chin, then swing back up and OUT to the right — the lower face juts forward past the eyes. Not a circle. A hook.",
+    s:[Q(.348,.400,.330,.552,.462,.606), Q(.462,.606,.652,.594,.700,.455)]},
+   {say:"The nose pokes straight out the side, level with the middle of the eyes. A little wedge — two lines out and one back. It sits OUTSIDE the face line.",
+    s:[L(.662,.398,.752,.432),L(.752,.432,.667,.458)]},
+   {say:"A dark pupil in each eye, sitting toward the nose side — that's what makes him look at something instead of into space. Leave a tiny white speck in each.",
+    s:[D(.487,.383,.028),D(.612,.383,.028)]},
+   {say:"Now the overbite, tucked under the nose on the right. One curve for the top lip, one shorter under it. His mouth sticks out further than his chin — that's the joke of the whole face.",
+    s:[Q(.492,.505,.600,.545,.672,.487), Q(.508,.541,.600,.582,.658,.520)]},
+   {say:"Two short lines down for the neck and a collar across. That's the whole head — no ear needed, his hair covers it.",
+    s:[L(.478,.604,.478,.662), L(.572,.590,.572,.650), Q(.430,.668,.526,.722,.638,.652)]},
+   {say:"Last step, the best one. Go back over the lines you're keeping and press harder — the eyes, the spikes, the jaw hook, the nose, the mouth. Leave the light stuff alone. Lean back. That's "+nm+", and you drew him.",
+    s:[]}
+  ]};
+}
+var BUILDS={
+  bart:function(){return simpsonBuild('Bart',9,.46)},
+  lisa:function(){return simpsonBuild('Lisa',7,.62)},
+  homer:function(){var b=simpsonBuild('Homer',2,.22); b.steps[1].say="Homer's skull is nearly bald — just two little hairs curling off the top, and an M shape if you want to be fancy."; return b},
+  simpson:function(){return simpsonBuild('a Simpson',9,.46)}
+};
+
 /* ---- who's who: signature-first specs (construction, not copies) ---- */
 var DICT={
  'bart':{h:'round',sig:'spikes9',e:'overlap',n:'point',m:'wide',b:'small',label:'Bart'},
@@ -552,6 +587,16 @@ function triadDecide(word){
   var A=lensA(word), B=lensB(word);
   bus('Lens A · structure','lensA',A.note,A.conf);
   bus('Lens B · recognition','lensB',B.note,B.conf);
+  /* an authored build wins outright — the lenses still argue, but the Pacemaker
+     knows a hand-drawn construction beats a generic assembly every time */
+  var authoredKey=null, lw=(word||'').toLowerCase();
+  for(var bk in BUILDS){ if(lw.indexOf(bk)>-1){ authoredKey=bk; break } }
+  if(authoredKey){
+    var c2=Math.min(.98,(A.conf+B.conf)/2+.22);
+    bus('Pacemaker','pace','A hand-authored construction exists for <b>'+authoredKey+'</b>. Overriding both lenses on head geometry: this face is NOT built on a circle — it is two overlapping eyeballs with a jaw hooked under them. Confidence '+Math.round(c2*100)+'% — clears. Roz has the floor.',c2);
+    bus('Roz','roz','Taking the floor. One shape at a time.',null);
+    return {authored:BUILDS[authoredKey](),conf:c2,label:authoredKey};
+  }
   var known=specFor(word), spec, conf, verdict;
   if(known){
     spec=known; conf=Math.min(.97,(A.conf+B.conf)/2+.18);
@@ -781,7 +826,7 @@ $('start').onclick=function(){
     lesson=LESSONS[lessonKey]||LESSONS['round-friend'];
   } else {
     var d=triadDecide(word);
-    lesson=buildFromSpec(d.spec, d.label);
+    lesson = d.authored ? d.authored : buildFromSpec(d.spec, d.label);
   }
   step=0; $('next').disabled=false;
   $('nowDrawing').textContent='Drawing · '+(lesson.name||word);
