@@ -221,7 +221,199 @@ function L(x1,y1,x2,y2){return {t:'l',x1:x1,y1:y1,x2:x2,y2:y2}}
 function Q(x1,y1,cx,cy,x2,y2){return {t:'q',x1:x1,y1:y1,cx:cx,cy:cy,x2:x2,y2:y2}}
 function D(cx,cy,r){return {t:'d',cx:cx,cy:cy,r:r}}
 
-/* The classic studio build: big circle, guide cross, ears, snout, features. */
+/* ============================ THE CHARACTER ENGINE ============================
+   Nobody gets a generic bear. Every character is built from ITS OWN signature —
+   the one shape that makes you go "oh, that's him." Bart is the nine-spike crown
+   and overlapping eyes. Mickey is two big ear circles. A dragon is the snout and
+   the horns. We teach that feature EARLY, because that's the moment a student
+   recognises what they're drawing and decides they can draw.
+   These are construction guides — circles, ovals and arcs, the way any art class
+   teaches it — not copies of anybody's artwork.
+   ============================================================================ */
+function spikes(n,cx,cy,r,len){
+  var out=[], a0=Math.PI*1.13, a1=Math.PI*1.87, len=len||0.42;
+  for(var i=0;i<n;i++){
+    var a=a0+(a1-a0)*(i+.5)/n, aw=(a1-a0)/n*0.46;
+    var tl=r*(len+((i%2)?0.07:0));
+    var tx=cx+Math.cos(a)*(r+tl), ty=cy+Math.sin(a)*(r+tl);
+    out.push(L(cx+Math.cos(a-aw)*r, cy+Math.sin(a-aw)*r, tx,ty));
+    out.push(L(tx,ty, cx+Math.cos(a+aw)*r, cy+Math.sin(a+aw)*r));
+  }
+  return out;
+}
+function triEars(cx,cy,r,spread,h){
+  spread=spread||.62; h=h||.9;
+  var lx=cx-r*spread, rx=cx+r*spread, by=cy-r*.72;
+  return [L(lx-r*.28,by+r*.2, lx-r*.06,by-r*h), L(lx-r*.06,by-r*h, lx+r*.28,by+r*.08),
+          L(rx-r*.28,by+r*.08, rx+r*.06,by-r*h), L(rx+r*.06,by-r*h, rx+r*.28,by+r*.2)];
+}
+var HEADS={
+  round:  function(){return [C(.5,.40,.235)]},
+  tall:   function(){return [E(.5,.40,.195,.25)]},
+  wide:   function(){return [E(.5,.41,.255,.20)]},
+  egg:    function(){return [E(.5,.42,.205,.245)]},
+  box:    function(){return [E(.5,.40,.215,.195)]},
+  muzzly: function(){return [C(.5,.40,.225)]}
+};
+var SIG={
+  spikes9: {say:function(n){return "Here's the whole trick to "+n+" — that spiky crown. Nine spikes around the top of the head, and do NOT make them even. Uneven is what sells it."},
+            shapes:function(){return spikes(9,.5,.40,.235,.44)}},
+  spikes5: {say:function(n){return "Now the hair — five big spikes off the top. Big and confident. "+n+" is basically a triangle factory."},
+            shapes:function(){return spikes(5,.5,.40,.235,.52)}},
+  bigEars: {say:function(n){return "Two big circles up top for the ears — and this is the famous part. Let them overlap the head. Overlapping is what makes it look solid instead of stuck on."},
+            shapes:function(){return [C(.275,.175,.135),C(.725,.175,.135)]}},
+  catEars: {say:function(n){return "Two triangle ears. Straight lines are fine — ears are the fastest way to say what animal this is."},
+            shapes:function(){return triEars(.5,.40,.235)}},
+  longEars:{say:function(n){return "Two long ears going straight up, like two tall ovals. Make one flop over if you want — a flopped ear has personality."},
+            shapes:function(){return [E(.395,.13,.055,.155,-.12),E(.605,.13,.055,.155,.12)]}},
+  horns:   {say:function(n){return "Two horns curving back off the top of the head. Curved, not straight — straight horns look like a cow, curved ones look like a dragon."},
+            shapes:function(){return [Q(.33,.24,.28,.10,.40,.09),Q(.67,.24,.72,.10,.60,.09)]}},
+  hat:     {say:function(n){return "Now the hat, and honestly the hat IS "+n+". A curved band across the head and a dome on top."},
+            shapes:function(){return [Q(.27,.30,.5,.20,.73,.30),Q(.31,.28,.5,.02,.69,.28)]}},
+  antenna: {say:function(n){return "One antenna straight up with a little ball on the end."},
+            shapes:function(){return [L(.5,.20,.5,.10),D(.5,.078,.032)]}},
+  bowl:    {say:function(n){return "A bowl of hair over the top — one big curve that comes down past the eyebrows."},
+            shapes:function(){return [Q(.265,.36,.5,.10,.735,.36)]}},
+  bun:     {say:function(n){return "Hair pulled up into a bun — a circle sitting right on top."},
+            shapes:function(){return [C(.5,.135,.078),Q(.30,.30,.5,.19,.70,.30)]}},
+  mane:    {say:function(n){return "A big mane all the way around the head — a bumpy circle outside the first circle. Bumps, not a smooth ring."},
+            shapes:function(){var o=[],n2=11;for(var i=0;i<n2;i++){var a=i/n2*Math.PI*2;
+              o.push(D(.5+Math.cos(a)*.315,.40+Math.sin(a)*.315,.052))}return o}},
+  none:    {say:function(n){return "No hat, no ears — the shape of the head is doing all the work here, so make it a good one."},shapes:function(){return []}}
+};
+var EYESET={
+  overlap:{say:"Now the eyes, and these are the giveaway — two big circles side by side that OVERLAP in the middle. Not two separate eyes. Overlapping.",
+           shapes:function(){return [C(.437,.375,.088),C(.563,.375,.088)]},
+           pupils:function(){return [D(.462,.385,.026),D(.588,.385,.026)]}},
+  bigRound:{say:"Two big round eyes, close together. Close-set eyes read young and friendly — far apart reads goofy. Your call.",
+           shapes:function(){return [C(.442,.385,.062),C(.558,.385,.062)]},
+           pupils:function(){return [D(.452,.395,.028),D(.568,.395,.028)]}},
+  tallOval:{say:"Two tall ovals for eyes — taller than they are wide. That one detail is the whole difference between friendly and blank.",
+           shapes:function(){return [E(.442,.385,.045,.068),E(.558,.385,.045,.068)]},
+           pupils:function(){return [D(.450,.398,.025),D(.566,.398,.025)]}},
+  dots:   {say:"Two simple dots for eyes. Simple is not lazy — simple is confident.",
+           shapes:function(){return [D(.448,.385,.028),D(.552,.385,.028)]},
+           pupils:function(){return []}},
+  sleepy: {say:"Two closed eyes — just two curves, like little smiles upside down. Way easier than open eyes, and twice as charming.",
+           shapes:function(){return [Q(.395,.39,.442,.355,.49,.39),Q(.51,.39,.558,.355,.605,.39)]},
+           pupils:function(){return []}}
+};
+var NOSES={
+  point:{say:"A small pointed nose sticking out the side. Just two short lines — that's it.",
+         shapes:function(){return [L(.5,.44,.575,.475),L(.575,.475,.5,.49)]}},
+  button:{say:"A little button nose right in the middle. Press harder here — noses get to be dark.",
+         shapes:function(){return [D(.5,.475,.033)]}},
+  snout:{say:"A wide oval snout across the lower face, and a small dark ball on top of it for the nose.",
+         shapes:function(){return [E(.5,.525,.135,.098),E(.5,.472,.052,.042)]}},
+  beak:{say:"A beak — one triangle out the front. Sharp and simple.",
+         shapes:function(){return [L(.5,.44,.63,.485),L(.63,.485,.5,.515),L(.5,.44,.5,.515)]}},
+  none:{say:"Skip the nose entirely. Loads of great characters have no nose at all and nobody ever notices.",shapes:function(){return []}}
+};
+var MOUTHS={
+  wide:{say:"A big wide grin under the nose — a long shallow curve, wider than you think is right. Go wider.",
+        shapes:function(){return [Q(.355,.545,.5,.665,.645,.545)]}},
+  smile:{say:"A small curved smile, like the bottom of a bowl.",
+        shapes:function(){return [Q(.415,.565,.5,.635,.585,.565)]}},
+  muzzle:{say:"A line down from the nose, then a curve out each side — that's a muzzle mouth, and it works on every animal there is.",
+        shapes:function(){return [L(.5,.518,.5,.575),Q(.5,.575,.435,.615,.395,.565),Q(.5,.575,.565,.615,.605,.565)]}},
+  flat:{say:"One straight little line for the mouth. Robots and cool characters both smile with a flat line.",
+        shapes:function(){return [L(.44,.575,.56,.575)]}},
+  fangs:{say:"A wide mouth with two small fangs poking down. Friendly fangs — keep them small.",
+        shapes:function(){return [Q(.37,.545,.5,.655,.63,.545),L(.44,.575,.455,.615),L(.56,.575,.545,.615)]}}
+};
+var BODIES={
+  small:{say:"A small body underneath — shoulders and a bit of chest. We keep it small so the head stays the star.",
+         shapes:function(){return [Q(.32,.90,.5,.66,.68,.90)]}},
+  round:{say:"A big round belly under the head. Let it overlap — never leave a gap between two shapes.",
+         shapes:function(){return [E(.5,.775,.225,.175)]}},
+  tall: {say:"A tall body under the head, like a rounded rectangle, and a short neck joining them.",
+         shapes:function(){return [L(.455,.615,.455,.66),L(.545,.615,.545,.66),E(.5,.79,.175,.155)]}},
+  none: {say:"We're stopping at the head today. A great head beats a rushed body every single time.",shapes:function(){return []}}
+};
+
+/* ---- who's who: signature-first specs (construction, not copies) ---- */
+var DICT={
+ 'bart':{h:'round',sig:'spikes9',e:'overlap',n:'point',m:'wide',b:'small',label:'Bart'},
+ 'lisa':{h:'round',sig:'spikes5',e:'overlap',n:'point',m:'smile',b:'small',label:'Lisa'},
+ 'homer':{h:'round',sig:'none',e:'overlap',n:'point',m:'flat',b:'round',label:'Homer'},
+ 'simpson':{h:'round',sig:'spikes9',e:'overlap',n:'point',m:'wide',b:'small',label:'a Simpson'},
+ 'mickey':{h:'round',sig:'bigEars',e:'tallOval',n:'snout',m:'smile',b:'small',label:'Mickey'},
+ 'minnie':{h:'round',sig:'bigEars',e:'tallOval',n:'snout',m:'smile',b:'small',label:'Minnie'},
+ 'mouse':{h:'round',sig:'bigEars',e:'tallOval',n:'snout',m:'smile',b:'small',label:'a mouse'},
+ 'mario':{h:'round',sig:'hat',e:'bigRound',n:'button',m:'smile',b:'round',label:'Mario'},
+ 'luigi':{h:'tall',sig:'hat',e:'bigRound',n:'button',m:'smile',b:'tall',label:'Luigi'},
+ 'sonic':{h:'round',sig:'spikes5',e:'overlap',n:'button',m:'smile',b:'small',label:'Sonic'},
+ 'pikachu':{h:'wide',sig:'longEars',e:'dots',n:'button',m:'wide',b:'round',label:'Pikachu'},
+ 'spongebob':{h:'box',sig:'none',e:'bigRound',n:'point',m:'wide',b:'tall',label:'SpongeBob'},
+ 'dragon':{h:'muzzly',sig:'horns',e:'bigRound',n:'snout',m:'fangs',b:'round',label:'a dragon'},
+ 'dino':{h:'muzzly',sig:'none',e:'bigRound',n:'snout',m:'fangs',b:'round',label:'a dinosaur'},
+ 'cat':{h:'wide',sig:'catEars',e:'sleepy',n:'button',m:'muzzle',b:'round',label:'a cat'},
+ 'dog':{h:'wide',sig:'catEars',e:'bigRound',n:'snout',m:'muzzle',b:'round',label:'a dog'},
+ 'bunny':{h:'tall',sig:'longEars',e:'bigRound',n:'button',m:'muzzle',b:'round',label:'a bunny'},
+ 'lion':{h:'round',sig:'mane',e:'bigRound',n:'snout',m:'muzzle',b:'round',label:'a lion'},
+ 'bear':{h:'wide',sig:'bigEars',e:'dots',n:'snout',m:'muzzle',b:'round',label:'a bear'},
+ 'bird':{h:'round',sig:'none',e:'dots',n:'beak',m:'flat',b:'round',label:'a bird'},
+ 'robot':{h:'box',sig:'antenna',e:'bigRound',n:'none',m:'flat',b:'tall',label:'a robot'},
+ 'alien':{h:'egg',sig:'antenna',e:'bigRound',n:'none',m:'flat',b:'small',label:'an alien'},
+ 'girl':{h:'egg',sig:'bun',e:'tallOval',n:'button',m:'smile',b:'small',label:'a girl'},
+ 'boy':{h:'egg',sig:'bowl',e:'tallOval',n:'button',m:'smile',b:'small',label:'a boy'},
+ 'me':{h:'egg',sig:'bowl',e:'tallOval',n:'button',m:'smile',b:'small',label:'you'}
+};
+var ALIAS={simpsons:'simpson',bartsimpson:'bart',mickeymouse:'mickey',minniemouse:'minnie',
+ kitty:'cat',kitten:'cat',puppy:'dog',doggy:'dog',rabbit:'bunny',hare:'bunny',
+ trex:'dino',dinosaur:'dino',rex:'dino',godzilla:'dragon',lizard:'dragon',
+ android:'robot',droid:'robot',bot:'robot',person:'me',myself:'me',man:'boy',woman:'girl',
+ mom:'girl',mum:'girl',dad:'boy',sister:'girl',brother:'boy',friend:'me',
+ pokemon:'pikachu',hedgehog:'sonic',tiger:'cat',fox:'cat',wolf:'dog',panda:'bear',koala:'bear'};
+
+function specFor(raw){
+  var words=(raw||'').toLowerCase().replace(/[^a-z ]/g,' ').split(/\s+/).filter(Boolean);
+  var joined=words.join('');
+  if(ALIAS[joined]&&DICT[ALIAS[joined]]) return DICT[ALIAS[joined]];
+  for(var i=0;i<words.length;i++){
+    var w=words[i];
+    if(DICT[w]) return DICT[w];
+    if(ALIAS[w]&&DICT[ALIAS[w]]) return DICT[ALIAS[w]];
+    if(w.length>3){ for(var k in DICT){ if(k.indexOf(w)===0||w.indexOf(k)===0) return DICT[k]; } }
+  }
+  return null;
+}
+/* never a dead end: invent a build for a name we've never heard */
+function inventSpec(raw){
+  var s=0,t=(raw||'x'); for(var i=0;i<t.length;i++) s=(s*31+t.charCodeAt(i))>>>0;
+  var pick=function(a,n){ return a[(s>>(n*3))%a.length] };
+  return {h:pick(['round','tall','wide','egg','box'],0), sig:pick(['spikes5','catEars','horns','bowl','hat','antenna','bigEars'],1),
+    e:pick(['bigRound','tallOval','overlap','dots'],2), n:pick(['button','point','snout'],3),
+    m:pick(['smile','wide','muzzle','flat'],4), b:pick(['small','round','tall'],5), label:raw, invented:true};
+}
+
+function buildFromSpec(spec,shownName){
+  var nm=shownName||spec.label||'your character';
+  var st=[];
+  st.push({say:"Light hand — we're only sketching. Draw the head shape first, right in the middle of your paper. It doesn't have to be perfect. Mine never is.",s:HEADS[spec.h]()});
+  st.push({say:"Now a soft line down the middle and one across. Those two are just for us — they tell the face which way it's looking, and they'll disappear later.",
+    s:[Q(.5,.16,.53,.40,.5,.66),Q(.245,.42,.5,.46,.755,.42)]});
+  /* HARD RULE: every character gets a giveaway shape. A drawing with no
+     signature is the one thing that makes a student say "that's not it." */
+  var sigKey=spec.sig;
+  if(!sigKey || sigKey==='none' || !SIG[sigKey]) sigKey=inventSpec(nm).sig;
+  var sig=SIG[sigKey]||SIG.spikes5;
+  st.push({say:sig.say(nm),s:sig.shapes()});
+  var ey=EYESET[spec.e]||EYESET.bigRound;
+  st.push({say:ey.say,s:ey.shapes()});
+  var pu=ey.pupils();
+  if(pu.length) st.push({say:"Now a dark pupil in each eye — and leave one tiny white speck un-filled. That speck is the spark. It's the whole difference between a drawing and a character.",s:pu});
+  var no=NOSES[spec.n]||NOSES.button;
+  st.push({say:no.say,s:no.shapes()});
+  var mo=MOUTHS[spec.m]||MOUTHS.smile;
+  st.push({say:mo.say,s:mo.shapes()});
+  var bo=BODIES[spec.b]||BODIES.small;
+  st.push({say:bo.say,s:bo.shapes()});
+  st.push({say:"Last step, and it's the best one. Go back over the lines you want to keep and press harder. Leave the light guide lines alone — nobody sees them once the dark lines are there. Lean back and look. That's "+nm+", and you drew it.",s:[]});
+  return {name:nm,steps:st};
+}
+
+/* legacy presets kept for the four starter chips */
 var LESSONS={
  'round-friend':{ name:'a round cartoon friend', steps:[
   {say:"Start light. We're only sketching — pretend the pencil is a feather. Draw one big circle right in the middle of your paper. It does not have to be perfect. Mine never is.",s:[C(.5,.46,.26)]},
@@ -300,18 +492,61 @@ function bus(from,cls,text,conf){
     (conf!=null?'<div class="conf"><i style="width:'+Math.round(conf*100)+'%"></i></div>':'');
   $('buslog').appendChild(d); $('buslog').scrollTop=$('buslog').scrollHeight;
 }
-/* Two sealed lenses. They never see each other's note — they only post to the bus.
-   The Pacemaker reads both, gates on confidence, and is the only voice out. */
+/* ------------------------------- THE AETRIAD -------------------------------
+   Canon: two SEALED, opposing lenses that never confer — they only post to the
+   bus. The Pacemaker reads both, resolves the disagreement, gates it on a
+   confidence bar, and is the ONLY voice out. Roz teaches what clears the gate.
+   This is the real decision path for which character gets built.
+   -------------------------------------------------------------------------- */
+var MASS_WORDS={tall:['tall','long','giraffe','tower','luigi','skinny','thin'],
+  wide:['wide','fat','round','chubby','cat','bear','panda','frog'],
+  box:['robot','box','square','block','sponge','brick','machine','truck'],
+  egg:['person','boy','girl','me','man','woman','kid','face','alien']};
+/* Lens A — STRUCTURE. Sees only mass and silhouette. Never considers charm. */
+function lensA(word){
+  var w=(word||'').toLowerCase(), h='round', why='no strong mass cue; defaulting to the most forgiving volume — a circle';
+  for(var k in MASS_WORDS){ for(var i=0;i<MASS_WORDS[k].length;i++){
+    if(w.indexOf(MASS_WORDS[k][i])>-1){ h=k; why='mass cue "'+MASS_WORDS[k][i]+'" reads '+k; break } } }
+  var b=(h==='box')?'tall':(h==='wide'?'round':'small');
+  return {h:h,b:b,note:'Reads "'+word+'" as volume first. '+why+'. Build largest shape outward; if we open with detail the student quits before it looks like anything.',conf:h==='round'?0.55:0.78};
+}
+/* Lens B — RECOGNITION. Sees only the one feature that makes you say "that's him". */
+var SIG_CUES=[['spikes9',['bart','spiky','punk']],['spikes5',['sonic','lisa','hedgehog','star']],
+  ['bigEars',['mickey','minnie','mouse','bear','panda','koala']],['catEars',['cat','kitty','fox','tiger','wolf','dog','puppy']],
+  ['longEars',['bunny','rabbit','pikachu','hare','donkey']],['horns',['dragon','devil','viking','bull','demon']],
+  ['hat',['mario','luigi','hat','cap','cowboy','chef','wizard']],['antenna',['robot','alien','bot','droid']],
+  ['mane',['lion','leo']],['bun',['girl','mom','sister','princess']],['bowl',['boy','dad','brother']]];
+function lensB(word){
+  var w=(word||'').toLowerCase(), sig='none', hit='';
+  for(var i=0;i<SIG_CUES.length;i++){ for(var j=0;j<SIG_CUES[i][1].length;j++){
+    if(w.indexOf(SIG_CUES[i][1][j])>-1){ sig=SIG_CUES[i][0]; hit=SIG_CUES[i][1][j]; break } }
+    if(sig!=='none') break }
+  var e=/simpson|bart|lisa|homer|sonic/.test(w)?'overlap':(/cat|sleep/.test(w)?'sleepy':'bigRound');
+  return {sig:sig,e:e,note:sig==='none'
+      ? 'Found no signature feature in "'+word+'". Warns loudly: without a giveaway shape the student will not recognise it and will not believe they drew it.'
+      : 'Locks on "'+hit+'" → signature is the '+sig+'. Insists this lands EARLY — the moment it looks like the character is the moment they decide they can draw.',
+    conf:sig==='none'?0.35:0.9};
+}
 function triadDecide(word){
   $('buslog').innerHTML='';
-  var key=chooseLesson(word);
-  var L=LESSONS[key];
-  bus('Lens A · structure','lensA','Reads "'+word+'" as mass first: one dominant volume, then satellites. Recommends building from the largest shape outward. Warns: if we start with detail, the student quits.',null);
-  bus('Lens B · feeling','lensB','Reads "'+word+'" as character first. Wants the eyes early enough to hook them, late enough that the head is solid. Warns: a perfect shape with dead eyes teaches nothing.',null);
-  var conf=0.82;
-  bus('Pacemaker','pace','Both lenses agree on order of operations, disagree on when the face arrives. Gate: structure first, face at step six, spark last. Plan selected: <b>'+L.name+'</b> · '+L.steps.length+' steps. Confidence '+Math.round(conf*100)+'% — clears. Handing the only voice to Roz.',conf);
-  bus('Roz','roz','Taking the floor. I teach one shape at a time and I never say the word wrong.',null);
-  return key;
+  var A=lensA(word), B=lensB(word);
+  bus('Lens A · structure','lensA',A.note,A.conf);
+  bus('Lens B · recognition','lensB',B.note,B.conf);
+  var known=specFor(word), spec, conf, verdict;
+  if(known){
+    spec=known; conf=Math.min(.97,(A.conf+B.conf)/2+.18);
+    verdict='Both lenses point at a known build. A wants the volume first, B wants the giveaway first — <b>resolved</b>: volume, guides, then the signature at step three, which is earlier than A likes and later than B likes. Selected: <b>'+(known.label||word)+'</b>.';
+  } else {
+    spec={h:A.h,b:A.b,sig:B.sig,e:B.e,n:(B.sig==='catEars'||/dog|bear|lion|dragon/.test((word||'').toLowerCase()))?'snout':'button',
+          m:B.sig==='horns'?'fangs':'smile',label:word};
+    if(B.sig==='none'){ var inv=inventSpec(word); spec.sig=inv.sig; spec.m=inv.m; }
+    conf=(A.conf+B.conf)/2;
+    verdict='No known build for "'+word+'". A supplies the volume, B supplies the signature — <b>merged into a new build</b>'+
+      (B.sig==='none'?' and, over B\'s objection, a signature is assigned so the drawing has a giveaway at all.':'.');
+  }
+  bus('Pacemaker','pace',verdict+' Confidence '+Math.round(conf*100)+'% — '+(conf>=.5?'clears the gate':'below gate, escalating with a note')+'. Handing the only voice to Roz.',conf);
+  bus('Roz','roz','Taking the floor. One shape at a time, and I say the name right.',null);
+  return {spec:spec,conf:conf,label:(known&&known.label)||word};
 }
 
 /* ---------------- Roz's voice (live, from ESPO Drama) ---------------- */
@@ -510,9 +745,14 @@ $('shot').onchange=function(){
 
 $('start').onclick=function(){
   ac();
-  var chosen=triadDecide(subject||'a character');
-  if(subject==='your picture') chosen=lessonKey;
-  lesson=LESSONS[chosen]||LESSONS['round-friend'];
+  var word=subject||'a character';
+  if(word==='your picture'){
+    /* the scan already put its verdict on the bus; use the preset it chose */
+    lesson=LESSONS[lessonKey]||LESSONS['round-friend'];
+  } else {
+    var d=triadDecide(word);
+    lesson=buildFromSpec(d.spec, d.label);
+  }
   step=0; $('next').disabled=false;
   $('setup').style.display='none'; $('class').classList.add('on');
   setTimeout(function(){ fit(); teach(); },60);
