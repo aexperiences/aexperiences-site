@@ -1,0 +1,6 @@
+{ "name":"ESPOsketch","short_name":"ESPOsketch",
+  "description":"A real drawing class, one shape at a time, with Coach Roz.",
+  "start_url":"./index.html","display":"standalone","orientation":"portrait",
+  "background_color":"#14181d","theme_color":"#14181d",
+  "icons":[{"src":"icon.png","sizes":"1024x1024","type":"image/png","purpose":"any"},
+           {"src":"icon.png","sizes":"512x512","type":"image/png","purpose":"maskable"}] }

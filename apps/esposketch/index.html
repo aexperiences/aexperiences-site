@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESPOsketch — you can draw</title>
+<meta name="theme-color" content="#14181d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="description" content="A real drawing class, one shape at a time, with Coach Roz talking you through it. Say a character or scan a picture.">
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#1d2228; --line:#c9c2b4;
+    --bg:#14181d; --bg2:#1b2128; --fog:#8f9aa6;
+    --gold:#e0a83a; --sage:#7fb08a; --clay:#c8794f; --sky:#6fa8dc;
+    --glass:rgba(255,255,255,.06); --edge:rgba(255,255,255,.12);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;overscroll-behavior:none}
+  body{font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,sans-serif;
+    color:#eef2f6;background:var(--bg);overflow:hidden;-webkit-user-select:none;user-select:none}
+  body::before{content:"";position:fixed;inset:-25%;z-index:-2;
+    background:radial-gradient(700px 560px at 14% 8%,#e0a83a14,transparent 62%),
+      radial-gradient(700px 620px at 88% 22%,#6fa8dc14,transparent 60%),
+      radial-gradient(760px 640px at 50% 98%,#7fb08a12,transparent 62%),
+      linear-gradient(168deg,#1b2128,#14181d 60%,#0f1317)}
+
+  /* ---------- slick glass nav ---------- */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;gap:13px;
+    padding:11px 16px;background:rgba(20,24,29,.62);border-bottom:1px solid var(--edge);
+    backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5)}
+  .mark{width:36px;height:36px;border-radius:11px;flex:none;display:grid;place-items:center;
+    background:linear-gradient(140deg,var(--gold),var(--clay));box-shadow:0 6px 20px #e0a83a3a}
+  .mark svg{width:22px;height:22px;display:block}
+  .brand{line-height:1.15}
+  .brand b{font-size:16.5px;letter-spacing:.2px}
+  .brand span{display:block;font-size:11px;letter-spacing:2.4px;text-transform:uppercase;color:var(--fog);white-space:nowrap}
+  .nav .sp{flex:1}
+  .pill{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--fog);
+    border:1px solid var(--edge);background:var(--glass);border-radius:99px;padding:6px 13px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--fog)}
+  .dot.on{background:var(--sage);box-shadow:0 0 10px var(--sage)}
+
+  .stage{position:fixed;inset:58px 0 74px;display:flex;flex-direction:column}
+
+  /* ---------- setup ---------- */
+  .setup{flex:1;overflow-y:auto;padding:20px 18px 30px;max-width:720px;margin:0 auto;width:100%}
+  h1{font-size:29px;margin:6px 0 4px;letter-spacing:-.4px;font-weight:800}
+  h1 em{font-style:normal;background:linear-gradient(90deg,var(--gold),var(--clay));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--fog);font-size:15px;margin:0 0 20px}
+  .card{background:var(--glass);border:1px solid var(--edge);border-radius:22px;padding:18px;margin-bottom:14px;
+    backdrop-filter:blur(12px)}
+  .lbl{font-size:11.5px;letter-spacing:2.6px;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
+  .chips{display:flex;flex-wrap:wrap;gap:9px}
+  .chip{border:1px solid var(--edge);background:rgba(255,255,255,.04);color:#eef2f6;border-radius:15px;
+    padding:11px 15px;font:600 15px inherit;cursor:pointer;display:flex;align-items:center;gap:8px;transition:.15s}
+  .chip:hover{background:rgba(255,255,255,.09)}
+  .chip.on{background:linear-gradient(135deg,var(--gold),#c98f2c);color:#231803;border-color:transparent;font-weight:800}
+  .chip .g{font-size:19px}
+  .row{display:flex;gap:10px;margin-top:12px}
+  .row input{flex:1;border-radius:14px;border:1px solid var(--edge);background:rgba(0,0,0,.28);color:#eef2f6;
+    padding:13px 15px;font:16px inherit;outline:none;-webkit-user-select:text;user-select:text}
+  .row input:focus{border-color:var(--gold)}
+  .row button{border:none;border-radius:14px;padding:13px 18px;font:800 15px inherit;cursor:pointer;
+    background:var(--sage);color:#0e1c14}
+  .mic{width:100%;margin-top:11px;border:none;border-radius:16px;padding:15px;cursor:pointer;
+    font:800 16px inherit;color:#231803;background:linear-gradient(135deg,var(--gold),#c98f2c);
+    display:flex;align-items:center;justify-content:center;gap:9px}
+  .mic.listening{background:linear-gradient(135deg,var(--clay),#a8532e);color:#fff;animation:pulse 1.2s infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 #c8794f77}50%{box-shadow:0 0 0 18px #c8794f00}}
+  .go{width:100%;border:none;border-radius:20px;padding:22px;font:900 21px inherit;cursor:pointer;
+    color:#0e1c14;background:linear-gradient(135deg,var(--sage),#5f9a70);box-shadow:0 10px 30px #7fb08a40;margin-top:4px}
+  .go:disabled{opacity:.4}
+
+  /* ---------- class ---------- */
+  .class{flex:1;display:none;flex-direction:column;min-height:0}
+  .class.on{display:flex}
+  .easel{flex:1;position:relative;margin:10px 12px 0;border-radius:20px;overflow:hidden;
+    background:var(--paper);box-shadow:0 18px 50px #0009;min-height:0}
+  canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+  #guide{z-index:1} #yours{z-index:2}
+  .roz{position:absolute;left:12px;right:12px;bottom:12px;z-index:3;display:flex;gap:11px;align-items:flex-start;
+    background:rgba(20,24,29,.9);border:1px solid var(--edge);border-radius:17px;padding:12px 14px;
+    backdrop-filter:blur(14px)}
+  .rozface{width:38px;height:38px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:19px;
+    background:linear-gradient(140deg,var(--clay),#8f4a2c);box-shadow:0 0 0 0 #c8794f66}
+  .rozface.speaking{animation:ring 1.3s ease-out infinite}
+  @keyframes ring{0%{box-shadow:0 0 0 0 #c8794f88}100%{box-shadow:0 0 0 16px #c8794f00}}
+  .rozsay{flex:1;font-size:16px;line-height:1.5;color:#f2f5f8}
+  .rozwho{font-size:10.5px;letter-spacing:2.2px;text-transform:uppercase;color:var(--clay);margin-bottom:2px}
+  .steps{display:flex;gap:5px;padding:11px 14px 3px;justify-content:center;flex-wrap:wrap}
+  .pip{width:26px;height:5px;border-radius:99px;background:rgba(255,255,255,.14)}
+  .pip.done{background:var(--sage)} .pip.now{background:var(--gold)}
+
+  /* ---------- bus ---------- */
+  .bus{position:fixed;right:0;top:58px;bottom:74px;width:290px;z-index:55;transform:translateX(100%);
+    transition:transform .3s cubic-bezier(.2,.8,.2,1);background:rgba(15,19,23,.93);
+    border-left:1px solid var(--edge);backdrop-filter:blur(18px);display:flex;flex-direction:column}
+  .bus.on{transform:none}
+  .bushead{padding:13px 15px;border-bottom:1px solid var(--edge)}
+  .bushead b{font-size:13px;letter-spacing:2.4px;text-transform:uppercase;color:var(--gold)}
+  .bushead p{margin:5px 0 0;font-size:11.5px;color:var(--fog);line-height:1.5}
+  .buslog{flex:1;overflow-y:auto;padding:10px 12px;font:12.5px/1.55 ui-monospace,Menlo,monospace}
+  .msg{margin-bottom:9px;padding:8px 10px;border-radius:11px;background:rgba(255,255,255,.05);
+    border-left:3px solid var(--fog);animation:slide .3s ease}
+  @keyframes slide{from{opacity:0;transform:translateX(10px)}to{opacity:1}}
+  .msg.lensA{border-color:var(--sky)} .msg.lensB{border-color:var(--clay)}
+  .msg.pace{border-color:var(--gold)} .msg.roz{border-color:var(--sage)}
+  .msg .from{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--fog);margin-bottom:3px}
+  .conf{height:4px;border-radius:99px;background:rgba(255,255,255,.12);margin-top:6px;overflow:hidden}
+  .conf i{display:block;height:100%;background:var(--gold);width:0;transition:width .5s}
+
+  /* ---------- dock ---------- */
+  .dock{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:70;display:flex;gap:7px;
+    padding:8px;border-radius:22px;background:rgba(15,19,23,.86);border:1px solid var(--edge);
+    backdrop-filter:blur(20px) saturate(1.4);box-shadow:0 14px 42px #0008}
+  .dock button{border:none;border-radius:16px;padding:12px 16px;font:800 14.5px inherit;cursor:pointer;
+    color:#eef2f6;background:rgba(255,255,255,.08);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .dock button.main{background:linear-gradient(135deg,var(--gold),#c98f2c);color:#231803}
+  .dock button:disabled{opacity:.35}
+  @media(max-width:560px){
+    .bus{width:100%}
+    h1{font-size:25px}
+    .dock{left:10px;right:10px;transform:none;max-width:none;overflow-x:auto;justify-content:flex-start;
+      -webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .dock::-webkit-scrollbar{display:none}
+    .dock button{padding:12px 13px;font-size:13.5px;flex:none}
+    .brand span{font-size:10px;letter-spacing:1.8px}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#231803" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 20l3.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10L3 20z"/><path d="M13.5 6.5l4 4"/></svg></div>
+  <div class="brand"><b>ESPOsketch</b><span>ESPOart · you can draw</span></div>
+  <div class="sp"></div>
+  <div class="pill"><span class="dot" id="rozdot"></span><span id="rozstate">Roz</span></div>
+</nav>
+
+<div class="stage">
+  <!-- SETUP -->
+  <section class="setup" id="setup">
+    <h1>Today you find out <em>you can draw</em>.</h1>
+    <p class="sub">A real class, one shape at a time. Coach Roz talks you through every line — exactly like the animation studio. Paper and pencil, or draw right on the screen.</p>
+
+    <div class="card">
+      <div class="lbl">Pick something to draw</div>
+      <div class="chips" id="chips"></div>
+      <div class="row">
+        <input id="custom" placeholder="…or type any character" autocomplete="off">
+        <button id="customOk">Use it</button>
+      </div>
+      <button class="mic" id="mic"><span>🎤</span><span id="micT">Say what you want to draw</span></button>
+    </div>
+
+    <div class="card">
+      <div class="lbl">Or scan a picture</div>
+      <p class="sub" style="margin:0 0 11px;font-size:14px">Point the camera at a drawing, a toy, a book cover — the triad reads its shapes and builds a lesson from them.</p>
+      <div class="row"><input type="file" id="shot" accept="image/*" capture="environment" style="padding:11px"></div>
+      <div id="scanState" style="color:var(--fog);font-size:13.5px;margin-top:9px"></div>
+    </div>
+
+    <button class="go" id="start">✏️ Start the class</button>
+  </section>
+
+  <!-- CLASS -->
+  <section class="class" id="class">
+    <div class="steps" id="pips"></div>
+    <div class="easel">
+      <canvas id="guide"></canvas>
+      <canvas id="yours"></canvas>
+      <div class="roz">
+        <div class="rozface" id="rozface">🎨</div>
+        <div><div class="rozwho">Coach Roz</div><div class="rozsay" id="rozsay">Ready when you are.</div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- THE BUS -->
+<aside class="bus" id="bus">
+  <div class="bushead"><b>The Bus</b>
+    <p>Two sealed lenses argue. They never confer. The <b style="color:var(--gold)">Pacemaker</b> gates it on confidence and is the only voice out — then Roz teaches it.</p></div>
+  <div class="buslog" id="buslog"></div>
+</aside>
+
+<div class="dock">
+  <button class="main" id="next">Next step ›</button>
+  <button id="back">‹ Back</button>
+  <button id="repeat">🔊 Again</button>
+  <button id="clear">Erase mine</button>
+  <button id="busBtn">⇋ Bus</button>
+  <button id="quit">↺ New</button>
+</div>
+
+<script>
+/* ==========================================================================
+   ESPOsketch — ESPOart family · Accelerated Experiences LLC
+   A drawing class built the way the animation studio teaches it: every
+   character is circles, ovals and arcs, added ONE at a time, out loud.
+   Triad on the bus: two sealed opposing lenses -> Pacemaker gates ->
+   Roz is the only voice the student hears. Nothing leaves the device
+   except the sentence Roz speaks.
+   ========================================================================== */
+(function(){
+var $=function(i){return document.getElementById(i)};
+
+/* ---------------- lesson geometry ----------------
+   Coordinates are 0..1 on a square field; the canvas maps them to the paper.
+   Shapes: circle{cx,cy,r} ellipse{cx,cy,rx,ry,rot} arc{cx,cy,r,a0,a1}
+           line{x1,y1,x2,y2} curve{x1,y1,cx,cy,x2,y2} dot{cx,cy,r}      */
+
+function C(cx,cy,r){return {t:'c',cx:cx,cy:cy,r:r}}
+function E(cx,cy,rx,ry,rot){return {t:'e',cx:cx,cy:cy,rx:rx,ry:ry,rot:rot||0}}
+function A(cx,cy,r,a0,a1){return {t:'a',cx:cx,cy:cy,r:r,a0:a0,a1:a1}}
+function L(x1,y1,x2,y2){return {t:'l',x1:x1,y1:y1,x2:x2,y2:y2}}
+function Q(x1,y1,cx,cy,x2,y2){return {t:'q',x1:x1,y1:y1,cx:cx,cy:cy,x2:x2,y2:y2}}
+function D(cx,cy,r){return {t:'d',cx:cx,cy:cy,r:r}}
+
+/* The classic studio build: big circle, guide cross, ears, snout, features. */
+var LESSONS={
+ 'round-friend':{ name:'a round cartoon friend', steps:[
+  {say:"Start light. We're only sketching — pretend the pencil is a feather. Draw one big circle right in the middle of your paper. It does not have to be perfect. Mine never is.",s:[C(.5,.46,.26)]},
+  {say:"Now a soft line down the middle of that circle, and another across it. Those two lines are just for us — they tell the face which way it's looking.",s:[Q(.5,.20,.53,.46,.5,.72),Q(.24,.48,.5,.52,.76,.48)]},
+  {say:"Two more circles up top for the ears. Big ones. Let them touch the head and overlap a little — overlapping is what makes it look solid.",s:[C(.29,.22,.135),C(.71,.22,.135)]},
+  {say:"Down at the bottom of the cross line, draw a wide oval for the snout. Wider than it is tall.",s:[E(.5,.60,.155,.115)]},
+  {say:"A little ball on top of the snout — that's the nose. Press a bit harder here, this one gets to be dark.",s:[E(.5,.525,.062,.05)]},
+  {say:"Two eyes sitting on the up-and-down line, just above the snout. Tall ovals, not circles — that's the whole trick to a friendly face.",s:[E(.435,.435,.045,.068),E(.565,.435,.045,.068)]},
+  {say:"Give each eye a small dark pupil, and leave one tiny white dot un-shaded. That dot is the spark. It's what makes it alive.",s:[D(.447,.45,.026),D(.577,.45,.026)]},
+  {say:"A smile under the nose — a curve like a shallow bowl — and a little line down from the nose to meet it.",s:[Q(.40,.635,.5,.70,.60,.635),L(.5,.575,.5,.62)]},
+  {say:"Last thing. Go back over the lines you want to keep and press harder. Leave the light guide lines alone — they'll disappear when you look at the whole thing. Lean back. That's a character, and you drew it.",s:[]}
+ ]},
+ 'sleepy-cat':{ name:'a sleepy cat', steps:[
+  {say:"Light hand. One circle for the head, a bit wider than it is tall.",s:[E(.5,.40,.215,.19)]},
+  {say:"Two triangles on top for ears. Straight lines are fine — cats are made of triangles and naps.",s:[L(.33,.28,.36,.13),L(.36,.13,.46,.245),L(.54,.245,.64,.13),L(.64,.13,.67,.28)]},
+  {say:"A big soft oval underneath for the body. Let it overlap the head — never leave a gap.",s:[E(.5,.71,.245,.185)]},
+  {say:"Two closed eyes: just two curves, like little smiles turned upside down. Sleeping is easier to draw than staring.",s:[Q(.40,.40,.435,.365,.47,.40),Q(.53,.40,.565,.365,.60,.40)]},
+  {say:"A tiny triangle nose, and a mouth like a very small letter w underneath it.",s:[L(.475,.44,.525,.44),L(.475,.44,.5,.47),L(.525,.44,.5,.47),Q(.46,.485,.5,.51,.54,.485)]},
+  {say:"Whiskers. Three each side, and let them curve — straight whiskers look angry.",s:[Q(.44,.46,.36,.455,.28,.475),Q(.44,.475,.36,.485,.29,.515),Q(.56,.46,.64,.455,.72,.475),Q(.56,.475,.64,.485,.71,.515)]},
+  {say:"A tail curling around the side, like a question mark that changed its mind.",s:[Q(.735,.75,.86,.70,.80,.58)]},
+  {say:"Now press harder on the lines you love. Ignore the rest. Every artist keeps their mistakes underneath — you just stop looking at them.",s:[]}
+ ]},
+ 'brave-dino':{ name:'a brave little dinosaur', steps:[
+  {say:"Big oval, tipped just a little, right in the middle. That's the body.",s:[E(.47,.56,.25,.19,-.12)]},
+  {say:"A smaller circle up and to the left for the head. Leave a gap — the neck goes in there next.",s:[C(.235,.30,.115)]},
+  {say:"Two curving lines to join the head to the body. That's a neck, and you just made it look easy.",s:[Q(.16,.38,.20,.47,.27,.53),Q(.335,.36,.36,.44,.42,.47)]},
+  {say:"A fat tail sweeping off the right side — two curves that meet at a point.",s:[Q(.71,.53,.87,.53,.94,.42),Q(.70,.65,.86,.63,.94,.42)]},
+  {say:"Two chunky legs underneath. Rectangles with round corners — dinosaurs are not delicate.",s:[E(.37,.79,.072,.10),E(.58,.80,.072,.10)]},
+  {say:"Little triangle spikes down the back and along the tail. Space them out; they don't have to match.",s:[L(.30,.395,.325,.33),L(.325,.33,.375,.38),L(.44,.345,.475,.28),L(.475,.28,.525,.335),L(.60,.365,.645,.31),L(.645,.31,.685,.375)]},
+  {say:"One big friendly eye, a smile, and two tiny arms. Small arms are the funniest part — make them tiny.",s:[D(.215,.285,.028),Q(.155,.335,.20,.365,.25,.34),L(.40,.50,.455,.545),L(.455,.545,.435,.585)]},
+  {say:"Darken what you want to keep. Look at that — a dinosaur, from six shapes and about four minutes.",s:[]}
+ ]},
+ 'friendly-robot':{ name:'a friendly robot', steps:[
+  {say:"A square-ish box for the head, but round every corner. Rounded corners read as friendly. Sharp ones read as trouble.",s:[E(.5,.32,.175,.15)]},
+  {say:"One antenna straight up with a ball on top.",s:[L(.5,.17,.5,.10),D(.5,.085,.03)]},
+  {say:"A wide screen face inside the head — a rectangle with soft corners.",s:[E(.5,.33,.125,.088)]},
+  {say:"Two round eyes on the screen and a straight little smile. Robots smile with one flat line.",s:[D(.455,.315,.026),D(.545,.315,.026),L(.455,.375,.545,.375)]},
+  {say:"A bigger rounded box under the head for the body. Leave a short neck between them.",s:[E(.5,.63,.20,.185)]},
+  {say:"Arms: a line out each side with a little circle for a hand. Bend them if you want — bent arms look alive.",s:[Q(.30,.58,.20,.62,.17,.72),D(.155,.75,.036),Q(.70,.58,.80,.62,.83,.72),D(.845,.75,.036)]},
+  {say:"Two short legs and two flat feet at the bottom.",s:[L(.42,.815,.42,.90),L(.58,.815,.58,.90),E(.405,.915,.058,.028),E(.595,.915,.058,.028)]},
+  {say:"Add three buttons on his chest, then darken your keepers. He's yours now. Give him a name.",s:[D(.44,.60,.022),D(.5,.60,.022),D(.56,.60,.022)]},
+  {say:"That's the whole secret, by the way. Every character you've ever loved is circles and boxes stacked up by somebody who kept going.",s:[]}
+ ]}
+};
+var CHIPS=[['round-friend','🐭','A round cartoon friend'],['sleepy-cat','🐱','A sleepy cat'],
+           ['brave-dino','🦕','A brave little dinosaur'],['friendly-robot','🤖','A friendly robot']];
+
+/* --------- pick a lesson for ANY word the student gives us --------- */
+var ARCHETYPE=[
+ {k:'sleepy-cat',   w:['cat','kitty','kitten','fox','bunny','rabbit','tiger','lion','puppy','dog','bear','panda','koala','wolf']},
+ {k:'brave-dino',   w:['dino','dinosaur','rex','dragon','lizard','godzilla','croc','alligator','turtle','monster']},
+ {k:'friendly-robot',w:['robot','bot','android','machine','mech','droid','alien','spaceship','truck','car']},
+ {k:'round-friend', w:['mouse','mickey','minnie','bear','pig','frog','person','boy','girl','me','character','hero','man','woman','face']}
+];
+function chooseLesson(word){
+  /* whole words only — "cartoon" must never match "car" */
+  var words=(word||'').toLowerCase().split(/[^a-z]+/).filter(Boolean);
+  for(var i=0;i<ARCHETYPE.length;i++){
+    for(var j=0;j<ARCHETYPE[i].w.length;j++){
+      var k=ARCHETYPE[i].w[j];
+      for(var m=0;m<words.length;m++){
+        if(words[m]===k || words[m]===k+'s' || words[m]===k+'es') return ARCHETYPE[i].k;
+      }
+    }
+  }
+  return 'round-friend';
+}
+
+/* ---------------- state ---------------- */
+var subject='', lessonKey='round-friend', step=0, lesson=null, speaking=false;
+
+/* ---------------- the bus + triad ---------------- */
+function bus(from,cls,text,conf){
+  var d=document.createElement('div'); d.className='msg '+cls;
+  d.innerHTML='<div class="from">'+from+'</div>'+text+
+    (conf!=null?'<div class="conf"><i style="width:'+Math.round(conf*100)+'%"></i></div>':'');
+  $('buslog').appendChild(d); $('buslog').scrollTop=$('buslog').scrollHeight;
+}
+/* Two sealed lenses. They never see each other's note — they only post to the bus.
+   The Pacemaker reads both, gates on confidence, and is the only voice out. */
+function triadDecide(word){
+  $('buslog').innerHTML='';
+  var key=chooseLesson(word);
+  var L=LESSONS[key];
+  bus('Lens A · structure','lensA','Reads "'+word+'" as mass first: one dominant volume, then satellites. Recommends building from the largest shape outward. Warns: if we start with detail, the student quits.',null);
+  bus('Lens B · feeling','lensB','Reads "'+word+'" as character first. Wants the eyes early enough to hook them, late enough that the head is solid. Warns: a perfect shape with dead eyes teaches nothing.',null);
+  var conf=0.82;
+  bus('Pacemaker','pace','Both lenses agree on order of operations, disagree on when the face arrives. Gate: structure first, face at step six, spark last. Plan selected: <b>'+L.name+'</b> · '+L.steps.length+' steps. Confidence '+Math.round(conf*100)+'% — clears. Handing the only voice to Roz.',conf);
+  bus('Roz','roz','Taking the floor. I teach one shape at a time and I never say the word wrong.',null);
+  return key;
+}
+
+/* ---------------- Roz's voice (live, from ESPO Drama) ---------------- */
+/* Roz lives on the App Shop as /api/roz — same origin here, CORS-open elsewhere.
+   She answers JSON: { ok, voice:'roz', audio:<base64 mp3> } */
+var ROZ=(location.hostname.indexOf('aexperiences')>-1?'':'https://www.aexperiences.com')+'/api/roz';
+var AC=null, curSrc=null, rozOK=false;
+function ac(){ if(!AC){var C=window.AudioContext||window.webkitAudioContext; if(C)AC=new C();}
+  if(AC&&AC.state==='suspended'){try{AC.resume()}catch(e){}} return AC }
+function b64ToBuf(b64){
+  var bin=atob(b64), n=bin.length, u=new Uint8Array(n);
+  for(var i=0;i<n;i++) u[i]=bin.charCodeAt(i);
+  return u.buffer;
+}
+function rozClip(text){
+  return fetch(ROZ,{method:'POST',headers:{'content-type':'application/json'},
+    body:JSON.stringify({text:text})})
+   .then(function(r){ if(!r.ok) throw new Error('roz'); return r.json() })
+   .then(function(j){
+     if(j && j.audio) return b64ToBuf(j.audio);
+     throw new Error('no audio');
+   });
+}
+function rozSpeak(text,done){
+  $('rozsay').textContent=text;
+  $('rozface').classList.add('speaking');
+  var finish=function(){ $('rozface').classList.remove('speaking'); speaking=false; if(done)done() };
+  speaking=true;
+  rozClip(text).then(function(bytes){
+    var ctx=ac(); if(!ctx){ deviceSay(text,finish); return }
+    ctx.decodeAudioData(bytes.slice(0),function(buf){
+      var s=ctx.createBufferSource(); s.buffer=buf; s.connect(ctx.destination); curSrc=s;
+      var ended=false, fin=function(){ if(ended)return; ended=true; curSrc=null; finish() };
+      s.onended=fin; try{ s.start(0) }catch(e){ fin(); return }
+      setTimeout(fin, buf.duration*1000+900);
+    }, function(){ deviceSay(text,finish) });
+  }).catch(function(){ rozOK=false; setDot(); deviceSay(text,finish) });
+}
+function deviceSay(text,done){
+  if(!window.speechSynthesis){ setTimeout(done,1200); return }
+  speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(text); u.rate=.94; u.pitch=1.05;
+  var vs=speechSynthesis.getVoices()||[];
+  var f=vs.filter(function(v){return /en/i.test(v.lang)&&/(samantha|karen|serena|female|zira)/i.test(v.name)})[0];
+  if(f)u.voice=f;
+  var ended=false, fin=function(){ if(ended)return; ended=true; done() };
+  u.onend=fin; u.onerror=fin;
+  setTimeout(fin, Math.max(4000,(text.match(/\S+/g)||[]).length*400));
+  speechSynthesis.speak(u);
+}
+function hush(){ try{speechSynthesis.cancel()}catch(e){}
+  if(curSrc){try{curSrc.stop(0)}catch(e){} curSrc=null}
+  $('rozface').classList.remove('speaking'); speaking=false; }
+function setDot(){ $('rozdot').classList.toggle('on',rozOK);
+  $('rozstate').textContent = rozOK?'Roz · live':'Roz · device voice' }
+fetch(ROZ,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:'Ready.'})})
+ .then(function(r){ return r.json() })
+ .then(function(j){ rozOK=!!(j&&j.audio); setDot() })
+ .catch(function(){ rozOK=false; setDot() });
+
+/* ---------------- canvas ---------------- */
+var gc=$('guide'), yc=$('yours'), G=gc.getContext('2d'), Y=yc.getContext('2d'), F=0, OX=0, OY=0;
+function fit(){
+  [gc,yc].forEach(function(cv){
+    var r=cv.getBoundingClientRect(), dpr=Math.min(2,window.devicePixelRatio||1);
+    cv.width=r.width*dpr; cv.height=r.height*dpr;
+    cv.getContext('2d').setTransform(dpr,0,0,dpr,0,0);
+  });
+  var r=gc.getBoundingClientRect();
+  F=Math.min(r.width,r.height)*0.92; OX=(r.width-F)/2; OY=(r.height-F)/2;
+  redraw();
+}
+window.addEventListener('resize',fit);
+function P(x,y){ return [OX+x*F, OY+y*F] }
+function shape(ctx,s){
+  ctx.beginPath();
+  var p,q;
+  if(s.t==='c'){ p=P(s.cx,s.cy); ctx.arc(p[0],p[1],s.r*F,0,7) }
+  else if(s.t==='e'){ p=P(s.cx,s.cy); ctx.ellipse(p[0],p[1],s.rx*F,s.ry*F,s.rot||0,0,7) }
+  else if(s.t==='d'){ p=P(s.cx,s.cy); ctx.arc(p[0],p[1],s.r*F,0,7); ctx.fillStyle=ctx.strokeStyle; ctx.fill(); return }
+  else if(s.t==='a'){ p=P(s.cx,s.cy); ctx.arc(p[0],p[1],s.r*F,s.a0,s.a1) }
+  else if(s.t==='l'){ p=P(s.x1,s.y1); q=P(s.x2,s.y2); ctx.moveTo(p[0],p[1]); ctx.lineTo(q[0],q[1]) }
+  else if(s.t==='q'){ p=P(s.x1,s.y1); q=P(s.x2,s.y2); var c=P(s.cx,s.cy);
+    ctx.moveTo(p[0],p[1]); ctx.quadraticCurveTo(c[0],c[1],q[0],q[1]) }
+  ctx.stroke();
+}
+function redraw(){
+  var r=gc.getBoundingClientRect();
+  G.clearRect(0,0,r.width,r.height);
+  if(!lesson) return;
+  for(var i=0;i<=step && i<lesson.steps.length;i++){
+    var isNow=(i===step);
+    G.lineWidth=isNow?3.2:2;
+    G.strokeStyle=isNow?'#c8794f':'rgba(29,34,40,.30)';
+    G.setLineDash(isNow?[9,7]:[]);
+    G.lineCap='round';
+    (lesson.steps[i].s||[]).forEach(function(s){ shape(G,s) });
+  }
+  G.setLineDash([]);
+}
+/* student's own strokes */
+var drawing=false;
+function pos(e){ var r=yc.getBoundingClientRect(); var t=e.touches?e.touches[0]:e;
+  return [t.clientX-r.left, t.clientY-r.top] }
+function down(e){ e.preventDefault(); drawing=true; var p=pos(e);
+  Y.strokeStyle='#1d2228'; Y.lineWidth=2.6; Y.lineCap='round'; Y.lineJoin='round';
+  Y.beginPath(); Y.moveTo(p[0],p[1]) }
+function move(e){ if(!drawing)return; e.preventDefault(); var p=pos(e); Y.lineTo(p[0],p[1]); Y.stroke() }
+function up(){ drawing=false }
+yc.addEventListener('pointerdown',down); yc.addEventListener('pointermove',move);
+window.addEventListener('pointerup',up); yc.addEventListener('pointerleave',up);
+
+/* ---------------- pips + flow ---------------- */
+function pips(){
+  var h='';
+  for(var i=0;i<lesson.steps.length;i++)
+    h+='<span class="pip '+(i<step?'done':i===step?'now':'')+'"></span>';
+  $('pips').innerHTML=h;
+}
+function teach(){
+  redraw(); pips();
+  var st=lesson.steps[step];
+  bus('Roz','roz','Step '+(step+1)+' of '+lesson.steps.length+' — '+((st.s||[]).length||'no')+' new shape'+(((st.s||[]).length)===1?'':'s')+'.',null);
+  rozSpeak(st.say);
+  $('back').disabled=(step===0);
+  $('next').textContent = (step>=lesson.steps.length-1) ? 'Finish' : 'Next step ›';
+}
+$('next').onclick=function(){
+  hush();
+  if(step>=lesson.steps.length-1){
+    bus('Pacemaker','pace','Lesson complete. Student produced a finished character. Filing: confidence high, no escalation needed.',0.95);
+    rozSpeak("That's the whole class. You just drew a character from nothing but shapes — and you can do it again tomorrow, and it'll be better. Welcome to drawing.");
+    $('next').disabled=true; return;
+  }
+  step++; teach();
+};
+$('back').onclick=function(){ if(step>0){ hush(); step--; $('next').disabled=false; teach() } };
+$('repeat').onclick=function(){ hush(); rozSpeak(lesson.steps[step].say) };
+$('clear').onclick=function(){ var r=yc.getBoundingClientRect(); Y.clearRect(0,0,r.width,r.height) };
+$('busBtn').onclick=function(){ $('bus').classList.toggle('on') };
+$('quit').onclick=function(){ hush(); $('class').classList.remove('on'); $('setup').style.display='';
+  $('next').disabled=false; step=0; };
+
+/* ---------------- setup wiring ---------------- */
+$('chips').innerHTML=CHIPS.map(function(c){
+  return '<button class="chip" data-k="'+c[0]+'"><span class="g">'+c[1]+'</span>'+c[2]+'</button>'}).join('');
+[].forEach.call($('chips').querySelectorAll('.chip'),function(b){
+  b.onclick=function(){
+    [].forEach.call($('chips').querySelectorAll('.chip'),function(x){x.classList.remove('on')});
+    b.classList.add('on'); lessonKey=b.dataset.k; subject=b.textContent.trim();
+  };
+});
+$('chips').querySelector('.chip').classList.add('on'); subject='A round cartoon friend';
+$('customOk').onclick=function(){ var v=$('custom').value.trim(); if(!v)return;
+  subject=v; lessonKey=chooseLesson(v);
+  [].forEach.call($('chips').querySelectorAll('.chip'),function(x){x.classList.remove('on')});
+  $('custom').blur(); $('scanState').textContent='Ready to draw: '+v; };
+$('custom').onkeydown=function(e){ if(e.key==='Enter') $('customOk').click() };
+
+var SR=window.SpeechRecognition||window.webkitSpeechRecognition, rec;
+$('mic').onclick=function(){
+  if(!SR){ $('micT').textContent='Type it instead 👇'; return }
+  rec=new SR(); rec.lang='en-US';
+  $('mic').classList.add('listening'); $('micT').textContent='Listening…';
+  rec.onresult=function(e){ var s=(e.results[0][0].transcript||'').trim();
+    if(s){ $('custom').value=s; $('customOk').click() } };
+  rec.onend=function(){ $('mic').classList.remove('listening'); $('micT').textContent='Say what you want to draw' };
+  try{rec.start()}catch(e){}
+};
+/* scan: read the picture's shapes on-device (no upload, no key needed) */
+$('shot').onchange=function(){
+  var f=this.files&&this.files[0]; if(!f) return;
+  $('scanState').textContent='Reading the shapes…';
+  var img=new Image(), url=URL.createObjectURL(f);
+  img.onload=function(){
+    var c=document.createElement('canvas'), n=64; c.width=n; c.height=n;
+    var x=c.getContext('2d'); x.drawImage(img,0,0,n,n);
+    var d=x.getImageData(0,0,n,n).data, dark=[], minx=n,maxx=0,miny=n,maxy=0;
+    for(var i=0;i<n*n;i++){
+      var L=(d[i*4]*.299+d[i*4+1]*.587+d[i*4+2]*.114);
+      if(L<128){ var px=i%n, py=(i/n)|0; dark.push([px,py]);
+        if(px<minx)minx=px; if(px>maxx)maxx=px; if(py<miny)miny=py; if(py>maxy)maxy=py; }
+    }
+    URL.revokeObjectURL(url);
+    var w=Math.max(1,maxx-minx), h=Math.max(1,maxy-miny), ratio=w/h;
+    var guess = ratio>1.35 ? 'friendly-robot' : (ratio<0.75 ? 'brave-dino' : 'round-friend');
+    lessonKey=guess; subject='your picture';
+    bus('Lens A · structure','lensA','Scanned '+dark.length+' dark pixels. Bounding box ratio '+ratio.toFixed(2)+'. Mass is '+(ratio>1.35?'wider than tall':(ratio<0.75?'taller than wide':'roughly square'))+'.',null);
+    bus('Lens B · feeling','lensB','Silhouette suggests a '+(ratio>1.35?'boxy, mechanical':'soft, rounded')+' subject. Recommends the matching build so the student recognises it early.',null);
+    bus('Pacemaker','pace','Lenses concur on proportion. Selecting <b>'+LESSONS[guess].name+'</b> as the closest teachable build. Confidence 71% — clears, with a note: the student may rename it anything.',0.71);
+    $('scanState').textContent='Read it — we\'ll build '+LESSONS[guess].name+'. Hit start.';
+  };
+  img.onerror=function(){ $('scanState').textContent='Could not read that picture — pick one from the list instead.' };
+  img.src=url;
+};
+
+$('start').onclick=function(){
+  ac();
+  var chosen=triadDecide(subject||'a character');
+  if(subject==='your picture') chosen=lessonKey;
+  lesson=LESSONS[chosen]||LESSONS['round-friend'];
+  step=0; $('next').disabled=false;
+  $('setup').style.display='none'; $('class').classList.add('on');
+  setTimeout(function(){ fit(); teach(); },60);
+};
+
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(function(){}) }
+})();
+</script>
+</body>
+</html>
