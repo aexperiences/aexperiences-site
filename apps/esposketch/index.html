@@ -259,10 +259,10 @@ var HEADS={
   muzzly: function(){return [C(.5,.40,.225)]}
 };
 var SIG={
-  spikes9: {say:function(n){return "Here's the whole trick to "+n+" — that spiky crown. Nine spikes around the top of the head, and do NOT make them even. Uneven is what sells it."},
-            shapes:function(){return spikes(9,.5,.40,.235,.44)}},
-  spikes5: {say:function(n){return "Now the hair — five big spikes off the top. Big and confident. "+n+" is basically a triangle factory."},
-            shapes:function(){return spikes(5,.5,.40,.235,.52)}},
+  spikes9: {say:function(n){return "Now close the top — but with SPIKES, not a curve. Nine of them, straight off the open ends of your U, zig-zagging across. Do NOT make them even. The uneven ones are what make it "+n+"."},
+            shapes:function(){return spikes(9,.5,.43,.225,.40)}},
+  spikes5: {say:function(n){return "Close the top with five big spikes instead of a curve. Straight off the open ends, big and confident. That jagged crown IS "+n+"."},
+            shapes:function(){return spikes(5,.5,.43,.225,.50)}},
   bigEars: {say:function(n){return "Two big circles up top for the ears — and this is the famous part. Let them overlap the head. Overlapping is what makes it look solid instead of stuck on."},
             shapes:function(){return [C(.275,.175,.135),C(.725,.175,.135)]}},
   catEars: {say:function(n){return "Two triangle ears. Straight lines are fine — ears are the fastest way to say what animal this is."},
@@ -285,9 +285,9 @@ var SIG={
   none:    {say:function(n){return "No hat, no ears — the shape of the head is doing all the work here, so make it a good one."},shapes:function(){return []}}
 };
 var EYESET={
-  overlap:{say:"Now the eyes, and these are the giveaway — two big circles side by side that OVERLAP in the middle. Not two separate eyes. Overlapping.",
-           shapes:function(){return [C(.437,.375,.088),C(.563,.375,.088)]},
-           pupils:function(){return [D(.462,.385,.026),D(.588,.385,.026)]}},
+  overlap:{say:"Now the eyes — two big circles that OVERLAP each other in the middle, and they sit HIGH, poking up past the head line. Not two separate eyes down in the face. Big, overlapping, and high.",
+           shapes:function(){return [C(.443,.365,.095),C(.573,.365,.095)]},
+           pupils:function(){return [D(.470,.378,.027),D(.600,.378,.027)]}},
   bigRound:{say:"Two big round eyes, close together. Close-set eyes read young and friendly — far apart reads goofy. Your call.",
            shapes:function(){return [C(.442,.385,.062),C(.558,.385,.062)]},
            pupils:function(){return [D(.452,.395,.028),D(.568,.395,.028)]}},
@@ -302,8 +302,8 @@ var EYESET={
            pupils:function(){return []}}
 };
 var NOSES={
-  point:{say:"A small pointed nose sticking out the side. Just two short lines — that's it.",
-         shapes:function(){return [L(.5,.44,.575,.475),L(.575,.475,.5,.49)]}},
+  point:{say:"The nose pokes OUT THE SIDE of the face, just past the far eye — a little wedge, like a beak. Not a button in the middle of the face. Out the side.",
+         shapes:function(){return [L(.663,.402,.762,.438),L(.762,.438,.668,.462)]}},
   button:{say:"A little button nose right in the middle. Press harder here — noses get to be dark.",
          shapes:function(){return [D(.5,.475,.033)]}},
   snout:{say:"A wide oval snout across the lower face, and a small dark ball on top of it for the nose.",
@@ -313,8 +313,8 @@ var NOSES={
   none:{say:"Skip the nose entirely. Loads of great characters have no nose at all and nobody ever notices.",shapes:function(){return []}}
 };
 var MOUTHS={
-  wide:{say:"A big wide grin under the nose — a long shallow curve, wider than you think is right. Go wider.",
-        shapes:function(){return [Q(.355,.545,.5,.665,.645,.545)]}},
+  wide:{say:"Now the overbite grin, low on the face — one curve for the top lip that swings out to the side, and a second shorter curve under it. Two curves, that's all. That stuck-out mouth is half the personality.",
+        shapes:function(){return [Q(.425,.535,.575,.585,.678,.512),Q(.455,.575,.575,.645,.655,.548)]}},
   smile:{say:"A small curved smile, like the bottom of a bowl.",
         shapes:function(){return [Q(.415,.565,.5,.635,.585,.565)]}},
   muzzle:{say:"A line down from the nose, then a curve out each side — that's a muzzle mouth, and it works on every animal there is.",
@@ -390,12 +390,29 @@ function inventSpec(raw){
     m:pick(['smile','wide','muzzle','flat'],4), b:pick(['small','round','tall'],5), label:raw, invented:true};
 }
 
+/* When the signature IS the top of the skull (spikes, horns), the head must be
+   drawn OPEN at the top — otherwise you get a finished circle with decoration
+   stuck on it, which is exactly what a wrong drawing looks like. */
+var OPEN_TOP={spikes9:1,spikes5:1,horns:1};
+var PI=Math.PI;
+function headShapes(spec){
+  if(OPEN_TOP[spec.sig]){
+    var r=(spec.h==='tall')?.205:(spec.h==='wide'?.245:.225);
+    var cy=(spec.h==='tall')?.44:.43;
+    return [A(.5,cy,r,-0.14*PI,1.14*PI)];   /* open across the top */
+  }
+  return (HEADS[spec.h]||HEADS.round)();
+}
 function buildFromSpec(spec,shownName){
   var nm=shownName||spec.label||'your character';
   var st=[];
-  st.push({say:"Light hand — we're only sketching. Draw the head shape first, right in the middle of your paper. It doesn't have to be perfect. Mine never is.",s:HEADS[spec.h]()});
-  st.push({say:"Now a soft line down the middle and one across. Those two are just for us — they tell the face which way it's looking, and they'll disappear later.",
-    s:[Q(.5,.16,.53,.40,.5,.66),Q(.245,.42,.5,.46,.755,.42)]});
+  var open=!!OPEN_TOP[spec.sig];
+  st.push({say: open
+      ? "Light hand — we're only sketching. Start with a big U shape: the sides and chin of the head, and leave the TOP OPEN. Don't close it. The top of the head isn't a curve on "+nm+" — it's coming next, and that's the whole point."
+      : "Light hand — we're only sketching. Draw the head shape first, right in the middle of your paper. It doesn't have to be perfect. Mine never is.",
+    s:headShapes(spec)});
+  st.push({g:true,say:"Now two faint guide lines inside the head — one down, one across. Barely press. These are only for us: they tell the face which way it's looking, and you'll stop seeing them once the real lines go down.",
+    s:[Q(.5,.235,.525,.43,.5,.625),Q(.30,.425,.5,.455,.70,.425)]});
   /* HARD RULE: every character gets a giveaway shape. A drawing with no
      signature is the one thing that makes a student say "that's not it." */
   var sigKey=spec.sig;
@@ -641,9 +658,11 @@ function redraw(){
   G.clearRect(0,0,r.width,r.height);
   if(!lesson) return;
   for(var i=0;i<=step && i<lesson.steps.length;i++){
-    var isNow=(i===step);
-    G.lineWidth=isNow?3.2:2;
-    G.strokeStyle=isNow?'#c8794f':'rgba(29,34,40,.30)';
+    var isNow=(i===step), isGuide=!!lesson.steps[i].g;
+    G.lineWidth=isNow?3.2:(isGuide?1.1:2);
+    /* guides stay whisper-faint once they've been drawn — that's what a real
+       construction line does: it holds the drawing up and then disappears */
+    G.strokeStyle=isNow?'#c8794f':(isGuide?'rgba(29,34,40,.11)':'rgba(29,34,40,.34)');
     G.setLineDash(isNow?[9,7]:[]);
     G.lineCap='round';
     (lesson.steps[i].s||[]).forEach(function(s){ shape(G,s) });
