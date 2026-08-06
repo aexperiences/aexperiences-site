@@ -178,7 +178,12 @@
       <canvas id="yours"></canvas>
       <div class="roz">
         <div class="rozface" id="rozface">🎨</div>
-        <div><div class="rozwho">Coach Roz</div><div class="rozsay" id="rozsay">Ready when you are.</div></div>
+        <div style="flex:1;min-width:0">
+          <div id="teachChip" style="display:none;font-size:10.5px;letter-spacing:2.2px;text-transform:uppercase;
+            color:#231803;background:linear-gradient(135deg,var(--gold),#c98f2c);border-radius:99px;
+            padding:4px 11px;margin-bottom:7px;font-weight:800;align-self:flex-start;display:inline-block"></div>
+          <div class="rozwho">Coach Roz</div><div class="rozsay" id="rozsay">Ready when you are.</div>
+        </div>
       </div>
     </div>
   </section>
@@ -279,6 +284,8 @@ var SIG={
             shapes:function(){return [Q(.265,.36,.5,.10,.735,.36)]}},
   bun:     {say:function(n){return "Hair pulled up into a bun — a circle sitting right on top."},
             shapes:function(){return [C(.5,.135,.078),Q(.30,.30,.5,.19,.70,.30)]}},
+  bushyTail:{say:function(n){return "Now the giveaway: an ENORMOUS bushy tail sweeping up behind, nearly as big as the whole body. One thing in every drawing should be exaggerated — on "+n+" it's always the tail."},
+            shapes:function(){return [Q(.70,.70,.92,.66,.86,.40),Q(.70,.78,.99,.76,.86,.40)]}},
   mane:    {say:function(n){return "A big mane all the way around the head — a bumpy circle outside the first circle. Bumps, not a smooth ring."},
             shapes:function(){var o=[],n2=11;for(var i=0;i<n2;i++){var a=i/n2*Math.PI*2;
               o.push(D(.5+Math.cos(a)*.315,.40+Math.sin(a)*.315,.052))}return o}},
@@ -362,11 +369,64 @@ function simpsonBuild(nm,spikeCount,spikeLen){
     s:[]}
   ]};
 }
+/* zig-zag fur along a curve — texture, used sparingly and only at edges */
+function furEdge(x1,y1,x2,y2,n,amp){
+  var out=[],px=x1,py=y1;
+  for(var i=1;i<=n;i++){
+    var t=i/n, x=x1+(x2-x1)*t, y=y1+(y2-y1)*t;
+    var nx=-(y2-y1), ny=(x2-x1), len=Math.sqrt(nx*nx+ny*ny)||1;
+    var s=(i%2?1:-1)*amp;
+    var mx=x+nx/len*s, my=y+ny/len*s;
+    out.push(L(px,py,mx,my)); px=mx; py=my;
+  }
+  out.push(L(px,py,x2,y2));
+  return out;
+}
+/* A REAL fox — sitting, full body, bushy tail. A fox is not a cat:
+   narrow wedge head, pointed muzzle, tall tufted ears, and a tail
+   nearly as big as the body. */
+function foxBuild(){
+  return {name:'a fox',steps:[
+   {teach:'GESTURE FIRST',
+    say:"Before any outline, draw the line of ACTION — one curve from the top of the head down through the chest to the ground. Every animal artist starts here. This line is the pose, and if the pose is wrong nothing else can save it.",
+    g:true,s:[Q(.40,.20,.50,.46,.55,.84)]},
+   {teach:'EVERYTHING IS SIMPLE SHAPES',
+    say:"Two masses on that line: a small circle for the skull up top, and a big egg for the sitting body. Small head, big body — that size difference is what makes it look like an animal instead of a person.",
+    s:[C(.395,.325,.105), E(.565,.635,.175,.205)]},
+   {teach:'OVERLAP MAKES IT SOLID',
+    say:"Join them with a neck, and let the shapes OVERLAP instead of just touching. Overlapping is the whole difference between a drawing that looks flat and one that looks like it takes up space.",
+    s:[Q(.415,.425,.44,.50,.47,.545), Q(.50,.40,.545,.47,.585,.53)]},
+   {teach:'THE SILHOUETTE TEST',
+    say:"Now the ears, and this is where it becomes a fox. Two TALL triangles, taller than you think, tipped slightly outward. Ask yourself: if I filled this whole drawing in solid black, could you still tell what it is? Ears are how you pass that test.",
+    s:[L(.325,.265,.285,.115),L(.285,.115,.395,.225), L(.445,.24,.505,.10),L(.505,.10,.515,.255)]},
+   {teach:'POINTED VS ROUND = SPECIES',
+    say:"Here's the fox-not-a-cat moment. Pull a long POINTED wedge off the front of the skull for the muzzle. A cat's face is round and flat. A fox's is a narrow triangle that comes to a point. Same animal family, completely different shape.",
+    s:[L(.315,.345,.155,.40),L(.155,.40,.325,.435), Q(.155,.40,.24,.42,.325,.435)]},
+   {teach:'ANGLE = ATTITUDE',
+    say:"Two almond eyes, and TILT them — inner corner low, outer corner high. Level eyes look sleepy. Tilted eyes look clever, and a fox is nothing if not clever. Then a dark nose right on the point of the muzzle.",
+    s:[Q(.335,.325,.375,.30,.405,.325),Q(.335,.325,.375,.345,.405,.325),
+       Q(.45,.315,.487,.292,.515,.318),Q(.45,.315,.487,.335,.515,.318),
+       D(.163,.397,.026)]},
+   {teach:'TEXTURE ONLY AT THE EDGE',
+    say:"Now fur — but ONLY on the outline, never scribbled all over the middle. A few zig-zags down the chest ruff and the cheek. Beginners cover the whole animal in fur lines and it turns to mud. Edges only.",
+    s:furEdge(.44,.47,.50,.72,6,.022).concat(furEdge(.315,.435,.375,.475,3,.018))},
+   {teach:'SCALE CONTRAST CARRIES IT',
+    say:"The tail. Make it HUGE — nearly as big as the body, sweeping up and around. This is the fun rule: one thing in every drawing should be exaggerated. On a fox it's always the tail.",
+    s:[Q(.70,.70,.92,.66,.86,.40), Q(.70,.78,.99,.76,.86,.40)]},
+   {teach:'LINE WEIGHT = LIGHT',
+    say:"Last, and this is the pro move. Go back and press HARD on the underside lines — under the chin, under the belly, under the tail — and keep the top lines light. Heavy where the shadow sits, light where the light hits. That one trick makes a flat drawing pop off the page.",
+    s:[L(.435,.815,.475,.815),L(.535,.815,.575,.815)]},
+   {teach:'YOU JUST DREW A FOX',
+    say:"Lean back. Small head, big body, tall ears, pointed muzzle, huge tail. Five shapes and a handful of rules — and none of them were about talent.",
+    s:[]}
+  ]};
+}
 var BUILDS={
   bart:function(){return simpsonBuild('Bart',9,.46)},
   lisa:function(){return simpsonBuild('Lisa',7,.62)},
-  homer:function(){var b=simpsonBuild('Homer',2,.22); b.steps[1].say="Homer's skull is nearly bald — just two little hairs curling off the top, and an M shape if you want to be fancy."; return b},
-  simpson:function(){return simpsonBuild('a Simpson',9,.46)}
+  homer:function(){var b=simpsonBuild('Homer',2,.22); b.steps[1].say="Homer's skull is nearly bald — just two little hairs curling off the top."; return b},
+  simpson:function(){return simpsonBuild('a Simpson',9,.46)},
+  fox:foxBuild
 };
 
 /* ---- who's who: signature-first specs (construction, not copies) ---- */
@@ -397,12 +457,15 @@ var DICT={
  'boy':{h:'egg',sig:'bowl',e:'tallOval',n:'button',m:'smile',b:'small',label:'a boy'},
  'me':{h:'egg',sig:'bowl',e:'tallOval',n:'button',m:'smile',b:'small',label:'you'}
 };
+/* Aliases only for things that are GENUINELY the same build. A fox is not a
+   cat. A wolf is not a dog. Collapsing them is exactly the lazy move that made
+   a kid ask for a fox and get a cat. */
 var ALIAS={simpsons:'simpson',bartsimpson:'bart',mickeymouse:'mickey',minniemouse:'minnie',
  kitty:'cat',kitten:'cat',puppy:'dog',doggy:'dog',rabbit:'bunny',hare:'bunny',
  trex:'dino',dinosaur:'dino',rex:'dino',godzilla:'dragon',lizard:'dragon',
  android:'robot',droid:'robot',bot:'robot',person:'me',myself:'me',man:'boy',woman:'girl',
  mom:'girl',mum:'girl',dad:'boy',sister:'girl',brother:'boy',friend:'me',
- pokemon:'pikachu',hedgehog:'sonic',tiger:'cat',fox:'cat',wolf:'dog',panda:'bear',koala:'bear'};
+ pokemon:'pikachu',hedgehog:'sonic',koala:'bear'};
 
 function specFor(raw){
   var words=(raw||'').toLowerCase().replace(/[^a-z ]/g,' ').split(/\s+/).filter(Boolean);
@@ -442,29 +505,32 @@ function buildFromSpec(spec,shownName){
   var nm=shownName||spec.label||'your character';
   var st=[];
   var open=!!OPEN_TOP[spec.sig];
-  st.push({say: open
+  var TEACH=['EVERYTHING IS SIMPLE SHAPES','CONSTRUCTION LINES','THE SILHOUETTE TEST','EYES SET THE MOOD',
+             'THE SPARK','POINTED VS ROUND','THE MOUTH CARRIES THE FEELING','OVERLAP MAKES IT SOLID','LINE WEIGHT = LIGHT'];
+  var ti=0, T=function(){ return TEACH[Math.min(ti++,TEACH.length-1)] };
+  st.push({teach:T(), say: open
       ? "Light hand — we're only sketching. Start with a big U shape: the sides and chin of the head, and leave the TOP OPEN. Don't close it. The top of the head isn't a curve on "+nm+" — it's coming next, and that's the whole point."
       : "Light hand — we're only sketching. Draw the head shape first, right in the middle of your paper. It doesn't have to be perfect. Mine never is.",
     s:headShapes(spec)});
-  st.push({g:true,say:"Now two faint guide lines inside the head — one down, one across. Barely press. These are only for us: they tell the face which way it's looking, and you'll stop seeing them once the real lines go down.",
+  st.push({g:true,teach:T(),say:"Now two faint guide lines inside the head — one down, one across. Barely press. These are only for us: they tell the face which way it's looking, and you'll stop seeing them once the real lines go down.",
     s:[Q(.5,.235,.525,.43,.5,.625),Q(.30,.425,.5,.455,.70,.425)]});
   /* HARD RULE: every character gets a giveaway shape. A drawing with no
      signature is the one thing that makes a student say "that's not it." */
   var sigKey=spec.sig;
   if(!sigKey || sigKey==='none' || !SIG[sigKey]) sigKey=inventSpec(nm).sig;
   var sig=SIG[sigKey]||SIG.spikes5;
-  st.push({say:sig.say(nm),s:sig.shapes()});
+  st.push({teach:T(),say:sig.say(nm),s:sig.shapes()});
   var ey=EYESET[spec.e]||EYESET.bigRound;
-  st.push({say:ey.say,s:ey.shapes()});
+  st.push({teach:T(),say:ey.say,s:ey.shapes()});
   var pu=ey.pupils();
-  if(pu.length) st.push({say:"Now a dark pupil in each eye — and leave one tiny white speck un-filled. That speck is the spark. It's the whole difference between a drawing and a character.",s:pu});
+  if(pu.length) st.push({teach:T(),say:"Now a dark pupil in each eye — and leave one tiny white speck un-filled. That speck is the spark. It's the whole difference between a drawing and a character.",s:pu});
   var no=NOSES[spec.n]||NOSES.button;
-  st.push({say:no.say,s:no.shapes()});
+  st.push({teach:T(),say:no.say,s:no.shapes()});
   var mo=MOUTHS[spec.m]||MOUTHS.smile;
-  st.push({say:mo.say,s:mo.shapes()});
+  st.push({teach:T(),say:mo.say,s:mo.shapes()});
   var bo=BODIES[spec.b]||BODIES.small;
-  st.push({say:bo.say,s:bo.shapes()});
-  st.push({say:"Last step, and it's the best one. Go back over the lines you want to keep and press harder. Leave the light guide lines alone — nobody sees them once the dark lines are there. Lean back and look. That's "+nm+", and you drew it.",s:[]});
+  st.push({teach:T(),say:bo.say,s:bo.shapes()});
+  st.push({teach:"LINE WEIGHT = LIGHT",say:"Last step, and it's the best one. Go back over the lines you want to keep and press harder. Leave the light guide lines alone — nobody sees them once the dark lines are there. Lean back and look. That's "+nm+", and you drew it.",s:[]});
   return {name:nm,steps:st};
 }
 
@@ -557,60 +623,96 @@ var MASS_WORDS={tall:['tall','long','giraffe','tower','luigi','skinny','thin'],
   wide:['wide','fat','round','chubby','cat','bear','panda','frog'],
   box:['robot','box','square','block','sponge','brick','machine','truck'],
   egg:['person','boy','girl','me','man','woman','kid','face','alien']};
-/* Lens A — STRUCTURE. Sees only mass and silhouette. Never considers charm. */
+/* LENS A — THE TRAINED TEACHER. Art-school trained, teaches children by the
+   book. Believes fundamentals in order or the kid learns bad habits for life.
+   Sealed: never sees Lens B's note. */
 function lensA(word){
-  var w=(word||'').toLowerCase(), h='round', why='no strong mass cue; defaulting to the most forgiving volume — a circle';
+  var w=(word||'').toLowerCase(), h='round', why='no strong mass cue; the most forgiving volume for a beginner is a circle';
   for(var k in MASS_WORDS){ for(var i=0;i<MASS_WORDS[k].length;i++){
-    if(w.indexOf(MASS_WORDS[k][i])>-1){ h=k; why='mass cue "'+MASS_WORDS[k][i]+'" reads '+k; break } } }
+    if(w.indexOf(MASS_WORDS[k][i])>-1){ h=k; why='mass reads '+k+' from the cue "'+MASS_WORDS[k][i]+'"'; break } } }
   var b=(h==='box')?'tall':(h==='wide'?'round':'small');
-  return {h:h,b:b,note:'Reads "'+word+'" as volume first. '+why+'. Build largest shape outward; if we open with detail the student quits before it looks like anything.',conf:h==='round'?0.55:0.78};
+  var order=['gesture','masses','construction','proportion','features','detail','lineweight'];
+  return {h:h,b:b,order:order,
+    note:'<b>By the book.</b> Gesture line, then masses, then construction lines, THEN features — in that order, no exceptions. '+why+
+      '. Position: a child who is handed the fun part first never learns to see, and every drawing after this one will be built on sand.',
+    conf:h==='round'?0.58:0.80};
 }
 /* Lens B — RECOGNITION. Sees only the one feature that makes you say "that's him". */
+var SIGLABEL={spikes9:'the nine-spike crown',spikes5:'the big jagged spikes',bigEars:'the two huge ear circles',
+  catEars:'the triangle ears',longEars:'the tall upright ears',horns:'the curved horns',hat:'the hat',
+  antenna:'the antenna',mane:'the shaggy mane',bun:'the bun',bowl:'the bowl cut',bushyTail:'the enormous bushy tail'};
 var SIG_CUES=[['spikes9',['bart','spiky','punk']],['spikes5',['sonic','lisa','hedgehog','star']],
-  ['bigEars',['mickey','minnie','mouse','bear','panda','koala']],['catEars',['cat','kitty','fox','tiger','wolf','dog','puppy']],
+  ['bushyTail',['fox','wolf','squirrel','husky']],
+  ['bigEars',['mickey','minnie','mouse','bear','panda','koala']],['catEars',['cat','kitty','tiger','dog','puppy']],
   ['longEars',['bunny','rabbit','pikachu','hare','donkey']],['horns',['dragon','devil','viking','bull','demon']],
   ['hat',['mario','luigi','hat','cap','cowboy','chef','wizard']],['antenna',['robot','alien','bot','droid']],
   ['mane',['lion','leo']],['bun',['girl','mom','sister','princess']],['bowl',['boy','dad','brother']]];
+/* LENS B — THE SELF-TAUGHT ARTIST. Nobody taught them; they filled sketchbooks
+   until it worked, and now they teach kids the way they actually learned.
+   Believes a kid who quits learns nothing, so the hook comes first.
+   Sealed: never sees Lens A's note. */
 function lensB(word){
   var w=(word||'').toLowerCase(), sig='none', hit='';
   for(var i=0;i<SIG_CUES.length;i++){ for(var j=0;j<SIG_CUES[i][1].length;j++){
     if(w.indexOf(SIG_CUES[i][1][j])>-1){ sig=SIG_CUES[i][0]; hit=SIG_CUES[i][1][j]; break } }
     if(sig!=='none') break }
   var e=/simpson|bart|lisa|homer|sonic/.test(w)?'overlap':(/cat|sleep/.test(w)?'sleepy':'bigRound');
-  return {sig:sig,e:e,note:sig==='none'
-      ? 'Found no signature feature in "'+word+'". Warns loudly: without a giveaway shape the student will not recognise it and will not believe they drew it.'
-      : 'Locks on "'+hit+'" → signature is the '+sig+'. Insists this lands EARLY — the moment it looks like the character is the moment they decide they can draw.',
-    conf:sig==='none'?0.35:0.9};
+  var order=['signature','masses','gesture','features','trick','lineweight'];
+  return {sig:sig,e:e,order:order,
+    note:sig==='none'
+      ? '<b>Self-taught.</b> No giveaway shape found in "'+word+'" — and that is the emergency. I never learned proportion first; I learned by drawing the one shape that made it look like the thing, and chasing that feeling. Without a giveaway a kid gets nine steps of homework and no payoff.'
+      : '<b>Self-taught.</b> The giveaway is '+(SIGLABEL[sig]||sig)+' — that is the shape that makes a kid say "hey, that\'s it." Put it in the first third. The second it looks like the character they stop wondering whether they can draw, and that is the only thing that has ever made anybody keep drawing.',
+    conf:sig==='none'?0.35:0.92};
+}
+/* ROZ'S CHECK — she reads the Pacemaker's plan before she'll say a word of it.
+   She is the last gate: if a step teaches nothing, or the payoff comes too
+   late for a kid, she sends it back rather than deliver something that makes
+   her look like she doesn't know what she's talking about. */
+function rozCheck(lesson){
+  var n=lesson.steps.length, notes=[], fixed=0;
+  var noTeach=0, sigAt=-1;
+  for(var i=0;i<n;i++){
+    var s=lesson.steps[i];
+    if(!s.teach){ noTeach++; s.teach='ONE THING AT A TIME'; fixed++; }
+    if(sigAt<0 && /spike|ear|horn|hat|antenna|mane|bun|crown|giveaway|muzzle|wedge/i.test(s.say||'')) sigAt=i;
+  }
+  if(noTeach) notes.push(noTeach+' step'+(noTeach===1?'':'s')+' arrived with nothing to teach — I put a lesson on '+(noTeach===1?'it':'them')+'. I am not reading out instructions with no reason behind them.');
+  if(sigAt>-1 && sigAt<=Math.ceil(n/3)) notes.push('Payoff lands at step '+(sigAt+1)+' of '+n+' — early enough. A kid will see what it is before they get bored. Approved.');
+  else if(sigAt>-1) notes.push('Payoff sits at step '+(sigAt+1)+' of '+n+'. Later than I like, but the build needs the foundation first. I will carry it — I will just talk faster.');
+  else notes.push('No obvious payoff step. I will name what it is out loud early so nobody is drawing blind.');
+  if(n>12) notes.push('Twelve-plus steps is a lecture, not a class. Watch the attention span.');
+  return {ok:true,notes:notes,fixed:fixed};
 }
 function triadDecide(word){
   $('buslog').innerHTML='';
   var A=lensA(word), B=lensB(word);
-  bus('Lens A · structure','lensA',A.note,A.conf);
-  bus('Lens B · recognition','lensB',B.note,B.conf);
+  bus('Lens A · the trained teacher','lensA',A.note,A.conf);
+  bus('Lens B · the self-taught artist','lensB',B.note,B.conf);
   /* an authored build wins outright — the lenses still argue, but the Pacemaker
      knows a hand-drawn construction beats a generic assembly every time */
   var authoredKey=null, lw=(word||'').toLowerCase();
   for(var bk in BUILDS){ if(lw.indexOf(bk)>-1){ authoredKey=bk; break } }
   if(authoredKey){
     var c2=Math.min(.98,(A.conf+B.conf)/2+.22);
-    bus('Pacemaker','pace','A hand-authored construction exists for <b>'+authoredKey+'</b>. Overriding both lenses on head geometry: this face is NOT built on a circle — it is two overlapping eyeballs with a jaw hooked under them. Confidence '+Math.round(c2*100)+'% — clears. Roz has the floor.',c2);
-    bus('Roz','roz','Taking the floor. One shape at a time.',null);
-    return {authored:BUILDS[authoredKey](),conf:c2,label:authoredKey};
+    bus('Pacemaker','pace','Both are right about different things, so: <b>A keeps the order</b> (gesture → masses → construction), <b>B gets the placement</b> (the giveaway moves into the first third, not step six). A hand-authored construction exists for <b>'+authoredKey+'</b> and it already obeys that compromise. Confidence '+Math.round(c2*100)+'% — clears the gate.',c2);
+    var L=BUILDS[authoredKey](), chk=rozCheck(L);
+    bus('Roz · final check','roz','Read it before I say it. '+chk.notes.join(' ')+' Taking the floor.',null);
+    return {authored:L,conf:c2,label:authoredKey};
   }
   var known=specFor(word), spec, conf, verdict;
   if(known){
     spec=known; conf=Math.min(.97,(A.conf+B.conf)/2+.18);
-    verdict='Both lenses point at a known build. A wants the volume first, B wants the giveaway first — <b>resolved</b>: volume, guides, then the signature at step three, which is earlier than A likes and later than B likes. Selected: <b>'+(known.label||word)+'</b>.';
+    verdict='The teacher wants fundamentals first; the self-taught artist wants the payoff first. <b>Split the difference:</b> A keeps the order — gesture, masses, construction — but B wins the placement, so the giveaway lands at <b>step three</b>, not step six. Earlier than A likes, later than B likes, which is how I know it is right. Build: <b>'+(known.label||word)+'</b>.';
   } else {
     spec={h:A.h,b:A.b,sig:B.sig,e:B.e,n:(B.sig==='catEars'||/dog|bear|lion|dragon/.test((word||'').toLowerCase()))?'snout':'button',
           m:B.sig==='horns'?'fangs':'smile',label:word};
     if(B.sig==='none'){ var inv=inventSpec(word); spec.sig=inv.sig; spec.m=inv.m; }
     conf=(A.conf+B.conf)/2;
-    verdict='No known build for "'+word+'". A supplies the volume, B supplies the signature — <b>merged into a new build</b>'+
-      (B.sig==='none'?' and, over B\'s objection, a signature is assigned so the drawing has a giveaway at all.':'.');
+    verdict='Nobody has built "'+word+'" before. The teacher supplies the volume and the order; the self-taught artist supplies the giveaway'+
+      (B.sig==='none'?' — and since B found none, I am <b>assigning one over B\'s own objection</b>, because a drawing with no payoff is worse than a wrong one.':' and it goes in early.')+
+      ' <b>Merged into a new build.</b>';
   }
-  bus('Pacemaker','pace',verdict+' Confidence '+Math.round(conf*100)+'% — '+(conf>=.5?'clears the gate':'below gate, escalating with a note')+'. Handing the only voice to Roz.',conf);
-  bus('Roz','roz','Taking the floor. One shape at a time, and I say the name right.',null);
+  bus('Pacemaker','pace',verdict+' Confidence '+Math.round(conf*100)+'% — '+(conf>=.5?'clears the gate':'under the bar, sending it anyway with the risk flagged')+'.',conf);
   return {spec:spec,conf:conf,label:(known&&known.label)||word};
 }
 
@@ -736,7 +838,10 @@ function pips(){
 function teach(){
   redraw(); pips();
   var st=lesson.steps[step];
-  bus('Roz','roz','Step '+(step+1)+' of '+lesson.steps.length+' — '+((st.s||[]).length||'no')+' new shape'+(((st.s||[]).length)===1?'':'s')+'.',null);
+  var chip=$('teachChip');
+  if(st.teach){ chip.textContent='The lesson · '+st.teach; chip.style.display='inline-block' }
+  else chip.style.display='none';
+  bus('Roz','roz','Step '+(step+1)+' of '+lesson.steps.length+(st.teach?' — teaching: '+st.teach:'')+'.',null);
   rozSpeak(st.say);
   $('back').disabled=(step===0);
   $('next').textContent = (step>=lesson.steps.length-1) ? 'Finish' : 'Next step ›';
@@ -826,7 +931,12 @@ $('start').onclick=function(){
     lesson=LESSONS[lessonKey]||LESSONS['round-friend'];
   } else {
     var d=triadDecide(word);
-    lesson = d.authored ? d.authored : buildFromSpec(d.spec, d.label);
+    if(d.authored){ lesson=d.authored; }
+    else {
+      lesson=buildFromSpec(d.spec, d.label);
+      var chk=rozCheck(lesson);        /* Roz reads it before she says any of it */
+      bus('Roz · final check','roz','Read it before I say it. '+chk.notes.join(' ')+' Taking the floor.',null);
+    }
   }
   step=0; $('next').disabled=false;
   $('nowDrawing').textContent='Drawing · '+(lesson.name||word);
