@@ -352,6 +352,44 @@
     }).catch(function () { root.AEShop.priceSource = 'fallback'; return false; });
   }
 
+
+  /* MEDIA — the App Store strip. A preview video of the real system being operated,
+     then screenshots of the actual rooms. Never a mockup, never stock: every frame here
+     was captured by driving the live product. `len` is the true runtime of the file.
+     A product with no entry simply shows no gallery — the store must never show a
+     broken player or a placeholder tile. */
+  var MEDIA = {
+    homestead:   { preview:'/media/homestead/preview.mp4', poster:'/media/homestead/poster.jpg', len:'2:37',
+                 shots:['/media/homestead/s1.jpg', '/media/homestead/s2.jpg', '/media/homestead/s3.jpg', '/media/homestead/s4.jpg', '/media/homestead/s5.jpg', '/media/homestead/s6.jpg'] },
+    draftline:   { preview:'/media/draftline/preview.mp4', poster:'/media/draftline/poster.jpg', len:'2:16',
+                 shots:['/media/draftline/s1.jpg', '/media/draftline/s2.jpg', '/media/draftline/s3.jpg', '/media/draftline/s4.jpg', '/media/draftline/s5.jpg', '/media/draftline/s6.jpg', '/media/draftline/s7.jpg', '/media/draftline/s8.jpg'] },
+    datum:       { preview:'/media/datum/preview.mp4', poster:'/media/datum/poster.jpg', len:'2:42',
+                 shots:['/media/datum/s1.jpg', '/media/datum/s2.jpg', '/media/datum/s3.jpg', '/media/datum/s4.jpg', '/media/datum/s5.jpg', '/media/datum/s6.jpg'] },
+    marquee:     { preview:'/media/marquee/preview.mp4', poster:'/media/marquee/poster.jpg', len:'2:41',
+                 shots:['/media/marquee/s1.jpg', '/media/marquee/s2.jpg', '/media/marquee/s3.jpg', '/media/marquee/s4.jpg', '/media/marquee/s5.jpg', '/media/marquee/s6.jpg', '/media/marquee/s7.jpg'] },
+    reel:        { preview:'/media/reel/preview.mp4', poster:'/media/reel/poster.jpg', len:'3:05',
+                 shots:['/media/reel/s1.jpg', '/media/reel/s2.jpg', '/media/reel/s3.jpg', '/media/reel/s4.jpg', '/media/reel/s5.jpg', '/media/reel/s6.jpg', '/media/reel/s7.jpg', '/media/reel/s8.jpg'] },
+    encore:      { preview:'/media/encore/preview.mp4', poster:'/media/encore/poster.jpg', len:'3:03',
+                 shots:['/media/encore/s1.jpg', '/media/encore/s2.jpg', '/media/encore/s3.jpg', '/media/encore/s4.jpg', '/media/encore/s5.jpg', '/media/encore/s6.jpg'] },
+    cartwheel:   { preview:'/media/cartwheel/preview.mp4', poster:'/media/cartwheel/poster.jpg', len:'2:40',
+                 shots:['/media/cartwheel/s1.jpg', '/media/cartwheel/s2.jpg', '/media/cartwheel/s3.jpg', '/media/cartwheel/s4.jpg', '/media/cartwheel/s5.jpg', '/media/cartwheel/s6.jpg'] },
+    moments:     { preview:'/media/moments/preview.mp4', poster:'/media/moments/poster.jpg', len:'2:57',
+                 shots:['/media/moments/s1.jpg', '/media/moments/s2.jpg', '/media/moments/s3.jpg', '/media/moments/s4.jpg', '/media/moments/s5.jpg', '/media/moments/s6.jpg', '/media/moments/s7.jpg'] },
+    smiley:      { preview:'/media/smiley/preview.mp4', poster:'/media/smiley/poster.jpg', len:'2:53',
+                 shots:['/media/smiley/s1.jpg', '/media/smiley/s2.jpg', '/media/smiley/s3.jpg', '/media/smiley/s4.jpg', '/media/smiley/s5.jpg', '/media/smiley/s6.jpg', '/media/smiley/s7.jpg'] },
+    sleeves:     { preview:'/media/sleeves/preview.mp4', poster:'/media/sleeves/poster.jpg', len:'2:29',
+                 shots:['/media/sleeves/s1.jpg', '/media/sleeves/s2.jpg', '/media/sleeves/s3.jpg', '/media/sleeves/s4.jpg', '/media/sleeves/s5.jpg', '/media/sleeves/s6.jpg'] },
+    toolbelt:    { preview:'/media/toolbelt/preview.mp4', poster:'/media/toolbelt/poster.jpg', len:'2:31',
+                 shots:['/media/toolbelt/s1.jpg', '/media/toolbelt/s2.jpg', '/media/toolbelt/s3.jpg', '/media/toolbelt/s4.jpg', '/media/toolbelt/s5.jpg', '/media/toolbelt/s6.jpg'] },
+    stayathome:  { preview:'/media/stayathome/preview.mp4', poster:'/media/stayathome/poster.jpg', len:'2:28',
+                 shots:['/media/stayathome/s1.jpg', '/media/stayathome/s2.jpg', '/media/stayathome/s3.jpg', '/media/stayathome/s4.jpg', '/media/stayathome/s5.jpg', '/media/stayathome/s6.jpg'] },
+    showroom:    { preview:'/media/showroom/preview.mp4', poster:'/media/showroom/poster.jpg', len:'2:26',
+                 shots:['/media/showroom/s1.jpg', '/media/showroom/s2.jpg', '/media/showroom/s3.jpg', '/media/showroom/s4.jpg', '/media/showroom/s5.jpg', '/media/showroom/s6.jpg', '/media/showroom/s7.jpg'] },
+    targeted:    { preview:'/media/targeted/preview.mp4', poster:'/media/targeted/poster.jpg', len:'2:27',
+                 shots:['/media/targeted/s1.jpg', '/media/targeted/s2.jpg', '/media/targeted/s3.jpg', '/media/targeted/s4.jpg', '/media/targeted/s5.jpg', '/media/targeted/s6.jpg'] },
+  };
+  CATALOG.forEach(function (a) { if (MEDIA[a.id]) a.media = MEDIA[a.id]; });
+
   root.AEShop = {
     CATALOG: CATALOG, GENRES: GENRES, AISLES: AISLES,
     byId: byId, live: live, dev: dev, activeGenres: activeGenres,

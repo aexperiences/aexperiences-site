@@ -257,6 +257,31 @@ main{padding:24px 0 40px}
 .sh-head .tg{font-size:13px;color:var(--mute);margin-top:3px}
 .sh-head .get{margin-top:10px;height:36px;font-size:14px}
 .sh-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px;flex:1}
+
+/* ── media gallery — the App Store strip: watch it work before you walk in ── */
+.gal{margin:-4px -18px 20px;position:relative}
+.gal-strip{display:flex;gap:11px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+  padding:0 18px 11px;scrollbar-width:none}
+.gal-strip::-webkit-scrollbar{display:none}
+.gal-item{flex:0 0 auto;scroll-snap-align:center;width:78%;max-width:520px;border-radius:14px;overflow:hidden;
+  border:1px solid var(--line-2);background:#000;position:relative;aspect-ratio:1456/833}
+@media(min-width:760px){ .gal-item{width:min(86%,520px)} }
+.gal-item img,.gal-item video{width:100%;height:100%;object-fit:cover;display:block}
+.gal-item.vid{cursor:pointer}
+.gal-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.55));transition:opacity .2s}
+.gal-play i{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.94);display:flex;
+  align-items:center;justify-content:center;box-shadow:0 6px 22px rgba(0,0,0,.45)}
+.gal-play i::after{content:"";border-left:17px solid #14261a;border-top:11px solid transparent;
+  border-bottom:11px solid transparent;margin-left:5px}
+.gal-play b{position:absolute;left:12px;bottom:11px;font-family:var(--mono);font-size:11px;letter-spacing:.09em;
+  text-transform:uppercase;background:rgba(0,0,0,.62);padding:5px 9px;border-radius:7px;font-weight:600}
+.gal-item.playing .gal-play{opacity:0;pointer-events:none}
+.gal-cap{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:0 18px;margin:-4px 0 18px}
+.gal-cap span{font-size:12.5px;color:var(--mute)}
+.gal-dots{display:flex;gap:5px}
+.gal-dots i{width:5px;height:5px;border-radius:50%;background:var(--line-2);transition:background .2s,width .2s}
+.gal-dots i.on{background:var(--gold);width:15px;border-radius:3px}
 .sh-body h4{margin:0 0 8px;font-size:11.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--mute);font-family:var(--mono)}
 .sh-body p{margin:0 0 20px;font-size:15.5px;line-height:1.6;color:var(--cream)}
 .rows{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:20px;background:rgba(255,255,255,.04)}
@@ -756,6 +781,51 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
   clr.addEventListener('click',function(){ q.value=''; term=''; clr.classList.remove('on'); render(); q.focus(); });
 
   var sheet=document.getElementById('sheet'), scrim=document.getElementById('scrim'), lastFocus=null;
+
+  /* ── media gallery ─────────────────────────────────────────────
+     Watch it work before you walk in. Video first, then real
+     screenshots of the actual rooms — no mockups, no stock. */
+  function mmss(s){ s=Math.round(s||0); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+  function galleryHTML(a){
+    var m=a.media; if(!m || !(m.preview||(m.shots&&m.shots.length))) return '';
+    var items=[];
+    if(m.preview){
+      items.push('<div class="gal-item vid" data-src="'+esc(m.preview)+'" data-poster="'+esc(m.poster||'')+'">'
+        +'<img src="'+esc(m.poster||'')+'" alt="'+esc(a.name)+' preview" loading="lazy">'
+        +'<div class="gal-play"><i></i><b>Preview'+(m.len?' · '+esc(m.len):'')+'</b></div></div>');
+    }
+    (m.shots||[]).forEach(function(s,i){
+      items.push('<div class="gal-item"><img src="'+esc(s)+'" loading="lazy" alt="'
+        +esc(a.name)+' screen '+(i+1)+'"></div>');
+    });
+    var dots=items.map(function(_,i){return '<i'+(i?'':' class="on"')+'></i>';}).join('');
+    return '<div class="gal"><div class="gal-strip" id="galStrip">'+items.join('')+'</div></div>'
+      +'<div class="gal-cap"><span>'+(m.preview?'Watch it work, then walk in and use it.'
+        :'Screens from the live system.')+'</span><span class="gal-dots" id="galDots">'+dots+'</span></div>';
+  }
+  function wireGallery(){
+    var strip=document.getElementById('galStrip'); if(!strip) return;
+    var dots=document.getElementById('galDots');
+    strip.addEventListener('scroll',function(){
+      if(!dots) return;
+      var i=Math.round(strip.scrollLeft/(strip.firstElementChild.offsetWidth+11));
+      [].forEach.call(dots.children,function(d,n){ d.classList.toggle('on',n===i); });
+    },{passive:true});
+    var v=strip.querySelector('.gal-item.vid'); if(!v) return;
+    v.addEventListener('click',function(){
+      if(v.classList.contains('playing')) return;
+      var el=document.createElement('video');
+      el.src=v.dataset.src;
+      /* carry the poster onto the <video> too — without it the tile flashes black
+         on any browser that blocks autoplay, which is most of them with sound on */
+      if(v.dataset.poster) el.poster=v.dataset.poster;
+      el.controls=true; el.playsInline=true; el.setAttribute('playsinline',''); el.preload='auto';
+      v.innerHTML=''; v.appendChild(el);
+      v.classList.add('playing');
+      el.play().catch(function(){ /* blocked → the controls are right there */ });
+    });
+  }
+
   function open(id){
     var a=C.byId(id); if(!a) return;
     lastFocus=document.activeElement;
@@ -764,7 +834,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     document.getElementById('shTag').textContent=a.tag+(a.family?' · '+a.family:'');
     document.getElementById('shPr').innerHTML=verb(a);
 
-    var body='<h4>What it is</h4><p>'+esc(a.blurb)+'</p>';
+    var body=galleryHTML(a)+'<h4>What it is</h4><p>'+esc(a.blurb)+'</p>';
     if(a.state==='live'){
       body+=(a.tiers&&a.tiers.length?('<h4>Plans</h4><div class="tiers">'+a.tiers.map(function(t){return '<div class="tier"><div class="tn">'+esc(t[0])+'</div><div class="tp">$'+Number(t[1]).toLocaleString()+'<small>/mo</small></div><div class="tb">+ $'+Number(t[2]).toLocaleString()+' one-time build</div><div class="ti">'+esc(t[3])+'</div></div>';}).join('')+'</div><p class="tnote">Monthly plus a one-time build. Annual billing saves about two months. Final numbers are confirmed with you before anything is signed — nothing here auto-charges.</p>'):'')+'<div class="rows"'+(a.tiers&&a.tiers.length?' hidden':'')+'><div class="rw"><span>Price</span><span>'+esc(a.price||'—')+'</span></div>'
         +(a.priceNote?'<div class="rw"><span>Details</span><span>'+esc(a.priceNote)+'</span></div>':'')
@@ -775,6 +845,8 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
       body+='<div class="note"><b>This app is being built.</b> There is no price yet and nothing to buy. Leave your email and you will hear from us the day it opens — nothing else, ever.</div>';
     }
     document.getElementById('shBody').innerHTML=body;
+    document.getElementById('shBody').scrollTop=0;
+    wireGallery();
 
     var foot=document.getElementById('shFoot');
     if(a.state==='live'){
@@ -795,6 +867,9 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     if(history.replaceState) history.replaceState(null,'','#'+a.id);
   }
   function close(){
+    /* kill the preview audio the moment the sheet starts closing */
+    var pv=sheet.querySelector('.gal-item.vid video');
+    if(pv){ try{ pv.pause(); pv.removeAttribute('src'); pv.load(); }catch(e){} }
     sheet.classList.remove('on'); scrim.classList.remove('on');
     document.body.style.overflow='';
     setTimeout(function(){ sheet.hidden=true; },270);
