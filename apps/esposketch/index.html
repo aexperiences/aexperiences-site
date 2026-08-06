@@ -151,9 +151,10 @@
       <div class="lbl">Pick something to draw</div>
       <div class="chips" id="chips"></div>
       <div class="row">
-        <input id="custom" placeholder="…or type any character" autocomplete="off">
+        <input id="custom" placeholder="…or type any character — Bart Simpson, Walker Texas Ranger, anything" autocomplete="off">
         <button id="customOk">Use it</button>
       </div>
+      <div id="picked" style="margin-top:10px;font-weight:800;color:var(--gold);font-size:15.5px"></div>
       <button class="mic" id="mic"><span>🎤</span><span id="micT">Say what you want to draw</span></button>
     </div>
 
@@ -169,6 +170,8 @@
 
   <!-- CLASS -->
   <section class="class" id="class">
+    <div style="text-align:center;padding:9px 14px 0"><span id="nowDrawing"
+      style="font-size:12px;letter-spacing:2.6px;text-transform:uppercase;color:var(--gold)"></span></div>
     <div class="steps" id="pips"></div>
     <div class="easel">
       <canvas id="guide"></canvas>
@@ -700,11 +703,17 @@ $('chips').innerHTML=CHIPS.map(function(c){
   };
 });
 $('chips').querySelector('.chip').classList.add('on'); subject='A round cartoon friend';
-$('customOk').onclick=function(){ var v=$('custom').value.trim(); if(!v)return;
-  subject=v; lessonKey=chooseLesson(v);
+/* typing alone is enough — no one should have to press a second button */
+function useTyped(){
+  var v=$('custom').value.trim(); if(!v) return false;
+  subject=v;
   [].forEach.call($('chips').querySelectorAll('.chip'),function(x){x.classList.remove('on')});
-  $('custom').blur(); $('scanState').textContent='Ready to draw: '+v; };
-$('custom').onkeydown=function(e){ if(e.key==='Enter') $('customOk').click() };
+  $('picked').textContent='Drawing: '+v;
+  return true;
+}
+$('custom').addEventListener('input',useTyped);
+$('customOk').onclick=function(){ if(useTyped()) $('custom').blur() };
+$('custom').onkeydown=function(e){ if(e.key==='Enter'){ e.preventDefault(); $('customOk').click() } };
 
 var SR=window.SpeechRecognition||window.webkitSpeechRecognition, rec;
 $('mic').onclick=function(){
@@ -745,7 +754,9 @@ $('shot').onchange=function(){
 
 $('start').onclick=function(){
   ac();
-  var word=subject||'a character';
+  /* what's in the box ALWAYS wins — typed text beats a leftover chip */
+  var typed=$('custom').value.trim();
+  var word=typed||subject||'a character';
   if(word==='your picture'){
     /* the scan already put its verdict on the bus; use the preset it chose */
     lesson=LESSONS[lessonKey]||LESSONS['round-friend'];
@@ -754,6 +765,7 @@ $('start').onclick=function(){
     lesson=buildFromSpec(d.spec, d.label);
   }
   step=0; $('next').disabled=false;
+  $('nowDrawing').textContent='Drawing · '+(lesson.name||word);
   $('setup').style.display='none'; $('class').classList.add('on');
   setTimeout(function(){ fit(); teach(); },60);
 };

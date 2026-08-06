@@ -1,4 +1,4 @@
-var C='espos ketch-v1'.replace(' ','');
+var C='esposketch-v3';
 var A=['./','./index.html','./manifest.webmanifest','./icon.png'];
 self.addEventListener('install',function(e){e.waitUntil(caches.open(C).then(function(c){
  return Promise.all(A.map(function(a){return c.add(a).catch(function(){})}))}).then(function(){return self.skipWaiting()}))});
