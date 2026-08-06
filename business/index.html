@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1f3d">
+<title>Business Solutions — Software &amp; App Shop | Accelerated Experiences LLC</title>
+<meta name="description" content="Complete operating systems for a working business — real estate, architecture, engineering, theater, film, concerts, kids gyms, photography, dental, tattoo, trades, home care, used-car and marketing. Walk in and use the real thing. Unlimited seats on every tier.">
+<link rel="canonical" href="https://www.aexperiences.com/business/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Business Solutions — Software &amp; App Shop">
+<meta property="og:description" content="Operating systems for a working business. Walk in and use the real thing — no demo, no sales call, no per-seat pricing.">
+<meta property="og:image" content="https://www.aexperiences.com/ae-disc.png">
+<link rel="icon" href="/ae-disc.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── Business Solutions · Software & App Shop ─────────────────────────────
+   A separate destination on purpose. You arrive already knowing these are
+   business operating systems — no consumer apps, no studio portfolio, no
+   "what is this". AE navy, not the storefront's forest green.
+   Domain-portable: every asset path is root-absolute, so pointing a new
+   domain at this directory needs no edits. ─────────────────────────────── */
+:root{
+  --navy:#0f1f3d; --navy-d:#0a1730; --navy-l:#16294c;
+  --blue:#1f6feb; --bright:#3b9dff; --slate:#5b6b86;
+  --light:#f4f6fb; --white:#fff; --green:#0f8a5f;
+  --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.20);
+  --sans:'Outfit',system-ui,-apple-system,sans-serif;
+  --mono:'Space Grotesk',ui-monospace,monospace;
+  --tap:44px; --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--navy);color:var(--white);font-family:var(--sans);line-height:1.55;
+  -webkit-font-smoothing:antialiased;padding-bottom:var(--safe-b)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+.wrap{max-width:1180px;margin:0 auto;padding:0 18px}
+@media(min-width:700px){ .wrap{padding:0 26px} }
+
+/* ── masthead ── */
+.bar{position:sticky;top:0;z-index:50;background:rgba(15,31,61,.93);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:13px;height:66px}
+.logo{display:flex;align-items:center;gap:11px;min-width:0}
+.logo img{width:38px;height:38px;display:block;flex:none;
+  filter:drop-shadow(0 2px 7px rgba(0,0,0,.45))}
+.logo-text{min-width:0}
+.logo-text b{display:block;font-size:15.5px;font-weight:700;letter-spacing:-.01em;line-height:1.15}
+.logo-text span{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--bright)}
+.bar nav{margin-left:auto;display:none;gap:22px;font-size:14.5px;color:#c3cee0}
+@media(min-width:860px){ .bar nav{display:flex} }
+.bar nav a:hover{color:var(--white)}
+
+/* ── hero ── */
+.hero{padding:44px 0 30px;border-bottom:1px solid var(--line);
+  background:radial-gradient(1100px 420px at 22% -12%,rgba(31,111,235,.20),transparent 62%)}
+@media(min-width:700px){ .hero{padding:62px 0 42px} }
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--bright);margin-bottom:13px}
+.hero h1{font-size:clamp(30px,6.4vw,52px);line-height:1.04;letter-spacing:-.03em;font-weight:800;
+  max-width:16ch}
+.hero p{margin-top:15px;font-size:clamp(15.5px,2.3vw,19px);color:#c3cee0;max-width:62ch}
+.hero .facts{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+.fact{font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;padding:8px 13px;border-radius:999px;
+  border:1px solid var(--line-2);background:rgba(255,255,255,.05);color:#dbe4f2}
+.fact b{color:var(--bright);font-weight:600}
+
+/* ── aisles ── */
+.aisles{display:flex;gap:8px;margin:26px 0 4px;border-bottom:1px solid var(--line)}
+.aisle{flex:1;padding:14px 8px 13px;text-align:center;font-weight:600;font-size:15px;
+  color:#93a3bd;border-bottom:2.5px solid transparent;transition:color .16s,border-color .16s}
+.aisle b{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.13em;
+  text-transform:uppercase;font-weight:500;margin-top:3px;opacity:.75}
+.aisle[aria-selected=true]{color:var(--white);border-bottom-color:var(--bright)}
+
+.sec{padding:26px 0 40px}
+.sec-note{font-size:14.5px;color:#93a3bd;margin-bottom:20px;max-width:66ch}
+
+/* ── product grid ── */
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:600px){ .grid{grid-template-columns:repeat(2,1fr);gap:14px} }
+@media(min-width:1000px){ .grid{grid-template-columns:repeat(3,1fr);gap:16px} }
+.card{display:flex;flex-direction:column;background:var(--navy-l);border:1px solid var(--line);
+  border-radius:16px;overflow:hidden;text-align:left;transition:transform .16s,border-color .16s;width:100%}
+.card:hover{transform:translateY(-3px);border-color:var(--line-2)}
+.card .shot{aspect-ratio:1456/833;background:#000;position:relative;overflow:hidden}
+.card .shot img{width:100%;height:100%;object-fit:cover;display:block}
+.card .runtime{position:absolute;right:9px;bottom:9px;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.05em;background:rgba(0,0,0,.72);padding:4px 8px;border-radius:6px}
+.card .body{padding:14px 15px 15px;display:flex;gap:12px;align-items:flex-start}
+.card .ic{width:44px;height:44px;border-radius:11px;flex:none;object-fit:cover;
+  box-shadow:0 0 0 1px rgba(255,255,255,.14)}
+.card .body > span:last-child{min-width:0}
+.card .nm{display:block;font-weight:700;font-size:16.5px;letter-spacing:-.01em}
+.card .tg{display:block;font-size:13px;color:#93a3bd;margin-top:2px}
+.card .pr{display:block;margin-top:7px;font-family:var(--mono);font-size:12.5px;color:var(--bright)}
+
+/* ── tools: honest empty state ── */
+.empty{border:1px dashed var(--line-2);border-radius:18px;padding:34px 22px;text-align:center;
+  background:rgba(255,255,255,.03)}
+.empty h3{font-size:20px;letter-spacing:-.01em;margin-bottom:9px}
+.empty p{color:#a9b7cd;font-size:15px;max-width:56ch;margin:0 auto 6px}
+.empty .mono{font-family:var(--mono);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--bright);margin-bottom:14px}
+
+/* ── promise strip ── */
+.promise{border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  background:rgba(31,111,235,.09);padding:26px 0}
+.promise .row{display:grid;gap:18px}
+@media(min-width:760px){ .promise .row{grid-template-columns:repeat(3,1fr);gap:26px} }
+.promise h4{font-size:15.5px;margin-bottom:5px}
+.promise p{font-size:14px;color:#b9c6da}
+
+/* ── footer ── */
+footer{padding:30px 0 40px;color:#7d8ca6;font-size:13.5px}
+footer .f-in{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
+footer a{color:#a9b7cd} footer a:hover{color:var(--white)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="logo" href="/business/">
+      <!-- Anthony's real mark. Never a drawn glyph. -->
+      <img src="/ae-disc.png" alt="Accelerated Experiences">
+      <span class="logo-text">
+        <b>Business Solutions</b>
+        <span>Software &amp; App Shop</span>
+      </span>
+    </a>
+    <nav>
+      <a href="#os">Operating systems</a>
+      <a href="#tools">Tools</a>
+      <a href="#how">How it works</a>
+      <a href="/shop.html">Personal apps →</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Accelerated Experiences LLC</p>
+    <h1>Software that runs the whole business.</h1>
+    <p>Not a CRM you bolt onto six other subscriptions. Each of these is a complete
+       operating system for one trade — the front office, the actual craft work, the
+       compliance gates, and the money, on one record. Open any of them right now and
+       use the real thing.</p>
+    <div class="facts">
+      <span class="fact"><b>14</b> operating systems</span>
+      <span class="fact"><b>Unlimited</b> seats, every tier</span>
+      <span class="fact">No demo &middot; <b>walk in and use it</b></span>
+      <span class="fact">You keep <b>100%</b> of your revenue</span>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="aisles" role="tablist" id="aisles">
+    <button class="aisle" role="tab" aria-selected="true" data-a="os" id="tab-os">
+      Operating systems<b>The whole business</b></button>
+    <button class="aisle" role="tab" aria-selected="false" data-a="tools" id="tab-tools">
+      Tools<b>One job at a time</b></button>
+  </div>
+</div>
+
+<main class="wrap">
+  <section class="sec" id="os">
+    <p class="sec-note">Every one is a live instance running real data. Watch the preview,
+       watch the full walkthrough, then walk in — you cannot hurt it.</p>
+    <div class="grid" id="osGrid"></div>
+  </section>
+
+  <section class="sec" id="tools" hidden>
+    <div class="empty">
+      <p class="mono">In development</p>
+      <h3>Standalone tools are being built.</h3>
+      <p>Single-purpose tools for a business that does not want a whole operating system —
+         buy the one piece that solves the one problem.</p>
+      <p><strong>There is nothing to buy here yet, and no prices to quote.</strong>
+         When the first tools are ready they will appear in this aisle with a real price
+         and a real link, the same as everything else in this shop.</p>
+    </div>
+  </section>
+</main>
+
+<section class="promise" id="how">
+  <div class="wrap row">
+    <div>
+      <h4>Unlimited seats. Always.</h4>
+      <p>Every tier, every product. Hiring somebody never costs you more — there is no
+         per-seat charge anywhere in this shop.</p>
+    </div>
+    <div>
+      <h4>You keep 100% of your revenue.</h4>
+      <p>We do not take a cut of what your business earns. You pay for the software and
+         that is the end of it.</p>
+    </div>
+    <div>
+      <h4>Walk in. No sales call.</h4>
+      <p>Every system is open right now with real data in it. Nobody has to talk to you
+         first, and nothing you type is stored.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap f-in">
+    <span>&copy; <span id="yr"></span> Accelerated Experiences LLC &middot; Post Falls, Idaho</span>
+    <span><a href="/shop.html">Personal apps</a> &middot; <a href="/">Both stores</a></span>
+  </div>
+</footer>
+
+<script src="/catalog.js"></script>
+<script>
+(function(){
+  var C = window.AEShop;
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  if(!C || !C.CATALOG) return;
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+  /* Business aisle only. This shop is business software — a consumer app has no
+     business appearing in it, which is the whole point of the separate destination. */
+  var os = C.CATALOG.filter(function(a){ return a.genre==='business' && a.state==='live'; });
+
+  document.getElementById('osGrid').innerHTML = os.map(function(a){
+    var m = a.media || {};
+    var still = m.poster || (m.shots && m.shots[0]) || '';
+    /* Label the LONGEST thing we actually have, and never invent a runtime. */
+    var badge = m.longLen ? ('Walkthrough · ' + m.longLen)
+              : (m.len ? ('Preview · ' + m.len) : '');
+    return '<a class="card" href="/shop.html#'+esc(a.id)+'">'
+      + (still ? '<span class="shot"><img src="'+esc(still)+'" alt="'+esc(a.name)+'" loading="lazy">'
+                 + (badge?'<span class="runtime">'+esc(badge)+'</span>':'') + '</span>' : '')
+      + '<span class="body">'
+      +   '<img class="ic" src="'+esc(a.mark||'')+'" alt="" loading="lazy">'
+      +   '<span><span class="nm">'+esc(a.name)+'</span>'
+      +     '<span class="tg">'+esc(a.tag)+'</span>'
+      +     '<span class="pr">'+esc(a.price||'')+'</span></span>'
+      + '</span></a>';
+  }).join('');
+
+  var tabs = document.getElementById('aisles');
+  tabs.addEventListener('click', function(e){
+    var b = e.target.closest('.aisle'); if(!b) return;
+    [].forEach.call(tabs.children, function(t){ t.setAttribute('aria-selected', t===b); });
+    document.getElementById('os').hidden    = b.dataset.a !== 'os';
+    document.getElementById('tools').hidden = b.dataset.a !== 'tools';
+    history.replaceState(null,'','#'+b.dataset.a);
+  });
+  if(location.hash === '#tools') document.getElementById('tab-tools').click();
+})();
+</script>
+</body>
+</html>
