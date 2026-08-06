@@ -796,6 +796,13 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
         +'<img src="'+esc(m.poster||'')+'" alt="'+esc(a.name)+' preview" loading="lazy">'
         +'<div class="gal-play"><i></i><b>Preview'+(m.len?' · '+esc(m.len):'')+'</b></div></div>');
     }
+    /* The long one. Two tiers on purpose: the preview sells it in two minutes, the
+       walkthrough shows every room for somebody who is actually deciding. */
+    if(m.long){
+      items.push('<div class="gal-item vid" data-src="'+esc(m.long)+'" data-poster="'+esc(m.longPoster||m.poster||'')+'">'
+        +'<img src="'+esc(m.longPoster||m.poster||'')+'" alt="'+esc(a.name)+' full walkthrough" loading="lazy">'
+        +'<div class="gal-play"><i></i><b>Full walkthrough'+(m.longLen?' · '+esc(m.longLen):'')+'</b></div></div>');
+    }
     (m.shots||[]).forEach(function(s,i){
       items.push('<div class="gal-item"><img src="'+esc(s)+'" loading="lazy" alt="'
         +esc(a.name)+' screen '+(i+1)+'"></div>');
@@ -813,7 +820,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
       var i=Math.round(strip.scrollLeft/(strip.firstElementChild.offsetWidth+11));
       [].forEach.call(dots.children,function(d,n){ d.classList.toggle('on',n===i); });
     },{passive:true});
-    var v=strip.querySelector('.gal-item.vid'); if(!v) return;
+    [].forEach.call(strip.querySelectorAll('.gal-item.vid'), function(v){
     v.addEventListener('click',function(){
       if(v.classList.contains('playing')) return;
       var el=document.createElement('video');
@@ -824,7 +831,12 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
       el.controls=true; el.playsInline=true; el.setAttribute('playsinline',''); el.preload='auto';
       v.innerHTML=''; v.appendChild(el);
       v.classList.add('playing');
+      /* only one preview plays at a time */
+      [].forEach.call(strip.querySelectorAll('.gal-item.vid video'), function(o){
+        if(o!==el){ try{ o.pause(); }catch(e){} }
+      });
       el.play().catch(function(){ /* blocked → the controls are right there */ });
+    });
     });
   }
 
