@@ -14,49 +14,49 @@
   var CATALOG = [
 
     /* ─────────── BUSINESS OS — live, sold as a subscription ─────────── */
-    { id:'homestead', mark:'/os-icons/Abode_OS.png', name:'Abode OS', img:'/Abode_OS.png', tag:'Real estate', genre:'business', state:'live',
+    { id:'abode', mark:'/os-icons/Abode_OS.png', name:'Abode OS', img:'/Abode_OS.png', tag:'Real estate', genre:'business', state:'live',
       tiers:[ ['Solo / Team',450,2500,'Pipeline + CRM + commissions, DeepSeek AI'], ['Team',950,6000,'Full suite + broker views + marketing + Claude'], ['Brokerage',2400,9900,'Multi-team · compliance · custom + premium AI'] ],
       acc:'#c8794f', url:'/apps/abode/', pricing:'/hubs/real-estate.html',
       blurb:'Run a real-estate practice from one place — listings, clients, calendar, and the paperwork that follows a deal.',
       price:'$450/mo', priceNote:'3 tiers · annual $4,500/yr (2 months free)',
       svg:'<path d="M7 22 24 8l17 14"/><path d="M11 20v19h26V20"/><circle cx="24" cy="29" r="3.2"/><path d="M24 32.2V37"/>' },
 
-    { id:'draftline', mark:'/os-icons/Buttress_OS.png', name:'Buttress OS', img:'/Buttress_OS.png', tag:'Architecture', genre:'business', state:'live',
+    { id:'buttress', mark:'/os-icons/Buttress_OS.png', name:'Buttress OS', img:'/Buttress_OS.png', tag:'Architecture', genre:'business', state:'live',
       tiers:[ ['Studio',550,3500,'Projects + RFIs + billing + Detail Studio'], ['Firm',1200,8400,'Full suite + custom workflows + Claude eyes'], ['Multi-office',2800,14500,'Unlimited + custom modules + white-glove'] ],
       acc:'#5c8a5f', url:'/apps/buttress/', pricing:'/hubs/architecture.html',
       blurb:'Projects, drawing sets, consultants and clients in one studio OS — built around how a practice actually runs.',
       price:'$550/mo', priceNote:'3 tiers · annual $5,500/yr (2 months free)',
       svg:'<path d="M24 7 11 41M24 7l13 34"/><circle cx="24" cy="7" r="2.6"/><path d="M24 7v11"/><path d="M16 30h16"/>' },
 
-    { id:'datum', mark:'/os-icons/Truss_OS.png', name:'Truss OS', img:'/Truss_OS.png', tag:'Engineering', genre:'business', state:'live',
+    { id:'truss', mark:'/os-icons/Truss_OS.png', name:'Truss OS', img:'/Truss_OS.png', tag:'Engineering', genre:'business', state:'live',
       tiers:[ ['Practice',650,3500,'Projects + submittals + Calc Studio'], ['Firm',1400,9000,'Full suite + QA + premium AI eyes'], ['Multi-discipline',3200,16800,'Unlimited + custom + priority SLA'] ],
       acc:'#18b0ba', url:'/apps/truss/', pricing:'/hubs/engineering.html',
       blurb:'Job tracking, submittals, field notes and billing for an engineering firm — one system instead of six.',
       price:'$650/mo', priceNote:'3 tiers · annual $6,500/yr (2 months free)',
       svg:'<path d="M6 40 24 9l18 31zM6 40h36"/><path d="M24 9 16 40M24 9l8 31M13 30h22"/>' },
 
-    { id:'marquee', mark:'/os-icons/Musical_OS.png', name:'Musical OS', img:'/Musical_OS.png', tag:'Live theater', genre:'business', state:'live',
+    { id:'musical', mark:'/os-icons/Musical_OS.png', name:'Musical OS', img:'/Musical_OS.png', tag:'Live theater', genre:'business', state:'live',
       tiers:[ ['Community',650,4000,'Box office + productions + patrons'], ['Producing',1500,8400,'+ subscriptions · marketing · full house tools'], ['Regional / Multi-venue',3200,13800,'Multi-venue + custom + premium AI'] ],
       acc:'#e0b24a', url:'/apps/musical/', pricing:'/hubs/theater.html',
       blurb:'Box office, season, giving, sponsorship, volunteers and classes — the whole playhouse on one spine, and the only theatre OS that speaks non-profit.',
       price:'$650/mo', priceNote:'3 tiers · annual $6,500/yr (2 months free)',
       svg:'<path d="M9 17h30l-3 22H12z"/><path d="M9 17 24 7l15 10"/><circle cx="19" cy="27" r="2"/><circle cx="29" cy="27" r="2"/>' },
 
-    { id:'reel', mark:'/os-icons/8mm_OS.png', name:'8mm OS', img:'/8mm_OS.png', tag:'Film & production', genre:'business', state:'live',
+    { id:'8mm', mark:'/os-icons/8mm_OS.png', name:'8mm OS', img:'/8mm_OS.png', tag:'Film & production', genre:'business', state:'live',
       tiers:[ ['Single / Twin',500,3000,'Box office + showtimes + members'], ['Multiplex',1200,7600,'Up to 8 screens + reserved + concessions'], ['Circuit',2800,12200,'Multi-location + custom + premium AI'] ],
       acc:'#8a6fd6', url:'/apps/8mm/', pricing:'/hubs/cinema.html',
       blurb:'Productions, crew, call sheets, gear and post — from greenlight to delivery.',
       price:'$500/mo', priceNote:'3 tiers · annual $5,000/yr (2 months free)',
       svg:'<rect x="7" y="14" width="24" height="20" rx="3"/><path d="M31 22l10-6v16l-10-6z"/>' },
 
-    { id:'encore', mark:'/os-icons/Amphitheater_OS.png', name:'Amphitheater OS', img:'/Amphitheater_OS.png', tag:'Concerts & venues', genre:'business', state:'live',
+    { id:'amphitheater', mark:'/os-icons/Amphitheater_OS.png', name:'Amphitheater OS', img:'/Amphitheater_OS.png', tag:'Concerts & venues', genre:'business', state:'live',
       tiers:[ ['Club',600,3500,'Box office (GA/reserved/cabaret) + lineup'], ['Venue',1400,7600,'Full suite + marketing + memberships'], ['Group / Promoter',3000,12200,'Multi-venue + custom + priority SLA'] ],
       acc:'#d65f8a', url:'/apps/amphitheater/', pricing:'/hubs/concerts.html',
       blurb:'Shows, ticketing, artists, riders and settlement — the venue back office in one place.',
       price:'$600/mo', priceNote:'3 tiers · annual $6,000/yr (2 months free)',
       svg:'<path d="M18 34V12l18-4v22"/><circle cx="14" cy="34" r="4.5"/><circle cx="32" cy="30" r="4.5"/>' },
 
-    { id:'cartwheel', mark:'/os-icons/LilNinja_OS.png', name:'LilNinja OS', img:'/LilNinja_OS.png', tag:'Kids gyms & programs', genre:'business', state:'live',
+    { id:'lilninja', mark:'/os-icons/LilNinja_OS.png', name:'LilNinja OS', img:'/LilNinja_OS.png', tag:'Kids gyms & programs', genre:'business', state:'live',
       tiers:[ ['Studio',400,2500,'Schedule + enrollment + tuition + families'], ['Center',750,6000,'Full suite + coaches + parent portal + your site'], ['Multi-location',1600,9900,'Multi-site + custom + premium AI'] ],
       acc:'#4aa3d6', url:'/apps/lilninja/', pricing:'/hubs/kids-gym.html',
       blurb:'Classes, enrollment, waivers, parents and payments — for gyms, camps and kids programs.',
@@ -96,7 +96,7 @@
       price:'$550/mo', priceNote:'3 tiers \u00b7 the whole spine in every tier',
       svg:'<path d="M8 24L24 10l16 14"/><path d="M12 24v14h24V24"/><path d="M24 34c-4-3-6-5-6-8a3 3 0 016-1 3 3 0 016 1c0 3-2 5-6 8z"/>' },
 
-    { id:'showroom', mark:'/os-icons/4barrel_OS.png', name:'4barrel OS', img:'/4barrel_OS.png', tag:'Used-car dealers', genre:'business', state:'live',
+    { id:'4barrel', mark:'/os-icons/4barrel_OS.png', name:'4barrel OS', img:'/4barrel_OS.png', tag:'Used-car dealers', genre:'business', state:'live',
       tiers:[ ['Lot',450,2500,'Inventory + desk + leads + recon'], ['Dealership',950,6500,'Full suite + online sales + service'], ['Multi-lot',2000,12200,'Multi-lot + custom + premium AI'] ],
       acc:'#1c5568', url:'/apps/4barrel/', pricing:'/hubs/showroom.html',
       blurb:'Inventory, sales desk, leads and recon for independent and boutique used-car dealers.',
@@ -331,13 +331,26 @@
      page — a shop with no prices in front of a prospect is worse than a price a day old.
      Only ever touches `live` products: a coming-soon app has no price by design. */
   var PRICE_API = 'https://aexperiences.studio/api/pricing';
+
+  /* RETIRED IDS. Before Jul 24 2026 these products were keyed by their old brand names, and
+     that id was the join key between this catalog and the hub's price desk. The names are
+     retired (SSOT Art. IV.4) so the ids are too — but the two repos deploy separately, and a
+     rename that lands here first would silently stop matching prices until the hub caught up.
+     So we accept either id and always resolve to the canon one. Nothing here is ever shown
+     to a visitor; it exists purely so a deploy gap can't blank the prices in the store. */
+  var RETIRED_ID = {
+    homestead: 'abode', draftline: 'buttress', datum: 'truss', marquee: 'musical',
+    reel: '8mm', encore: 'amphitheater', cartwheel: 'lilninja', showroom: '4barrel'
+  };
+  function canonId(id) { return RETIRED_ID[id] || id; }
+
   function refreshPrices() {
     return fetch(PRICE_API).then(function (r) {
       if (!r.ok) throw new Error('pricing unavailable');
       return r.json();
     }).then(function (rec) {
       (rec.hubs || []).forEach(function (h) {
-        var a = byId(h.id);
+        var a = byId(canonId(h.id));
         if (!a || a.state !== 'live' || !h.tiers || !h.tiers.length) return;
         var t = h.tiers[0];
         a.price = '$' + Number(t.mo).toLocaleString('en-US') + '/mo';
@@ -359,20 +372,20 @@
      A product with no entry simply shows no gallery — the store must never show a
      broken player or a placeholder tile. */
   var MEDIA = {
-    homestead:   { preview:'/media/homestead/preview.mp4', poster:'/media/homestead/poster.jpg', len:'2:37',
-                 shots:['/media/homestead/s1.jpg', '/media/homestead/s2.jpg', '/media/homestead/s3.jpg', '/media/homestead/s4.jpg', '/media/homestead/s5.jpg', '/media/homestead/s6.jpg'] },
-    draftline:   { preview:'/media/draftline/preview.mp4', poster:'/media/draftline/poster.jpg', len:'2:16',
-                 shots:['/media/draftline/s1.jpg', '/media/draftline/s2.jpg', '/media/draftline/s3.jpg', '/media/draftline/s4.jpg', '/media/draftline/s5.jpg', '/media/draftline/s6.jpg', '/media/draftline/s7.jpg', '/media/draftline/s8.jpg'] },
-    datum:       { preview:'/media/datum/preview.mp4', poster:'/media/datum/poster.jpg', len:'2:42',
-                 shots:['/media/datum/s1.jpg', '/media/datum/s2.jpg', '/media/datum/s3.jpg', '/media/datum/s4.jpg', '/media/datum/s5.jpg', '/media/datum/s6.jpg'] },
-    marquee:     { preview:'/media/marquee/preview.mp4', poster:'/media/marquee/poster.jpg', len:'2:41',
-                 shots:['/media/marquee/s1.jpg', '/media/marquee/s2.jpg', '/media/marquee/s3.jpg', '/media/marquee/s4.jpg', '/media/marquee/s5.jpg', '/media/marquee/s6.jpg', '/media/marquee/s7.jpg'] },
-    reel:        { preview:'/media/reel/preview.mp4', poster:'/media/reel/poster.jpg', len:'3:05',
-                 shots:['/media/reel/s1.jpg', '/media/reel/s2.jpg', '/media/reel/s3.jpg', '/media/reel/s4.jpg', '/media/reel/s5.jpg', '/media/reel/s6.jpg', '/media/reel/s7.jpg', '/media/reel/s8.jpg'] },
-    encore:      { preview:'/media/encore/preview.mp4', poster:'/media/encore/poster.jpg', len:'3:03',
-                 shots:['/media/encore/s1.jpg', '/media/encore/s2.jpg', '/media/encore/s3.jpg', '/media/encore/s4.jpg', '/media/encore/s5.jpg', '/media/encore/s6.jpg'] },
-    cartwheel:   { preview:'/media/cartwheel/preview.mp4', poster:'/media/cartwheel/poster.jpg', len:'2:40',
-                 shots:['/media/cartwheel/s1.jpg', '/media/cartwheel/s2.jpg', '/media/cartwheel/s3.jpg', '/media/cartwheel/s4.jpg', '/media/cartwheel/s5.jpg', '/media/cartwheel/s6.jpg'] },
+    abode:       { preview:'/media/abode/preview.mp4', poster:'/media/abode/poster.jpg', len:'2:37',
+                 shots:['/media/abode/s1.jpg', '/media/abode/s2.jpg', '/media/abode/s3.jpg', '/media/abode/s4.jpg', '/media/abode/s5.jpg', '/media/abode/s6.jpg'] },
+    buttress:    { preview:'/media/buttress/preview.mp4', poster:'/media/buttress/poster.jpg', len:'2:16',
+                 shots:['/media/buttress/s1.jpg', '/media/buttress/s2.jpg', '/media/buttress/s3.jpg', '/media/buttress/s4.jpg', '/media/buttress/s5.jpg', '/media/buttress/s6.jpg', '/media/buttress/s7.jpg', '/media/buttress/s8.jpg'] },
+    truss:       { preview:'/media/truss/preview.mp4', poster:'/media/truss/poster.jpg', len:'2:42',
+                 shots:['/media/truss/s1.jpg', '/media/truss/s2.jpg', '/media/truss/s3.jpg', '/media/truss/s4.jpg', '/media/truss/s5.jpg', '/media/truss/s6.jpg'] },
+    musical:     { preview:'/media/musical/preview.mp4', poster:'/media/musical/poster.jpg', len:'2:41',
+                 shots:['/media/musical/s1.jpg', '/media/musical/s2.jpg', '/media/musical/s3.jpg', '/media/musical/s4.jpg', '/media/musical/s5.jpg', '/media/musical/s6.jpg', '/media/musical/s7.jpg'] },
+    '8mm':         { preview:'/media/8mm/preview.mp4', poster:'/media/8mm/poster.jpg', len:'3:05',
+                 shots:['/media/8mm/s1.jpg', '/media/8mm/s2.jpg', '/media/8mm/s3.jpg', '/media/8mm/s4.jpg', '/media/8mm/s5.jpg', '/media/8mm/s6.jpg', '/media/8mm/s7.jpg', '/media/8mm/s8.jpg'] },
+    amphitheater: { preview:'/media/amphitheater/preview.mp4', poster:'/media/amphitheater/poster.jpg', len:'3:03',
+                 shots:['/media/amphitheater/s1.jpg', '/media/amphitheater/s2.jpg', '/media/amphitheater/s3.jpg', '/media/amphitheater/s4.jpg', '/media/amphitheater/s5.jpg', '/media/amphitheater/s6.jpg'] },
+    lilninja:    { preview:'/media/lilninja/preview.mp4', poster:'/media/lilninja/poster.jpg', len:'2:40',
+                 shots:['/media/lilninja/s1.jpg', '/media/lilninja/s2.jpg', '/media/lilninja/s3.jpg', '/media/lilninja/s4.jpg', '/media/lilninja/s5.jpg', '/media/lilninja/s6.jpg'] },
     moments:     { preview:'/media/moments/preview.mp4', poster:'/media/moments/poster.jpg', len:'2:57',
                  shots:['/media/moments/s1.jpg', '/media/moments/s2.jpg', '/media/moments/s3.jpg', '/media/moments/s4.jpg', '/media/moments/s5.jpg', '/media/moments/s6.jpg', '/media/moments/s7.jpg'] },
     smiley:      { preview:'/media/smiley/preview.mp4', poster:'/media/smiley/poster.jpg', len:'2:53',
@@ -383,8 +396,8 @@
                  shots:['/media/toolbelt/s1.jpg', '/media/toolbelt/s2.jpg', '/media/toolbelt/s3.jpg', '/media/toolbelt/s4.jpg', '/media/toolbelt/s5.jpg', '/media/toolbelt/s6.jpg'] },
     stayathome:  { preview:'/media/stayathome/preview.mp4', poster:'/media/stayathome/poster.jpg', len:'2:28',
                  shots:['/media/stayathome/s1.jpg', '/media/stayathome/s2.jpg', '/media/stayathome/s3.jpg', '/media/stayathome/s4.jpg', '/media/stayathome/s5.jpg', '/media/stayathome/s6.jpg'] },
-    showroom:    { preview:'/media/showroom/preview.mp4', poster:'/media/showroom/poster.jpg', len:'2:26',
-                 shots:['/media/showroom/s1.jpg', '/media/showroom/s2.jpg', '/media/showroom/s3.jpg', '/media/showroom/s4.jpg', '/media/showroom/s5.jpg', '/media/showroom/s6.jpg', '/media/showroom/s7.jpg'] },
+    '4barrel':     { preview:'/media/4barrel/preview.mp4', poster:'/media/4barrel/poster.jpg', len:'2:26',
+                 shots:['/media/4barrel/s1.jpg', '/media/4barrel/s2.jpg', '/media/4barrel/s3.jpg', '/media/4barrel/s4.jpg', '/media/4barrel/s5.jpg', '/media/4barrel/s6.jpg', '/media/4barrel/s7.jpg'] },
     targeted:    { preview:'/media/targeted/preview.mp4', poster:'/media/targeted/poster.jpg', len:'2:27',
                  shots:['/media/targeted/s1.jpg', '/media/targeted/s2.jpg', '/media/targeted/s3.jpg', '/media/targeted/s4.jpg', '/media/targeted/s5.jpg', '/media/targeted/s6.jpg'] },
   };
@@ -392,7 +405,7 @@
 
   root.AEShop = {
     CATALOG: CATALOG, GENRES: GENRES, AISLES: AISLES,
-    byId: byId, live: live, dev: dev, activeGenres: activeGenres,
+    byId: byId, canonId: canonId, live: live, dev: dev, activeGenres: activeGenres,
     aisleOf: aisleOf, inAisle: inAisle,
     refreshPrices: refreshPrices, priceSource: 'fallback',
     appShop: { build: 99, terms: 'Half up front, half on delivery', turnaround: '3 days' }

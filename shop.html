@@ -746,6 +746,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
   }
   function readHash(){
     var h=(location.hash||'').replace(/^#/,''); if(!h) return false;
+    h = (C.canonId ? C.canonId(h) : h);
     if(/^(business|personal|all)$/.test(h)){ aisle=h; return true; }   // legacy #business links
     var got=false;
     h.split('&').forEach(function(kv){
@@ -763,6 +764,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
      navigation: the script never re-runs, so without this the link silently does nothing. */
   window.addEventListener('hashchange',function(){
     var h=(location.hash||'').replace(/^#/,'');
+    h = (C.canonId ? C.canonId(h) : h);
     if(h && C.byId(h)) return;                      // product deep-link, handled elsewhere
     genre='all'; term=''; sortBy='featured'; aisle='all';
     q.value=''; sortSel.value='featured'; clr.classList.remove('on');
@@ -827,6 +829,10 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
   }
 
   function open(id){
+    /* Old links still work: aexperiences.com/shop.html#homestead was a real, shareable
+       URL before the Jul 24 rename. Resolve it to the canon product instead of 404-ing
+       a link somebody may have sent a prospect. */
+    id = (C.canonId ? C.canonId(id) : id);
     var a=C.byId(id); if(!a) return;
     lastFocus=document.activeElement;
     var ic=document.getElementById('shIcon'); ic.style.background=a.acc; ic.innerHTML=iconHTML(a);
@@ -882,6 +888,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
 
   // deep links: #a=..&c=..&q=..&s=.. restores a filtered view; #<product-id> opens a product
   var h=location.hash.replace('#','');
+  h = (C.canonId ? C.canonId(h) : h);
   if(h==='hubs') aisle='business';
   else readHash();
   [].forEach.call(seg.children,function(b){ b.setAttribute('aria-selected', b.dataset.aisle===aisle); });
