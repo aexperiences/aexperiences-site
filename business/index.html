@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0f1f3d">
+<meta name="theme-color" content="#2a1810">
 <title>Business Solutions — Software &amp; App Shop | Accelerated Experiences LLC</title>
 <meta name="description" content="Complete operating systems for a working business — real estate, architecture, engineering, theater, film, concerts, kids gyms, photography, dental, tattoo, trades, home care, used-car and marketing. Walk in and use the real thing. Unlimited seats on every tier.">
 <link rel="canonical" href="https://www.aexperiences.com/business/">
@@ -19,28 +19,40 @@
 /* ── Business Solutions · Software & App Shop ─────────────────────────────
    A separate destination on purpose. You arrive already knowing these are
    business operating systems — no consumer apps, no studio portfolio, no
-   "what is this". AE navy, not the storefront's forest green.
+   "what is this". Brand: the AE warm grid (SSOT Art. VII.2) — espresso to
+   forest with gold kickers and cream. Blue and navy were retired Jul 21 2026 and
+   does not come back; this file carried it by mistake until Aug 2026.
    Domain-portable: every asset path is root-absolute, so pointing a new
    domain at this directory needs no edits. ─────────────────────────────── */
 :root{
-  --navy:#0f1f3d; --navy-d:#0a1730; --navy-l:#16294c;
-  --blue:#1f6feb; --bright:#3b9dff; --slate:#5b6b86;
-  --light:#f4f6fb; --white:#fff; --green:#0f8a5f;
-  --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.20);
+  /* The AE warm grid — SSOT Art. VII.2 / Appendix A2. Espresso to forest,
+     faint gold grid, gold kickers, cream. Never blue. */
+  --espresso:#2a1810; --espresso-d:#1d100a; --panel:#33241a;      /* base · deep · panel */
+  --gold:#e0a83a; --gold-l:#f0c165; --stone:#8c7d68;        /* gold kickers */
+  --cream:#f4eede; --white:#f6f1e6; --green:#0f8a5f;        /* cream · warm ink · AE green */
+  --forest:#1c3d22;
+  --line:rgba(244,238,222,.11); --line-2:rgba(244,238,222,.22);
   --sans:'Outfit',system-ui,-apple-system,sans-serif;
   --mono:'Space Grotesk',ui-monospace,monospace;
   --tap:44px; --safe-b:env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{background:var(--navy);color:var(--white);font-family:var(--sans);line-height:1.55;
-  -webkit-font-smoothing:antialiased;padding-bottom:var(--safe-b)}
+body{background:linear-gradient(120deg,var(--espresso) 0%,var(--forest) 100%) fixed;
+  color:var(--white);font-family:var(--sans);line-height:1.55;
+  -webkit-font-smoothing:antialiased;padding-bottom:var(--safe-b);min-height:100vh}
+/* the faint gold grid — the thing that makes it read as AE and not a dark template */
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(224,168,58,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(224,168,58,.08) 1px,transparent 1px);
+  background-size:44px 44px}
+.bar,.hero,.sec,.promise,footer,main{position:relative;z-index:1}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .wrap{max-width:1180px;margin:0 auto;padding:0 18px}
 @media(min-width:700px){ .wrap{padding:0 26px} }
 
 /* ── masthead ── */
-.bar{position:sticky;top:0;z-index:50;background:rgba(15,31,61,.93);
+.bar{position:sticky;top:0;z-index:50;background:rgba(34,20,14,.93);
   backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .bar .wrap{display:flex;align-items:center;gap:13px;height:66px}
 .logo{display:flex;align-items:center;gap:11px;min-width:0}
@@ -49,41 +61,41 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .logo-text{min-width:0}
 .logo-text b{display:block;font-size:15.5px;font-weight:700;letter-spacing:-.01em;line-height:1.15}
 .logo-text span{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.15em;
-  text-transform:uppercase;color:var(--bright)}
-.bar nav{margin-left:auto;display:none;gap:22px;font-size:14.5px;color:#c3cee0}
+  text-transform:uppercase;color:var(--gold-l)}
+.bar nav{margin-left:auto;display:none;gap:22px;font-size:14.5px;color:#ded2bd}
 @media(min-width:860px){ .bar nav{display:flex} }
 .bar nav a:hover{color:var(--white)}
 
 /* ── hero ── */
 .hero{padding:44px 0 30px;border-bottom:1px solid var(--line);
-  background:radial-gradient(1100px 420px at 22% -12%,rgba(31,111,235,.20),transparent 62%)}
+  background:radial-gradient(1100px 420px at 22% -12%,rgba(224,168,58,.17),transparent 62%)}
 @media(min-width:700px){ .hero{padding:62px 0 42px} }
 .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--bright);margin-bottom:13px}
+  color:var(--gold-l);margin-bottom:13px}
 .hero h1{font-size:clamp(30px,6.4vw,52px);line-height:1.04;letter-spacing:-.03em;font-weight:800;
   max-width:16ch}
-.hero p{margin-top:15px;font-size:clamp(15.5px,2.3vw,19px);color:#c3cee0;max-width:62ch}
+.hero p{margin-top:15px;font-size:clamp(15.5px,2.3vw,19px);color:#ded2bd;max-width:62ch}
 .hero .facts{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
 .fact{font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;padding:8px 13px;border-radius:999px;
-  border:1px solid var(--line-2);background:rgba(255,255,255,.05);color:#dbe4f2}
-.fact b{color:var(--bright);font-weight:600}
+  border:1px solid var(--line-2);background:rgba(244,238,222,.05);color:#efe6d4}
+.fact b{color:var(--gold-l);font-weight:600}
 
 /* ── aisles ── */
 .aisles{display:flex;gap:8px;margin:26px 0 4px;border-bottom:1px solid var(--line)}
 .aisle{flex:1;padding:14px 8px 13px;text-align:center;font-weight:600;font-size:15px;
-  color:#93a3bd;border-bottom:2.5px solid transparent;transition:color .16s,border-color .16s}
+  color:#b5a68e;border-bottom:2.5px solid transparent;transition:color .16s,border-color .16s}
 .aisle b{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.13em;
   text-transform:uppercase;font-weight:500;margin-top:3px;opacity:.75}
-.aisle[aria-selected=true]{color:var(--white);border-bottom-color:var(--bright)}
+.aisle[aria-selected=true]{color:var(--white);border-bottom-color:var(--gold-l)}
 
 .sec{padding:26px 0 40px}
-.sec-note{font-size:14.5px;color:#93a3bd;margin-bottom:20px;max-width:66ch}
+.sec-note{font-size:14.5px;color:#b5a68e;margin-bottom:20px;max-width:66ch}
 
 /* ── product grid ── */
 .grid{display:grid;grid-template-columns:1fr;gap:12px}
 @media(min-width:600px){ .grid{grid-template-columns:repeat(2,1fr);gap:14px} }
 @media(min-width:1000px){ .grid{grid-template-columns:repeat(3,1fr);gap:16px} }
-.card{display:flex;flex-direction:column;background:var(--navy-l);border:1px solid var(--line);
+.card{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);
   border-radius:16px;overflow:hidden;text-align:left;transition:transform .16s,border-color .16s;width:100%}
 .card:hover{transform:translateY(-3px);border-color:var(--line-2)}
 .card .shot{aspect-ratio:1456/833;background:#000;position:relative;overflow:hidden}
@@ -92,32 +104,32 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   letter-spacing:.05em;background:rgba(0,0,0,.72);padding:4px 8px;border-radius:6px}
 .card .body{padding:14px 15px 15px;display:flex;gap:12px;align-items:flex-start}
 .card .ic{width:44px;height:44px;border-radius:11px;flex:none;object-fit:cover;
-  box-shadow:0 0 0 1px rgba(255,255,255,.14)}
+  box-shadow:0 0 0 1px rgba(244,238,222,.15)}
 .card .body > span:last-child{min-width:0}
 .card .nm{display:block;font-weight:700;font-size:16.5px;letter-spacing:-.01em}
-.card .tg{display:block;font-size:13px;color:#93a3bd;margin-top:2px}
-.card .pr{display:block;margin-top:7px;font-family:var(--mono);font-size:12.5px;color:var(--bright)}
+.card .tg{display:block;font-size:13px;color:#b5a68e;margin-top:2px}
+.card .pr{display:block;margin-top:7px;font-family:var(--mono);font-size:12.5px;color:var(--gold-l)}
 
 /* ── tools: honest empty state ── */
 .empty{border:1px dashed var(--line-2);border-radius:18px;padding:34px 22px;text-align:center;
-  background:rgba(255,255,255,.03)}
+  background:rgba(244,238,222,.035)}
 .empty h3{font-size:20px;letter-spacing:-.01em;margin-bottom:9px}
-.empty p{color:#a9b7cd;font-size:15px;max-width:56ch;margin:0 auto 6px}
+.empty p{color:#cabda7;font-size:15px;max-width:56ch;margin:0 auto 6px}
 .empty .mono{font-family:var(--mono);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--bright);margin-bottom:14px}
+  color:var(--gold-l);margin-bottom:14px}
 
 /* ── promise strip ── */
 .promise{border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-  background:rgba(31,111,235,.09);padding:26px 0}
+  background:rgba(224,168,58,.07);padding:26px 0}
 .promise .row{display:grid;gap:18px}
 @media(min-width:760px){ .promise .row{grid-template-columns:repeat(3,1fr);gap:26px} }
 .promise h4{font-size:15.5px;margin-bottom:5px}
-.promise p{font-size:14px;color:#b9c6da}
+.promise p{font-size:14px;color:#d4c8b3}
 
 /* ── footer ── */
-footer{padding:30px 0 40px;color:#7d8ca6;font-size:13.5px}
+footer{padding:30px 0 40px;color:#b5a68e;font-size:13.5px}
 footer .f-in{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
-footer a{color:#a9b7cd} footer a:hover{color:var(--white)}
+footer a{color:#cabda7} footer a:hover{color:var(--white)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
 </head>
