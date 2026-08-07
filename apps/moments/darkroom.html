@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Darkroom · Photo Editor & Culling · Moments OS</title>
+<meta name="description" content="A real photo tool built by Accelerated Experiences LLC — cull a shoot with stars and rejects, edit with film looks, batch a look across keepers, watermark and export, then send straight to client proofing. Included in every tier. Nothing you load leaves your device.">
+<link rel="canonical" href="https://www.aexperiences.com/apps/moments/darkroom.html">
+<meta property="og:title" content="Darkroom · Photo Editor & Culling · Moments OS">
+<meta property="og:description" content="Cull, edit, batch, watermark, export — then send keepers straight to client proofing. In the browser, every tier.">
+<meta property="og:image" content="https://www.aexperiences.com/Moments_OS.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="https://www.aexperiences.com/Moments_OS.png">
+<link rel="apple-touch-icon" href="https://www.aexperiences.com/Moments_OS.png">
+<meta name="theme-color" content="#6b5bb5">
+<link rel="stylesheet" href="moments.css">
+<style>
+  .dk-wrap{display:grid;grid-template-columns:1fr 300px;gap:14px;align-items:start}
+  @media(max-width:900px){.dk-wrap{grid-template-columns:1fr}}
+  .dk-stage{background:#17132e;border-radius:12px;min-height:380px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border:1px solid var(--line)}
+  .dk-stage canvas{max-width:100%;max-height:62vh;display:block}
+  .dk-drop{color:#a49dc4;text-align:center;padding:56px 20px;font-size:14px;line-height:1.7}
+  .dk-drop b{color:#e8e4f4}
+  .dk-drop .big{font-size:40px;display:block;margin-bottom:8px}
+  .dk-panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .dk-panel h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:14px 0 8px}
+  .dk-panel h3:first-child{margin-top:0}
+  .dk-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+  .dk-row label{flex:0 0 84px;font-size:12px;color:var(--ink)}
+  .dk-row input[type=range]{flex:1;accent-color:var(--tang)}
+  .dk-row output{flex:0 0 30px;font-size:11px;color:var(--mut);text-align:right;font-variant-numeric:tabular-nums}
+  .dk-btns{display:flex;flex-wrap:wrap;gap:6px}
+  .dk-btn{border:1px solid var(--line);background:var(--sunk);color:var(--ink);border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;font-family:inherit}
+  .dk-btn:hover{border-color:var(--tang)}
+  .dk-btn.on{background:var(--tang);color:#fff;border-color:var(--tang)}
+  .dk-btn.primary{background:var(--tang);color:#fff;border-color:var(--tang);font-weight:600}
+  .dk-btn.teal{background:var(--teal);color:#fff;border-color:var(--teal);font-weight:600}
+  .dk-note{font-size:11px;color:var(--mut);line-height:1.5;margin-top:8px}
+  .dk-file{display:none}
+  .dk-presets{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .dk-toolbar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;align-items:center}
+  .dk-wm-row{display:flex;gap:6px;margin-bottom:7px}
+  .dk-wm-row input[type=text]{flex:1;border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12px;background:var(--card);color:var(--ink);font-family:inherit}
+  .dk-stage .dk-hold{position:absolute;right:10px;top:10px;z-index:3}
+  .dk-quality{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  /* filmstrip */
+  .dk-strip{display:flex;gap:8px;overflow-x:auto;padding:10px;background:#17132e;border-radius:12px;border:1px solid var(--line);margin-top:10px;min-height:86px}
+  .dk-th{position:relative;flex:0 0 96px;height:64px;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent;background:#241f42}
+  .dk-th img{width:100%;height:100%;object-fit:cover;display:block}
+  .dk-th.act{border-color:var(--tang)}
+  .dk-th.rej img{opacity:.28;filter:grayscale(1)}
+  .dk-th .st{position:absolute;left:4px;bottom:3px;font-size:10px;color:#ffd76a;text-shadow:0 1px 2px #000;letter-spacing:-1px}
+  .dk-th .rx{position:absolute;right:4px;top:2px;font-size:11px;color:#ff8484;text-shadow:0 1px 2px #000;font-weight:700}
+  .dk-keycard{font-size:11px;color:var(--mut);line-height:1.7;margin-top:6px}
+  .dk-keycard b{color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:4px;padding:0 5px;font-family:monospace}
+  .dk-count{font-size:12px;color:var(--mut);margin-left:auto}
+  .dk-count b{color:var(--ink)}
+</style>
+</head>
+<body>
+<script src="moments.js"></script>
+<script src="manual.js"></script>
+<script>
+(function(){
+  var S = window.Moments;
+  var content = S.mount({ active:"darkroom.html", crumb:"Darkroom — cull & edit" });
+
+  content.appendChild(S.page("Darkroom",
+    "Cull the shoot, finish the keepers, send them to proofing — one room. Stars and rejects with the keyboard, film looks, batch a look across the set, your watermark, full-res export. Everything happens on your device; no photo ever leaves it."));
+
+  var card = document.createElement("div");
+  card.className = "card";
+  card.style.padding = "14px";
+  card.innerHTML =
+    '<div class="dk-toolbar">'+
+      '<button class="dk-btn primary" id="dkOpen">Open photos…</button>'+
+      '<button class="dk-btn" id="dkRotL">⟲</button>'+
+      '<button class="dk-btn" id="dkRotR">⟳</button>'+
+      '<button class="dk-btn" id="dkFlip">⇋ Flip</button>'+
+      '<button class="dk-btn" id="dkAuto">✦ Auto-enhance</button>'+
+      '<button class="dk-btn" id="dkCopy">Copy look</button>'+
+      '<button class="dk-btn" id="dkPaste">Paste look</button>'+
+      '<button class="dk-btn" id="dkAll">Look → all keepers</button>'+
+      '<span class="dk-count" id="dkCount"></span>'+
+    '</div>'+
+    '<div class="dk-wrap">'+
+      '<div>'+
+        '<div class="dk-stage" id="dkStage">'+
+          '<button class="dk-btn dk-hold" id="dkHold" style="display:none">Hold: before</button>'+
+          '<div class="dk-drop" id="dkDrop"><span class="big">◐</span><b>Drop a shoot here</b> — or click "Open photos…"<br>Load one photo or the whole card · JPG, PNG, WebP<br>edits &amp; culling happen on your device only</div>'+
+          '<canvas id="dkCanvas" style="display:none"></canvas>'+
+        '</div>'+
+        '<div class="dk-strip" id="dkStrip" style="display:none"></div>'+
+        '<div class="dk-keycard" id="dkKeys" style="display:none">Keyboard: <b>←</b><b>→</b> move · <b>1</b>–<b>5</b> stars · <b>0</b> clear · <b>X</b> reject · <b>C</b> copy look · <b>V</b> paste look</div>'+
+      '</div>'+
+      '<div class="dk-panel">'+
+        '<h3>Light</h3>'+
+        row("Exposure","exposure",-100,100,0)+
+        row("Contrast","contrast",-100,100,0)+
+        row("Highlights","highlights",-100,100,0)+
+        row("Shadows","shadows",-100,100,0)+
+        '<h3>Color</h3>'+
+        row("Saturation","saturation",-100,100,0)+
+        row("Warmth","warmth",-100,100,0)+
+        row("Tint","tint",-100,100,0)+
+        '<h3>Detail & frame</h3>'+
+        row("Sharpen","sharpen",0,100,0)+
+        row("Vignette","vignette",0,100,0)+
+        row("Grain","grain",0,100,0)+
+        row("Straighten","straighten",-15,15,0)+
+        '<h3>Crop</h3>'+
+        '<div class="dk-btns" id="dkCrops">'+
+          '<button class="dk-btn on" data-ar="0">Free</button>'+
+          '<button class="dk-btn" data-ar="1">1:1</button>'+
+          '<button class="dk-btn" data-ar="0.8">4:5</button>'+
+          '<button class="dk-btn" data-ar="1.5">3:2</button>'+
+          '<button class="dk-btn" data-ar="1.7778">16:9</button>'+
+        '</div>'+
+        '<h3>Film looks <span style="float:right"><button class="dk-btn" id="dkSaveLook" style="padding:2px 8px;font-size:10px">Save current as look…</button></span></h3>'+
+        '<div class="dk-presets" id="dkPresets"></div>'+
+        '<h3>Watermark</h3>'+
+        '<div class="dk-btns" id="dkWmMode" style="margin-bottom:7px">'+
+          '<button class="dk-btn on" data-m="text">Text</button>'+
+          '<button class="dk-btn" data-m="logo">Logo image</button>'+
+        '</div>'+
+        '<div class="dk-wm-row" id="dkWmTextRow"><input type="text" id="dkWmText" placeholder="© Your Studio Name" maxlength="60"></div>'+
+        '<div class="dk-btns" id="dkWmLogoRow" style="display:none;margin-bottom:7px">'+
+          '<button class="dk-btn" id="dkWmLogoPick">Choose logo PNG…</button><span id="dkWmLogoState" style="font-size:11px;color:var(--mut);align-self:center">none saved</span>'+
+        '</div>'+
+        row("Opacity","wmOpacity",0,100,55)+
+        row("Size","wmSize",4,20,8)+
+        '<div class="dk-btns" id="dkWmPos">'+
+          '<button class="dk-btn" data-p="none">Off</button>'+
+          '<button class="dk-btn on" data-p="br">Bottom-right</button>'+
+          '<button class="dk-btn" data-p="bl">Bottom-left</button>'+
+          '<button class="dk-btn" data-p="c">Center</button>'+
+        '</div>'+
+        '<h3>Export</h3>'+
+        '<div class="dk-quality"><label style="font-size:12px">Quality</label><input type="range" id="dkQ" min="50" max="100" value="90" style="flex:1;accent-color:var(--tang)"><output id="dkQo" style="font-size:11px;color:var(--mut)">90</output></div>'+
+        '<div class="dk-btns" id="dkSize" style="margin-bottom:8px">'+
+          '<button class="dk-btn on" data-s="0">Full res</button>'+
+          '<button class="dk-btn" data-s="2048">2048px web</button>'+
+          '<button class="dk-btn" data-s="1024">1024px</button>'+
+        '</div>'+
+        '<div class="dk-btns">'+
+          '<button class="dk-btn primary" id="dkExport">Export this ↓</button>'+
+          '<button class="dk-btn primary" id="dkExportAll">Export keepers ↓</button>'+
+        '</div>'+
+        '<div class="dk-btns" style="margin-top:8px">'+
+          '<button class="dk-btn teal" id="dkToProof">Send keepers to Proofing →</button>'+
+        '</div>'+
+        '<div class="dk-btns" style="margin-top:8px"><button class="dk-btn" id="dkReset">Reset photo</button></div>'+
+        '<div class="dk-note">Exports render at your chosen size with every adjustment and watermark baked in. Originals are never touched. "Keepers" = every photo not marked reject.</div>'+
+      '</div>'+
+    '</div>'+
+    '<input type="file" id="dkFile" class="dk-file" accept="image/*" multiple>'+
+    '<input type="file" id="dkLogoFile" class="dk-file" accept="image/png">';
+  content.appendChild(card);
+
+  function row(label,key,min,max,val){
+    return '<div class="dk-row"><label>'+label+'</label><input type="range" data-k="'+key+'" min="'+min+'" max="'+max+'" value="'+val+'"><output>'+val+'</output></div>';
+  }
+
+  // ---------- state ----------
+  var DEF = {exposure:0,contrast:0,highlights:0,shadows:0,saturation:0,warmth:0,tint:0,
+             sharpen:0,vignette:0,grain:0,straighten:0,wmOpacity:55,wmSize:8,rot:0,flip:false,ar:0};
+  var PHOTOS = [];      // {img, name, st, stars, rej, thumb}
+  var cur = -1, wmPos = "br", wmMode = "text", holding = false, clip = null, expSize = 0;
+
+  var FILM = [
+    ["None",        {}],
+    ["Portra",      {warmth:22,saturation:-8,contrast:6,highlights:-10,grain:12}],
+    ["Chrome",      {contrast:18,saturation:14,warmth:-6,sharpen:18}],
+    ["Sepia Road",  {warmth:45,saturation:-35,contrast:8,vignette:25,grain:18}],
+    ["Silver",      {saturation:-100,contrast:14,grain:15,vignette:15}],
+    ["Golden Hour", {warmth:35,exposure:6,contrast:4,highlights:-14,vignette:12}],
+    ["Northwest",   {warmth:-12,saturation:8,contrast:10,shadows:10,sharpen:10}],
+    ["Matte Fade",  {contrast:-14,shadows:22,saturation:-10,grain:10}]
+  ];
+  function customLooks(){ try{return JSON.parse(localStorage.getItem("moments-dk-looks")||"[]");}catch(e){return [];} }
+  function saveCustomLooks(v){ localStorage.setItem("moments-dk-looks", JSON.stringify(v)); }
+  function savedLogo(){ return localStorage.getItem("moments-dk-logo") || null; }
+
+  var canvas = document.getElementById("dkCanvas"), stage = document.getElementById("dkStage");
+  var drop = document.getElementById("dkDrop"), strip = document.getElementById("dkStrip");
+  var fileIn = document.getElementById("dkFile"), logoIn = document.getElementById("dkLogoFile");
+  var logoImg = null;
+  if (savedLogo()){ logoImg = new Image(); logoImg.src = savedLogo(); document.getElementById("dkWmLogoState").textContent = "logo saved ✓"; }
+
+  function P(){ return cur >= 0 ? PHOTOS[cur] : null; }
+
+  // ---------- pipeline ----------
+  function cropRect(img, s){
+    var w = img.width, h = img.height;
+    if (s.rot % 180 !== 0) { var t = w; w = h; h = t; }
+    if (!s.ar) return {w:w,h:h};
+    var cw = w, chh = Math.round(w / s.ar);
+    if (chh > h) { chh = h; cw = Math.round(h * s.ar); }
+    return {w:cw,h:chh};
+  }
+
+  function render(target, scale, photo, opts){
+    opts = opts || {};
+    var img = photo.img;
+    var s = (holding && !opts.force) ? DEF : photo.st;
+    var pos = (holding && !opts.force) ? "none" : (opts.wmPos !== undefined ? opts.wmPos : wmPos);
+    var cr = cropRect(img, s);
+    var W = Math.round(cr.w * scale), H = Math.round(cr.h * scale);
+    if (opts.maxDim && Math.max(W,H) > opts.maxDim){
+      var k = opts.maxDim / Math.max(W,H); W = Math.round(W*k); H = Math.round(H*k); scale = scale*k;
+    }
+    target.width = W; target.height = H;
+    var c = target.getContext("2d");
+    c.save();
+    c.translate(W/2, H/2);
+    c.rotate((s.rot + s.straighten) * Math.PI/180);
+    if (s.flip) c.scale(-1,1);
+    var zoom = 1 + Math.abs(s.straighten) * 0.022;
+    var f = [];
+    f.push("brightness(" + (1 + s.exposure/160) + ")");
+    f.push("contrast(" + (1 + s.contrast/130) + ")");
+    f.push("saturate(" + Math.max(0, 1 + s.saturation/100) + ")");
+    c.filter = f.join(" ");
+    var dw = img.width * scale * zoom, dh = img.height * scale * zoom;
+    c.drawImage(img, -dw/2, -dh/2, dw, dh);
+    c.restore();
+    c.filter = "none";
+    if (s.warmth)  wash(c, W, H, s.warmth > 0 ? "255,147,41" : "64,131,255", Math.abs(s.warmth)/100 * 0.18);
+    if (s.tint)    wash(c, W, H, s.tint  > 0 ? "255,64,208"  : "64,255,120", Math.abs(s.tint)/100 * 0.12);
+    if (s.highlights) lum(c, W, H, "screen",   s.highlights);
+    if (s.shadows)    lum(c, W, H, "multiply", -s.shadows);
+    if (s.sharpen > 0 && (opts.full || W*H < 1600*1200)) sharpen(c, W, H, s.sharpen/100);
+    if (s.vignette){
+      var g = c.createRadialGradient(W/2,H/2,Math.min(W,H)*0.42, W/2,H/2, Math.max(W,H)*0.75);
+      g.addColorStop(0,"rgba(0,0,0,0)"); g.addColorStop(1,"rgba(0,0,0,"+(s.vignette/100*0.55)+")");
+      c.fillStyle = g; c.fillRect(0,0,W,H);
+    }
+    if (s.grain) grain(c, W, H, s.grain/100);
+    if (pos !== "none"){
+      if (wmMode === "logo" && logoImg && logoImg.width){
+        var lw = W * (s.wmSize/100) * 2.2, lh = lw * (logoImg.height/logoImg.width), pad2 = W*0.02;
+        var lx = pos==="bl" ? pad2 : pos==="c" ? (W-lw)/2 : W-lw-pad2;
+        var ly = pos==="c" ? (H-lh)/2 : H-lh-pad2;
+        c.globalAlpha = s.wmOpacity/100;
+        c.drawImage(logoImg, lx, ly, lw, lh);
+        c.globalAlpha = 1;
+      } else {
+        var wt = (document.getElementById("dkWmText").value || "").trim();
+        if (wt){
+          var fs = Math.max(12, Math.round(Math.min(W,H) * (s.wmSize/100) * 0.42));
+          c.font = "600 " + fs + "px Inter, Helvetica, Arial, sans-serif";
+          c.globalAlpha = s.wmOpacity/100;
+          c.fillStyle = "#ffffff"; c.strokeStyle = "rgba(0,0,0,.35)"; c.lineWidth = fs/12;
+          var tw = c.measureText(wt).width, pad = fs;
+          var x = pos==="bl" ? pad : pos==="c" ? (W-tw)/2 : W-tw-pad;
+          var y = pos==="c" ? H/2 : H-pad;
+          c.strokeText(wt,x,y); c.fillText(wt,x,y);
+          c.globalAlpha = 1;
+        }
+      }
+    }
+  }
+
+  function wash(c,W,H,rgb,a){ c.globalCompositeOperation="soft-light"; c.fillStyle="rgba("+rgb+","+Math.min(1,a*3)+")"; c.fillRect(0,0,W,H); c.globalCompositeOperation="source-over"; }
+  function lum(c,W,H,mode,amt){ var a=Math.abs(amt)/100*0.35; c.globalCompositeOperation=mode; c.fillStyle=(amt>0?"rgba(255,255,255,":"rgba(0,0,0,")+a+")"; c.fillRect(0,0,W,H); c.globalCompositeOperation="source-over"; }
+  function grain(c,W,H,amt){
+    var n=document.createElement("canvas"); var gw=Math.min(W,512), gh=Math.min(H,512);
+    n.width=gw;n.height=gh; var nc=n.getContext("2d"); var d=nc.createImageData(gw,gh);
+    for(var i=0;i<d.data.length;i+=4){var v=128+(Math.random()-0.5)*255;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=255;}
+    nc.putImageData(d,0,0);
+    c.globalAlpha=amt*0.25;c.globalCompositeOperation="overlay";c.drawImage(n,0,0,W,H);
+    c.globalAlpha=1;c.globalCompositeOperation="source-over";
+  }
+  function sharpen(c,W,H,amt){
+    try{
+      var src=c.getImageData(0,0,W,H), out=c.createImageData(W,H);
+      var s=src.data,o=out.data,k=amt*0.8;
+      for(var y=0;y<H;y++)for(var x=0;x<W;x++){
+        var i=(y*W+x)*4;
+        if(x===0||y===0||x===W-1||y===H-1){o[i]=s[i];o[i+1]=s[i+1];o[i+2]=s[i+2];o[i+3]=255;continue;}
+        for(var ch=0;ch<3;ch++){
+          var v=s[i+ch]*(1+4*k) - k*(s[i-4+ch]+s[i+4+ch]+s[i-W*4+ch]+s[i+W*4+ch]);
+          o[i+ch]=v<0?0:v>255?255:v;
+        }
+        o[i+3]=255;
+      }
+      c.putImageData(out,0,0);
+    }catch(e){}
+  }
+
+  var raf=null;
+  function draw(){
+    var p=P(); if(!p) return;
+    if(raf) cancelAnimationFrame(raf);
+    raf=requestAnimationFrame(function(){
+      var maxW = (stage.clientWidth||900);
+      var cr = cropRect(p.img, p.st);
+      var scale = Math.min(1, maxW/cr.w, (window.innerHeight*0.62)/cr.h);
+      render(canvas, scale, p);
+    });
+  }
+
+  // ---------- filmstrip / culling ----------
+  function refreshStrip(){
+    strip.innerHTML="";
+    PHOTOS.forEach(function(p,i){
+      var d=document.createElement("div");
+      d.className="dk-th"+(i===cur?" act":"")+(p.rej?" rej":"");
+      d.innerHTML='<img src="'+p.thumb+'">'+
+        (p.stars?'<span class="st">'+"★".repeat(p.stars)+'</span>':'')+
+        (p.rej?'<span class="rx">✕</span>':'');
+      d.onclick=function(){ select(i); };
+      strip.appendChild(d);
+    });
+    var keep=PHOTOS.filter(function(p){return !p.rej;}).length;
+    document.getElementById("dkCount").innerHTML = PHOTOS.length ? "<b>"+keep+"</b> keepers · <b>"+(PHOTOS.length-keep)+"</b> rejected · <b>"+PHOTOS.length+"</b> loaded" : "";
+  }
+  function select(i){
+    cur=i; refreshStrip(); syncAll(); draw();
+  }
+
+  function loadFiles(files){
+    Array.prototype.slice.call(files).forEach(function(f){
+      if(!/^image\//.test(f.type)) return;
+      var r=new FileReader();
+      r.onload=function(){
+        var im=new Image();
+        im.onload=function(){
+          var t=document.createElement("canvas"); var k=120/Math.max(im.width,im.height)*2;
+          t.width=Math.round(im.width*k); t.height=Math.round(im.height*k);
+          t.getContext("2d").drawImage(im,0,0,t.width,t.height);
+          PHOTOS.push({img:im,name:f.name,st:Object.assign({},DEF),stars:0,rej:false,thumb:t.toDataURL("image/jpeg",0.7)});
+          if(cur<0){ firstShow(); }
+          select(PHOTOS.length-1);
+        };
+        im.src=r.result;
+      };
+      r.readAsDataURL(f);
+    });
+  }
+  function firstShow(){
+    drop.style.display="none"; canvas.style.display="block";
+    strip.style.display="flex";
+    document.getElementById("dkKeys").style.display="block";
+    document.getElementById("dkHold").style.display="block";
+  }
+
+  // ---------- wiring ----------
+  document.getElementById("dkOpen").onclick=function(){ fileIn.click(); };
+  fileIn.onchange=function(){ if(fileIn.files.length) loadFiles(fileIn.files); fileIn.value=""; };
+  stage.ondragover=function(e){e.preventDefault();};
+  stage.ondrop=function(e){e.preventDefault(); if(e.dataTransfer.files.length) loadFiles(e.dataTransfer.files);};
+
+  content.querySelectorAll(".dk-row input[type=range]").forEach(function(r){
+    r.oninput=function(){
+      var p=P(); if(!p) return;
+      p.st[r.dataset.k]=+r.value;
+      r.parentElement.querySelector("output").textContent=r.value;
+      draw();
+    };
+  });
+  function syncAll(){
+    var p=P(); if(!p) return;
+    content.querySelectorAll(".dk-row input[type=range]").forEach(function(r){
+      r.value=p.st[r.dataset.k]; r.parentElement.querySelector("output").textContent=p.st[r.dataset.k];
+    });
+    pick(document.getElementById("dkCrops"),'[data-ar="'+(p.st.ar||0)+'"]');
+  }
+  function pick(wrap,sel){
+    wrap.querySelectorAll(".dk-btn").forEach(function(b){b.classList.remove("on");});
+    var b=wrap.querySelector(sel); if(b) b.classList.add("on");
+  }
+
+  document.getElementById("dkRotL").onclick=function(){var p=P();if(p){p.st.rot=(p.st.rot+270)%360;draw();}};
+  document.getElementById("dkRotR").onclick=function(){var p=P();if(p){p.st.rot=(p.st.rot+90)%360;draw();}};
+  document.getElementById("dkFlip").onclick=function(){var p=P();if(p){p.st.flip=!p.st.flip;draw();}};
+  document.getElementById("dkReset").onclick=function(){var p=P();if(p){p.st=Object.assign({},DEF);syncAll();draw();}};
+
+  // auto-enhance: percentile histogram stretch → exposure/contrast
+  document.getElementById("dkAuto").onclick=function(){
+    var p=P(); if(!p) return;
+    var t=document.createElement("canvas"); var k=Math.min(1,400/p.img.width);
+    t.width=Math.round(p.img.width*k); t.height=Math.round(p.img.height*k);
+    var c=t.getContext("2d"); c.drawImage(p.img,0,0,t.width,t.height);
+    try{
+      var d=c.getImageData(0,0,t.width,t.height).data, hist=new Array(256).fill(0), n=0;
+      for(var i=0;i<d.length;i+=4){ hist[Math.round(0.299*d[i]+0.587*d[i+1]+0.114*d[i+2])]++; n++; }
+      var lo=0,hi=255,acc=0;
+      for(var v=0;v<256;v++){ acc+=hist[v]; if(acc>n*0.01){lo=v;break;} }
+      acc=0; for(v=255;v>=0;v--){ acc+=hist[v]; if(acc>n*0.01){hi=v;break;} }
+      var mid=(lo+hi)/2, spread=hi-lo;
+      p.st.exposure=Math.max(-60,Math.min(60,Math.round((128-mid)*0.55)));
+      p.st.contrast=Math.max(0,Math.min(50,Math.round((235-spread)*0.35)));
+      syncAll(); draw(); S.toast && S.toast("Auto-enhanced — nudge from here");
+    }catch(e){}
+  };
+
+  document.getElementById("dkCopy").onclick=copyLook;
+  document.getElementById("dkPaste").onclick=pasteLook;
+  function copyLook(){var p=P();if(p){clip=Object.assign({},p.st);S.toast&&S.toast("Look copied");}}
+  function pasteLook(){var p=P();if(p&&clip){p.st=Object.assign({},clip);syncAll();draw();S.toast&&S.toast("Look pasted");}}
+  document.getElementById("dkAll").onclick=function(){
+    var p=P(); if(!p) return;
+    var look=Object.assign({},p.st);
+    PHOTOS.forEach(function(q){ if(!q.rej) q.st=Object.assign({},look,{rot:q.st.rot,flip:q.st.flip}); });
+    S.toast&&S.toast("Look applied to all keepers"); draw();
+  };
+
+  document.getElementById("dkCrops").onclick=function(e){
+    var b=e.target.closest("[data-ar]"); if(!b) return;
+    var p=P(); if(!p) return;
+    p.st.ar=+b.dataset.ar; pick(this,'[data-ar="'+b.dataset.ar+'"]'); draw();
+  };
+  document.getElementById("dkWmPos").onclick=function(e){
+    var b=e.target.closest("[data-p]"); if(!b) return;
+    wmPos=b.dataset.p; pick(this,'[data-p="'+b.dataset.p+'"]'); draw();
+  };
+  document.getElementById("dkWmMode").onclick=function(e){
+    var b=e.target.closest("[data-m]"); if(!b) return;
+    wmMode=b.dataset.m; pick(this,'[data-m="'+b.dataset.m+'"]');
+    document.getElementById("dkWmTextRow").style.display = wmMode==="text"?"flex":"none";
+    document.getElementById("dkWmLogoRow").style.display = wmMode==="logo"?"flex":"none";
+    draw();
+  };
+  document.getElementById("dkWmLogoPick").onclick=function(){ logoIn.click(); };
+  logoIn.onchange=function(){
+    var f=logoIn.files[0]; if(!f) return;
+    var r=new FileReader();
+    r.onload=function(){
+      try{ localStorage.setItem("moments-dk-logo", r.result); }catch(e){}
+      logoImg=new Image(); logoImg.onload=draw; logoImg.src=r.result;
+      document.getElementById("dkWmLogoState").textContent="logo saved ✓";
+    };
+    r.readAsDataURL(f);
+  };
+  document.getElementById("dkWmText").oninput=draw;
+
+  // looks (film + custom)
+  var pw=document.getElementById("dkPresets");
+  function drawLooks(){
+    pw.innerHTML="";
+    FILM.concat(customLooks().map(function(l){return [l.name,l.st,true];})).forEach(function(pr){
+      var b=document.createElement("button");
+      b.className="dk-btn"; b.textContent=(pr[2]?"★ ":"")+pr[0];
+      b.onclick=function(){
+        var p=P(); if(!p) return;
+        p.st=Object.assign({},DEF,pr[1],{rot:p.st.rot,flip:p.st.flip,ar:p.st.ar});
+        pw.querySelectorAll(".dk-btn").forEach(function(x){x.classList.remove("on");});
+        b.classList.add("on"); syncAll(); draw();
+      };
+      pw.appendChild(b);
+    });
+  }
+  drawLooks();
+  document.getElementById("dkSaveLook").onclick=function(){
+    var p=P(); if(!p){ return; }
+    var name=prompt("Name this look (saved on this device):","My look");
+    if(!name) return;
+    var ls=customLooks(); ls.push({name:name.slice(0,24),st:Object.assign({},p.st,{rot:0,flip:false,ar:0})});
+    saveCustomLooks(ls); drawLooks(); S.toast&&S.toast('Look "'+name+'" saved');
+  };
+
+  var hold=document.getElementById("dkHold");
+  hold.onmousedown=hold.ontouchstart=function(){holding=true;draw();};
+  hold.onmouseup=hold.onmouseleave=hold.ontouchend=function(){holding=false;draw();};
+
+  var q=document.getElementById("dkQ");
+  q.oninput=function(){document.getElementById("dkQo").textContent=q.value;};
+  document.getElementById("dkSize").onclick=function(e){
+    var b=e.target.closest("[data-s]"); if(!b) return;
+    expSize=+b.dataset.s; pick(this,'[data-s="'+b.dataset.s+'"]');
+  };
+
+  function exportOne(p, idx){
+    var full=document.createElement("canvas");
+    render(full,1,p,{full:true,force:false,maxDim:expSize||undefined});
+    var a=document.createElement("a");
+    a.download=(p.name||("photo-"+(idx+1))).replace(/\.[^.]+$/,"")+"-darkroom.jpg";
+    a.href=full.toDataURL("image/jpeg",(+q.value)/100);
+    a.click();
+  }
+  document.getElementById("dkExport").onclick=function(){var p=P();if(p)exportOne(p,cur);};
+  document.getElementById("dkExportAll").onclick=function(){
+    var keep=PHOTOS.filter(function(p){return !p.rej;});
+    if(!keep.length) return;
+    var i=0;
+    (function next(){ if(i>=keep.length){S.toast&&S.toast(keep.length+" keepers exported");return;}
+      exportOne(keep[i],i); i++; setTimeout(next,450); })();
+  };
+
+  // send keepers to proofing (writes a draft proof set into the OS spine)
+  document.getElementById("dkToProof").onclick=function(){
+    var keep=PHOTOS.filter(function(p){return !p.rej;});
+    if(!keep.length){ S.toast&&S.toast("No keepers to send"); return; }
+    var shots=[], done=0;
+    keep.forEach(function(p){
+      var t=document.createElement("canvas");
+      render(t,1,p,{full:false,force:true,maxDim:900,wmPos:"none"});
+      shots.push({src:t.toDataURL("image/jpeg",0.68), name:p.name, stars:p.stars});
+    });
+    try{
+      S.save(function(d){
+        d.proofs=d.proofs||[];
+        d.proofs.push({id:"P"+Date.now(), title:"From the Darkroom — "+new Date().toLocaleDateString(),
+          job:null, photos:shots, included:Math.min(20,shots.length), extraPrice:25,
+          status:"draft", selects:[], comments:{}, created:S.iso?S.iso(new Date()):(""+new Date())});
+      });
+      location.href="proofs.html";
+    }catch(e){
+      S.toast&&S.toast("Too many photos for the browser store — send fewer keepers");
+    }
+  };
+
+  // keyboard culling
+  document.addEventListener("keydown",function(e){
+    if(!PHOTOS.length) return;
+    if(/INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+    var p=P();
+    if(e.key==="ArrowRight"){ select(Math.min(PHOTOS.length-1,cur+1)); e.preventDefault(); }
+    else if(e.key==="ArrowLeft"){ select(Math.max(0,cur-1)); e.preventDefault(); }
+    else if(/^[0-5]$/.test(e.key)&&p){ p.stars=+e.key; refreshStrip(); }
+    else if((e.key==="x"||e.key==="X")&&p){ p.rej=!p.rej; refreshStrip(); }
+    else if((e.key==="c"||e.key==="C")&&p){ copyLook(); }
+    else if((e.key==="v"||e.key==="V")&&p){ pasteLook(); }
+  });
+
+  // QA hook
+  window.DK={ loadImages:function(imgs){ imgs.forEach(function(im,ix){
+      var t=document.createElement("canvas");var k=240/Math.max(im.width,im.height);
+      t.width=Math.round(im.width*k);t.height=Math.round(im.height*k);
+      t.getContext("2d").drawImage(im,0,0,t.width,t.height);
+      PHOTOS.push({img:im,name:"test-"+ix+".jpg",st:Object.assign({},DEF),stars:0,rej:false,thumb:t.toDataURL("image/jpeg",0.7)});
+    }); if(cur<0) firstShow(); select(PHOTOS.length-1); },
+    photos:PHOTOS, state:function(){var p=P();return p?p.st:null;}, draw:draw };
+
+  content.appendChild(S.card(
+    '<h2>Cull → edit → proof: the pipeline is the point</h2>'+
+    '<p class="sub">A gallery vendor sells you a place to put finished photos. An operating system runs the whole middle: '+
+    'load the card, star and reject with the keyboard, build a look once and batch it across the keepers, '+
+    'watermark with your name or your logo, export at full or web size — then hit <b>Send keepers to Proofing</b> '+
+    'and the same set becomes a client proofing gallery with your package math attached. '+
+    'Video has Cutlabs; stills have the Darkroom; selection has the Proofing room. '+
+    'For deep pixel retouching, round-trip to a dedicated tool — for everything else, you never leave the system that '+
+    'booked the job and will bill it.</p>'
+  ));
+})();
+</script>
+</body>
+</html>

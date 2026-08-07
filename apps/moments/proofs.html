@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Proofing · Client Selects · Moments OS</title>
+<meta name="description" content="Client proofing galleries with package math built in — favorites, comments, included counts and overage pricing, flowing straight to the job. Built by Accelerated Experiences LLC. In every tier.">
+<link rel="canonical" href="https://www.aexperiences.com/apps/moments/proofs.html">
+<meta property="og:title" content="Proofing · Client Selects · Moments OS">
+<meta property="og:description" content="Proofing galleries with package math — favorites, comments, overage pricing, straight to the job.">
+<meta property="og:image" content="https://www.aexperiences.com/Moments_OS.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="https://www.aexperiences.com/Moments_OS.png">
+<link rel="apple-touch-icon" href="https://www.aexperiences.com/Moments_OS.png">
+<meta name="theme-color" content="#6b5bb5">
+<link rel="stylesheet" href="moments.css">
+<style>
+  .pf-btn{border:1px solid var(--line);background:var(--sunk);color:var(--ink);border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;font-family:inherit}
+  .pf-btn:hover{border-color:var(--tang)}
+  .pf-btn.primary{background:var(--tang);color:#fff;border-color:var(--tang);font-weight:600}
+  .pf-btn.teal{background:var(--teal);color:#fff;border-color:var(--teal);font-weight:600}
+  .pf-btn.warn{border-color:#c66;color:#a33}
+  .pf-set{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--card);margin-bottom:10px}
+  .pf-set img{width:74px;height:50px;object-fit:cover;border-radius:6px}
+  .pf-set .m{flex:1;min-width:0}
+  .pf-set .m b{font-size:14px}
+  .pf-set .m .mut{font-size:12px}
+  .pf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:10px}
+  .pf-ph{position:relative;border-radius:8px;overflow:hidden;cursor:pointer;background:#17132e}
+  .pf-ph img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block}
+  .pf-ph .hb{position:absolute;right:6px;top:6px;font-size:17px;line-height:1;cursor:pointer;text-shadow:0 1px 3px rgba(0,0,0,.6);user-select:none}
+  .pf-ph .cm{position:absolute;left:6px;bottom:6px;font-size:10px;background:rgba(0,0,0,.55);color:#fff;border-radius:10px;padding:2px 7px;max-width:80%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pf-ph.sel{outline:3px solid var(--tang)}
+  .pf-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+  .pf-form label{font-size:11px;color:var(--mut);display:block;margin-bottom:3px}
+  .pf-form input,.pf-form select{width:100%;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:13px;background:var(--card);color:var(--ink);font-family:inherit;box-sizing:border-box}
+  .pf-counter{position:sticky;top:0;z-index:5;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;display:flex;gap:16px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+  .pf-counter b{font-size:15px}
+  .pf-counter .ov{color:#a33;font-weight:700}
+  .pf-counter .ok{color:var(--teal);font-weight:700}
+  .pf-lb{position:fixed;inset:0;background:rgba(10,8,24,.93);z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+  .pf-lb img{max-width:92vw;max-height:74vh;border-radius:8px}
+  .pf-lb .bar{display:flex;gap:8px;align-items:center}
+  .pf-lb input{width:340px;max-width:80vw;border-radius:8px;border:none;padding:8px 10px;font-size:13px;font-family:inherit}
+  .pf-badge{font-family:monospace;font-size:10px;letter-spacing:.12em;background:var(--gold-wash);color:#8a6a2f;border:1px solid var(--gold);padding:2px 8px;border-radius:999px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<script src="moments.js"></script>
+<script src="manual.js"></script>
+<script>
+(function(){
+  var S = window.Moments;
+  var content = S.mount({ active:"proofs.html", crumb:"Proofing & client selects" });
+
+  var qs = new URLSearchParams(location.search);
+  var clientMode = qs.get("view")==="client";
+  var openId = qs.get("set");
+
+  function sets(){ return (S.db().proofs)||[]; }
+  function saveSet(id, mut){ S.save(function(d){ d.proofs=d.proofs||[]; var x=d.proofs.filter(function(s){return s.id===id;})[0]; if(x) mut(x); }); }
+  function overage(st){ var extra=Math.max(0, st.selects.length - st.included); return {extra:extra, cost:extra*st.extraPrice}; }
+
+  // ---------------- CLIENT VIEW ----------------
+  function clientView(st){
+    content.appendChild(S.page("Your proofs — "+st.title,
+      "Tap the heart on every photo you want. Your package includes "+st.included+" selects; extras are $"+st.extraPrice+" each. Leave a note on any photo. Nothing is final until you press Send selections."));
+    var counter=document.createElement("div"); counter.className="pf-counter";
+    content.appendChild(counter);
+    var grid=document.createElement("div"); grid.className="pf-grid";
+    content.appendChild(grid);
+
+    function refreshCounter(){
+      var ov=overage(st);
+      counter.innerHTML='<span><b>'+st.selects.length+'</b> selected of <b>'+st.included+'</b> included</span>'+
+        (ov.extra? '<span class="ov">+'+ov.extra+' extra = +'+S.money(ov.cost)+'</span>' : '<span class="ok">within your package</span>')+
+        '<span style="flex:1"></span>'+
+        '<button class="pf-btn primary" id="pfDone">Send selections →</button>';
+      counter.querySelector("#pfDone").onclick=function(){
+        saveSet(st.id,function(x){ x.status="selections-in"; x.selects=st.selects.slice(); x.comments=st.comments; });
+        alert("Selections sent to the studio. "+st.selects.length+" photos"+(ov.extra?(" ("+ov.extra+" extra, +"+S.money(ov.cost)+")"):"")+". Thank you!");
+        location.href="proofs.html?set="+st.id;
+      };
+    }
+    function refreshGrid(){
+      grid.innerHTML="";
+      st.photos.forEach(function(p,i){
+        var on=st.selects.indexOf(i)>=0;
+        var d=document.createElement("div"); d.className="pf-ph"+(on?" sel":"");
+        d.innerHTML='<img src="'+p.src+'"><span class="hb">'+(on?"❤️":"🤍")+'</span>'+
+          (st.comments[i]?'<span class="cm">💬 '+S.esc(st.comments[i])+'</span>':'');
+        d.querySelector(".hb").onclick=function(e){ e.stopPropagation(); toggle(i); };
+        d.onclick=function(){ lightbox(st,i,refreshGrid,refreshCounter,toggle); };
+        grid.appendChild(d);
+      });
+    }
+    function toggle(i){
+      var at=st.selects.indexOf(i);
+      if(at>=0) st.selects.splice(at,1); else st.selects.push(i);
+      refreshGrid(); refreshCounter();
+    }
+    refreshCounter(); refreshGrid();
+
+    content.appendChild(S.card('<p class="sub" style="margin:0">Powered by Accelerated Experiences LLC · This preview runs entirely in this browser — real client links come with go-live, PIN-protected on your own domain.</p>'));
+  }
+
+  function lightbox(st,i,refreshGrid,refreshCounter,toggle){
+    var lb=document.createElement("div"); lb.className="pf-lb";
+    function paint(){
+      var on=st.selects.indexOf(i)>=0;
+      lb.innerHTML='<img src="'+st.photos[i].src+'">'+
+        '<div class="bar">'+
+          '<button class="pf-btn" id="pv">←</button>'+
+          '<button class="pf-btn primary" id="ph">'+(on?"❤️ Selected":"🤍 Select")+'</button>'+
+          '<button class="pf-btn" id="pn">→</button>'+
+          '<button class="pf-btn" id="px">✕ Close</button>'+
+        '</div>'+
+        '<div class="bar"><input id="pc" placeholder="Leave a note on this photo…" value="'+(st.comments[i]?String(st.comments[i]).replace(/"/g,"&quot;"):"")+'"><button class="pf-btn" id="ps">Save note</button></div>';
+      lb.querySelector("#ph").onclick=function(){ toggle(i); paint(); };
+      lb.querySelector("#pv").onclick=function(){ i=(i-1+st.photos.length)%st.photos.length; paint(); };
+      lb.querySelector("#pn").onclick=function(){ i=(i+1)%st.photos.length; paint(); };
+      lb.querySelector("#px").onclick=function(){ document.body.removeChild(lb); refreshGrid(); refreshCounter(); };
+      lb.querySelector("#ps").onclick=function(){
+        st.comments[i]=lb.querySelector("#pc").value.trim();
+        saveSet(st.id,function(x){ x.comments=st.comments; });
+        paint();
+      };
+    }
+    paint(); document.body.appendChild(lb);
+  }
+
+  // ---------------- STUDIO VIEW ----------------
+  function studioView(){
+    content.appendChild(S.page("Proofing & client selects",
+      "The step every gallery vendor charges for, built into your OS: send proofs, the client hearts their picks, the package math computes the overage, and the selects land on the job. Photo software and video software, every tier — proofing included."));
+
+    // KPIs
+    var all=sets();
+    var out=all.filter(function(s){return s.status==="sent";}).length;
+    var inn=all.filter(function(s){return s.status==="selections-in";}).length;
+    var appr=all.filter(function(s){return s.status==="approved";}).length;
+    var ovTotal=all.reduce(function(a,s){ return a+(s.status!=="draft"?overage(s).cost:0); },0);
+    content.appendChild(S.card('<h2>The desk</h2><div class="stats">'+
+      S.stat("Sets with clients", out, "waiting on hearts", out?"watch":"good")+
+      S.stat("Selections in", inn, "review & approve", inn?"watch":"good")+
+      S.stat("Approved", appr, "ready for finishing & delivery")+
+      S.stat("Overage revenue", S.money(ovTotal), "extra selects beyond packages", ovTotal?"good":undefined)+
+      '</div><p class="sub">Overage is the quiet money in proofing: the package includes N photos, the twelfth heart is revenue. A vendor charges you a monthly fee to collect it — here it just flows to the job.</p>'));
+
+    // new set
+    var jobs=(S.db().jobs||[]).filter(function(j){return j.stage!=="Lost";});
+    var jobOpts=jobs.map(function(j){return '<option value="'+j.id+'">'+S.esc(S.clientName(j.client))+' — '+S.esc(S.jobType(j.type).n)+'</option>';}).join("");
+    var mk=document.createElement("div"); mk.className="card"; mk.style.padding="14px";
+    mk.innerHTML='<h2>New proof set</h2>'+
+      '<div class="pf-form">'+
+        '<div><label>Title</label><input id="npTitle" placeholder="Sarah & Ben — sneak peeks"></div>'+
+        '<div><label>Attach to job (the sample book)</label><select id="npJob"><option value="">— none —</option>'+jobOpts+'</select></div>'+
+        '<div><label>Included in package</label><input id="npInc" type="number" value="20" min="1"></div>'+
+        '<div><label>Price per extra select</label><input id="npX" type="number" value="25" min="0"></div>'+
+      '</div>'+
+      '<div style="display:flex;gap:8px;margin-top:10px;align-items:center">'+
+        '<button class="pf-btn primary" id="npPhotos">Add photos…</button>'+
+        '<span id="npCount" style="font-size:12px;color:var(--mut)">no photos yet — or build the set in the Darkroom and press "Send keepers to Proofing"</span>'+
+        '<span style="flex:1"></span>'+
+        '<button class="pf-btn teal" id="npMake">Create set</button>'+
+      '</div>'+
+      '<input type="file" id="npFile" accept="image/*" multiple style="display:none">';
+    content.appendChild(mk);
+    var pending=[];
+    mk.querySelector("#npPhotos").onclick=function(){ mk.querySelector("#npFile").click(); };
+    mk.querySelector("#npFile").onchange=function(){
+      var files=Array.prototype.slice.call(mk.querySelector("#npFile").files);
+      files.forEach(function(f){
+        if(!/^image\//.test(f.type)) return;
+        var r=new FileReader();
+        r.onload=function(){
+          var im=new Image();
+          im.onload=function(){
+            var t=document.createElement("canvas"); var k=Math.min(1,900/Math.max(im.width,im.height));
+            t.width=Math.round(im.width*k); t.height=Math.round(im.height*k);
+            t.getContext("2d").drawImage(im,0,0,t.width,t.height);
+            pending.push({src:t.toDataURL("image/jpeg",0.68), name:f.name});
+            mk.querySelector("#npCount").textContent=pending.length+" photos ready";
+          };
+          im.src=r.result;
+        };
+        r.readAsDataURL(f);
+      });
+      mk.querySelector("#npFile").value="";
+    };
+    mk.querySelector("#npMake").onclick=function(){
+      if(!pending.length){ S.toast&&S.toast("Add photos first — or send them from the Darkroom"); return; }
+      var title=mk.querySelector("#npTitle").value.trim()||("Proof set — "+new Date().toLocaleDateString());
+      try{
+        S.save(function(d){
+          d.proofs=d.proofs||[];
+          d.proofs.push({id:"P"+Date.now(), title:title, job:mk.querySelector("#npJob").value||null,
+            photos:pending, included:+mk.querySelector("#npInc").value||20, extraPrice:+mk.querySelector("#npX").value||25,
+            status:"draft", selects:[], comments:{}, created:new Date().toISOString().slice(0,10)});
+        });
+        location.reload();
+      }catch(e){ S.toast&&S.toast("Browser storage is full — fewer or smaller photos"); }
+    };
+
+    // the shelf of sets
+    var shelf=document.createElement("div"); shelf.className="card"; shelf.style.padding="14px";
+    var rows='<h2>Proof sets</h2>';
+    if(!all.length) rows+='<p class="sub">None yet. Create one above, or cull a shoot in the Darkroom and press "Send keepers to Proofing".</p>';
+    content.appendChild(shelf);
+    shelf.innerHTML=rows;
+    all.slice().reverse().forEach(function(st){
+      var ov=overage(st);
+      var jobLabel=st.job?(S.clientName((S.jobById(st.job)||{}).client)||"job"):null;
+      var d=document.createElement("div"); d.className="pf-set";
+      d.innerHTML='<img src="'+(st.photos[0]?st.photos[0].src:"")+'">'+
+        '<div class="m"><b>'+S.esc(st.title)+'</b> <span class="pf-badge">'+st.status.replace("-"," ")+'</span>'+
+        '<div class="mut">'+st.photos.length+' photos · package '+st.included+' · $'+st.extraPrice+'/extra'+
+        (jobLabel?' · job: '+S.esc(jobLabel):'')+
+        (st.selects.length?(' · <b>'+st.selects.length+' selected</b>'+(ov.extra?' · overage +'+S.money(ov.cost):'')) :'')+
+        '</div></div>'+
+        '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
+          (st.status==="draft"?'<button class="pf-btn primary" data-a="send">Send to client</button>':'')+
+          '<button class="pf-btn" data-a="view">Client view</button>'+
+          (st.status==="selections-in"?'<button class="pf-btn teal" data-a="approve">Approve set</button>':'')+
+          '<button class="pf-btn warn" data-a="del">✕</button>'+
+        '</div>';
+      d.onclick=function(e){
+        var a=e.target.getAttribute&&e.target.getAttribute("data-a");
+        if(!a) return;
+        if(a==="view"){ location.href="proofs.html?view=client&set="+st.id; }
+        if(a==="send"){ saveSet(st.id,function(x){x.status="sent";}); S.toast&&S.toast("Marked sent — client link comes with go-live; use Client view to preview what they see"); location.reload(); }
+        if(a==="approve"){
+          saveSet(st.id,function(x){x.status="approved";});
+          if(st.job){ try{ S.save(function(dd){ (dd.galleries||[]).forEach(function(g){ if(g.job===st.job) g.selects=st.selects.length; }); }); }catch(e2){} }
+          S.toast&&S.toast("Approved — "+st.selects.length+" selects"+(ov.extra?", overage "+S.money(ov.cost):"")); location.reload();
+        }
+        if(a==="del"){ if(confirm("Delete this proof set?")){ S.save(function(dd){ dd.proofs=(dd.proofs||[]).filter(function(x){return x.id!==st.id;}); }); location.reload(); } }
+      };
+      shelf.appendChild(d);
+    });
+
+    content.appendChild(S.card(
+      '<h2>What this replaces</h2>'+
+      '<p class="sub">Proofing platforms charge a monthly fee to host hearts and comments — and some take a cut of print sales on top. '+
+      'Here, proofing is a room in the system you already run: the set comes from the Darkroom, the package and overage price '+
+      'come from your quote, the selections land on the job, and the finished photos go out through Galleries &amp; delivery. '+
+      'Photo software and video software, in every tier — with the business wrapped around both.</p>'));
+  }
+
+  // ---------------- route ----------------
+  if(clientMode && openId){
+    var st=sets().filter(function(s){return s.id===openId;})[0];
+    if(st){ clientView(st); } else { content.appendChild(S.card('<p class="sub">Proof set not found.</p>')); }
+  } else {
+    studioView();
+  }
+
+  window.PF={ sets:sets };
+})();
+</script>
+</body>
+</html>
