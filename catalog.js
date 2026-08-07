@@ -404,7 +404,7 @@
     '4barrel':     { preview:'/media/4barrel/preview.mp4', poster:'/media/4barrel/poster.jpg', len:'2:26',
                  shots:['/media/4barrel/s1.jpg', '/media/4barrel/s2.jpg', '/media/4barrel/s3.jpg', '/media/4barrel/s4.jpg', '/media/4barrel/s5.jpg', '/media/4barrel/s6.jpg', '/media/4barrel/s7.jpg'] },
     targeted:    { preview:'/media/targeted/preview.mp4', poster:'/media/targeted/poster.jpg', len:'2:27',
-                 shots:['/media/targeted/s1.jpg', '/media/targeted/s2.jpg', '/media/targeted/s3.jpg', '/media/targeted/s4.jpg', '/media/targeted/s5.jpg', '/media/targeted/s6.jpg'] },
+                 shots:['/media/targeted/s1.jpg', '/media/targeted/s2.jpg', '/media/targeted/s3.jpg', '/media/targeted/s4.jpg', '/media/targeted/s5.jpg', '/media/targeted/s6.jpg'], long:'/media/targeted/long.mp4', longPoster:'/media/targeted/long-poster.jpg', longLen:'6:33' },
   };
   CATALOG.forEach(function (a) { if (MEDIA[a.id]) a.media = MEDIA[a.id]; });
 
