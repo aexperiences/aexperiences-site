@@ -41,17 +41,19 @@
   function fresh(){
     return { _t:now(), started:now(), sample:true, tier:"grandsuite", adds:[], offs:[],
       shop:clone(SEED.shop), techs:clone(SEED.techs), customers:clone(SEED.customers),
-      jobs:clone(SEED.jobs), parts:clone(SEED.parts), applicants:clone(SEED.applicants),
+      jobs:clone(SEED.jobs), calls:clone(SEED.calls), parts:clone(SEED.parts), applicants:clone(SEED.applicants),
       referrers:clone(SEED.referrers), estimates:clone(SEED.estimates),
       documents:clone(SEED.documents), systems:clone(SEED.systems),
       approvals:clone(SEED.approvals), bus:[], seq:1 };
   }
   function emptyBook(){ var d=fresh(); d.sample=false;
-    d.techs=[]; d.customers=[]; d.jobs=[]; d.applicants=[]; d.referrers=[];
+    d.techs=[]; d.customers=[]; d.jobs=[]; d.applicants=[]; d.referrers=[]; d.calls=[];
     d.estimates=[]; d.documents=[]; d.approvals=[]; d.bus=[]; return d; }
   function goLive(){ var d=emptyBook(); write(d); return d; }
   function isSample(){ return db().sample !== false; }
-  function db(){ var d=read(); if(!d){ d=fresh(); write(d); return d; } return d; }
+  function db(){ var d=read(); if(!d){ d=fresh(); write(d); return d; }
+    if(!d.calls){ d.calls = d.sample===false ? [] : clone(SEED.calls); write(d); }
+    return d; }
   function save(mut){ var d=db(); mut(d); write(d); return d; }
 
   /* ====================================================================
@@ -177,6 +179,35 @@
     hours:"7:00a – 5:00p, 24/7 emergency",
     holidays:["2026-01-01","2026-05-25","2026-07-04","2026-09-07","2026-11-26","2026-12-25"]
   };
+
+  /* SWITCHBOARD — the phone floor. Simulated sample calls (the ribbon says so):
+     real numbers, recordings and IVR are wired to the buyer's line at purchase. */
+  SEED.calls = [
+    { id:"k1", when:"T 08:42", from:"(208) 555-0214", name:"Gary Pruett", customerId:null,
+      reason:"No cooling — upstairs is 84° and climbing", status:"ringing", dur:0, by:null,
+      summary:null, jobId:null },
+    { id:"k2", when:"T 08:40", from:"(208) 555-0202", name:null, customerId:"c2",
+      reason:"Unit 14 — water heater leaking at the base", status:"ringing", dur:0, by:null,
+      summary:null, jobId:null },
+    { id:"k3", when:"T 08:12", from:"(208) 555-0201", name:null, customerId:"c1",
+      reason:"Comfort Club spring visit — wants it before the heat", status:"booked", dur:214, by:"Front desk",
+      summary:"Existing member, 2 visits/yr. Prefers mornings, dogs in yard — use gate code on file. Booked as maintenance.", jobId:null },
+    { id:"k4", when:"T 07:58", from:"(208) 555-0219", name:"Lena Okafor", customerId:null,
+      reason:"Quote — replace 40-gal water heater", status:"booked", dur:311, by:"AI receptionist",
+      summary:"New caller, Hayden. Gas 40-gal, 11 yrs old, pilot keeps dropping. Offered first open slot off the live board; caller took it. Estimate flagged for a tankless option.", jobId:null },
+    { id:"k5", when:"T 07:31", from:"(208) 555-0223", name:"R. Maldonado", customerId:null,
+      reason:"Asked for a price on a panel upgrade", status:"logged", dur:126, by:"AI receptionist",
+      summary:"Shopping calls only — wants ballpark for a 200A panel. Gave the visit-fee policy, no booking yet. Set a follow-up touch for Thursday.", jobId:null },
+    { id:"k6", when:"T 07:05", from:"(208) 555-0208", name:null, customerId:"c3",
+      reason:"Furnace short-cycling again", status:"callback", dur:0, by:null,
+      summary:"Missed before open — rang 22s. Auto-queued for callback; history shows a January ignitor replacement under warranty.", jobId:null },
+    { id:"y1", when:"Y 16:12", from:"(208) 555-0202", name:null, customerId:"c2",
+      reason:"PO for building-6 rooftop work", status:"logged", dur:187, by:"Front desk",
+      summary:"PM confirming PO before Thursday rooftop job. PO number recorded to the job record.", jobId:null },
+    { id:"y2", when:"Y 11:47", from:"(208) 555-0230", name:"Walk-in referral", customerId:null,
+      reason:"Mini-split quote for a garage shop", status:"booked", dur:242, by:"Front desk",
+      summary:"Referred by Riverbend's PM. Wants a ductless mini-split in a 600 sq ft shop. Estimate visit booked; referral touch logged.", jobId:null }
+  ];
 
   SEED.techs = [
     { id:"t1", name:"Wade Fillmore", trade:"HVAC", phone:"(208) 555-0181", city:"Post Falls",
@@ -980,6 +1011,71 @@
     d.bus.unshift({ts:new Date().toISOString().slice(0,19),dept:dept,msg:msg});
     if(d.bus.length>120) d.bus.length=120; }
   function bus(){ return db().bus||[]; }
+
+  /* ====================================================================
+     SWITCHBOARD — calls become jobs
+     ==================================================================== */
+  function callLabel(w){ if(!w) return ""; var p=String(w).split(" ");
+    return (p[0]==="T"?"Today":"Yesterday")+" "+hhmm(p[1]); }
+  function calls(){ return db().calls||[]; }
+  function callById(id){ return calls().filter(function(c){return c.id===id;})[0]||null; }
+  function callStats(){
+    var t=calls().filter(function(c){return String(c.when).charAt(0)==="T";});
+    var ring=t.filter(function(c){return c.status==="ringing";}).length;
+    var booked=t.filter(function(c){return c.status==="booked";}).length;
+    var handled=t.filter(function(c){return c.status!=="ringing";}).length;
+    var missed=t.filter(function(c){return c.status==="callback";}).length;
+    var ai=t.filter(function(c){return c.by==="AI receptionist";}).length;
+    return { today:t.length, ringing:ring, booked:booked, handled:handled, missed:missed, ai:ai };
+  }
+  function answerCall(id){ return save(function(d){
+    var c=(d.calls||[]).filter(function(x){return x.id===id;})[0]; if(!c||c.status!=="ringing") return;
+    c.status="logged"; c.by="Front desk"; c.dur=90+((d.seq++)%7)*30;
+    c.summary="Answered at the desk. Add the outcome — or book it straight onto the board.";
+    logBus(d,"Switchboard","Call answered — "+(c.name||((customerById(c.customerId)||{}).name)||c.from)+".");
+  }); }
+  function bookFromCall(id, rec){
+    var jid=null;
+    save(function(d){
+      var c=(d.calls||[]).filter(function(x){return x.id===id;})[0]; if(!c) return;
+      var custId=c.customerId;
+      if(!custId){
+        custId="c"+Date.now().toString(36);
+        d.customers.push({ id:custId, name:c.name||("Caller "+c.from), kind:"Residential",
+          city:d.shop.city, lat:d.shop.lat, lng:d.shop.lng, addr:"(address from the call)",
+          phone:c.from, since:iso(TODAY), equip:"", agreement:null, agreementAnnual:0, visitsYr:0,
+          notes:"Created from a Switchboard call." });
+      }
+      jid="j"+Date.now().toString(36);
+      var st=(rec&&rec.start)||"13:00", hrs=(rec&&rec.hours)||2;
+      d.jobs.push(Object.assign({ id:jid, customerId:custId, techId:null, date:iso(TODAY),
+        start:st, end:minToHhmm(hhmmToMin(st)+Math.round(hrs*60)), hours:hrs,
+        trade:(rec&&rec.trade)||"HVAC", type:(rec&&rec.type)||"Service call",
+        billing:"Time & materials", task:c.reason||"Diagnose and report",
+        parts:{}, note:"Booked from the Switchboard — call "+c.id,
+        status:"OPEN", proof:null, permitNo:"", mileage:8, photos:0 }, {}));
+      c.status="booked"; c.jobId=jid;
+      if(!c.by) c.by="Front desk";
+      if(!c.dur) c.dur=120+((d.seq++)%5)*45;
+      if(!c.summary) c.summary="Booked to the board while the caller was on the line.";
+      logBus(d,"Switchboard","Call became a job — "+(c.reason||"service call")+" · on the board OPEN.");
+    });
+    return jid;
+  }
+  function aiHandleCall(id){
+    var jid=null;
+    save(function(d){
+      var c=(d.calls||[]).filter(function(x){return x.id===id;})[0]; if(!c||c.status!=="ringing") return;
+      c.by="AI receptionist";
+      logBus(d,"Switchboard","AI receptionist took the call — matching against the live board.");
+    });
+    jid=bookFromCall(id,{start:"15:00"});
+    save(function(d){
+      var c=(d.calls||[]).filter(function(x){return x.id===id;})[0]; if(!c) return;
+      c.summary="AI receptionist answered the overflow, matched the first workable slot on the live board, and booked it. Flagged for the desk to confirm parts on the truck.";
+    });
+    return jid;
+  }
   function approvals(){ return db().approvals||[]; }
   function decideApproval(id,dec){ return save(function(d){
     var a=d.approvals.filter(function(x){return x.id===id;})[0]; if(!a) return;
@@ -1039,6 +1135,10 @@
       why:"Labor, parts and trip fee kept separate. Overtime, drive time, burden — and the callback line nobody else shows you." },
     books:    { label:"Books & Metrics",      mo:80,  build:600,
       why:"Margin by trade and by how the job gets paid, callback rate by tech, first-time fix — computed, never reconstructed." },
+    phones:   { label:"Switchboard · Phones", mo:120, build:900,
+      why:"The inbound call becomes a booked job while the caller is still on the line — logged, summarized, on the board. Your number is wired at purchase." },
+    webbook:  { label:"24/7 Web Booking",     mo:70,  build:500,
+      why:"A booking page under your brand on your own site, offering only slots the live board can actually take." },
     org:      { label:"Agent Org · Bus",      mo:140, build:1100,
       why:"The AI department chains, the event bus and the confidence gates." }
   };
@@ -1051,10 +1151,10 @@
       desc:"A real shop with a dispatcher. Adds the referral book, recruiting, books & metrics and the AI department org.",
       base:"Unlimited techs · dispatcher seat · referral CRM · agent org",
       includes:["dispatch","field","work","licences","truck","estimate","crm","portal","recruit","sign","money","books","org"] },
-    grandsuite: { key:"grandsuite", name:"Grandsuite", rank:3, mo:2200, build:13800,
+    grandsuite: { key:"grandsuite", name:"Grandsuite", rank:3, mo:2200, build:16000,
       desc:"Nothing held back. Multi-location, multi-trade, dedicated environment, data migration and your own branded tech app.",
       base:"Multi-location · multi-trade · dedicated environment · migration · branded app",
-      includes:["dispatch","field","work","licences","truck","estimate","crm","portal","recruit","sign","money","books","org"] }
+      includes:["dispatch","field","work","licences","truck","estimate","crm","portal","recruit","sign","money","books","org","phones","webbook"] }
   };
   var DEPTS = [
     { group:"Command", items:[
@@ -1064,6 +1164,9 @@
       { href:"connect.html",   label:"Connect · Video",ic:"◉" },
       { href:"records.html",   label:"Records · Filing",ic:"▤" },
       { href:"approvals.html", label:"Approval Desk",  ic:"✓", accent:"ops" } ]},
+    { group:"Front Desk", items:[
+      { href:"switchboard.html", label:"Switchboard · Phones", ic:"☏", room:"phones", accent:"crm" },
+      { href:"book.html",        label:"Web Booking",          ic:"◷", room:"webbook", accent:"portal" } ]},
     { group:"The Day", items:[
       { href:"dispatch.html",  label:"Dispatch & Board",ic:"▦", room:"dispatch", accent:"dispatch" },
       { href:"field.html",     label:"Field & Proof",   ic:"◉", room:"field",    accent:"field" },
@@ -1306,6 +1409,8 @@
     TIERS:TIERS, ROOMS:ROOMS, DEPTS:DEPTS, tier:tier, setTier:setTier, activeRooms:activeRooms,
     hasRoom:hasRoom, toggleRoom:toggleRoom, priceNow:priceNow, priceLabel:priceLabel,
     manual:manual, askManual:askManual, kpis:kpis,
+    calls:calls, callById:callById, callStats:callStats, callLabel:callLabel,
+    answerCall:answerCall, bookFromCall:bookFromCall, aiHandleCall:aiHandleCall,
     mount:mount, toast:toast, el:el, esc:esc, money:money, money2:money2, pct:pct,
     hhmm:hhmm, dayLabel:dayLabel, page:page, card:card, stat:stat, tag:tag, srcNote:srcNote, bar:bar,
     proofBand:proofBand, brandMark:brandMark, MARK_URL:MARK_URL
