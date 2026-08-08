@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>AE — Their Stack vs Ours (Private)</title>
+<style>
+:root{--esp:#2a1810;--forest:#1c3d22;--gold:#e0a83a;--cream:#f5eee2;--line:rgba(224,168,58,.22)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+ background:linear-gradient(120deg,var(--esp),var(--forest));background-attachment:fixed;color:var(--cream)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;
+ background-image:linear-gradient(rgba(224,168,58,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(224,168,58,.05) 1px,transparent 1px);
+ background-size:44px 44px}
+.wrap{position:relative;max-width:660px;margin:0 auto;padding:22px 14px 60px}
+.kicker{color:var(--gold);font-size:12px;letter-spacing:.24em;text-transform:uppercase;font-weight:700}
+h1{font-size:29px;line-height:1.12;margin:6px 0 6px;font-weight:800}
+.sub{color:rgba(245,238,226,.76);font-size:14.5px;line-height:1.55}
+.asof{color:rgba(245,238,226,.52);font-size:12px;margin-top:7px}
+.big{margin:18px 0 6px;padding:16px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.28);text-align:center}
+.big .t{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.big .n{font-size:38px;font-weight:800;margin:4px 0}
+.big .n2{font-size:30px;font-weight:800;color:#8fd69a}
+.big .s{font-size:13.5px;color:rgba(245,238,226,.66)}
+.cmp{margin-top:14px;border:1px solid var(--line);border-radius:16px;background:rgba(0,0,0,.28);overflow:hidden}
+.ch{display:flex;align-items:center;gap:9px;padding:12px 15px 10px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.dot{width:11px;height:11px;border-radius:50%;background:var(--a);flex:0 0 11px}
+.ch b{font-size:18px}
+.who{margin-left:auto;font-size:12px;color:rgba(245,238,226,.58);text-align:right}
+.cb{display:grid;grid-template-columns:1fr 1fr}
+.them{padding:12px 14px;border-right:1px solid var(--line)}
+.us{padding:12px 14px;background:rgba(255,255,255,.03)}
+.lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;color:var(--gold);margin-bottom:6px}
+.us .lab{color:var(--a)}
+.tools{font-size:11.5px;line-height:1.5;color:rgba(245,238,226,.6);margin-bottom:8px}
+.amt{font-size:25px;font-weight:800;color:var(--gold)}
+.amt2{font-size:29px;font-weight:800;color:var(--cream)}
+.amt small,.amt2 small{font-size:12px;font-weight:600;color:rgba(245,238,226,.55)}
+.save{display:inline-block;margin-top:8px;font-size:12.5px;font-weight:800;color:#8fd69a}
+.more{display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:#d67a6e;line-height:1.35}
+.fn{padding:0 15px 12px;font-size:12px;color:var(--gold);opacity:.85}
+.note{margin-top:22px;padding:15px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.25);font-size:13.5px;line-height:1.6;color:rgba(245,238,226,.8)}
+.note b{color:var(--gold)}
+footer{margin-top:26px;text-align:center;font-size:12.5px;color:rgba(245,238,226,.55);line-height:1.7}
+footer b{color:var(--cream)}
+</style></head><body><div class="wrap">
+<div class="kicker">Private · Rep Comparison Sheet</div>
+<h1>Their stack. Our price.</h1>
+<p class="sub">What a business in each industry is already paying, itemised, next to one AE number. For Jessica &amp; Barry — please don't pass the link around.</p>
+<p class="asof">Competitor prices are their own published rates, August 2026.</p>
+<div class="big"><div class="t">All 14 stacks, added up</div><div class="n">$18,210<span style="font-size:16px">/mo</span></div>
+<div class="s">our Lite tier across the same 14 industries</div><div class="n2">$6,399<span style="font-size:14px">/mo</span></div></div>
+  <div class="cmp" style="--a:#c8794f">
+    <div class="ch"><span class="dot"></span><b>Abode OS</b><span class="who">Real estate team · a 5-person team</span></div>
+    <div class="cb">
+      <div class="them"><div class="lab">what they pay now</div><p class="tools">Follow Up Boss (CRM) · dotloop (transactions) · DocuSign · QuickBooks Essentials · Calendly · Mailchimp</p>
+        <div class="amt">$1,064<small>/mo</small></div></div>
+      <div class="us"><div class="lab">with us · Lite</div><div class="amt2">$450<small>/mo</small></div>
+        <span class="save">saves $7,368/yr</span></div>
+    </div>
+  </div>
+  <div class="cmp" style="--a:#d97a2e">
+    <div class="ch"><span class="dot"></span><b>Targeted OS</b><span class="who">Marketing agency · a 6-person agency</span></div>
+    <div class="cb">
+      <div class="them"><div class="lab">what they pay now</div><p class="tools">HubSpot Starter · Asana · Figma · Canva · Semrush · Buffer</p>
+        <div class="amt">$715<small>/mo</small></div></div>
+      <div class="us"><div class="lab">with us · Lite</div><div class="amt2">$450<small>/mo</small></div>
+        <span class="save">saves $3,180/yr</span></div>
+    </div>
+  </div>
+  <div class="cmp" style="--a:#5c8a5f">
+    <div class="ch"><span class="dot"></span><b>Buttress OS</b><span class="who">Architecture studio · an 8-person studio</span></div>
+    <div class="cb">
+      <div class="them"><div class="lab">what they pay now</div><p class="tools">Monograph · Bluebeam · QuickBooks Plus · Dropbox · Microsoft 365 · Harvest</p>
+        <div class="amt">$1,071<small>/mo</small></div></div>
+      <div class="us"><div class="lab">with us · Lite</div><div class="amt2">$550<small>/mo</small></div>
+        <span class="save">saves $6,252/yr</span></div>
+    </div>
+  </div>
+  <div class="cmp" style="--a:#18b0ba">
+    <div class="ch"><span class="dot"></span><b>Truss OS</b><span class="who">Engineering practice · a 10-person practice</span></div>
+    <div class="cb">
+      <div class="them"><div class="lab">what they pay now</div><p class="tools">Bluebeam Complete · Egnyte · BigTime · monday.com · Microsoft 365 · QuickBooks Plus</p>
+        <div class="amt">$1,369<small>/mo</small></div></div>
+      <div class="us"><div class="lab">with us · Lite</div><div class="amt2">$650<small>/mo</small></div>
+        <span class="save">saves $8,628/yr</span></div>
+    </div>
+  </div>
+  <div class="cmp" style="--a:#0e7c93">
+    <div class="ch"><span class="dot"></span><b>Smiley OS</b><span class="who">Dental practice · one location, 6 staff</span></div>
+    <div class="cb">
+      <div class="them"><div class="lab">what they pay now</div><p class="tools">Weave (phone + recall) · Open Dental · QuickBooks Essentials · Gusto payroll · Web Sched · eClipboard consent</p>
+        <div class="amt">$638<small>/mo</small></div></div>
+      <div class="us"><div class="lab">with us · Lite</div><div class="amt2">$350<small>/mo</small></div>
+        <span class="save">saves $3,456/yr</span></div>
+    </div><p class="fn">and that is before the claims clearinghouse and the reviews tool, which publish no price at all</p>
+  </div>
+  <div class="cmp" style="--a:#2e7f7c">
+    <div class="ch"><span class="dot"></span><b>Stay@Home OS</b><span class="who">Home care agency · 25 caregivers</span></div>
+    <div class="cb">
+      <div class="them"><div class="lab">what they pay now</div><p class="tools">Alora agency platform · CareAcademy training · Gusto payroll · QuickBooks Plus · When I Work · Ooma phone</p>
+        <div class="amt">$1,151<small>/mo</small></div></div>
+      <div class="us"><div class="lab">with us · Lite</div><div class="amt2">$550<small>/mo</small></div>
+        <span class="save">saves $7,212/yr</span></div>
+    </div>
+  </div>
+  <div class="cmp" style="--a:#e4832b">
+    <div class="ch"><span class="dot"></span><b>Toolbelt OS</b><span class="who">HVAC / plumbing / electrical · 4 trucks, 6 employees</span></div>
+    <div class="cb">
+      <div class="them"><div class="lab">what they pay now</div><p class="tools">Podium reviews · Housecall Pro · Profit Rhino pricebook · QuickBooks Plus · RingCentral · Gusto payroll</p>
+        <div class="amt">$1,131<small>/mo</small></div></div>
+      <div class="us"><div class="lab">with us · Lite</div><div class="amt2">$450<small>/mo</small></div>
+        <span class="save">saves $8,172/yr</span></div>
+    </div>
+  </div>
+  <div class="cmp" style="--a:#1c5568">
+    <div class="ch"><span class="dot"></span><b>4barrel OS</b><span class="who">Used-car dealer · an independent lot — software only</span></div>
+    <div class="cb">
+      <div class="them"><div class="lab">what they pay now</div><p class="tools">Podium reviews · QuickBooks Plus · DealerCenter DMS · DealerCenter CRM · Carsforsale.com · Window stickers</p>
+        <div class="amt">$861<small>/mo</small></div></div>
+      <div class="us"><div class="lab">with us · Lite</div><div class="amt2">$450<small>/mo</small></div>
+        <span class="save">saves $4,932/yr</span></div>
+    </div><p class="fn">and that is before Cars.com and CarGurus, which will not publish a rate card at all</p>
+  </div>
+  <div class="cmp" style="--a:#e0b24a">
+    <div class="ch"><span class="dot"></span><b>Musical OS</b><span class="who">Community playhouse · 15,000 tickets a year</span></div>
+    <div class="cb">
+      <div class="them"><div class="lab">what they pay now</div><p class="tools">Ticket fees ($1.25/ticket) · QuickBooks Essentials · Little Green Light donors · Website · When I Work · Mailchimp</p>
+        <div class="amt">$1,773<small>/mo</small></div></div>
+      <div class="us"><div class="lab">with us · Lite</div><div class="amt2">$650<small>/mo</small></div>
+        <span class="save">saves $13,476/yr</span></div>
+    </div><p class="fn">the per-ticket cut alone is six times the rest of the software put together</p>
+  </div>
+  <div class="cmp" style="--a:#8a6fd6">
+    <div class="ch"><span class="dot"></span><b>8mm OS</b><span class="who">Independent cinema · 50,000 admissions a year</span></div>
+    <div class="cb">
+      <div class="them"><div class="lab">what they pay now</div><p class="tools">Online ticket fees ($1/ticket) · Filmbot box office · QuickBooks Plus · Square POS · When I Work · Mailchimp</p>
+        <div class="amt">$2,164<small>/mo</small></div></div>
+      <div class="us"><div class="lab">with us · Lite</div><div class="amt2">$500<small>/mo</small></div>
+        <span class="save">saves $19,968/yr</span></div>
+    </div>
+  </div>
+  <div class="cmp" style="--a:#d65f8a">
+    <div class="ch"><span class="dot"></span><b>Amphitheater OS</b><span class="who">Live music venue · 150 shows, 27,000 tickets a year</span></div>
+    <div class="cb">
+      <div class="them"><div class="lab">what they pay now</div><p class="tools">Ticket fees ($1.59 + 3%) · QuickBooks Essentials · Square POS · Homebase · Website · Mailchimp</p>
+        <div class="amt">$5,479<small>/mo</small></div></div>
+      <div class="us"><div class="lab">with us · Lite</div><div class="amt2">$600<small>/mo</small></div>
+        <span class="save">saves $58,548/yr</span></div>
+    </div><p class="fn">most venues pass that to the fan as a service fee — it still comes out of the room, and it caps what you can charge at the door</p>
+  </div>
+  <div class="cmp" style="--a:#6b5bb5">
+    <div class="ch"><span class="dot"></span><b>Moments OS</b><span class="who">Photographer / videographer · one shooter</span></div>
+    <div class="cb">
+      <div class="them"><div class="lab">what they pay now</div><p class="tools">HoneyBook · QuickBooks Simple Start · Pixieset galleries · Adobe Premiere Pro · Adobe Photography Plan · ShootProof</p>
+        <div class="amt">$217<small>/mo</small></div></div>
+      <div class="us"><div class="lab">with us · Lite</div><div class="amt2">$99<small>/mo</small></div>
+        <span class="save">saves $1,416/yr</span></div>
+    </div>
+  </div>
+  <div class="cmp" style="--a:#b8324a">
+    <div class="ch"><span class="dot"></span><b>Sleeves OS</b><span class="who">Tattoo studio · a 3-artist shop</span></div>
+    <div class="cb">
+      <div class="them"><div class="lab">what they pay now</div><p class="tools">Smartwaiver · Gusto payroll · Square Appointments · QuickBooks Simple Start · Squarespace · Mailchimp</p>
+        <div class="amt">$227<small>/mo</small></div></div>
+      <div class="us"><div class="lab">with us · Lite</div><div class="amt2">$250<small>/mo</small></div>
+        <span class="more">we are $23/mo more — say so</span></div>
+    </div>
+  </div>
+  <div class="cmp" style="--a:#4aa3d6">
+    <div class="ch"><span class="dot"></span><b>LilNinja OS</b><span class="who">Kids gym / program · 150 students</span></div>
+    <div class="cb">
+      <div class="them"><div class="lab">what they pay now</div><p class="tools">Jackrabbit Class · QuickBooks Essentials · Gusto payroll · Smartwaiver · Squarespace · Mailchimp</p>
+        <div class="amt">$350<small>/mo</small></div></div>
+      <div class="us"><div class="lab">with us · Lite</div><div class="amt2">$400<small>/mo</small></div>
+        <span class="more">we are $50/mo more — say so</span></div>
+    </div>
+  </div>
+<div class="note"><b>How to use this.</b> Every number on the left is the vendor's own published price — read off their pricing page in August 2026. Where a company refuses to publish a rate (Podium, Cars.com, CarGurus, most dental clearinghouses, ServiceTitan), we <b>left it out of the total</b> rather than guess, so every gap here is conservative. Two industries where we are not the cheaper option are marked in red — lead with the one-system and AI-workforce argument there, not price.</div>
+<div class="note"><b>The line that closes it:</b> those are six or eight separate tools that don't know each other exist. Ours is one system, one login, one bill — with an AI workforce inside that none of them sell at any price.</div>
+<footer>Questions on a deal? Call Anthony.<br><b>Accelerated Experiences LLC</b> · AExperiences.com</footer>
+</div></body></html>
