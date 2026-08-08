@@ -158,11 +158,42 @@
       blurb:'Practical regulation tools for ADHD and autistic brains — built by someone who needs them.',
       price:'$9 per tool', priceNote:'One-time · free starter checklist included' },
 
-    { id:'aefunkmaster', name:'AEfunkmaster', tag:'Music studio & looper', genre:'arts', state:'live',
-      acc:'#e0a83a', img:'/ae-disc.png', url:'/apps/aefunkmaster/',
+    /* ESPOfunkmaster sits in TWO aisles off ONE record — a person makes a track with it,
+       and a business scores its own video with it. Same app, same price, two places to
+       find it. `aisles` is what makes that possible without a second entry (see aislesOf
+       below); a duplicate record would be two prices waiting to disagree.
+       `family` puts it on the ESPO Music shelf. It is NOT inside the ESPO Music app and
+       NOT in All-Access — it is its own app that shares the family name. */
+    { id:'espofunkmaster', name:'ESPOfunkmaster', tag:'Studio, looper & chop shop', genre:'arts', state:'live',
+      family:'ESPO Music', aisles:['personal','business'], partOf:'ae-cre8',
+      acc:'#e0a83a', mark:'/marks/espofunkmaster.png', img:'/marks/espofunkmaster.png', url:'/apps/espofunkmaster/',
       shots:['/shots/aefunkmaster.png','/shots/aefunkmaster-2.png','/shots/aefunkmaster-desktop.png'],
-      blurb:'A real studio in your browser, in plain English: a true drum kit, real-instrument keys, a bar-synced looper, your microphone, a mixing desk — and "Put it on wax" to make it sound like a record. Nothing uploaded, nothing collected.',
+      blurb:'A real studio in your browser, in plain English: a true drum kit, real-instrument keys, a bar-synced looper, your microphone, a mixing desk — and "Put it on wax" to make it sound like a record. Bring in your own song or a video you shot, chop it onto the pads, and send the finished track straight into ESPO Cutlabs as the music under your edit. Nothing uploaded, nothing collected.',
       price:'Free right now', priceNote:'Pricing set: $4.99/mo · $29.99/yr — payments not switched on yet' },
+
+    /* ─────────── AE CREATE — the making tools. Each one stands alone; together they are
+       a suite. All three carry aisles:['personal','business'] because the same tool serves
+       one person and a company — one record each, shown on both shelves, never copied. ── */
+    { id:'espocutlabs', name:'ESPO Cutlabs', tag:'Video editing', genre:'arts', state:'live',
+      family:'AE Cre8', aisles:['personal','business'], partOf:'ae-cre8',
+      acc:'#e0553a', mark:'/marks/espocutlabs.png', img:'/marks/espocutlabs.png',
+      url:'https://ae-video-studio.vercel.app/',
+      blurb:'Fast, loud, punchy video editing that runs entirely in your browser — captions that pop, zoom punches, freeze frames, slow-mo and fast-forward, and a synthesized sound-effect palette. Drop your clips in, cut, export to your downloads. Takes its music straight from ESPOfunkmaster.',
+      price:'Free right now', priceNote:'No account, no upload — your footage never leaves your machine' },
+
+    { id:'aevoice', name:'AE Voice Machine', tag:'Your voice, on tap', genre:'arts', state:'dev',
+      family:'AE Cre8', aisles:['personal','business'], partOf:'ae-cre8',
+      acc:'#c8965a', mark:'/marks/aevoice.png', img:'/marks/aevoice.png',
+      blurb:'Record a few seconds of your own voice, and it reads any script back in it — on your own machine, no per-take fee. Consent is recorded in your name before a clone is ever made, it only ever clones the voice of the person sitting there, and every file it produces is watermarked as synthetic. Not open to the public yet: today it runs inside the AE OS on our own hardware.' },
+
+    { id:'ae-cre8', name:'AE Cre8', tag:'Eight machines that make things', genre:'arts', state:'live',
+      family:'AE Cre8', aisles:['personal','business'],
+      bundle:['espofunkmaster','espocutlabs','aevoice'],
+      acc:'#e0a83a', mark:'/marks/ae-cre8.png', img:'/marks/ae-cre8.png',
+      url:'https://ae-cre8.vercel.app/',
+      blurb:'The small stuff that eats a working day — resizing a logo forty times, turning a document into something you would actually send, cutting a short video, scoring it, getting a voice on it. Eight tools, each one job: Studio, Sizes, Press, Reel, Darkroom, ESPOfunkmaster, ESPO Cutlabs and the Voice Machine. They also work as one line — ESPOfunkmaster scores it, the Voice Machine narrates it, Reel or Cutlabs builds it, Studio makes the art, Sizes cuts every format.',
+      price:'Free right now',
+      priceNote:'Seven of the eight are open to anyone today · Voice still runs inside the AE OS · Cre8 is not priced yet' },
 
     /* ─────────── ESPO REMAKES — live, in-shop apps (/apps/<name>/) ─────────── */
     { id:'revolver', name:'Revolver OS', tag:'Record collection', genre:'arts', state:'live',
@@ -312,9 +343,31 @@
   /* TWO AISLES. This is the only distinction a visitor has to understand:
        business — software that runs a company. You and your team. Setup fee + monthly.
        personal — something one person uses. Small price or free.
-     Everything else (genre, price, family) is a filter inside an aisle. */
-  function aisleOf(a) { return a.genre === 'business' ? 'business' : 'personal'; }
-  function inAisle(id) { return CATALOG.filter(function (a) { return aisleOf(a) === id; }); }
+     Everything else (genre, price, family) is a filter inside an aisle.
+
+     MOST products belong to exactly one aisle, derived from genre. A few genuinely belong
+     to both — the same one app, sold to a person and to a company (ESPOfunkmaster: your
+     band on Saturday, your ad on Monday). Those carry an explicit `aisles` array.
+
+     THE AISLE IS A VIEW, NOT A COPY. A dual-aisle product is ONE record with ONE price and
+     ONE id; it is listed on two shelves the way a shop puts one product on two end-caps.
+     A second catalog entry would be a duplicate — two prices, two blurbs, two things to
+     forget to update — and that is exactly what this exists to prevent. On "Everything"
+     it renders once, because the filter tests membership rather than adding it twice. */
+  function aislesOf(a) {
+    if (a.aisles && a.aisles.length) return a.aisles;
+    return [a.genre === 'business' ? 'business' : 'personal'];
+  }
+  function aisleOf(a) { return aislesOf(a)[0]; }              // primary aisle (older callers)
+  function isIn(a, id) { return aislesOf(a).indexOf(id) > -1; }
+  function inAisle(id) { return CATALOG.filter(function (a) { return isIn(a, id); }); }
+
+  /* SUITES. `bundle` on a suite lists the ids it contains; `partOf` on a member points
+     back. The store uses this to show the relationship — a suite card that names its
+     parts, and a quiet ribbon on each part — instead of repeating the same three products
+     twice on one screen. */
+  function bundleOf(a) { return (a.bundle || []).map(byId).filter(Boolean); }
+  function suiteFor(a) { return a.partOf ? byId(a.partOf) : null; }
 
   var AISLES = [
     { id:'business', label:'For your business',
@@ -340,7 +393,10 @@
      to a visitor; it exists purely so a deploy gap can't blank the prices in the store. */
   var RETIRED_ID = {
     homestead: 'abode', draftline: 'buttress', datum: 'truss', marquee: 'musical',
-    reel: '8mm', encore: 'amphitheater', cartwheel: 'lilninja', showroom: '4barrel'
+    reel: '8mm', encore: 'amphitheater', cartwheel: 'lilninja', showroom: '4barrel',
+    /* Aug 8 2026 — AEfunkmaster joined the ESPO Music family and took the family name.
+       Old id kept here only so the hub's price desk and any old bookmark still resolve. */
+    aefunkmaster: 'espofunkmaster'
   };
   function canonId(id) { return RETIRED_ID[id] || id; }
 
@@ -411,7 +467,8 @@
   root.AEShop = {
     CATALOG: CATALOG, GENRES: GENRES, AISLES: AISLES,
     byId: byId, canonId: canonId, live: live, dev: dev, activeGenres: activeGenres,
-    aisleOf: aisleOf, inAisle: inAisle,
+    aisleOf: aisleOf, aislesOf: aislesOf, isIn: isIn, inAisle: inAisle,
+    bundleOf: bundleOf, suiteFor: suiteFor,
     refreshPrices: refreshPrices, priceSource: 'fallback',
     appShop: { build: 99, terms: 'Half up front, half on delivery', turnaround: '3 days' }
   };
