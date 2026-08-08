@@ -110,7 +110,23 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .card .tg{display:block;font-size:13px;color:#b5a68e;margin-top:2px}
 .card .pr{display:block;margin-top:7px;font-family:var(--mono);font-size:12.5px;color:var(--gold-l)}
 
-/* ── tools: honest empty state ── */
+/* ── the suite card: one box, three tools ──
+   Without a visual difference a suite and its three parts read as the same product listed
+   four times. Gold keyline, full width, and it names what is inside. */
+.card.suite{border-color:rgba(224,168,58,.55);background:rgba(224,168,58,.06)}
+@media(min-width:640px){ .card.suite{grid-column:1 / -1} .card.suite .body{align-items:center} }
+.card.suite:hover{border-color:var(--gold-l)}
+.card .inc{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.card .inc i{font-style:normal;font-family:var(--mono);font-size:11px;letter-spacing:.03em;
+  padding:3px 9px;border-radius:20px;border:1px solid rgba(224,168,58,.4);
+  color:#ecd9b0;background:rgba(224,168,58,.09)}
+.card .inc i.soon{border-color:var(--line-2);color:#b5a68e;background:transparent}
+.card .of{display:block;margin-top:7px;font-family:var(--mono);font-size:11px;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--gold-l)}
+.card.soon{opacity:.9}
+.card.soon .pr{color:#b5a68e}
+
+/* ── tools: honest empty state (kept — the aisle empties itself if the catalog does) ── */
 .empty{border:1px dashed var(--line-2);border-radius:18px;padding:34px 22px;text-align:center;
   background:rgba(244,238,222,.035)}
 .empty h3{font-size:20px;letter-spacing:-.01em;margin-bottom:9px}
@@ -188,15 +204,11 @@ footer a{color:#cabda7} footer a:hover{color:var(--white)}
   </section>
 
   <section class="sec" id="tools" hidden>
-    <div class="empty">
-      <p class="mono">In development</p>
-      <h3>Standalone tools are being built.</h3>
-      <p>Single-purpose tools for a business that does not want a whole operating system —
-         buy the one piece that solves the one problem.</p>
-      <p><strong>There is nothing to buy here yet, and no prices to quote.</strong>
-         When the first tools are ready they will appear in this aisle with a real price
-         and a real link, the same as everything else in this shop.</p>
-    </div>
+    <p class="sec-note">Not a whole operating system. One piece of work, done well, in a
+       browser — buy the suite, or just the part that solves your problem. Everything here
+       runs on your own machine: your footage, your music and your voice are never uploaded.</p>
+    <div class="grid" id="toolGrid"></div>
+    <p class="sec-note" id="toolNote" style="margin-top:18px"></p>
   </section>
 </main>
 
@@ -257,6 +269,44 @@ footer a{color:#cabda7} footer a:hover{color:var(--white)}
       +     '<span class="pr">'+esc(a.price||'')+'</span></span>'
       + '</span></a>';
   }).join('');
+
+  /* THE TOOLS AISLE. Same catalog, same records — a tool that also sells to a person is
+     listed here because it carries the business aisle in `aisles`, NOT because anybody
+     typed it in twice. One record, one price, two shelves. */
+  var tools = C.CATALOG.filter(function(a){
+    return a.genre !== 'business' && C.isIn(a, 'business');
+  }).sort(function(x,y){
+    if(!!x.bundle !== !!y.bundle) return x.bundle ? -1 : 1;      // the suite leads
+    if(x.state !== y.state) return x.state === 'live' ? -1 : 1;  // then what you can open
+    return 0;
+  });
+
+  function toolCard(a){
+    var parts = (C.bundleOf ? C.bundleOf(a) : []);
+    var suite = (C.suiteFor ? C.suiteFor(a) : null);
+    var live  = a.state === 'live' && a.url;
+    var href  = live ? '/shop.html#'+esc(a.id) : '/shop.html#'+esc(a.id);
+    return '<a class="card'+(a.bundle?' suite':'')+(live?'':' soon')+'" href="'+href+'">'
+      + '<span class="body">'
+      +   '<img class="ic" src="'+esc(a.mark||a.img||'')+'" alt="" loading="lazy">'
+      +   '<span><span class="nm">'+esc(a.name)+'</span>'
+      +     '<span class="tg">'+esc(a.tag)+'</span>'
+      +     (parts.length ? '<span class="inc">'+parts.map(function(p){
+              return '<i'+(p.state==='live'?'':' class="soon"')+'>'+esc(p.name)
+                   + (p.state==='live'?'':' · soon')+'</i>'; }).join('')+'</span>' : '')
+      +     (suite ? '<span class="of">Also in '+esc(suite.name)+'</span>' : '')
+      +     '<span class="pr">'+esc(live ? (a.price||'') : 'In production · nothing to buy yet')+'</span>'
+      +   '</span>'
+      + '</span></a>';
+  }
+  var tg = document.getElementById('toolGrid');
+  if(tg){
+    tg.innerHTML = tools.map(toolCard).join('');
+    var openable = tools.filter(function(a){ return a.state==='live'; }).length;
+    document.getElementById('toolNote').textContent =
+      openable + (openable===1?' of these you can open and use right now':' of these you can open and use right now')
+      + ', free, with no account. The rest say so on the card — nothing here is dressed up as buyable before it is.';
+  }
 
   var tabs = document.getElementById('aisles');
   tabs.addEventListener('click', function(e){
