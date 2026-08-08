@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>AE Rate Sheet — Private</title>
+<style>
+  :root{
+    --espresso:#2a1810; --forest:#1c3d22; --gold:#e0a83a; --cream:#f5eee2;
+    --ink:#241c14; --line:rgba(224,168,58,.22);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(120deg,var(--espresso),var(--forest));
+    background-attachment:fixed; color:var(--cream); min-height:100vh;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:linear-gradient(rgba(224,168,58,.05) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(224,168,58,.05) 1px,transparent 1px);
+    background-size:44px 44px;
+  }
+  .wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:22px 14px 60px}
+  .kicker{color:var(--gold);font-size:12px;letter-spacing:.24em;text-transform:uppercase;font-weight:700}
+  h1{font-size:30px;line-height:1.1;margin:6px 0 4px;font-weight:800}
+  .sub{color:rgba(245,238,226,.75);font-size:14px;line-height:1.5}
+  .asof{color:rgba(245,238,226,.55);font-size:12px;margin-top:6px}
+
+  .how{
+    margin:18px 0 8px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;
+    background:rgba(0,0,0,.25);font-size:14.5px;line-height:1.6;
+  }
+  .how b{color:var(--gold)}
+  .how .lvls{display:flex;gap:8px;margin:10px 0 6px;flex-wrap:wrap}
+  .lvl{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+       padding:4px 10px;border-radius:999px;border:1px solid var(--line)}
+  .lvl.l1{color:#d8cfc0}.lvl.l2{color:var(--gold)}.lvl.l3{color:#8fd69a;border-color:rgba(143,214,154,.35)}
+
+  .filter{margin:16px 0 4px}
+  .filter input{
+    width:100%;padding:13px 16px;font-size:16px;border-radius:12px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:var(--cream);outline:none;
+  }
+  .filter input::placeholder{color:rgba(245,238,226,.4)}
+
+  .card{
+    margin-top:14px;border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    background:rgba(0,0,0,.28);
+  }
+  .card header{padding:13px 16px 11px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:10px}
+  .dot{width:12px;height:12px;border-radius:50%;flex:0 0 12px}
+  .os{font-size:19px;font-weight:800}
+  .tag{margin-left:auto;font-size:12px;color:rgba(245,238,226,.6);text-align:right}
+  .tier{display:flex;align-items:baseline;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(224,168,58,.1)}
+  .tier:last-of-type{border-bottom:none}
+  .tier .lvl{flex:0 0 auto}
+  .tname{font-size:14.5px;color:rgba(245,238,226,.85);min-width:0}
+  .money{margin-left:auto;text-align:right;white-space:nowrap}
+  .mo{font-size:18px;font-weight:800}
+  .mo span{font-size:12px;font-weight:600;color:rgba(245,238,226,.6)}
+  .build{font-size:12px;color:rgba(245,238,226,.6)}
+  .note{padding:9px 16px 12px;font-size:12.5px;color:var(--gold);opacity:.9}
+
+  footer{margin-top:34px;text-align:center;font-size:12.5px;color:rgba(245,238,226,.55);line-height:1.7}
+  footer b{color:var(--cream)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Private · Rep Rate Sheet</div>
+  <h1>AE Rate Sheet</h1>
+  <p class="sub">Every business OS, all three sizes, one page. For Jessica &amp; Barry — please don't pass the link around.</p>
+  <p class="asof">Rates as of Aug 8, 2026 — pulled straight from the live store.</p>
+
+  <div class="how">
+    Every OS comes in <b>three sizes</b>. Each OS names its sizes its own way, so this sheet shows both — the universal size on the left, that OS's own name next to it:
+    <div class="lvls">
+      <span class="lvl l1">Lite</span><span class="lvl l2">Standard</span><span class="lvl l3">Grandsuite</span>
+    </div>
+    <b>Clients are not locked in.</b> A client can switch sizes at any time — drop from Grandsuite to Standard, step up from Lite, whatever fits — and the monthly simply becomes the new size's price. The build fee is a one-time fee at signup.
+  </div>
+
+  <div class="filter"><input id="q" type="search" placeholder="Type to filter — e.g. dental, tattoo, real estate…" autocomplete="off"></div>
+
+  <div id="cards"></div>
+
+  <footer>
+    Questions on a deal? Call Anthony.<br>
+    <b>Accelerated Experiences LLC</b> · AExperiences.com
+  </footer>
+</div>
+<script>
+var DATA=[
+ {id:"abode",name:"Abode OS",tag:"Real estate",acc:"#c8794f",note:"Annual $4,500/yr (2 months free)",
+  t:[["Solo / Team",450,2500],["Team",950,6000],["Brokerage",2400,9900]]},
+ {id:"buttress",name:"Buttress OS",tag:"Architecture",acc:"#5c8a5f",note:"Annual $5,500/yr (2 months free)",
+  t:[["Studio",550,3500],["Firm",1200,8400],["Multi-office",2800,14500]]},
+ {id:"truss",name:"Truss OS",tag:"Engineering",acc:"#18b0ba",note:"Annual $6,500/yr (2 months free)",
+  t:[["Practice",650,3500],["Firm",1400,9000],["Multi-discipline",3200,16800]]},
+ {id:"musical",name:"Musical OS",tag:"Live theater",acc:"#e0b24a",note:"Annual $6,500/yr (2 months free)",
+  t:[["Community",650,4000],["Producing",1500,8400],["Regional / Multi-venue",3200,13800]]},
+ {id:"8mm",name:"8mm OS",tag:"Film & production",acc:"#8a6fd6",note:"Annual $5,000/yr (2 months free)",
+  t:[["Single / Twin",500,3000],["Multiplex",1200,7600],["Circuit",2800,12200]]},
+ {id:"amphitheater",name:"Amphitheater OS",tag:"Concerts & venues",acc:"#d65f8a",note:"Annual $6,000/yr (2 months free)",
+  t:[["Club",600,3500],["Venue",1400,7600],["Group / Promoter",3000,12200]]},
+ {id:"lilninja",name:"LilNinja OS",tag:"Kids gyms & programs",acc:"#4aa3d6",note:"Annual $4,000/yr (2 months free)",
+  t:[["Studio",400,2500],["Center",750,6000],["Multi-location",1600,9900]]},
+ {id:"moments",name:"Moments OS",tag:"Photographers & videographers",acc:"#6b5bb5",note:"Cutlabs video editor included in every size",
+  t:[["Starter",99,600],["Studio",199,1200],["Signature",329,2000]]},
+ {id:"smiley",name:"Smiley OS",tag:"Dental practices",acc:"#0e7c93",note:"The whole spine in every size",
+  t:[["Solo",350,3200],["Practice",750,6400],["Grandsuite",1500,12000]]},
+ {id:"sleeves",name:"Sleeves OS",tag:"Tattoo studios",acc:"#b8324a",note:"The whole spine in every size",
+  t:[["Chair",250,1500],["Studio",650,3100],["Grandsuite",1400,4600]]},
+ {id:"toolbelt",name:"Toolbelt OS",tag:"HVAC · plumbing · electrical",acc:"#e4832b",note:"The whole spine in every size",
+  t:[["Truck",450,3900],["Shop",950,8200],["Grandsuite",2200,13800]]},
+ {id:"stayathome",name:"Stay@Home OS",tag:"Home care agencies",acc:"#2e7f7c",note:"The whole spine in every size",
+  t:[["Office",550,4800],["Agency",1150,9500],["Grandsuite",2600,16800]]},
+ {id:"4barrel",name:"4barrel OS",tag:"Used-car dealers",acc:"#1c5568",note:"Annual $4,500/yr (2 months free)",
+  t:[["Lot",450,2500],["Dealership",950,6500],["Multi-lot",2000,12200]]},
+ {id:"targeted",name:"Targeted OS",tag:"Marketing agencies & studios",acc:"#d97a2e",note:"Annual $4,500/yr (2 months free)",
+  t:[["Freelance / Studio",450,2500],["Agency",950,6500],["Multi-team",2200,12200]]}
+];
+var LVL=[["Lite","l1"],["Standard","l2"],["Grandsuite","l3"]];
+function money(n){return "$"+n.toLocaleString("en-US")}
+function render(q){
+  q=(q||"").toLowerCase();
+  var host=document.getElementById("cards");host.innerHTML="";
+  DATA.forEach(function(d){
+    if(q && (d.name+" "+d.tag).toLowerCase().indexOf(q)<0) return;
+    var c=document.createElement("div");c.className="card";
+    var h='<header><span class="dot" style="background:'+d.acc+'"></span><span class="os">'+d.name+'</span><span class="tag">'+d.tag+'</span></header>';
+    d.t.forEach(function(t,i){
+      h+='<div class="tier"><span class="lvl '+LVL[i][1]+'">'+LVL[i][0]+'</span>'+
+         '<span class="tname">'+t[0]+'</span>'+
+         '<span class="money"><div class="mo">'+money(t[1])+'<span>/mo</span></div>'+
+         '<div class="build">'+money(t[2])+' one-time build</div></span></div>';
+    });
+    h+='<div class="note">'+d.note+'</div>';
+    c.innerHTML=h;host.appendChild(c);
+  });
+}
+document.getElementById("q").addEventListener("input",function(e){render(e.target.value)});
+render("");
+</script>
+</body>
+</html>
