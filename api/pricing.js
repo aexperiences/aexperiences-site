@@ -97,11 +97,12 @@ function parseCatalog(src) {
       tiers.push({
         n: t[2].replace(/\\(.)/g, '$1'),
         name: t[2].replace(/\\(.)/g, '$1'),
-        mo, build,
+        mo,
         inc: t[6] ? t[6].replace(/\\(.)/g, '$1') : '',
-        /* Arithmetic on published numbers, not a new price: twelve months plus
-           the one-time build. catalog.js's own reader expects this field. */
-        firstYear: mo * 12 + build
+        /* A licensed buyer pays the monthly and nothing down, so the first year is
+           nothing down. The white-label build fee is deliberately NOT served here:
+           it is quoted by us, never posted (Anthony, Aug 9 2026). */
+        firstYear: mo * 12
       });
     }
     if (!tiers.length) continue;
