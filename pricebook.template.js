@@ -1,4 +1,5 @@
 
+
 /* ------------------------------------------------------------------ pricebook
    This showroom no longer trusts its own copy of the price book.
 
@@ -61,31 +62,45 @@
   }
 
   /* Find the app's live TIERS object. Each showroom exports under its own name,
-     so match on shape — an object whose entries carry rank + mo + build — rather
-     than on a name that could be renamed out from under this. */
+     so match on shape — an object whose entries carry mo + build — rather than on
+     a name that could be renamed out from under this. */
   function findTiers() {
     var seen = Object.keys(global), i, o, k, first;
     for (i = 0; i < seen.length; i++) {
       try { o = global[seen[i]]; } catch (e) { continue; }
       if (!o || typeof o !== "object" || !o.TIERS) continue;
+      first = null;
       for (k in o.TIERS) { first = o.TIERS[k]; break; }
-      if (first && typeof first.rank === "number" &&
-          typeof first.mo === "number" && typeof first.build === "number") return o.TIERS;
+      if (first && typeof first.mo === "number" && typeof first.build === "number") return o.TIERS;
     }
     return null;
   }
 
-  /* Match on rank, never on key. The internal keys (lite/standard/…) are ours
-     and can be renamed; rank is what the store's tier order actually means. */
-  function reconcile(tiers, book) {
-    var byRank = {}, k, fixes = [];
-    for (k in tiers) if (tiers[k] && tiers[k].rank) byRank[tiers[k].rank] = tiers[k];
+  /* Put the app's tiers in store order. Most showrooms carry an explicit rank and
+     that is authoritative. A few (Moments) don't, and there we fall back to the
+     declaration order of the object — but only when the counts match exactly, so
+     a tier added on one side can never silently shift prices onto the wrong one. */
+  function ordered(tiers, expected) {
+    var k, list = [], ranked = true;
+    for (k in tiers) {
+      if (!tiers[k] || typeof tiers[k].mo !== "number") continue;
+      if (typeof tiers[k].rank !== "number") ranked = false;
+      list.push(tiers[k]);
+    }
+    if (ranked) return list.sort(function (a, b) { return a.rank - b.rank; });
+    return list.length === expected ? list : null;
+  }
 
+  /* Never match on the object key. The internal keys (lite/standard/…) are ours
+     and can be renamed; the tier's position in the store's list is what a price
+     actually belongs to. */
+  function reconcile(list, book) {
+    var fixes = [];
     book.forEach(function (row, i) {
-      var t = byRank[i + 1];
+      var t = list[i];
       if (!t) return;
       if (t.name === row.name && t.mo === row.mo && t.build === row.build) return;
-      fixes.push("rank " + (i + 1) + ": " + t.name + " $" + t.mo + "/" + t.build +
+      fixes.push("tier " + (i + 1) + ": " + t.name + " $" + t.mo + "/" + t.build +
                  "  ->  " + row.name + " $" + row.mo + "/" + row.build);
       t.name = row.name; t.mo = row.mo; t.build = row.build;
     });
@@ -124,7 +139,10 @@
     }
     if (!tiers) return { ok: false, why: "app tiers not exposed", id: ID };
 
-    var fixes = reconcile(tiers, book);
+    var list = ordered(tiers, book.length);
+    if (!list) return { ok: false, why: "tier count disagrees with the catalog", id: ID };
+
+    var fixes = reconcile(list, book);
     if (fixes.length) {
       console.info("[pricebook] " + ID + " — corrected " + fixes.length +
         " tier(s) against the store catalog. The copy baked into this repo has " +
