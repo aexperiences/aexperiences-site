@@ -410,8 +410,7 @@
         if (!a || a.state !== 'live' || !h.tiers || !h.tiers.length) return;
         var t = h.tiers[0];
         a.price = '$' + Number(t.mo).toLocaleString('en-US') + '/mo';
-        a.priceNote = h.tiers.length + ' tiers · from $' + Number(t.build).toLocaleString('en-US')
-          + ' one-time setup · first year $' + Number(t.firstYear).toLocaleString('en-US');
+        a.priceNote = h.tiers.length + ' tiers · licensed, nothing down';
       });
       if (rec.appShop && rec.appShop.build) {
         root.AEShop.appShop = rec.appShop;
