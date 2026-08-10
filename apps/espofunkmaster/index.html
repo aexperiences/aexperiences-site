@@ -339,8 +339,8 @@ function now(){ return ctx.currentTime; }
 function barLen(){ return (60/tempo)*4; }
 
 function buildGraph(){
-  ctx=new (window.AudioContext||window.webkitAudioContext)();
-  master=ctx.createGain(); master.gain.value=.9;
+  ctx=new (window.AudioContext||window.webkitAudioContext)();window.__aeCtx=ctx;try{if(navigator.audioSession)navigator.audioSession.type='playback';}catch(e){}['pointerdown','touchstart','touchend','mousedown','keydown'].forEach(function(ev){document.addEventListener(ev,function(){if(ctx.state!=='running'){ctx.resume().then(function(){if(window.__aeSoundOn)window.__aeSoundOn();});}},{capture:true,passive:true});});document.addEventListener('visibilitychange',function(){if(!document.hidden&&ctx.state!=='running')ctx.resume();});
+  master=ctx.createGain(); master.gain.value=.9;window.__aeMaster=master;
   // wax: dry/wet -> shaper -> tone shelf
   waxIn=ctx.createGain();
   // effect returns: Echo (tempo-synced dotted-8th delay) + Room (generated reverb)
@@ -1136,6 +1136,39 @@ document.getElementById('powerBtn').addEventListener('click',function(){
   buildGraph(); applyWax(); applySaved();
   document.getElementById('splash').style.display='none';
   meters();
+});
+})();
+</script>
+
+<div id="ae-vol" style="position:fixed;top:0;left:0;right:0;z-index:99999;display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(10,12,18,.93);backdrop-filter:blur(8px);border-bottom:1px solid rgba(224,168,58,.3);font:700 11.5px -apple-system,BlinkMacSystemFont,system-ui,sans-serif;color:#f4eede;letter-spacing:.04em">
+<span id="ae-vol-lab" style="white-space:nowrap;min-width:74px">VOLUME</span>
+<input id="ae-vol-sl" type="range" min="0" max="100" value="90" style="flex:1;accent-color:#e0a83a;height:26px">
+<span id="ae-vol-num" style="min-width:32px;text-align:right;font-variant-numeric:tabular-nums;color:#e0a83a">90</span>
+</div>
+<div id="ae-tap" style="position:fixed;inset:0;z-index:99998;display:none;place-items:center;background:rgba(6,8,12,.88);backdrop-filter:blur(3px);color:#f4eede;font:600 15px -apple-system,BlinkMacSystemFont,system-ui,sans-serif;text-align:center;padding:28px">
+<div style="max-width:340px">
+<div style="font-size:20px;font-weight:800;margin-bottom:10px;color:#e0a83a">Tap to turn the sound on</div>
+<div style="opacity:.75;line-height:1.6">Phones keep audio switched off until you touch the screen. One tap and the studio is live.<br><br>Still silent? Check the side switch on your phone is not set to silent.</div>
+</div></div>
+<script>
+(function(){
+function ready(fn){ if(document.readyState!=="loading")fn(); else document.addEventListener("DOMContentLoaded",fn); }
+ready(function(){
+ var bar=document.getElementById("ae-vol"), tap=document.getElementById("ae-tap");
+ var sl=document.getElementById("ae-vol-sl"), num=document.getElementById("ae-vol-num"), lab=document.getElementById("ae-vol-lab");
+ document.body.style.paddingTop=((bar.offsetHeight||44)+4)+"px";
+ var saved=parseInt(localStorage.getItem("funk.master")||"90",10);
+ if(!isNaN(saved)){ sl.value=saved; num.textContent=saved; }
+ function applyVol(){ var v=parseInt(sl.value,10); num.textContent=v;
+  try{ if(window.__aeMaster) window.__aeMaster.gain.value=(v/100)*0.9; }catch(e){}
+  try{ localStorage.setItem("funk.master",String(v)); }catch(e){} }
+ sl.addEventListener("input",applyVol);
+ function state(){ var c=window.__aeCtx; if(!c){ setTimeout(state,400); return; } applyVol();
+  if(c.state==="running"){ tap.style.display="none"; lab.textContent="VOLUME"; lab.style.color=""; }
+  else { tap.style.display="grid"; lab.textContent="SOUND OFF"; lab.style.color="#e0a83a"; } }
+ window.__aeSoundOn=function(){ tap.style.display="none"; lab.textContent="VOLUME"; lab.style.color=""; applyVol(); };
+ tap.addEventListener("click",function(){ try{ window.__aeCtx && window.__aeCtx.resume(); }catch(e){} setTimeout(state,150); });
+ setTimeout(state,600); setInterval(state,2500);
 });
 })();
 </script>
