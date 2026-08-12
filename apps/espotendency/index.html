@@ -302,10 +302,10 @@ function visibleActs(p){
   var key=mood+":"+rotOff;
   if(offerKey!==key){
     offerKey=key;offer={};
-    var rest=p.a.filter(function(a){return doneActs.indexOf(a[0])<0});
-    if(rest.length){
-      var off=((dayIndex()+rotOff)%rest.length+rest.length)%rest.length;
-      for(var i=0;i<Math.min(SHOWN,rest.length);i++)offer[rest[(off+i)%rest.length][0]]=1;
+    var n=p.a.length, off=((dayIndex()+rotOff)%n+n)%n, c=0;
+    for(var i=0;i<n&&c<SHOWN;i++){
+      var a=p.a[(off+i)%n];
+      if(doneActs.indexOf(a[0])<0){offer[a[0]]=1;c++}
     }
   }
   return p.a.filter(function(a){return offer[a[0]]||doneActs.indexOf(a[0])>=0});
