@@ -85,6 +85,8 @@ input[type=text]{background:#FFFDF6;border:1px solid var(--line);border-radius:1
 .hitem .e{font-size:20px}
 .hitem .d{font-size:11.5px;color:var(--ink2);min-width:74px;letter-spacing:.06em}
 .hitem p{font-size:14.5px;color:var(--ink);line-height:1.5;flex:1}
+.wcount{font-family:var(--serif);font-size:15px;color:var(--ink2);padding:2px 2px 12px;border-bottom:1px solid var(--line);margin-bottom:2px}
+.wcount b{font-size:20px;color:var(--acc);font-weight:600}
 .empty2{color:var(--ink2);font-size:15px;text-align:center;padding:28px 12px;line-height:1.65;font-family:var(--serif);font-style:italic}
 .note{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:11px 13px;font-size:12.5px;color:var(--ink2);line-height:1.6;margin-top:14px}
 .note b{color:var(--ink)}
@@ -140,6 +142,7 @@ footer .fl{color:var(--terra);font-size:13px;margin-bottom:6px;letter-spacing:.5
       <h3 id="planTitle"></h3>
       <p class="sub" id="planSub" style="margin-bottom:10px"></p>
       <div class="acts" id="acts"></div>
+      <button class="b2" id="moreActs" style="display:none">Show me different ideas</button>
     </div>
     <div class="card" id="noteCard" style="display:none">
       <h3>One line about today (optional)</h3>
@@ -197,38 +200,75 @@ No ads. No trackers. Not medical advice.</footer>
 <div class="toast" id="toast"></div>
 
 <script>
-/* ─── action plans by mood: small, physical, finishable ─── */
+/* ─── action plans by mood: small, physical, finishable ───
+   Twelve per mood; five are offered at a time and the set turns over
+   day to day, so the same person doesn't meet the same five forever. */
 var PLANS={
  1:{t:"Rough days get the smallest steps",s:"Not a to-do list. Pick ONE. Finishing it is the whole victory.",a:[
    ["Sit up and drink a glass of water","2 minutes · your body goes first"],
    ["Open a window or step outside for 5 breaths","Fresh air is a real reset button"],
    ["Text one person one sentence","No explaining required — 'thinking of you' counts"],
    ["Put on actual clothes","Pajama physics is real; break it"],
-   ["Wash your face with cold water","30 seconds, oldest trick there is"]]},
+   ["Wash your face with cold water","30 seconds, oldest trick there is"],
+   ["Eat one thing, even if it's just toast","Rough days skip meals; don't let this one"],
+   ["Move to a different room","New walls, new loop"],
+   ["Take a hot shower, no rush","Warm water is the cheapest reset there is"],
+   ["Set a timer for 10 minutes and actually rest","Resting on purpose beats scrolling by accident"],
+   ["Put the phone face-down across the room","Ten minutes of not-checking"],
+   ["Make the bed, badly","One thing in this room is now handled"],
+   ["Write the sentence you'd say to a friend in this exact spot","Then read it back to yourself"]]},
  2:{t:"Low, but moving",s:"One or two of these and the day usually bends upward.",a:[
    ["Walk to the end of the block and back","10 minutes · no podcast needed"],
    ["Clear ONE surface — a desk, a counter","Visible order calms the noise"],
    ["Eat something with protein in it","Mood runs on fuel"],
    ["Write down the one thing bugging you most","On paper it gets smaller"],
-   ["Do the 2-minute version of a chore you're avoiding","Momentum beats motivation"]]},
+   ["Do the 2-minute version of a chore you're avoiding","Momentum beats motivation"],
+   ["Open the blinds and let the real light in","Cheaper than a lamp and works better"],
+   ["Play one song you loved at seventeen","Music takes the shortcut"],
+   ["Wash the dishes in the sink — just those","A finished small thing still counts"],
+   ["Drink a full glass of water before the next coffee","Low is sometimes just dry"],
+   ["Answer the message you've been leaving unread","A short answer is a real answer"],
+   ["Stretch for 3 minutes — neck, back, hips","That's where the day gets stored"],
+   ["Step outside for exactly five minutes","No goal, no phone, no reason"]]},
  3:{t:"Okay is workable",s:"A steady day is a good foundation. Stack one brick on it.",a:[
    ["Take the 15-minute walk, the full one","Okay + oxygen often equals good"],
    ["Do the thing you've moved to tomorrow twice","You know the one"],
    ["Call someone instead of texting","Voices land different"],
    ["Tidy for exactly 10 minutes, timer on","Stop when it rings — that's the trick"],
-   ["Plan one thing to look forward to this week","Anticipation is free mood"]]},
+   ["Plan one thing to look forward to this week","Anticipation is free mood"],
+   ["Run the errand you keep driving past","Okay days are for clearing decks"],
+   ["Cook one real meal instead of grabbing something","Twenty minutes, better night"],
+   ["Put 15 minutes into something you're learning","Steady beats bursts"],
+   ["Make the appointment you've been putting off","Two minutes on the phone, off your back"],
+   ["Get the inbox down to ten, then stop","The stopping is the important half"],
+   ["Take a different route home","Okay goes stale on autopilot"],
+   ["Write down tomorrow's one priority tonight","Tomorrow starts the night before"]]},
  4:{t:"Good — bank some of it",s:"Days like this are when you build the stuff bad days borrow from.",a:[
    ["Knock out the task future-you dreads","You have the fuel today"],
    ["Move for 20+ minutes — walk, gym, bike, anything","Keep the engine warmed up"],
    ["Reach out to someone having a worse week","Good days are for sharing"],
    ["Prep tomorrow tonight — clothes, bag, list","Gift to tomorrow-you"],
-   ["Write down what's working right now","So rough days can read it"]]},
+   ["Write down what's working right now","So rough days can read it"],
+   ["Cook something future-you can reheat","Good days feed the bad ones"],
+   ["Handle the boring admin — bill, form, renewal","Best day for the worst task"],
+   ["Say the compliment out loud instead of thinking it","Costs nothing, lands hard"],
+   ["Clean the one spot that always bugs you","You've got the energy today"],
+   ["Make the plan you keep meaning to make","A good mood makes the call easy"],
+   ["Move somewhere new — trail, pool, court","Novelty on a good day sticks"],
+   ["Put 20 minutes into the project you actually care about","Not the urgent one. That one."]]},
  5:{t:"Great — remember this one",s:"Capture it. Great days are data too.",a:[
    ["Write 3 lines about why today is great","Your own instruction manual"],
    ["Do something generous, tiny counts","Tip big, text kind, hold a door"],
    ["Take on the ambitious thing while the wave is up","Surf it"],
    ["Take an actual photo of an actual moment","Not for posting — for January"],
-   ["Set one small intention for tomorrow","Carry-over is allowed"]]}
+   ["Set one small intention for tomorrow","Carry-over is allowed"],
+   ["Tell the person why they matter, specifically","Vague praise evaporates"],
+   ["Write tomorrow's plan while you're this clear","Great-day you is the best planner you have"],
+   ["Make the scary ask — the email, the pitch, the invite","Courage is cheapest right now"],
+   ["Put something away for later — money, food, a favor","Great days can afford to lend"],
+   ["Teach someone the thing you're good at","Ten minutes, big return"],
+   ["Say yes to one plan you'd normally dodge","Ride it"],
+   ["Log what made today work, in specifics","'Slept 8, walked, didn't doomscroll' beats 'good vibes'"]]}
 };
 
 var K="espotendency.v1",S;
@@ -251,6 +291,20 @@ function drawStreak(){var n=streak();document.getElementById("streak").textConte
 var mood=null, doneActs=[];
 var todayRec=S.days[dkey()];
 if(todayRec){mood=todayRec.m;doneActs=todayRec.acts||[]}
+
+/* which five you're offered — turns over day to day, and the
+   "different ideas" button walks you through the rest of the twelve */
+var SHOWN=5, rotOff=0, touched={};
+function dayIndex(){var d=new Date();return d.getFullYear()*372+d.getMonth()*31+d.getDate()}
+function visibleActs(p){
+  var rest=p.a.filter(function(a){return doneActs.indexOf(a[0])<0&&!touched[a[0]]});
+  var pick={};
+  if(rest.length){
+    var off=((dayIndex()+rotOff)%rest.length+rest.length)%rest.length;
+    for(var i=0;i<Math.min(SHOWN,rest.length);i++)pick[rest[(off+i)%rest.length][0]]=1;
+  }
+  return p.a.filter(function(a){return pick[a[0]]||touched[a[0]]||doneActs.indexOf(a[0])>=0});
+}
 function drawMood(){
   document.querySelectorAll("#moods button").forEach(function(b){b.classList.toggle("on",+b.dataset.m===mood)});
   if(mood){
@@ -260,20 +314,23 @@ function drawMood(){
     document.getElementById("planTitle").textContent=p.t;
     document.getElementById("planSub").textContent=p.s;
     var el=document.getElementById("acts");el.innerHTML="";
-    p.a.forEach(function(a,i){
+    visibleActs(p).forEach(function(a){
       var b=document.createElement("button");
       var isDone=doneActs.indexOf(a[0])>=0;
       b.className=isDone?"done":"";
       b.innerHTML=(isDone?"✓ ":"")+esc(a[0])+"<b>"+esc(a[1])+"</b>";
       b.onclick=function(){
+        touched[a[0]]=1;
         var j=doneActs.indexOf(a[0]);
         if(j>=0){doneActs.splice(j,1)}else{doneActs.push(a[0]);S.wins.unshift({a:a[0],t:Date.now()});var sp=document.getElementById("spark");sp.classList.remove("fly");void sp.offsetWidth;sp.classList.add("fly");if(navigator.vibrate)navigator.vibrate(10);toast("Tiny win ✓")}
         persistToday();drawMood();
       };
       el.appendChild(b);
     });
+    document.getElementById("moreActs").style.display = p.a.length>SHOWN ? "block" : "none";
   }
 }
+document.getElementById("moreActs").onclick=function(){rotOff+=SHOWN;touched={};drawMood()};
 document.querySelectorAll("#moods button").forEach(function(b){
   b.onclick=function(){mood=+b.dataset.m;persistToday();drawMood()};
 });
@@ -322,7 +379,8 @@ document.getElementById("exp").onclick=function(){
 function drawWins(){
   var el=document.getElementById("wins");
   if(!S.wins.length){el.innerHTML='<div class="empty2">Finish any action on a check-in and it lands here. They add up faster than you think.</div>';return}
-  el.innerHTML=S.wins.slice(0,100).map(function(w){
+  var wk=S.wins.filter(function(w){return Date.now()-w.t<6048e5}).length;
+  el.innerHTML='<div class="wcount"><b>'+S.wins.length+'</b> finished'+(wk?' · <b>'+wk+'</b> in the last 7 days':'')+'</div>'+S.wins.slice(0,100).map(function(w){
     return '<div class="hitem"><div class="e">✓</div><div class="d">'+new Date(w.t).toLocaleDateString()+'</div><p>'+esc(w.a)+'</p></div>';
   }).join("");
 }
