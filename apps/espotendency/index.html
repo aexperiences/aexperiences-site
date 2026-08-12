@@ -292,18 +292,23 @@ var mood=null, doneActs=[];
 var todayRec=S.days[dkey()];
 if(todayRec){mood=todayRec.m;doneActs=todayRec.acts||[]}
 
-/* which five you're offered — turns over day to day, and the
-   "different ideas" button walks you through the rest of the twelve */
-var SHOWN=5, rotOff=0, touched={};
+/* which five you're offered — the set turns over day to day, and the
+   "different ideas" button walks you through the rest of the twelve.
+   It is frozen until you change mood or ask for different ideas, so the
+   list never shuffles under your finger while you're reading it. */
+var SHOWN=5, rotOff=0, offerKey=null, offer={};
 function dayIndex(){var d=new Date();return d.getFullYear()*372+d.getMonth()*31+d.getDate()}
 function visibleActs(p){
-  var rest=p.a.filter(function(a){return doneActs.indexOf(a[0])<0&&!touched[a[0]]});
-  var pick={};
-  if(rest.length){
-    var off=((dayIndex()+rotOff)%rest.length+rest.length)%rest.length;
-    for(var i=0;i<Math.min(SHOWN,rest.length);i++)pick[rest[(off+i)%rest.length][0]]=1;
+  var key=mood+":"+rotOff;
+  if(offerKey!==key){
+    offerKey=key;offer={};
+    var rest=p.a.filter(function(a){return doneActs.indexOf(a[0])<0});
+    if(rest.length){
+      var off=((dayIndex()+rotOff)%rest.length+rest.length)%rest.length;
+      for(var i=0;i<Math.min(SHOWN,rest.length);i++)offer[rest[(off+i)%rest.length][0]]=1;
+    }
   }
-  return p.a.filter(function(a){return pick[a[0]]||touched[a[0]]||doneActs.indexOf(a[0])>=0});
+  return p.a.filter(function(a){return offer[a[0]]||doneActs.indexOf(a[0])>=0});
 }
 function drawMood(){
   document.querySelectorAll("#moods button").forEach(function(b){b.classList.toggle("on",+b.dataset.m===mood)});
@@ -320,7 +325,6 @@ function drawMood(){
       b.className=isDone?"done":"";
       b.innerHTML=(isDone?"✓ ":"")+esc(a[0])+"<b>"+esc(a[1])+"</b>";
       b.onclick=function(){
-        touched[a[0]]=1;
         var j=doneActs.indexOf(a[0]);
         if(j>=0){doneActs.splice(j,1)}else{doneActs.push(a[0]);S.wins.unshift({a:a[0],t:Date.now()});var sp=document.getElementById("spark");sp.classList.remove("fly");void sp.offsetWidth;sp.classList.add("fly");if(navigator.vibrate)navigator.vibrate(10);toast("Tiny win ✓")}
         persistToday();drawMood();
@@ -330,7 +334,7 @@ function drawMood(){
     document.getElementById("moreActs").style.display = p.a.length>SHOWN ? "block" : "none";
   }
 }
-document.getElementById("moreActs").onclick=function(){rotOff+=SHOWN;touched={};drawMood()};
+document.getElementById("moreActs").onclick=function(){rotOff+=SHOWN;drawMood()};
 document.querySelectorAll("#moods button").forEach(function(b){
   b.onclick=function(){mood=+b.dataset.m;persistToday();drawMood()};
 });
