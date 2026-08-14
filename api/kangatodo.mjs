@@ -515,6 +515,73 @@ export default async function handler(req, res) {
   }
 }
 
+/**
+ * Erase a household. EVERYTHING, not just the connection.
+ *
+ * A privacy page is only worth the paper if this function is honest, so it
+ * deletes in this order: the photographs themselves (bytes out of Blob, not
+ * just the pointer), then every per-child record and phone number, the kid
+ * tokens, the parents' push subscriptions, the queued alerts and digest rows,
+ * and finally the household with its Skylight refresh token. What survives is
+ * nothing: signing in again starts from an empty house.
+ */
+async function forgetHousehold(H) {
+  const hh = H.id;
+  const out = { photos: 0, kids: 0, devices: 0 };
+
+  /* 1. the photographs — bytes first, pointer after */
+  const urls = [];
+  const scan = await redis('KEYS', K('hh:' + hh + ':photo:*')).catch(() => []);
+  for (const key of (scan || [])) {
+    const rec = await getJSON(key).catch(() => null);
+    if (rec && rec.url) urls.push(rec.url);
+    await redis('DEL', key).catch(() => {});
+  }
+  if (urls.length && blobReady()) {
+    await fetch('https://blob.vercel-storage.com/delete', {
+      method: 'POST',
+      headers: { authorization: `Bearer ${BLOB_TOKEN}`, 'content-type': 'application/json', 'x-api-version': '7' },
+      body: JSON.stringify({ urls }),
+    }).catch(() => {});
+  }
+  out.photos = urls.length;
+
+  /* 2. the children — names, colours, phone numbers, device lists */
+  const childKeys = await redis('KEYS', K('hh:' + hh + ':child:*')).catch(() => []);
+  for (const key of (childKeys || [])) {
+    const rec = await getJSON(key).catch(() => null);
+    out.devices += rec && rec.devices ? rec.devices.length : 0;
+    await redis('DEL', key).catch(() => {});
+  }
+  out.kids = (childKeys || []).length;
+
+  /* 3. every kid phone that was ever joined */
+  const toks = await redis('SMEMBERS', K('hh:' + hh + ':kids')).catch(() => []);
+  for (const t of (toks || [])) await redis('DEL', kidKey(t)).catch(() => {});
+  await redis('DEL', K('hh:' + hh + ':kids')).catch(() => {});
+
+  /* 4. the parents' own push subscriptions */
+  const pids = await redis('SMEMBERS', K('hh:' + hh + ':parentpushids')).catch(() => []);
+  for (const id of (pids || [])) await redis('DEL', K('hh:' + hh + ':parentpush:' + id)).catch(() => {});
+  await redis('DEL', K('hh:' + hh + ':parentpushids')).catch(() => {});
+
+  /* 5. anything still queued that names this family */
+  await redis('DEL', K('hh:' + hh + ':proofset')).catch(() => {});
+  const digests = await redis('KEYS', K('digest:' + hh + ':*')).catch(() => []);
+  for (const key of (digests || [])) await redis('DEL', key).catch(() => {});
+  for (const list of ['finished', 'parentq']) {
+    const rows = await redis('LRANGE', K(list), '0', '-1').catch(() => []);
+    for (const raw of (rows || [])) {
+      let e = null; try { e = JSON.parse(raw); } catch {}
+      if (e && e.hh === hh) await redis('LREM', K(list), '0', raw).catch(() => {});
+    }
+  }
+
+  /* 6. the household itself — and with it the Skylight refresh token */
+  await redis('DEL', hhKey(hh)).catch(() => {});
+  return { ...out, removed: (toks || []).length };
+}
+
 async function route(op, b, req) {
   const H = await household(b.hh);          // the signed-in family, or null
 
@@ -573,12 +640,14 @@ async function route(op, b, req) {
 
   if (op === 'parent.disconnect') {
     if (!H) return { ok: true, removed: 0 };
-    // Take every kid phone with it — their tokens point at this household.
-    const kids = await redis('SMEMBERS', K('hh:' + H.id + ':kids')).catch(() => []);
-    for (const t of (kids || [])) await redis('DEL', kidKey(t)).catch(() => {});
-    await redis('DEL', K('hh:' + H.id + ':kids')).catch(() => {});
-    await redis('DEL', hhKey(H.id)).catch(() => {});
-    return { ok: true, removed: (kids || []).length, signedOut: true };
+    return { ok: true, ...(await forgetHousehold(H)), signedOut: true };
+  }
+
+  // Same thing under the name a parent will look for. A privacy page that
+  // promises deletion and a product that only "disconnects" would be a lie.
+  if (op === 'parent.forget') {
+    if (!H) return { ok: true, removed: 0 };
+    return { ok: true, ...(await forgetHousehold(H)), signedOut: true, forgotten: true };
   }
 
   const needH = () => { if (!H) throw new SkylightError('not_connected', 'sign in with Skylight first', 401); return H; };
