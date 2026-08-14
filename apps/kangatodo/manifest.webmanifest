@@ -1,0 +1,41 @@
+{
+  "name": "KangaToDo",
+  "short_name": "KangaToDo",
+  "description": "A grown-up pops a job on their phone and picks a kid. It lands on the Skylight and buzzes that kid's phone \u2014 and only that kid's.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFF9F0",
+  "theme_color": "#FFF9F0",
+  "categories": [
+    "productivity",
+    "lifestyle"
+  ],
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Pop a job in",
+      "short_name": "Add",
+      "url": "./#assign"
+    },
+    {
+      "name": "This is a kid's phone",
+      "short_name": "Kid",
+      "url": "./#kid"
+    }
+  ]
+}

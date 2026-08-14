@@ -1,0 +1,966 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KangaToDo — jobs hop from your phone to theirs</title>
+<meta name="description" content="A grown-up pops a job on their phone and picks a kid. It lands on the Skylight and buzzes that kid's phone — and only that kid's. Every child in the house, each with their own pouch. From Accelerated Experiences LLC.">
+<meta name="theme-color" content="#FFF9F0">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-180.png">
+<link rel="icon" href="./icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="KangaToDo">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* pastel — pinks, yellows, creams. Every text pair solved to WCAG AA before a line was drawn. */
+  --cream:#FFF9F0; --card:#FFFFFF; --sand:#FDF0DA; --field:#FFFCF6;
+  --line:#F3DFC8; --hair:#F8EBD8;
+  --ink:#4A2C38; --ink2:#7A5B67; --mut:#876471;
+  --blush:#F7B7C8; --blush-d:#E28FA6; --blush-l:#FFE3EA;
+  --rose:#CD3B66; --rose-cta:#C4416B;
+  --butter:#FDE49A; --sun:#F7C948; --sunbg:#FFF6DF;
+  --ok:#3C7C53; --okbg:#EAF7EF; --warn:#926A21;
+  --round:'Fredoka',system-ui,sans-serif; --sans:'Nunito',system-ui,-apple-system,sans-serif;
+  --tap:54px; --r:20px; --wrap:640px;
+  --sh:0 2px 0 var(--line), 0 8px 22px rgba(74,44,56,.07);
+  --ease-out:cubic-bezier(.22,.9,.28,1);
+  --ease-spring:cubic-bezier(.34,1.42,.5,1);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;
+  overscroll-behavior-y:contain;padding:0 0 env(safe-area-inset-bottom);-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 18px}
+h1,h2,h3{font-family:var(--round);font-weight:600;letter-spacing:-.005em;margin:0}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input,select,textarea{font:inherit;color:inherit}
+a{color:var(--rose);text-underline-offset:3px}
+
+/* ---------- chrome ---------- */
+header.top{position:sticky;top:0;z-index:40;
+  background:linear-gradient(180deg,var(--cream) 74%,rgba(255,249,240,0));
+  padding:calc(env(safe-area-inset-top) + 14px) 0 10px}
+.brandrow{display:flex;align-items:center;gap:10px}
+.brandmark{width:38px;height:38px;flex:none;border-radius:12px;background:var(--blush-l);
+  border:2px solid var(--blush);display:grid;place-items:center;overflow:hidden}
+.brandmark svg{width:30px;height:30px;display:block}
+.brandname{font-family:var(--round);font-size:21px;font-weight:600;letter-spacing:-.01em}
+.brandname i{font-style:normal;color:var(--rose)}
+.brandsub{font-size:12px;color:var(--mut);margin-top:-3px}
+.spacer{flex:1}
+
+/* ---------- cards ---------- */
+.card{background:var(--card);border:2px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--sh);padding:18px;margin:14px 0}
+.card h2{font-size:19px;margin-bottom:3px}
+.card .sub{font-size:13.5px;color:var(--ink2);margin-bottom:12px}
+.hr{height:2px;background:var(--hair);margin:14px -18px}
+
+/* ---------- status pills ---------- */
+.status{display:flex;flex-wrap:wrap;gap:7px;margin:2px 0 4px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;
+  padding:6px 11px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink2)}
+.pill .dot{width:7px;height:7px;border-radius:50%;background:var(--mut);flex:none}
+.pill.on{color:var(--ok);border-color:#BFE3CC;background:var(--okbg)}
+.pill.on .dot{background:var(--ok)}
+.pill.off{color:var(--warn);border-color:#F2DFAE;background:var(--sunbg)}
+.pill.off .dot{background:var(--sun)}
+
+/* ---------- buttons — chunky, kid-proof ---------- */
+.btn{min-height:var(--tap);padding:0 20px;border-radius:16px;background:var(--rose-cta);color:#fff;
+  font-family:var(--round);font-weight:600;font-size:16px;display:inline-flex;align-items:center;
+  justify-content:center;gap:8px;width:100%;box-shadow:0 3px 0 #A33357;
+  transition:transform .14s var(--ease-spring),box-shadow .14s var(--ease-out)}
+.btn:active{transform:translateY(3px);box-shadow:0 0 0 #A33357}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.btn.ghost{background:var(--card);color:var(--rose);border:2px solid var(--blush);box-shadow:0 3px 0 var(--blush)}
+.btn.ghost:active{box-shadow:0 0 0 var(--blush)}
+.btn.sun{background:var(--sun);color:var(--ink);box-shadow:0 3px 0 #D9A916}
+.btn.sun:active{box-shadow:0 0 0 #D9A916}
+.btn.sm{min-height:42px;font-size:14.5px;padding:0 15px;width:auto;box-shadow:0 2px 0 var(--blush)}
+.rm{width:38px;height:38px;flex:none;border-radius:11px;display:grid;place-items:center;
+  color:var(--mut);opacity:.55;transition:opacity .18s var(--ease-out),background .18s var(--ease-out)}
+.rm svg{width:17px;height:17px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round}
+.rm:hover,.rm:focus-visible,.rm:active{opacity:1;color:var(--rose);background:var(--blush-l)}
+
+/* ---------- fields ---------- */
+label.lbl{display:block;font-family:var(--round);font-size:13px;font-weight:600;color:var(--ink2);margin:14px 0 6px}
+.inp{width:100%;min-height:var(--tap);padding:12px 15px;border:2px solid var(--line);border-radius:15px;
+  background:var(--field);outline:none;transition:border-color .18s var(--ease-out),box-shadow .18s var(--ease-out)}
+.inp:focus{border-color:var(--blush-d);box-shadow:0 0 0 4px var(--blush-l)}
+.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}
+.fold{margin-top:8px}
+.fold>summary{list-style:none;cursor:pointer;font-size:13px;color:var(--ink2);padding:8px 0;
+  font-weight:700;display:inline-flex;align-items:center;gap:7px}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary::before{content:'+';font-family:var(--round);font-size:15px;width:20px;height:20px;
+  border-radius:7px;background:var(--blush-l);color:var(--rose);display:grid;place-items:center;font-weight:600;line-height:1}
+.fold[open]>summary::before{content:'–'}
+
+/* ---------- child chips ---------- */
+.kids{display:flex;gap:10px;overflow-x:auto;padding:2px 18px 8px;margin:0 -18px;
+  scrollbar-width:none;scroll-snap-type:x proximity}
+.kids::-webkit-scrollbar{display:none}
+.kid{flex:none;min-width:104px;padding:13px;border-radius:18px;background:var(--card);
+  border:2.5px solid var(--line);text-align:left;scroll-snap-align:start;
+  transition:transform .18s var(--ease-spring),border-color .18s var(--ease-out),background .18s var(--ease-out)}
+.kid:active{transform:scale(.96)}
+.kid[aria-pressed="true"]{border-color:var(--blush-d);background:var(--blush-l)}
+.kid .swatch{width:30px;height:30px;border-radius:11px;margin-bottom:9px;display:grid;place-items:center;
+  color:#fff;font-weight:700;font-size:14px;font-family:var(--round)}
+.kid .nm{font-family:var(--round);font-weight:600;font-size:15.5px}
+.kid .st{font-size:11.5px;color:var(--mut);margin-top:1px}
+
+/* ---------- chore rows ---------- */
+.chore{display:flex;align-items:center;gap:13px;padding:14px 2px;border-bottom:2px solid var(--hair)}
+.chore:last-child{border-bottom:0}
+.tick{width:36px;height:36px;flex:none;border-radius:50%;border:3px solid var(--blush);
+  background:var(--card);display:grid;place-items:center;
+  transition:transform .2s var(--ease-spring),background .2s var(--ease-out),border-color .2s var(--ease-out)}
+.tick svg{width:17px;height:17px;stroke:#fff;stroke-width:3.4;fill:none;stroke-linecap:round;
+  stroke-linejoin:round;opacity:0;transform:scale(.4);
+  transition:opacity .18s var(--ease-out),transform .26s var(--ease-spring)}
+.tick[aria-checked="true"]{background:var(--sun);border-color:var(--sun)}
+.tick[aria-checked="true"] svg{opacity:1;transform:scale(1);stroke:var(--ink)}
+.tick:active{transform:scale(.88)}
+.chore .body{flex:1;min-width:0}
+.chore .ttl{font-family:var(--round);font-weight:500;font-size:16.5px;word-break:break-word}
+.chore[data-done="1"] .ttl{color:var(--mut);text-decoration:line-through;text-decoration-color:var(--blush)}
+.chore .meta{font-size:13px;color:var(--mut);margin-top:1px;display:flex;gap:8px;flex-wrap:wrap}
+.star{color:var(--warn);font-weight:700}
+
+/* ---------- notices ---------- */
+.empty{text-align:center;padding:26px 14px;color:var(--ink2)}
+.empty .big{font-family:var(--round);font-size:19px;font-weight:600;color:var(--ink);margin-bottom:5px}
+.notice{border-radius:16px;padding:13px 15px;font-size:14px;line-height:1.5;
+  background:var(--sunbg);border:2px solid #F2DFAE;color:#6E5014;margin:12px 0}
+.notice.bad{background:var(--blush-l);border-color:var(--blush);color:#8A2F4C}
+.notice.good{background:var(--okbg);border-color:#BFE3CC;color:#2C5E3E}
+.notice b{font-weight:800}
+.notice code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;
+  background:rgba(74,44,56,.07);padding:2px 6px;border-radius:6px}
+
+/* ---------- join code ---------- */
+.code{font-family:var(--round);font-size:42px;font-weight:600;letter-spacing:.12em;text-align:center;
+  color:var(--rose);padding:14px 0 4px}
+.codehint{text-align:center;font-size:13.5px;color:var(--ink2);padding-bottom:4px}
+
+/* ══════════════════ KID MODE ══════════════════ */
+body.kid{background:var(--cream)}
+body.kid .wrap{max-width:520px}
+.kidhead{padding:calc(env(safe-area-inset-top) + 18px) 0 0;text-align:center}
+.kidhello{font-family:var(--round);font-size:30px;font-weight:600;letter-spacing:-.02em}
+.kiddate{font-size:14px;color:var(--mut);margin-top:1px}
+.roo{width:236px;margin:-6px auto -12px;display:block}
+.roo.hop{animation:hop .85s var(--ease-spring)}
+@keyframes hop{0%{transform:translateY(0)}28%{transform:translateY(-24px) rotate(-7deg)}
+  55%{transform:translateY(0)}72%{transform:translateY(-9px)}100%{transform:translateY(0)}}
+/* The star's POSITION lives on a wrapper <g transform=…>; the CSS pop animates the
+   inner <path> only. Putting both on one element makes CSS clobber the SVG attribute
+   and the star lands in the corner instead of the pouch. */
+.roo .pstar{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.25);
+  transition:opacity .35s var(--ease-out),transform .5s var(--ease-spring)}
+.roo .pstar.in{opacity:1;transform:scale(1)}
+.togo{text-align:center;font-family:var(--round);font-size:20px;font-weight:600;margin:2px 0 6px}
+.togo b{color:var(--rose)}
+.bar{height:14px;border-radius:999px;background:var(--sand);border:2px solid var(--line);
+  overflow:hidden;margin:8px 34px 0}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--butter),var(--sun));
+  border-radius:999px;transition:width .6s var(--ease-out)}
+.allclear{text-align:center;padding:6px 10px 0;animation:pop .55s var(--ease-spring)}
+.allclear .tx{font-family:var(--round);font-size:23px;font-weight:600;color:var(--rose)}
+.allclear .sm{font-size:14px;color:var(--ink2);margin-top:2px}
+@keyframes pop{from{opacity:0;transform:scale(.85) translateY(10px)}to{opacity:1;transform:none}}
+
+/* ---------- footer / toast ---------- */
+footer{margin:26px 0 30px;padding-top:16px;border-top:2px solid var(--hair);
+  font-size:12.5px;color:var(--mut);line-height:1.6}
+footer img{height:14px;vertical-align:-2px;margin-right:6px;opacity:.8}
+#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 22px);transform:translate(-50%,120%);
+  background:var(--ink);color:#FFF6EC;padding:13px 20px;border-radius:16px;font-size:14.5px;font-weight:700;
+  z-index:90;max-width:calc(100vw - 36px);text-align:center;box-shadow:0 8px 30px rgba(74,44,56,.25);
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:transform .34s var(--ease-spring),opacity .2s var(--ease-out),visibility 0s .34s}
+#toast.show{transform:translate(-50%,0);opacity:1;visibility:visible;transition-delay:0s}
+
+/* ---------- tabs ---------- */
+.tabs{display:flex;gap:5px;background:var(--sand);border:2px solid var(--line);border-radius:16px;padding:5px;margin:12px 0 2px}
+.tabs button{flex:1;min-height:42px;border-radius:12px;font-family:var(--round);font-size:15px;
+  font-weight:500;color:var(--ink2);transition:background .2s var(--ease-out),color .2s var(--ease-out)}
+.tabs button[aria-selected="true"]{background:var(--card);color:var(--rose);font-weight:600;box-shadow:0 2px 0 var(--line)}
+
+/* proof photos */
+.cam{width:36px;height:36px;flex:none;border-radius:50%;border:3px dashed var(--sun);
+  background:var(--sunbg);display:grid;place-items:center;
+  transition:transform .2s var(--ease-spring),background .2s var(--ease-out)}
+.cam svg{width:17px;height:17px;stroke:var(--warn);stroke-width:2.1;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cam:active{transform:scale(.88);background:var(--butter)}
+.thumb{width:46px;height:46px;flex:none;border-radius:13px;object-fit:cover;
+  border:2px solid var(--line);background:var(--sand);display:block}
+.shotwrap{margin-top:10px}
+.shotwrap img{width:100%;border-radius:16px;border:2px solid var(--line);display:block}
+.needs{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--warn);
+  background:var(--sunbg);border:1.5px solid #F2DFAE;border-radius:999px;padding:2px 8px}
+.check{display:flex;align-items:center;gap:11px;padding:13px;border:2px solid var(--line);
+  border-radius:15px;background:var(--field);margin-top:14px;cursor:pointer}
+.check input{width:24px;height:24px;flex:none;accent-color:var(--rose-cta);margin:0}
+.check b{font-family:var(--round);font-weight:600;font-size:15px;display:block}
+.check span{font-size:12.5px;color:var(--ink2)}
+.skel{background:linear-gradient(90deg,var(--hair) 25%,#FFF7EA 50%,var(--hair) 75%);
+  background-size:200% 100%;animation:sh 1.3s infinite;border-radius:10px;height:15px;margin:10px 0}
+@keyframes sh{from{background-position:200% 0}to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+'use strict';
+/* ══════════════════════════════════════════════════════════════════════════
+   KangaToDo — Accelerated Experiences LLC
+   A grown-up pops a job in; it hops to the right kid's pouch and nobody else's.
+   The SERVER decides which jobs a kid may see. This file never does.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+const API   = '/api/kangatodo';
+const ALERT = '/api/kangatodo-alert';
+const $  = (s,r)=> (r||document).querySelector(s);
+const el = (t,a,h)=>{const n=document.createElement(t);if(a)for(const k in a){
+  if(k==='class')n.className=a[k];else if(k.startsWith('on'))n.addEventListener(k.slice(2),a[k]);
+  else if(a[k]!==null&&a[k]!==false)n.setAttribute(k,a[k]);}
+  if(h!=null)n.innerHTML=h;return n;};
+const esc=(s)=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const store={
+  get(k){try{return JSON.parse(localStorage.getItem('kangatodo:'+k));}catch{return null;}},
+  set(k,v){try{localStorage.setItem('kangatodo:'+k,JSON.stringify(v));}catch{}},
+  del(k){try{localStorage.removeItem('kangatodo:'+k);}catch{}},
+};
+let toastT;
+function toast(msg,ms){const t=$('#toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),ms||2600);}
+function buzz(ms){try{navigator.vibrate&&navigator.vibrate(ms||8);}catch{}}
+
+async function api(url,body){
+  try{
+    const r=await fetch(url,{method:'POST',headers:{'content-type':'application/json'},
+                            body:JSON.stringify(body),cache:'no-store'});
+    return await r.json();
+  }catch(e){return {ok:false,reason:'offline',detail:String(e.message||e)};}
+}
+
+/* ═══════════════════════ the kangaroo ═══════════════════════ */
+/* Original artwork. The pouch IS the progress meter — stars land in it as
+   jobs get done, so a kid who cannot read yet can still see how they are doing. */
+
+const STAR_SPOTS=[[],[[185,152,1]],[[174,152,.95],[196,152,.88]],
+  [[171,154,.88],[185,145,.95],[199,154,.82]],
+  [[169,155,.82],[181,146,.88],[194,146,.86],[203,156,.76]],
+  [[168,156,.78],[179,147,.84],[185,158,.86],[194,147,.82],[202,157,.72]]];
+
+function rooSVG(){return `
+<svg class="roo" viewBox="-1 -27 257 237" role="img" aria-label="A mother kangaroo with her joey, and stars in her pouch">
+ <g id="rooG">
+  <path d="M156 142 C 134 168, 100 186, 62 191 C 38 194, 16 191, 8 185 C 2 180, 5 172, 13 172 C 48 174, 88 166, 116 148 C 130 139, 140 128, 146 118 Z" fill="#9C5934"/>
+  <path d="M124 176 C 112 176, 106 186, 110 194 C 113 201, 123 204, 134 204 L 214 204 C 227 204, 230 192, 219 188 L 150 178 Z" fill="#A76620"/>
+  <path d="M219 188 l14 2 M219 194 l15 1 M218 199 l13 0" stroke="#A76620" stroke-width="7" stroke-linecap="round"/>
+  <path d="M124 118 C 158 108, 190 132, 188 166 C 186 192, 158 204, 134 191 C 112 179, 104 126, 124 118 Z" fill="#B37124"/>
+  <path d="M198 58 C 218 76, 222 112, 216 146 C 209 182, 186 197, 163 192 C 136 186, 128 150, 133 112 C 139 72, 174 40, 198 58 Z" fill="#C78425"/>
+  <path d="M190 70 C 204 82, 209 108, 206 138 C 203 166, 190 180, 175 178 C 159 176, 153 150, 156 120 C 159 90, 176 60, 190 70 Z" fill="#FFDC92"/>
+  <path d="M152 120 L 218 120 C 220 150, 203 174, 183 174 C 163 174, 150 150, 152 120 Z" fill="#FFF6E2"/>
+  <g id="pouchStars"></g>
+  <g>
+   <ellipse cx="173" cy="76" rx="8" ry="14" transform="rotate(-28 173 76)" fill="#A96A20"/>
+   <ellipse cx="174" cy="78" rx="4.3" ry="8.5" transform="rotate(-28 174 78)" fill="#FF9E7A"/>
+   <ellipse cx="200" cy="74" rx="8" ry="14" transform="rotate(24 200 74)" fill="#A96A20"/>
+   <ellipse cx="199" cy="76" rx="4.3" ry="8.5" transform="rotate(24 199 76)" fill="#FF9E7A"/>
+   <ellipse cx="184" cy="98" rx="19" ry="17.5" fill="#D89230"/>
+   <ellipse cx="173" cy="104" rx="6.2" ry="4.3" fill="#E8734A" opacity=".45"/>
+   <ellipse cx="199" cy="104" rx="6.2" ry="4.3" fill="#E8734A" opacity=".45"/>
+   <circle cx="179" cy="96" r="5" fill="#4A2A12"/><circle cx="180.8" cy="94" r="1.9" fill="#fff"/>
+   <circle cx="193.6" cy="96" r="5" fill="#4A2A12"/><circle cx="195.4" cy="94" r="1.9" fill="#fff"/>
+   <ellipse cx="186.3" cy="106.5" rx="7.2" ry="5.4" fill="#FFE8B4"/>
+   <ellipse cx="186.3" cy="104" rx="2.8" ry="2.2" fill="#7A4A1E"/>
+   <path d="M183 108.6 q3.3 3.1 6.6 0" stroke="#7A4A1E" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+   <path d="M163 119 q6 -9 14 -4" stroke="#D89230" stroke-width="7.5" fill="none" stroke-linecap="round"/>
+   <path d="M210 118 q-6 -9 -14 -4" stroke="#D89230" stroke-width="7.5" fill="none" stroke-linecap="round"/>
+  </g>
+  <path d="M152 120 L 218 120" stroke="#E0AE5E" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  <path d="M206 84 C 219 80, 231 89, 232 99 C 233 108, 224 112, 217 106 C 209 100, 203 90, 206 84 Z" fill="#B37124"/>
+  <ellipse cx="186" cy="10" rx="12" ry="25" transform="rotate(-26 186 10)" fill="#C78425"/>
+  <ellipse cx="187" cy="13" rx="6.5" ry="16" transform="rotate(-26 187 13)" fill="#FF9E7A"/>
+  <ellipse cx="229" cy="7" rx="12" ry="25" transform="rotate(22 229 7)" fill="#C78425"/>
+  <ellipse cx="228" cy="10" rx="6.5" ry="16" transform="rotate(22 228 10)" fill="#FF9E7A"/>
+  <ellipse cx="206" cy="44" rx="35" ry="32" fill="#C78425"/>
+  <ellipse cx="228" cy="59" rx="20" ry="14.5" fill="#FFE8B4"/>
+  <ellipse cx="183" cy="56" rx="9.5" ry="7" fill="#E8734A" opacity=".4"/>
+  <circle cx="196" cy="39" r="9.2" fill="#4A2A12"/><circle cx="199.4" cy="36" r="3.4" fill="#fff"/>
+  <circle cx="225" cy="36" r="9.2" fill="#4A2A12"/><circle cx="228.4" cy="33" r="3.4" fill="#fff"/>
+  <ellipse cx="235" cy="53" rx="4.8" ry="3.9" fill="#7A4A1E"/>
+  <path d="M229 60 q5 4.6 9.6 1" stroke="#7A4A1E" stroke-width="2.1" fill="none" stroke-linecap="round"/>
+ </g>
+</svg>`;}
+
+const starPath=(x,y,s)=>`<g transform="translate(${x} ${y}) scale(${s})"><path class="pstar"
+  d="M0 -9 L2.6 -2.8 9.3 -2.2 4.2 2.2 5.7 8.8 0 5.3 -5.7 8.8 -4.2 2.2 -9.3 -2.2 -2.6 -2.8 Z"
+  fill="${s>.85?'#E09B12':'#F7C948'}"/></g>`;
+
+/** Paint the pouch. `animate` staggers them in so a finished job feels like it landed. */
+function paintPouch(done,total,animate){
+  const g=$('#pouchStars'); if(!g) return;
+  // One finished job = one star. The pouch holds five, so past five it stays full —
+  // it never shows more stars than jobs actually done.
+  const n=Math.min(5,Math.max(0,done));
+  const spots=STAR_SPOTS[n]||[];
+  g.innerHTML=spots.map(([x,y,s])=>starPath(x,y,s)).join('');
+  const stars=g.querySelectorAll('.pstar');
+  stars.forEach((st,i)=>{ if(animate) setTimeout(()=>st.classList.add('in'),90+i*70);
+                          else st.classList.add('in'); });
+}
+
+/* ═══════════════════ plain-words failures ═══════════════════ */
+const REASONS={
+  no_kv:['Storage is not connected yet.','Connect an Upstash Redis store to this Vercel project, then redeploy.'],
+  no_skylight:['Skylight is not connected yet.','Add <code>SKYLIGHT_EMAIL</code> and <code>SKYLIGHT_PASSWORD</code> in Vercel → Settings → Environment Variables, then redeploy.'],
+  skylight_bad_login:['Skylight would not accept that email or password.','Check them in Vercel. If you changed your Skylight password recently, update it there too.'],
+  skylight_changed:['Skylight changed something on their end.','KangaToDo talks to Skylight the same way their own app does. When they update it, this can need a patch. Nothing was lost.'],
+  skylight_rate_limited:['Skylight is asking us to slow down.','Give it a minute and try again.'],
+  skylight_no_frame:['That Skylight account has no frame on it.','Set up your Skylight Calendar or Buddy first, then come back.'],
+  skylight_error:['Skylight sent back an error.','Nothing was saved. Try again in a moment.'],
+  locked:['That PIN did not match.',''], bad_pin:['That PIN did not match.',''],
+  offline:['No connection.','The phone is offline, or the server did not answer.'],
+  not_linked:['This phone is not joined to anyone yet.','Ask a grown-up for a join code.'],
+  bad_code:['That code did not work.','Codes last one hour and work once. Ask for a fresh one.'],
+  bad_phone:['That does not look like a phone number.','Use 10 digits, or +1 and the number.'],
+  no_key:['Not set up yet.',''],
+  needs_photo:['This one needs a photo first.','Tap the camera and show them it is done.'],
+  no_photo_store:['Photos are not switched on yet.','A grown-up needs to add <code>BLOB_READ_WRITE_TOKEN</code> in Vercel.'],
+  bad_image:['That did not come through as a picture.','Try taking it again.'],
+  image_too_big:['That picture is too big.','Try taking it again.'],
+  photo_store_failed:['The photo would not save.','Nothing was lost — the job is still on your list. Try again in a moment.'],
+};
+const why=(r)=>REASONS[r]||['Something went wrong.',r?('The server said: <code>'+esc(r)+'</code>'):''];
+function noticeFor(res,cls){
+  const [a,b]=why(res&&res.reason);
+  const d=res&&res.detail?`<br><span style="opacity:.75">${esc(res.detail)}</span>`:'';
+  return `<div class="notice ${cls||'bad'}"><b>${a}</b>${b?'<br>'+b:''}${d}</div>`;
+}
+/* The header mark: the same roo, framed to its own bounding box (art spans
+   x 7→181, y −1→179) so nothing crops. Two stars, because a full pouch is the point. */
+const MARK=rooSVG()
+  .replace('class="roo" viewBox="-1 -27 257 237"','viewBox="-1 -27 257 237" preserveAspectRatio="xMidYMid meet"')
+  .replace('<g id="pouchStars"></g>', starPath(178,150,.95)+starPath(196,152,.8))
+  .replace(/class="pstar"/g,'');
+const FOOTER=`<footer>
+  <img src="/ae-mark.png" alt="" onerror="this.style.display='none'">
+  Powered by <b>Accelerated Experiences LLC</b> · <a href="/shop.html">More from the App Shop</a><br>
+  Not affiliated with or endorsed by Skylight. Jobs are written to your own Skylight account.
+</footer>`;
+
+/* ══════════════════════════════════════════════════════════════════════════
+   KID MODE
+   ══════════════════════════════════════════════════════════════════════════ */
+const Kid={
+  token:null,data:null,
+
+  async start(){document.body.className='kid';this.token=store.get('kidToken');
+    if(!this.token) return this.renderJoin(); await this.load();},
+
+  renderJoin(err){
+    $('#app').innerHTML=`<div class="wrap">
+      <div class="kidhead"><div class="kidhello">Hi there!</div>
+        <div class="kiddate">Pop in the code a grown-up gave you.</div></div>
+      ${rooSVG()}
+      <div class="card">
+        ${err?noticeFor(err):''}
+        <label class="lbl" for="jc">Your join code</label>
+        <input id="jc" class="inp" inputmode="text" autocapitalize="characters" autocomplete="off"
+               spellcheck="false" maxlength="6" placeholder="A B C 1 2 3"
+               style="text-align:center;font-size:28px;letter-spacing:.2em;font-family:var(--round);font-weight:600">
+        <div style="height:14px"></div>
+        <button class="btn" id="go">Hop in</button>
+      </div>${FOOTER}</div>`;
+    paintPouch(0,0,false);
+    const inp=$('#jc');
+    inp.addEventListener('input',()=>{inp.value=inp.value.toUpperCase().replace(/[^A-Z0-9]/g,'');});
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter')$('#go').click();});
+    $('#go').onclick=async()=>{
+      const code=inp.value.trim();
+      if(code.length!==6) return toast('The code is 6 letters and numbers.');
+      $('#go').disabled=true;$('#go').textContent='Hopping in…';
+      const r=await api(API,{do:'kid.join',code,device:(navigator.userAgent.match(/iPhone|Android|iPad/)||['phone'])[0]});
+      if(!r.ok){$('#go').disabled=false;$('#go').textContent='Hop in';return this.renderJoin(r);}
+      store.set('kidToken',r.token);this.token=r.token;buzz(18);
+      await this.load();this.offerPush();
+    };
+  },
+
+  async load(){
+    if(!this.data) $('#app').innerHTML=`<div class="wrap"><div class="kidhead">
+      <div class="kidhello">Loading…</div></div>${rooSVG()}
+      <div class="card"><div class="skel" style="width:70%"></div><div class="skel" style="width:90%"></div></div></div>`;
+    const r=await api(API,{do:'kid.mine',token:this.token});
+    if(!r.ok){
+      if(r.reason==='not_linked'){store.del('kidToken');this.token=null;return this.renderJoin(r);}
+      return this.renderError(r);
+    }
+    this.data=r;this.render();
+  },
+
+  renderError(r){$('#app').innerHTML=`<div class="wrap"><div class="kidhead">
+    <div class="kidhello">Hang on…</div></div>${rooSVG()}
+    <div class="card">${noticeFor(r)}<div style="height:10px"></div>
+    <button class="btn" onclick="location.reload()">Try again</button></div>${FOOTER}</div>`;},
+
+  render(){
+    const d=this.data,done=d.done,total=d.total,left=total-done;
+    const dateTxt=new Date(d.date+'T12:00:00').toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+    $('#app').innerHTML=`<div class="wrap">
+      <div class="kidhead"><div class="kidhello">${esc(d.name)}</div>
+        <div class="kiddate">${esc(dateTxt)}</div></div>
+      ${rooSVG()}
+      ${total===0?'':(left===0
+        ? `<div class="allclear"><div class="tx">Pouch full — all done!</div>
+             <div class="sm">Nice hopping today.</div></div>`
+        : `<div class="togo"><b>${left}</b> to go${done?` · ${done} in the pouch`:''}</div>
+           <div class="bar"><i style="width:${total?Math.round(done/total*100):0}%"></i></div>`)}
+      ${total===0?`<div class="card"><div class="empty">
+          <div class="big">Nothing in your pouch yet</div>
+          <div>When a grown-up pops a job in, this phone will buzz.</div></div></div>`
+        :`<div class="card" id="list"></div>`}
+      <div id="pushslot"></div>
+      <div style="margin:14px 0"><button class="btn ghost" id="refresh">Check again</button></div>
+      ${FOOTER}</div>`;
+    paintPouch(done,total,false);
+
+    if(total){
+      const list=$('#list');
+      d.chores.forEach(c=>{
+        const row=el('div',{class:'chore','data-done':c.done?'1':'0'});
+        // A job that needs a photo shows a CAMERA until the photo exists. The tick
+        // never appears first, so a kid is never told "no" after tapping.
+        const wantsShot = c.needsProof && !c.done && !c.photo;
+        let control;
+        if(wantsShot){
+          control=el('button',{class:'cam','aria-label':'Take a photo of: '+c.summary},
+            '<svg viewBox="0 0 24 24"><path d="M3 8.5A1.5 1.5 0 0 1 4.5 7h2.2l1.1-2h8.4l1.1 2h2.2A1.5 1.5 0 0 1 21 8.5v9A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/><circle cx="12" cy="13" r="3.6"/></svg>');
+          control.onclick=()=>this.takeShot(c,row);
+        }else{
+          control=el('button',{class:'tick',role:'checkbox','aria-checked':String(c.done),
+            'aria-label':(c.done?'Put back: ':'Done: ')+c.summary},
+            '<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>');
+          control.onclick=()=>this.toggle(c,row,control);
+        }
+        const meta=[];
+        if(c.time) meta.push(esc(c.time));
+        if(c.points) meta.push(`<span class="star">${c.points} ★</span>`);
+        if(wantsShot) meta.push('<span class="needs">photo needed</span>');
+        row.append(control,el('div',{class:'body'},
+          `<div class="ttl">${c.emoji?esc(c.emoji)+' ':''}${esc(c.summary)}</div>`+
+          (meta.length?`<div class="meta">${meta.join('<span style="opacity:.4">·</span>')}</div>`:'')));
+        if(c.photo) row.append(el('img',{class:'thumb',src:c.photo,alt:'Photo of '+c.summary,loading:'lazy'}));
+        list.append(row);
+      });
+    }
+    $('#refresh').onclick=()=>{toast('Having a look…',1200);this.load();};
+    this.pushSlot();
+  },
+
+  async toggle(c,row,tick){
+    const next=!c.done;
+    c.done=next;tick.setAttribute('aria-checked',String(next));row.dataset.done=next?'1':'0';buzz(next?14:6);
+    const before=this.data.done;
+    this.data.done=this.data.chores.filter(x=>x.done).length;
+    this.paintProgress(next);
+
+    const r=await api(API,{do:'kid.done',token:this.token,choreId:c.id,done:next});
+    if(!r.ok){
+      c.done=!next;tick.setAttribute('aria-checked',String(!next));row.dataset.done=!next?'1':'0';
+      this.data.done=before;this.paintProgress(false);toast(why(r.reason)[0]);return;
+    }
+    if(this.data.done===this.data.total&&this.data.total>0){
+      buzz(34);const g=$('.roo');if(g){g.classList.add('hop');setTimeout(()=>g.classList.remove('hop'),900);}
+      setTimeout(()=>this.load(),950);
+    }
+  },
+
+  /* Open the camera, shrink what comes back, send it, then the job completes. */
+  takeShot(c,row){
+    const inp=el('input',{type:'file',accept:'image/*',capture:'environment',hidden:'hidden'});
+    document.body.append(inp);
+    inp.onchange=async()=>{
+      const file=inp.files&&inp.files[0]; inp.remove();
+      if(!file) return;
+      const btn=row.querySelector('.cam');
+      if(btn){btn.disabled=true;btn.style.opacity=.5;}
+      toast('Sending your photo…',4000);
+      try{
+        const dataUrl=await shrinkImage(file);
+        const r=await api(API,{do:'kid.proof',token:this.token,choreId:c.id,image:dataUrl});
+        if(!r.ok){
+          if(btn){btn.disabled=false;btn.style.opacity=1;}
+          return toast(why(r.reason)[0]);
+        }
+        buzz(30); toast('Sent! They can see it now.',3000);
+        await this.load();
+      }catch(e){
+        if(btn){btn.disabled=false;btn.style.opacity=1;}
+        toast('That photo would not open.');
+      }
+    };
+    inp.click();
+  },
+
+  paintProgress(animate){
+    const {done,total}=this.data;
+    paintPouch(done,total,animate);
+    const bar=$('.bar i'); if(bar) bar.style.width=(total?Math.round(done/total*100):0)+'%';
+    const tg=$('.togo'); if(tg&&total-done>0) tg.innerHTML=`<b>${total-done}</b> to go${done?` · ${done} in the pouch`:''}`;
+  },
+
+  async pushSlot(){
+    const slot=$('#pushslot'); if(!slot) return;
+    const st=await api(API,{do:'status'});
+    const standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+    const iOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+    const supported='serviceWorker' in navigator&&'PushManager' in window;
+
+    if(!st.push){slot.innerHTML=`<div class="notice">Buzzing is not switched on yet. A grown-up needs to finish setting it up.</div>`;return;}
+    if(iOS&&!standalone){slot.innerHTML=`<div class="notice"><b>Make this buzz</b><br>
+      Tap <b>Share</b> at the bottom of Safari, then <b>Add to Home Screen</b>. Open KangaToDo from there
+      and your phone can buzz when a job hops in. (Apple only allows it that way.)</div>`;return;}
+    if(!supported){slot.innerHTML=`<div class="notice">This browser cannot buzz. Try Safari or Chrome.</div>`;return;}
+    if(Notification.permission==='granted'&&store.get('pushed')){slot.innerHTML='';return;}
+    if(Notification.permission==='denied'){slot.innerHTML=`<div class="notice">Notifications are switched off for KangaToDo in your phone settings. Turn them on there to get buzzed.</div>`;return;}
+    slot.innerHTML=`<div class="card">
+      <h2>Get buzzed</h2><div class="sub">So you know the moment a job hops in.</div>
+      <button class="btn sun" id="allow">Yes, buzz me</button></div>`;
+    $('#allow').onclick=()=>this.subscribe(st.vapidPublicKey);
+  },
+
+  async offerPush(){setTimeout(()=>this.pushSlot(),500);},
+
+  async subscribe(vapidPub){
+    const b=$('#allow');b.disabled=true;b.textContent='Asking…';
+    try{
+      const perm=await Notification.requestPermission();
+      if(perm!=='granted'){b.disabled=false;b.textContent='Yes, buzz me';return toast('No problem — you can switch it on later.');}
+      const reg=await navigator.serviceWorker.register('./sw.js');
+      await navigator.serviceWorker.ready;
+      const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlB64ToUint8(vapidPub)});
+      const r=await api(API,{do:'kid.push',token:this.token,subscription:sub.toJSON()});
+      if(!r.ok){b.disabled=false;b.textContent='Try again';return toast(why(r.reason)[0]);}
+      store.set('pushed',true);
+      await api(ALERT,{do:'test',token:this.token});   // prove it buzzes; never just claim it
+      toast('All set — watch for the test buzz!',3200);
+      this.pushSlot();
+    }catch(e){b.disabled=false;b.textContent='Yes, buzz me';toast('This phone would not allow it.');}
+  },
+};
+/* Shrink on the PHONE before uploading. A kid's camera produces 4 MB files;
+   we send about 150 KB. Saves their data, our storage, and the wait. */
+async function shrinkImage(file, max=1200, q=.72){
+  const img = await createImageBitmap(file, {imageOrientation:'from-image'});
+  const s = Math.min(1, max/Math.max(img.width, img.height));
+  const c = document.createElement('canvas');
+  c.width = Math.round(img.width*s); c.height = Math.round(img.height*s);
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  img.close && img.close();
+  return c.toDataURL('image/jpeg', q);
+}
+
+function urlB64ToUint8(s){
+  const pad='='.repeat((4-s.length%4)%4);
+  const raw=atob((s+pad).replace(/-/g,'+').replace(/_/g,'/'));
+  const out=new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++)out[i]=raw.charCodeAt(i);
+  return out;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   GROWN-UP MODE
+   ══════════════════════════════════════════════════════════════════════════ */
+const Parent={
+  status:null,children:[],chores:[],pin:'',sel:null,tab:'today',date:null,
+
+  async start(){document.body.className='';this.pin=store.get('pin')||'';this.shell();await this.refreshStatus();},
+
+  shell(){
+    $('#app').innerHTML=`
+      <header class="top"><div class="wrap"><div class="brandrow">
+        <div class="brandmark">${MARK}</div>
+        <div><div class="brandname">Kanga<i>ToDo</i></div>
+             <div class="brandsub">Jobs hop to the right kid</div></div>
+        <div class="spacer"></div>
+        <button class="btn ghost sm" id="kidmode" style="min-height:38px;font-size:13.5px;padding:0 13px;white-space:nowrap;flex:none">Kid's phone</button>
+      </div></div></header>
+      <main class="wrap" id="main"></main>`;
+    $('#kidmode').onclick=()=>{location.hash='#kid';location.reload();};
+  },
+
+  async refreshStatus(){
+    $('#main').innerHTML=`<div class="card"><div class="skel" style="width:40%"></div>
+      <div class="skel" style="width:80%"></div><div class="skel" style="width:62%"></div></div>`;
+    this.status=await api(API,{do:'status'});this.render();
+  },
+
+  statusStrip(){
+    const s=this.status||{};
+    const p=(on,a,b)=>`<span class="pill ${on?'on':'off'}"><span class="dot"></span>${on?a:b}</span>`;
+    return `<div class="status">
+      ${p(s.connected,'Skylight connected','Skylight not connected')}
+      ${p(s.store,'Storage on','Storage off')}
+      ${p(s.push,'Buzzing on','Buzzing off')}
+      ${p(s.sms,'Text backup on','Text backup off')}
+      ${p(s.photos,'Photos on','Photos off')}</div>`;
+  },
+
+  setupNeeded(){
+    const s=this.status||{},m=[];
+    if(!s.store) m.push(['Storage','Vercel → Storage → connect an <b>Upstash Redis</b> store (set the prefix to <code>KV</code>), then redeploy.']);
+    if(!s.skylight) m.push(['Skylight sign-in','Vercel → Settings → Environment Variables → add <code>SKYLIGHT_EMAIL</code> and <code>SKYLIGHT_PASSWORD</code>, then redeploy.']);
+    else if(!s.connected) m.push(['Skylight connection',why(s.skylightReason)[1]||'Check the credentials in Vercel.']);
+    if(!s.push) m.push(['Buzzing','Add <code>VAPID_PUBLIC_KEY</code> and <code>VAPID_PRIVATE_KEY</code>, then redeploy.']);
+    if(!s.photos) m.push(['Photos','Vercel → Storage → create a <b>Blob</b> store. That sets <code>BLOB_READ_WRITE_TOKEN</code> for you. Without it, "needs a photo" jobs cannot be finished.']);
+    return m;
+  },
+
+  render(){
+    const s=this.status||{},missing=this.setupNeeded(),m=$('#main');
+    if(!s.connected){
+      m.innerHTML=`${this.statusStrip()}
+        <div class="card"><h2>Not connected yet</h2>
+          <div class="sub">KangaToDo is installed and running. It needs three things before it can move a job.</div>
+          ${missing.map(([t,b])=>`<div class="notice"><b>${t}</b><br>${b}</div>`).join('')}
+          <div class="hr"></div><button class="btn ghost" id="recheck">Check again</button></div>
+        ${this.aboutCard()}${FOOTER}`;
+      $('#recheck').onclick=()=>this.refreshStatus();return;
+    }
+    m.innerHTML=`${this.statusStrip()}
+      ${missing.length?`<div class="notice">${missing.map(([t,b])=>`<b>${t}</b> — ${b}`).join('<br><br>')}</div>`:''}
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="${this.tab==='today'}" data-t="today">Today</button>
+        <button role="tab" aria-selected="${this.tab==='assign'}" data-t="assign">Pop one in</button>
+        <button role="tab" aria-selected="${this.tab==='kids'}" data-t="kids">Kids</button>
+      </div><div id="pane"></div>${FOOTER}`;
+    m.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{this.tab=b.dataset.t;this.render();});
+    this.pane();
+  },
+
+  aboutCard(){return `<div class="card"><h2>What KangaToDo does</h2>
+    <div class="sub">Plainly, so you know what you are installing.</div>
+    <div style="font-size:14.5px;line-height:1.65;color:var(--ink2)">
+      You type a job here and pick a kid. It is written into <b>your own Skylight account</b>, so it turns up
+      on your Skylight Calendar and on that child's Buddy exactly as if you had typed it there.
+      Then KangaToDo buzzes that child's phone — and only that child's.
+      <div style="height:10px"></div>
+      Skylight does not publish an API and does not send notifications to phones. KangaToDo signs in to
+      Skylight the same way their own app does, from the server, and does the phone side itself.
+      If Skylight changes their app, this can need a patch — it will tell you so rather than quietly failing.
+    </div></div>`;},
+
+  async pane(){const p=$('#pane');
+    if(this.tab==='today')return this.paneToday(p);
+    if(this.tab==='assign')return this.paneAssign(p);
+    if(this.tab==='kids')return this.paneKids(p);},
+
+  async ensureChildren(force){
+    if(this.children.length&&!force)return this.children;
+    const r=await api(API,{do:'children',pin:this.pin});
+    if(!r.ok){this.lastErr=r;this.children=[];return [];}
+    this.children=r.children||[];this.frame=r.frame;this.lastErr=null;return this.children;
+  },
+
+  async paneToday(p){
+    p.innerHTML=`<div class="card"><div class="skel" style="width:50%"></div><div class="skel" style="width:85%"></div></div>`;
+    const kids=await this.ensureChildren();
+    if(this.lastErr)return p.innerHTML=`<div class="card">${noticeFor(this.lastErr)}</div>`;
+    const r=await api(API,{do:'chores',pin:this.pin,from:this.date||undefined});
+    if(!r.ok)return p.innerHTML=`<div class="card">${noticeFor(r)}</div>`;
+    this.chores=r.chores||[];this.date=r.from;
+    const byKid={};for(const c of this.chores){(byKid[c.categoryId]=byKid[c.categoryId]||[]).push(c);}
+    const dateTxt=new Date(r.from+'T12:00:00').toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+
+    let html=`<div class="card"><h2>${esc(dateTxt)}</h2>
+      <div class="sub">${this.chores.length} job${this.chores.length===1?'':'s'} · ${this.chores.filter(c=>c.done).length} in pouches</div>`;
+    if(!this.chores.length){
+      html+=`<div class="empty"><div class="big">Nothing on today</div>
+        <div>Use <b>Pop one in</b> to add a job.</div></div>`;
+    }else{
+      for(const kid of kids){
+        const list=byKid[kid.categoryId];if(!list||!list.length)continue;
+        html+=`<div style="margin-top:16px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+            <span style="width:11px;height:11px;border-radius:50%;background:${esc(kid.color)};display:block"></span>
+            <b style="font-family:var(--round);font-weight:600;font-size:15.5px">${esc(kid.name)}</b>
+            <span style="font-size:13px;color:var(--mut)">${list.filter(c=>c.done).length}/${list.length}</span>
+            ${kid.linked?'':'<span style="font-size:12px;color:var(--warn)">· no phone joined</span>'}
+          </div><div data-kid="${esc(kid.categoryId)}"></div></div>`;
+      }
+      const orphan=this.chores.filter(c=>!kids.some(k=>k.categoryId===c.categoryId));
+      if(orphan.length)html+=`<div style="margin-top:16px"><div style="font-size:13px;color:var(--mut);margin-bottom:2px">Not given to anyone</div><div data-kid="__none"></div></div>`;
+    }
+    p.innerHTML=html+`</div>`;
+
+    const put=(cid,list)=>{
+      const host=p.querySelector(`[data-kid="${cid}"]`);if(!host)return;
+      list.forEach(c=>{
+        const row=el('div',{class:'chore','data-done':c.done?'1':'0'});
+        const tick=el('button',{class:'tick',role:'checkbox','aria-checked':String(c.done),
+          'aria-label':(c.done?'Mark not done: ':'Mark done: ')+c.summary},
+          '<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>');
+        tick.onclick=async()=>{
+          const nx=!c.done;c.done=nx;tick.setAttribute('aria-checked',String(nx));row.dataset.done=nx?'1':'0';buzz(10);
+          const rr=await api(API,{do:'chore.complete',pin:this.pin,choreId:c.id,done:nx});
+          if(!rr.ok){c.done=!nx;tick.setAttribute('aria-checked',String(!nx));row.dataset.done=!nx?'1':'0';toast(why(rr.reason)[0]);}
+        };
+        const del=el('button',{class:'rm',title:'Remove','aria-label':'Remove '+c.summary},
+          '<svg viewBox="0 0 24 24"><path d="M4 7h16M9.5 7V5.5A1.5 1.5 0 0 1 11 4h2a1.5 1.5 0 0 1 1.5 1.5V7"/><path d="M6.5 7 7.6 19a1.5 1.5 0 0 0 1.5 1.4h5.8a1.5 1.5 0 0 0 1.5-1.4L17.5 7"/></svg>');
+        del.onclick=async()=>{
+          if(!confirm(`Remove "${c.summary}"${c.recurring?' and every repeat of it':''}?`))return;
+          del.disabled=true;
+          const rr=await api(API,{do:'chore.delete',pin:this.pin,choreId:c.recurring?c.group:c.id,all:true});
+          if(!rr.ok){del.disabled=false;return toast(why(rr.reason)[0]);}
+          row.remove();toast('Removed.');
+        };
+        const meta=[];if(c.time)meta.push(esc(c.time));
+        if(c.recurring)meta.push('repeats');
+        if(c.points)meta.push(`<span class="star">${c.points} ★</span>`);
+        if(c.needsProof&&!c.photo)meta.push('<span class="needs">photo needed</span>');
+        row.append(tick,el('div',{class:'body'},
+          `<div class="ttl">${c.emoji?esc(c.emoji)+' ':''}${esc(c.summary)}</div>`+
+          (meta.length?`<div class="meta">${meta.join('<span style="opacity:.4">·</span>')}</div>`:'')));
+        if(c.photo){
+          const t=el('img',{class:'thumb',src:c.photo,alt:'Photo from '+(c.childName||'them'),loading:'lazy'});
+          t.onclick=()=>{
+            const box=row.nextElementSibling;
+            if(box&&box.classList.contains('shotwrap')){box.remove();return;}
+            const w=el('div',{class:'shotwrap'},
+              `<img src="${esc(c.photo)}" alt="Photo of ${esc(c.summary)}">
+               <div style="font-size:12.5px;color:var(--mut);margin-top:6px">
+                 Kept ${this.status&&this.status.photoDays?this.status.photoDays:7} days, then deleted automatically.
+                 Save it to your phone if you want to keep it.</div>`);
+            row.after(w);
+          };
+          row.append(t);
+        }
+        row.append(del);
+        host.append(row);
+      });
+    };
+    for(const kid of kids)if(byKid[kid.categoryId])put(kid.categoryId,byKid[kid.categoryId]);
+    const orphan=this.chores.filter(c=>!kids.some(k=>k.categoryId===c.categoryId));
+    if(orphan.length)put('__none',orphan);
+  },
+
+  async paneAssign(p){
+    p.innerHTML=`<div class="card"><div class="skel" style="width:45%"></div><div class="skel" style="width:75%"></div></div>`;
+    const kids=await this.ensureChildren();
+    if(this.lastErr)return p.innerHTML=`<div class="card">${noticeFor(this.lastErr)}</div>`;
+    if(!kids.length)return p.innerHTML=`<div class="card"><div class="empty">
+      <div class="big">No kids on this Skylight yet</div>
+      <div>Add a family member in the Skylight app first — KangaToDo reads them from there.</div></div></div>`;
+
+    const today=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
+    p.innerHTML=`<div class="card">
+      <h2>Pop a job in</h2><div class="sub">It lands on your Skylight and buzzes their phone.</div>
+      <label class="lbl">Whose pouch?</label>
+      <div class="kids" id="kidpick" role="group" aria-label="Choose a child"></div>
+      <label class="lbl" for="sum">What is the job?</label>
+      <input id="sum" class="inp" placeholder="Feed the dog" maxlength="120" autocomplete="off">
+      <div class="row">
+        <div><label class="lbl" for="dt">Day</label><input id="dt" class="inp" type="date" value="${today}"></div>
+        <div><label class="lbl" for="tm">Time <span style="font-weight:400">(optional)</span></label><input id="tm" class="inp" type="time"></div>
+      </div>
+      <div class="row">
+        <div><label class="lbl" for="rep">Repeat</label>
+          <select id="rep" class="inp"><option value="">Just this day</option>
+            <option value="DAILY">Every day</option><option value="WEEKDAY">Weekdays</option>
+            <option value="WEEKLY">Every week</option></select></div>
+        <div><label class="lbl" for="pts">Stars <span style="font-weight:400">(optional)</span></label>
+          <input id="pts" class="inp" type="number" min="0" max="99" placeholder="—"></div>
+      </div>
+      <label class="check" for="proof">
+        <input type="checkbox" id="proof">
+        <span><b>Needs a photo</b><span>They have to snap a picture of it done before it ticks off.</span></span>
+      </label>
+      <div style="height:16px"></div>
+      <button class="btn" id="save">Send it hopping</button>
+      <div id="result"></div></div>`;
+
+    const host=$('#kidpick');
+    kids.forEach(k=>{
+      const b=el('button',{class:'kid','aria-pressed':String(this.sel===k.categoryId)},
+        `<div class="swatch" style="background:${esc(k.color)}">${esc((k.name||'?')[0].toUpperCase())}</div>
+         <div class="nm">${esc(k.name)}</div>
+         <div class="st">${k.linked?'phone joined':'no phone yet'}</div>`);
+      b.onclick=()=>{this.sel=k.categoryId;buzz(6);
+        host.querySelectorAll('.kid').forEach(x=>x.setAttribute('aria-pressed','false'));
+        b.setAttribute('aria-pressed','true');};
+      host.append(b);
+    });
+
+    $('#save').onclick=async()=>{
+      const summary=$('#sum').value.trim();
+      if(!this.sel)return toast('Pick whose pouch it goes in.');
+      if(!summary)return toast('Say what the job is.');
+      const btn=$('#save');btn.disabled=true;btn.textContent='Sending…';
+      const rep=$('#rep').value,tm=$('#tm').value||null,hour=tm?Number(tm.slice(0,2)):null;
+      let rset=null;
+      if(rep==='DAILY')rset=[`RRULE:FREQ=DAILY;INTERVAL=1${hour!==null?';BYHOUR='+hour:''}`];
+      if(rep==='WEEKDAY')rset=[`RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR${hour!==null?';BYHOUR='+hour:''}`];
+      if(rep==='WEEKLY')rset=[`RRULE:FREQ=WEEKLY;INTERVAL=1${hour!==null?';BYHOUR='+hour:''}`];
+
+      const r=await api(API,{do:'chore.create',pin:this.pin,summary,categoryId:this.sel,
+        date:$('#dt').value,time:tm,recurring:!!rset,recurrence_set:rset,
+        points:$('#pts').value?Number($('#pts').value):null,
+        needsProof:$('#proof').checked});
+      btn.disabled=false;btn.textContent='Send it hopping';
+      if(!r.ok)return $('#result').innerHTML=noticeFor(r);
+
+      const a=await api(ALERT,{do:'flush'});
+      const line=(a.pushed||[]).find(x=>x.choreId===(r.created[0]||{}).id)||(a.pushed||[])[0];
+      let msg;
+      if(!line)msg='Saved to your Skylight.';
+      else if(line.delivered>0)msg=`Sent — ${line.child}'s phone just buzzed.`;
+      else if(line.smsArmed)msg=`Saved. ${line.child}'s phone isn't joined — a text will go out.`;
+      else msg=`Saved to your Skylight. ${line.child} has no phone joined yet.`;
+      $('#sum').value='';$('#pts').value='';$('#proof').checked=false;
+      $('#result').innerHTML=`<div class="notice good"><b>${esc(msg)}</b>${a.note?'<br>'+esc(a.note):''}</div>`;
+      buzz(20);this.chores=[];
+    };
+  },
+
+  async paneKids(p){
+    p.innerHTML=`<div class="card"><div class="skel" style="width:45%"></div><div class="skel" style="width:75%"></div></div>`;
+    const kids=await this.ensureChildren(true);
+    if(this.lastErr)return p.innerHTML=`<div class="card">${noticeFor(this.lastErr)}</div>`;
+    p.innerHTML=`<div id="parentbuzz"></div>
+      <div class="card"><h2>Kids &amp; phones</h2>
+      <div class="sub">Each kid gets their own code. One code joins one phone, and that phone only ever sees that kid's pouch.</div>
+      <div id="kidlist"></div></div>
+      ${this.status&&!this.status.sms?`<div class="notice"><b>Text backup is off.</b><br>
+        Add <code>TWILIO_ACCOUNT_SID</code>, <code>TWILIO_AUTH_TOKEN</code> and <code>TWILIO_FROM</code> in Vercel to switch it on.
+        Until then a kid with no joined phone simply gets no alert — KangaToDo will not pretend otherwise.</div>`:''}`;
+
+    const host=$('#kidlist');
+    kids.forEach(k=>{
+      const box=el('div',{style:'padding:15px 0;border-bottom:2px solid var(--hair)'});
+      box.innerHTML=`<div style="display:flex;align-items:center;gap:11px">
+          <div style="background:${esc(k.color)};width:34px;height:34px;border-radius:12px;display:grid;
+               place-items:center;color:#fff;font-weight:700;font-family:var(--round);font-size:15px;flex:none">
+            ${esc((k.name||'?')[0].toUpperCase())}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-family:var(--round);font-weight:600;font-size:16px">${esc(k.name)}</div>
+            <div style="font-size:13px;color:var(--mut)">${k.devices?`${k.devices} phone${k.devices===1?'':'s'} joined`:'No phone joined'}</div>
+          </div></div>
+        <div class="row" style="margin-top:11px">
+          <button class="btn ghost sm" data-a="code" style="flex:1">Get a join code</button>
+          ${k.devices?`<button class="btn ghost sm" data-a="unlink" style="flex:none">Unjoin</button>`:''}
+        </div><div data-slot></div>`;
+
+      box.querySelector('[data-a="code"]').onclick=async(e)=>{
+        const b=e.currentTarget;b.disabled=true;b.textContent='…';
+        const r=await api(API,{do:'child.code',pin:this.pin,categoryId:k.categoryId});
+        b.disabled=false;b.textContent='Get a join code';
+        const slot=box.querySelector('[data-slot]');
+        if(!r.ok)return slot.innerHTML=noticeFor(r);
+        slot.innerHTML=`<div class="code">${esc(r.code)}</div>
+          <div class="codehint">On ${esc(k.name)}'s phone open<br>
+            <b>aexperiences.com/apps/kangatodo/#kid</b><br>and type this code. It lasts one hour.</div>`;
+        buzz(12);
+      };
+      const un=box.querySelector('[data-a="unlink"]');
+      if(un)un.onclick=async()=>{
+        if(!confirm(`Unjoin every phone for ${k.name}? They will need a new code.`))return;
+        const r=await api(API,{do:'child.unlink',pin:this.pin,categoryId:k.categoryId});
+        if(!r.ok)return toast(why(r.reason)[0]);
+        toast('Unjoined.');this.paneKids(p);
+      };
+
+      const ph=el('details',{class:'fold'});
+      if(k.phone)ph.setAttribute('open','');
+      ph.innerHTML=`<summary>${k.phone?'Text number: '+esc(k.phone):'Add a number to text if the buzz fails'}</summary>
+        <div class="row" style="margin-top:4px">
+          <input class="inp" data-ph inputmode="tel" placeholder="${k.phone?esc(k.phone):'(optional)'}"
+                 aria-label="Phone number to text ${esc(k.name)}">
+          <button class="btn ghost sm" data-save style="flex:none">Save</button></div>`;
+      ph.querySelector('[data-save]').onclick=async()=>{
+        const v=ph.querySelector('[data-ph]').value.trim();
+        const r=await api(API,{do:'child.phone',pin:this.pin,categoryId:k.categoryId,phone:v});
+        if(!r.ok)return toast(why(r.reason)[0]);
+        toast(r.phone?'Saved.':'Number removed.');this.paneKids(p);
+      };
+      box.append(ph);host.append(box);
+    });
+    this.buzzCard();
+  },
+
+  /* Your own phone, subscribed the same way a kid's is. */
+  async buzzCard(){
+    const slot=$('#parentbuzz'); if(!slot) return;
+    const st=this.status||{};
+    if(!st.push){slot.innerHTML=`<div class="notice">Buzzing is off, so you will not be told when a job is finished.</div>`;return;}
+    const iOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+    const standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+    if(iOS&&!standalone){
+      slot.innerHTML=`<div class="notice"><b>Get told when they finish</b><br>
+        Tap <b>Share</b> then <b>Add to Home Screen</b>, and open KangaToDo from there.
+        Apple only allows notifications that way.</div>`;return;
+    }
+    if(!('serviceWorker' in navigator&&'PushManager' in window)){slot.innerHTML='';return;}
+    if(Notification.permission==='granted'&&store.get('parentPushed')){
+      slot.innerHTML=`<div class="notice good" style="display:flex;align-items:center;gap:10px;justify-content:space-between">
+        <span><b>You get buzzed when a job is finished.</b></span>
+        <button class="btn ghost sm" id="unbuzz" style="flex:none">Stop</button></div>`;
+      $('#unbuzz').onclick=async()=>{
+        await api(API,{do:'parent.unpush',pin:this.pin});
+        store.del('parentPushed');toast('Stopped.');this.buzzCard();
+      };
+      return;
+    }
+    slot.innerHTML=`<div class="card">
+      <h2>Tell me when they finish</h2>
+      <div class="sub">A buzz the moment a job is ticked off — with the photo, when there is one.</div>
+      <button class="btn sun" id="pbuzz">Buzz my phone</button></div>`;
+    $('#pbuzz').onclick=async()=>{
+      const b=$('#pbuzz');b.disabled=true;b.textContent='Asking…';
+      try{
+        const perm=await Notification.requestPermission();
+        if(perm!=='granted'){b.disabled=false;b.textContent='Buzz my phone';return toast('No problem — you can switch it on later.');}
+        const reg=await navigator.serviceWorker.register('./sw.js');
+        await navigator.serviceWorker.ready;
+        const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlB64ToUint8(this.status.vapidPublicKey)});
+        const r=await api(API,{do:'parent.push',pin:this.pin,subscription:sub.toJSON()});
+        if(!r.ok){b.disabled=false;b.textContent='Try again';return toast(why(r.reason)[0]);}
+        store.set('parentPushed',true);toast('Done — this phone will buzz.',3000);this.buzzCard();
+      }catch(e){b.disabled=false;b.textContent='Buzz my phone';toast('This phone would not allow it.');}
+    };
+  },
+};
+
+/* ═══════════════════════════════ boot ═══════════════════════════════ */
+(function boot(){
+  const isKid=location.hash.replace(/^#\/?/,'').toLowerCase().startsWith('kid')||!!store.get('kidToken');
+  if(isKid)Kid.start();else Parent.start();
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='visible'&&document.body.classList.contains('kid')&&Kid.token)Kid.load();
+  });
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+    navigator.serviceWorker.addEventListener('message',(e)=>{
+      if(e.data&&e.data.type==='refresh'&&Kid.token)Kid.load();
+    });
+  }
+})();
+</script>
+</body>
+</html>
