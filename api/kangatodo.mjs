@@ -294,6 +294,121 @@ async function resolveKid(token) {
 
 
 
+/* ============================================================== grown-ups == */
+//
+// More than one parent. Mum's phone, Dad's phone, a grandparent, a co-parent in
+// another house — all on the same household.
+//
+// The household id alone used to be the whole credential, which meant "whoever
+// has the link is in, forever". So each grown-up device also carries its own
+// `pdev` token, and the household keeps the set of tokens it trusts. Removing a
+// phone is then a real revocation: it still knows the household id, and it is
+// still locked out on the next request.
+//
+// Households created before this existed have an EMPTY set and keep working
+// exactly as they did — the check only bites once there is a set to check.
+
+const pdevKey  = (hh)   => K('hh:' + hh + ':pdev');
+const pdevInfo = (hh,d) => K('hh:' + hh + ':pdev:' + d);
+const pcodeKey = (code) => K('pcode:' + String(code).toUpperCase());
+
+async function addParentDevice(hh, label) {
+  const d = rnd(16);
+  await redis('SADD', pdevKey(hh), d).catch(() => {});
+  await setJSON(pdevInfo(hh, d), { id: d, label: String(label || 'This phone').slice(0, 30), at: Date.now() });
+  return d;
+}
+
+/** Empty set = an old household, so nothing to enforce yet. */
+async function parentDeviceOk(H, pdev) {
+  const set = await redis('SMEMBERS', pdevKey(H.id)).catch(() => []);
+  if (!set || !set.length) return true;
+  return !!pdev && set.includes(String(pdev));
+}
+
+/* ============================================================ own store == */
+//
+// "Just use it" mode. Skylight is a $200 device; requiring one to type a chore
+// made the app useless to most families who want it. So a household can also
+// live entirely here: the parent adds their own kids and their own jobs, and
+// EVERYTHING else — join codes, per-kid isolation, buzzing, photo proof, the
+// PIN, the evening digest, delete-everything — is untouched, because none of it
+// ever cared where the list came from.
+//
+// A household is `mode:'local'` or `mode:'skylight'`. The four functions below
+// are the only place that difference exists; every op above calls them and
+// stays ignorant.
+
+const isLocal   = (H) => !H || H.mode === 'local' || !H.refresh_token;
+const kidsKey   = (hh)      => K('hh:' + hh + ':kidlist');
+const personKey = (hh, cid) => K('hh:' + hh + ':person:' + cid);
+const choreKey  = (hh, id)  => K('hh:' + hh + ':chore:' + id);
+const dayKey    = (hh, d)   => K('hh:' + hh + ':day:' + d);
+
+const KID_COLORS = ['#915EA1','#CB434C','#2F7DB5','#3C7C53','#C1622B','#8A5A9E','#B7433F','#2F6E8F'];
+
+async function localChildren(H) {
+  const ids = await redis('SMEMBERS', kidsKey(H.id)).catch(() => []);
+  const out = [];
+  for (const cid of (ids || [])) {
+    const p = await getJSON(personKey(H.id, cid)).catch(() => null);
+    if (p) out.push({ categoryId: String(cid), name: p.name, color: p.color, isPerson: true, photo: null });
+  }
+  return out.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+}
+
+/** Every chore filed under each day in the range. Cheap, and range reads are
+ *  the only read the app ever does. */
+async function localChores(H, { from, to } = {}) {
+  const days = [];
+  const start = new Date((from || todayISO(H.tz)) + 'T12:00:00');
+  const end   = new Date((to   || from || todayISO(H.tz)) + 'T12:00:00');
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) days.push(d.toISOString().slice(0, 10));
+  const names = {};
+  for (const c of await localChildren(H)) names[c.categoryId] = c.name;
+  const out = [];
+  for (const day of days) {
+    const ids = await redis('SMEMBERS', dayKey(H.id, day)).catch(() => []);
+    for (const id of (ids || [])) {
+      const c = await getJSON(choreKey(H.id, id)).catch(() => null);
+      if (c) out.push({ ...c, childName: names[c.categoryId] || null });
+    }
+  }
+  return out.sort((a, b) => (a.time || '').localeCompare(b.time || '') || (a.position - b.position));
+}
+
+async function localCreateChore(H, b) {
+  const date = b.date || todayISO(H.tz);
+  const id = 'L' + rnd(14);
+  const chore = {
+    id, group: id,
+    summary: String(b.summary).trim().slice(0, 200),
+    status: 'pending', done: false,
+    date, time: b.time || null,
+    recurring: false, points: b.points ?? null,
+    emoji: b.emoji || null, position: Date.now() % 100000,
+    categoryId: String(b.categoryId),
+  };
+  await setJSON(choreKey(H.id, id), chore);
+  await redis('SADD', dayKey(H.id, date), id).catch(() => {});
+  return [chore];
+}
+
+async function localSetDone(H, choreId, done) {
+  const c = await getJSON(choreKey(H.id, choreId)).catch(() => null);
+  if (!c) throw new SkylightError('no_such_job', 'that job is not here any more', 404);
+  c.done = !!done; c.status = done ? 'complete' : 'pending';
+  await setJSON(choreKey(H.id, choreId), c);
+  return c;
+}
+
+async function localDeleteChore(H, choreId) {
+  const c = await getJSON(choreKey(H.id, choreId)).catch(() => null);
+  if (c) await redis('SREM', dayKey(H.id, c.date), choreId).catch(() => {});
+  await redis('DEL', choreKey(H.id, choreId)).catch(() => {});
+  await redis('DEL', photoKey(H.id, choreId)).catch(() => {});
+}
+
 /* ============================================================= households == */
 //
 // One household = one family that signed in with their own Skylight login.
@@ -342,6 +457,9 @@ async function skyH(H, path, { method = 'GET', body, retry = true } = {}) {
 }
 
 async function hhFrame(H) {
+  // A local household has no Skylight frame; it has a synthetic one so every
+  // caller above can keep asking the same question.
+  if (isLocal(H)) return { id: 'local', name: H.frameName || 'Home', tz: H.tz || 'UTC', plus: false, local: true };
   if (H.frameId) return { id: H.frameId, name: H.frameName, tz: H.tz, plus: H.plus };
   const j = await skyH(H, '/api/frames');
   const first = j && j.data && j.data[0];
@@ -354,6 +472,7 @@ async function hhFrame(H) {
 }
 
 async function hhChildren(H, frameId) {
+  if (isLocal(H)) return await localChildren(H);
   const j = await skyH(H, `/api/frames/${frameId}/categories`);
   return (j.data || []).map((c) => ({
     categoryId: String(c.id),
@@ -365,6 +484,7 @@ async function hhChildren(H, frameId) {
 }
 
 async function hhChores(H, frameId, { from, to } = {}) {
+  if (isLocal(H)) return await localChores(H, { from, to });
   const q = new URLSearchParams();
   if (from) q.set('after', from);
   if (to) q.set('before', to);
@@ -565,6 +685,16 @@ async function forgetHousehold(H) {
   for (const id of (pids || [])) await redis('DEL', K('hh:' + hh + ':parentpush:' + id)).catch(() => {});
   await redis('DEL', K('hh:' + hh + ':parentpushids')).catch(() => {});
 
+  /* 4b. a local household's own kids and jobs live here too */
+  for (const pat of ['person:', 'chore:', 'day:']) {
+    const keys = await redis('KEYS', K('hh:' + hh + ':' + pat + '*')).catch(() => []);
+    for (const k of (keys || [])) await redis('DEL', k).catch(() => {});
+  }
+  await redis('DEL', K('hh:' + hh + ':kidlist')).catch(() => {});
+  for (const d of (await redis('SMEMBERS', pdevKey(hh)).catch(() => []) || []))
+    await redis('DEL', pdevInfo(hh, d)).catch(() => {});
+  await redis('DEL', pdevKey(hh)).catch(() => {});
+
   /* 5. anything still queued that names this family */
   await redis('DEL', K('hh:' + hh + ':proofset')).catch(() => {});
   const digests = await redis('KEYS', K('digest:' + hh + ':*')).catch(() => []);
@@ -584,6 +714,9 @@ async function forgetHousehold(H) {
 
 async function route(op, b, req) {
   const H = await household(b.hh);          // the signed-in family, or null
+  // Which grown-up phone is this? Computed once, up here, because `status`
+  // reports it and every parent op is gated on it.
+  const deviceOk = H ? await parentDeviceOk(H, b.pdev) : true;
 
   /* ---------------------------------------------------------- status ---- */
   if (op === 'status') {
@@ -598,7 +731,9 @@ async function route(op, b, req) {
       // app can say "Text backup off" instead of implying a message will arrive.
       sms: !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_FROM),
       signedIn: !!H,
+      mode: H ? (isLocal(H) ? 'local' : 'skylight') : null,
       pinSet: !!(H && H.pin),
+      deviceOk,
     };
     if (H) {
       try {
@@ -616,6 +751,25 @@ async function route(op, b, req) {
   }
 
   /* --------------------------------------------------- sign in / out ---- */
+
+  /* ---------------------------------------- start without Skylight ------ */
+  //
+  // No account, no password, no email. A household id is minted and lives in
+  // the browser exactly like the Skylight one does. This is the front door for
+  // every family that does not own a $200 calendar.
+  if (op === 'parent.start') {
+    if (!storeReady()) return { ok: false, reason: 'no_kv' };
+    const id = rnd(24);
+    const rec = {
+      id, mode: 'local', at: Date.now(),
+      frameName: String(b.household || 'Home').trim().slice(0, 60) || 'Home',
+      tz: String(b.tz || 'UTC').slice(0, 60),
+    };
+    if (isPin(process.env.PARENT_PIN)) rec.pin = pinHash(id, process.env.PARENT_PIN);
+    await setJSON(hhKey(id), rec);
+    const pdev = await addParentDevice(id, b.label);
+    return { ok: true, hh: id, pdev, mode: 'local', frame: { id: 'local', name: rec.frameName, tz: rec.tz, local: true } };
+  }
 
   if (op === 'parent.connect') {
     if (!storeReady()) return { ok: false, reason: 'no_kv' };
@@ -635,7 +789,8 @@ async function route(op, b, req) {
     await setJSON(hhKey(id), rec);
     let frame = null;
     try { frame = await hhFrame(rec); } catch {}
-    return { ok: true, hh: id, email, frame };
+    const pdev = await addParentDevice(id, b.label);
+    return { ok: true, hh: id, pdev, email, frame };
   }
 
   if (op === 'parent.disconnect') {
@@ -657,8 +812,100 @@ async function route(op, b, req) {
   const gate = () => {
     needH();
     if (!pinOk(H, b.pin)) throw new SkylightError('locked', 'that PIN did not match', 401);
+    if (!deviceOk) throw new SkylightError('not_this_device', 'this phone was removed from the household', 401);
     return H;
   };
+
+  /* ------------------------------------------------- kids, in own mode -- */
+  if (op === 'child.add') {
+    gate();
+    if (!isLocal(H)) return { ok: false, reason: 'skylight_owns_kids' };
+    const name = String(b.name || '').trim().slice(0, 40);
+    if (!name) return { ok: false, reason: 'no_name' };
+    const have = await localChildren(H);
+    if (have.length >= 12) return { ok: false, reason: 'too_many_kids' };
+    if (have.some((c) => c.name.toLowerCase() === name.toLowerCase()))
+      return { ok: false, reason: 'name_taken' };
+    const cid = 'c' + rnd(10);
+    const color = /^#[0-9A-Fa-f]{6}$/.test(String(b.color || '')) ? b.color
+                : KID_COLORS[have.length % KID_COLORS.length];
+    await setJSON(personKey(H.id, cid), { categoryId: cid, name, color });
+    await redis('SADD', kidsKey(H.id), cid).catch(() => {});
+    return { ok: true, child: { categoryId: cid, name, color, isPerson: true, photo: null } };
+  }
+
+  if (op === 'child.remove') {
+    gate();
+    if (!isLocal(H)) return { ok: false, reason: 'skylight_owns_kids' };
+    const cid = String(b.categoryId || '');
+    if (!cid) return { ok: false, reason: 'no_child' };
+    // their jobs go with them, and any photo attached to those jobs
+    const days = await redis('KEYS', K('hh:' + H.id + ':day:*')).catch(() => []);
+    let removed = 0;
+    for (const dk of (days || [])) {
+      const ids = await redis('SMEMBERS', dk).catch(() => []);
+      for (const id of (ids || [])) {
+        const c = await getJSON(choreKey(H.id, id)).catch(() => null);
+        if (c && String(c.categoryId) === cid) { await localDeleteChore(H, id); removed++; }
+      }
+    }
+    // and every phone that was joined to them
+    const rec = await getJSON(childKey(H.id, cid)).catch(() => null);
+    for (const d of ((rec && rec.devices) || [])) await redis('DEL', kidKey(d.token)).catch(() => {});
+    await redis('DEL', childKey(H.id, cid)).catch(() => {});
+    await redis('DEL', personKey(H.id, cid)).catch(() => {});
+    await redis('SREM', kidsKey(H.id), cid).catch(() => {});
+    return { ok: true, removedJobs: removed };
+  }
+
+  /* ------------------------------------------------- more grown-ups ----- */
+  //
+  // One code, one hour, one use. Same shape as a kid's join code, because the
+  // parents in this house should not have to learn a second idea.
+  if (op === 'parent.invite') {
+    gate();
+    const code = joinCode(6);
+    await setJSON(pcodeKey(code), { hh: H.id, at: Date.now() }, 3600);
+    return { ok: true, code, minutes: 60 };
+  }
+
+  if (op === 'parent.accept') {
+    if (!storeReady()) return { ok: false, reason: 'no_kv' };
+    const code = String(b.code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (!code) return { ok: false, reason: 'no_code' };
+    const claim = await getJSON(pcodeKey(code)).catch(() => null);
+    if (!claim) return { ok: false, reason: 'bad_code' };
+    const HH = await household(claim.hh);
+    if (!HH) return { ok: false, reason: 'household_gone' };
+    await redis('DEL', pcodeKey(code)).catch(() => {});          // one use
+    const pdev = await addParentDevice(HH.id, b.label);
+    return { ok: true, hh: HH.id, pdev, mode: isLocal(HH) ? 'local' : 'skylight',
+             frame: { id: 'joined', name: HH.frameName || 'Home', tz: HH.tz || 'UTC' } };
+  }
+
+  if (op === 'parent.devices') {
+    gate();
+    const ids = await redis('SMEMBERS', pdevKey(H.id)).catch(() => []);
+    const out = [];
+    for (const d of (ids || [])) {
+      const rec = await getJSON(pdevInfo(H.id, d)).catch(() => null);
+      out.push({ id: d, label: (rec && rec.label) || 'A phone', at: (rec && rec.at) || null,
+                 isYou: String(b.pdev || '') === d });
+    }
+    return { ok: true, devices: out.sort((a, z) => (a.at || 0) - (z.at || 0)) };
+  }
+
+  // A real revocation: that phone still knows the household id and is still out.
+  if (op === 'parent.removedevice') {
+    gate();
+    const d = String(b.device || '');
+    if (!d) return { ok: false, reason: 'no_device' };
+    const ids = await redis('SMEMBERS', pdevKey(H.id)).catch(() => []);
+    if ((ids || []).length <= 1) return { ok: false, reason: 'last_grownup' };
+    await redis('SREM', pdevKey(H.id), d).catch(() => {});
+    await redis('DEL', pdevInfo(H.id, d)).catch(() => {});
+    return { ok: true, removedSelf: String(b.pdev || '') === d };
+  }
 
   /* --------------------------------------------------------- the PIN ---- */
   //
@@ -703,6 +950,17 @@ async function route(op, b, req) {
     if (!b.summary || !String(b.summary).trim()) return { ok: false, reason: 'no_summary' };
     if (!b.categoryId) return { ok: false, reason: 'no_child' };
     const f = await hhFrame(H);
+    if (f.local) {
+      const made = await localCreateChore(H, b);
+      const grp = String(made[0].group);
+      if (b.needsProof) await redis('SADD', proofSetKey(H.id), grp).catch(() => {});
+      await redis('LPUSH', K('alerts'), JSON.stringify({
+        at: Date.now(), hh: H.id, categoryId: String(b.categoryId),
+        choreId: made[0].id, summary: made[0].summary, time: made[0].time, date: made[0].date,
+      })).catch(() => {});
+      await redis('LTRIM', K('alerts'), 0, 499).catch(() => {});
+      return { ok: true, created: made, queuedAlert: true };
+    }
     const j = await skyH(H, `/api/frames/${f.id}/chores/create_multiple`, { method: 'POST', body: {
       summary: String(b.summary).trim().slice(0, 200),
       start: b.date || todayISO(f.tz),
@@ -734,6 +992,7 @@ async function route(op, b, req) {
   if (op === 'chore.complete') {
     gate();
     const f = await hhFrame(H);
+    if (f.local) { await localSetDone(H, b.choreId, b.done !== false); return { ok: true }; }
     await skyH(H, `/api/frames/${f.id}/chores/${encodeURIComponent(b.choreId)}`,
                { method: 'PUT', body: { status: b.done === false ? 'pending' : 'complete' } });
     return { ok: true };
@@ -742,6 +1001,7 @@ async function route(op, b, req) {
   if (op === 'chore.delete') {
     gate();
     const f = await hhFrame(H);
+    if (f.local) { await localDeleteChore(H, b.choreId); return { ok: true }; }
     await skyH(H, `/api/frames/${f.id}/chores/${encodeURIComponent(b.choreId)}${b.all !== false ? '?apply_to=all' : ''}`,
                { method: 'DELETE' });
     return { ok: true };
@@ -894,7 +1154,8 @@ async function route(op, b, req) {
       if (need.has(String(target.group)) && !(await getJSON(photoKey(c.H.id, target.id)).catch(() => null)))
         return { ok: false, reason: 'needs_photo', summary: target.summary };
     }
-    await skyH(c.H, `/api/frames/${f.id}/chores/${encodeURIComponent(target.id)}`,
+    if (f.local) await localSetDone(c.H, target.id, b.done !== false);
+    else await skyH(c.H, `/api/frames/${f.id}/chores/${encodeURIComponent(target.id)}`,
                { method: 'PUT', body: { status: b.done === false ? 'pending' : 'complete' } });
     await redis('SADD', K('acked'), String(target.id)).catch(() => {});
     await redis('EXPIRE', K('acked'), 172800).catch(() => {});
@@ -924,7 +1185,8 @@ async function route(op, b, req) {
     await redis('ZADD', K('photoq'), String(Date.now() + PHOTO_DAYS * 86400000),
       JSON.stringify({ url: up.url, choreId: target.id, hh: c.H.id })).catch(() => {});
 
-    await skyH(c.H, `/api/frames/${f.id}/chores/${encodeURIComponent(target.id)}`,
+    if (f.local) await localSetDone(c.H, target.id, true);
+    else await skyH(c.H, `/api/frames/${f.id}/chores/${encodeURIComponent(target.id)}`,
                { method: 'PUT', body: { status: 'complete' } });
     await redis('SADD', K('acked'), String(target.id)).catch(() => {});
     await queueParentAlert({ hh: c.H.id, child: c.kid.name, summary: target.summary,
