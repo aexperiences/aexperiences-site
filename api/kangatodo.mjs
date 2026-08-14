@@ -76,6 +76,29 @@ function safeEqual(a, b) {
   return crypto.timingSafeEqual(A, B);
 }
 
+/**
+ * The parent PIN is now PER HOUSEHOLD, not one global env var.
+ *
+ * It was `PARENT_PIN` when this ran on a single Skylight account. With many
+ * families on one deployment a shared PIN is meaningless, so each household
+ * carries its own — stored only as a salted hash, never in the clear, so a
+ * dump of the store does not hand anyone a working PIN.
+ *
+ * The PIN is a SECOND lock, not the first. The household token already
+ * authenticates the family; the PIN stops a kid picking up a parent's unlocked
+ * phone and assigning themselves nothing. Optional by design — a parent who
+ * doesn't want one shouldn't be forced to invent one.
+ */
+function pinHash(hhId, pin) {
+  return crypto.createHash('sha256').update(hhId + ':' + String(pin)).digest('hex');
+}
+function pinOk(H, pin) {
+  if (!H || !H.pin) return true;                     // no PIN set = no lock
+  if (pin === undefined || pin === null || pin === '') return false;
+  return safeEqual(pinHash(H.id, pin), H.pin);
+}
+const isPin = (p) => /^[0-9]{4,8}$/.test(String(p || ''));
+
 /* ============================================================== skylight == */
 //
 // Reverse-engineered surface. Confirmed live Aug 2026:
@@ -92,10 +115,6 @@ const SKY_CLIENT_ID = 'skylight-mobile';
 const SKY_SCOPE     = 'everything';
 const SKY_REDIRECT  = 'https://ourskylight.com/welcome';
 const SKY_API_VER   = '2026-03-01';
-
-const SKY_EMAIL = process.env.SKYLIGHT_EMAIL || '';
-const SKY_PASS  = process.env.SKYLIGHT_PASSWORD || '';
-const skyConfigured = () => !!(SKY_EMAIL && SKY_PASS);
 
 class SkylightError extends Error {
   constructor(reason, detail, status) {
@@ -124,7 +143,7 @@ function readSetCookie(res) {
 
 /* -- the OAuth PKCE dance -------------------------------------------------- */
 
-async function skyAuthorize() {
+async function skyAuthorize(email, password) {
   const verifier  = rnd(32);
   const challenge = b64url(crypto.createHash('sha256').update(verifier).digest());
   const state     = rnd(16);
@@ -167,7 +186,7 @@ async function skyAuthorize() {
       origin: SKY_BASE,
       referer: `${SKY_BASE}/auth/session/new`,
     },
-    body: new URLSearchParams({ authenticity_token: csrf, email: SKY_EMAIL, password: SKY_PASS }),
+    body: new URLSearchParams({ authenticity_token: csrf, email, password }),
   });
   jarPut(jar, readSetCookie(r));
   if (r.status !== 302 && r.status !== 303) {
@@ -189,14 +208,16 @@ async function skyAuthorize() {
     code,
     code_verifier: verifier,
     redirect_uri: SKY_REDIRECT,
+    __email: email,
   });
 }
 
 async function skyToken(extra) {
+  const email = extra.__email; delete extra.__email;
   const body = new URLSearchParams({
     client_id: SKY_CLIENT_ID,
     scope: SKY_SCOPE,
-    skylight_api_client_device_fingerprint: deviceFingerprint(),
+    skylight_api_client_device_fingerprint: deviceFingerprint(email),
     skylight_api_client_device_platform: 'web',
     skylight_api_client_device_name: 'KangaToDo',
     skylight_api_client_device_os_version: 'unknown',
@@ -225,100 +246,10 @@ async function skyToken(extra) {
 // One stable fingerprint per deployment. Skylight ties tokens to a device; a
 // fingerprint that changed every cold start would look like a swarm of new
 // devices logging in, which is how an account gets flagged.
-function deviceFingerprint() {
-  const seed = (process.env.SKYLIGHT_DEVICE_ID || '') || crypto
-    .createHash('sha256').update('ae-assign|' + SKY_EMAIL).digest('hex');
+function deviceFingerprint(email) {
+  const seed = crypto.createHash('sha256').update('kangatodo|' + (email || 'default')).digest('hex');
   const h = seed.replace(/[^a-f0-9]/gi, '').padEnd(32, '0').slice(0, 32);
   return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20,32)}`;
-}
-
-/* -- token cache ----------------------------------------------------------- */
-
-let memToken = null; // survives warm invocations; Redis survives cold ones.
-
-async function skyAccessToken(force) {
-  if (!skyConfigured()) throw new SkylightError('no_skylight', 'SKYLIGHT_EMAIL / SKYLIGHT_PASSWORD are not set');
-
-  if (!force && memToken && memToken.expires_at > Date.now()) return memToken.access_token;
-
-  if (!force && storeReady()) {
-    const cached = await getJSON(K('sky:token')).catch(() => null);
-    if (cached && cached.expires_at > Date.now()) { memToken = cached; return cached.access_token; }
-    if (cached && cached.refresh_token) {
-      try {
-        const t = await skyToken({ grant_type: 'refresh_token', refresh_token: cached.refresh_token });
-        memToken = t; await setJSON(K('sky:token'), t).catch(() => {});
-        return t.access_token;
-      } catch { /* refresh tokens rotate and expire — fall through to a full login */ }
-    }
-  }
-
-  const t = await skyAuthorize();
-  memToken = t;
-  if (storeReady()) await setJSON(K('sky:token'), t).catch(() => {});
-  return t.access_token;
-}
-
-/* -- authenticated calls --------------------------------------------------- */
-
-async function sky(path, { method = 'GET', body, retry = true } = {}) {
-  const token = await skyAccessToken(false);
-  const headers = {
-    authorization: `Bearer ${token}`,
-    accept: 'application/json',
-    'skylight-api-version': SKY_API_VER,
-  };
-  if (body !== undefined) headers['content-type'] = 'application/json';
-
-  const r = await fetch(SKY_BASE + path, {
-    method, headers,
-    body: body === undefined ? undefined : JSON.stringify(body),
-  });
-
-  if (r.status === 401 && retry) { memToken = null; return sky(path, { method, body, retry: false }); }
-  if (r.status === 429) {
-    throw new SkylightError('skylight_rate_limited', `retry after ${r.headers.get('retry-after') || '?'}s`, 429);
-  }
-  if (!r.ok) {
-    const text = await r.text().catch(() => '');
-    throw new SkylightError('skylight_error', text.slice(0, 300), r.status);
-  }
-
-  // DELETE returns 200 with an empty body. Calling .json() on it throws.
-  const raw = await r.text();
-  if (!raw) return null;
-  try { return JSON.parse(raw); }
-  catch { throw new SkylightError('skylight_changed', 'response was not JSON', r.status); }
-}
-
-/* -- frame (household) ----------------------------------------------------- */
-
-async function skyFrame() {
-  if (process.env.SKYLIGHT_FRAME_ID) return { id: String(process.env.SKYLIGHT_FRAME_ID) };
-  const j = await sky('/api/frames');
-  const first = j && j.data && j.data[0];
-  if (!first) throw new SkylightError('skylight_no_frame', 'this Skylight account has no frames');
-  return { id: String(first.id), name: (first.attributes || {}).name || 'Home',
-           tz: (first.attributes || {}).timezone || 'UTC',
-           plus: !!(first.attributes || {}).plus };
-}
-
-/* -- children are categories ----------------------------------------------- */
-// Skylight has no /people endpoint. A family member is a CATEGORY carrying
-// linked_to_profile:true. That is the join point for everything below.
-
-async function skyChildren(frameId) {
-  const j = await sky(`/api/frames/${frameId}/categories`);
-  return (j.data || [])
-    .map((c) => ({
-      categoryId: String(c.id),
-      name: (c.attributes || {}).label || 'Unnamed',
-      color: (c.attributes || {}).color || '#8a7a5c',
-      isPerson: !!(c.attributes || {}).linked_to_profile,
-      onChoreChart: !!(c.attributes || {}).selected_for_chore_chart,
-      photo: (c.attributes || {}).profile_pic_url || null,
-    }))
-    .filter((c) => c.isPerson);
 }
 
 /* -- chores ---------------------------------------------------------------- */
@@ -344,56 +275,14 @@ function normaliseChore(c, catIndex) {
   };
 }
 
-async function skyChores(frameId, { from, to } = {}) {
-  const q = new URLSearchParams();
-  if (from) q.set('after', from);
-  if (to) q.set('before', to);
-  q.set('include_late', 'true');
-  const j = await sky(`/api/frames/${frameId}/chores?${q}`);
-  const catIndex = {};
-  for (const inc of (j.included || [])) {
-    if (inc.type === 'category') catIndex[String(inc.id)] = (inc.attributes || {}).label || null;
-  }
-  return (j.data || []).map((c) => normaliseChore(c, catIndex));
-}
-
-async function skyCreateChore(frameId, chore) {
-  // FLAT body, not JSON:API — sending relationships here returns 422
-  // {"category":["must exist"]}. Both category_id AND category_ids are required.
-  const body = {
-    summary: chore.summary,
-    start: chore.date,
-    start_time: chore.time || null,
-    recurring: !!chore.recurring,
-    recurrence_set: chore.recurrence_set || null,
-    recurring_until: chore.until || null,
-    routine: chore.routine !== false,
-    reward_points: chore.points ?? null,
-    emoji_icon: chore.emoji || null,
-    category_id: String(chore.categoryId),
-    category_ids: [String(chore.categoryId)],
-  };
-  const j = await sky(`/api/frames/${frameId}/chores/create_multiple`, { method: 'POST', body });
-  // Returns an ARRAY. A single BYHOUR=6,14,20 rule fans out into one record per hour.
-  const list = (j && j.data) || [];
-  return list.map((c) => normaliseChore(c, null));
-}
-
-const skySetStatus = (frameId, choreId, status) =>
-  sky(`/api/frames/${frameId}/chores/${encodeURIComponent(choreId)}`, { method: 'PUT', body: { status } });
-
-const skyDeleteChore = (frameId, choreId, applyToAll) =>
-  sky(`/api/frames/${frameId}/chores/${encodeURIComponent(choreId)}${applyToAll ? '?apply_to=all' : ''}`,
-      { method: 'DELETE' });
-
 /* ============================================================== kid links == */
 //
 // A child device holds one opaque token. The token — not the request — decides
 // which category the device may see. This is the whole security model.
 
-const kidKey   = (token) => K('kid:' + token);
+const kidKey   = (token) => K('kid:' + token);   // value carries its own householdId
 const codeKey  = (code)  => K('code:' + code.toUpperCase());
-const childKey = (cid)   => K('child:' + cid);
+const childKey = (hh, cid) => K('hh:' + hh + ':child:' + cid);
 
 async function resolveKid(token) {
   if (!token || typeof token !== 'string' || token.length < 20) return null;
@@ -403,6 +292,88 @@ async function resolveKid(token) {
   return kid;
 }
 
+
+
+/* ============================================================= households == */
+//
+// One household = one family that signed in with their own Skylight login.
+// THE PASSWORD IS NEVER STORED. It is used once to complete Skylight's OAuth
+// flow; only the refresh token comes back, and only that is kept. Signing out
+// deletes it. Each household's data is namespaced by its own id, so one family
+// can never see another's — the same rule the kid tokens follow.
+
+const hhKey = (id) => K('hh:' + id);
+
+async function household(id) {
+  if (!id || typeof id !== 'string' || id.length < 20) return null;
+  if (!storeReady()) return null;
+  return await getJSON(hhKey(id)).catch(() => null);
+}
+
+/** Access token for THIS household, refreshing when it has aged out. */
+async function hhAccess(H, force) {
+  if (!H) throw new SkylightError('not_connected', 'this family has not signed in yet');
+  if (!force && H.access_token && H.expires_at > Date.now()) return H.access_token;
+  if (H.refresh_token) {
+    try {
+      const t = await skyToken({ grant_type: 'refresh_token', refresh_token: H.refresh_token, __email: H.email });
+      Object.assign(H, t);
+      await setJSON(hhKey(H.id), H);
+      return t.access_token;
+    } catch { /* refresh tokens rotate and expire — fall through */ }
+  }
+  throw new SkylightError('signed_out', 'Skylight signed this family out — sign in again');
+}
+
+/** Authenticated Skylight call ON BEHALF OF one household. */
+async function skyH(H, path, { method = 'GET', body, retry = true } = {}) {
+  const token = await hhAccess(H, false);
+  const headers = { authorization: `Bearer ${token}`, accept: 'application/json',
+                    'skylight-api-version': SKY_API_VER };
+  if (body !== undefined) headers['content-type'] = 'application/json';
+  const r = await fetch(SKY_BASE + path, { method, headers,
+    body: body === undefined ? undefined : JSON.stringify(body) });
+  if (r.status === 401 && retry) { await hhAccess(H, true); return skyH(H, path, { method, body, retry: false }); }
+  if (r.status === 429) throw new SkylightError('skylight_rate_limited', `retry after ${r.headers.get('retry-after') || '?'}s`, 429);
+  if (!r.ok) throw new SkylightError('skylight_error', (await r.text().catch(() => '')).slice(0, 300), r.status);
+  const raw = await r.text();
+  if (!raw) return null;
+  try { return JSON.parse(raw); } catch { throw new SkylightError('skylight_changed', 'response was not JSON', r.status); }
+}
+
+async function hhFrame(H) {
+  if (H.frameId) return { id: H.frameId, name: H.frameName, tz: H.tz, plus: H.plus };
+  const j = await skyH(H, '/api/frames');
+  const first = j && j.data && j.data[0];
+  if (!first) throw new SkylightError('skylight_no_frame', 'this Skylight account has no frames');
+  const a = first.attributes || {};
+  H.frameId = String(first.id); H.frameName = a.name || 'Home';
+  H.tz = a.timezone || 'UTC'; H.plus = !!a.plus;
+  await setJSON(hhKey(H.id), H);
+  return { id: H.frameId, name: H.frameName, tz: H.tz, plus: H.plus };
+}
+
+async function hhChildren(H, frameId) {
+  const j = await skyH(H, `/api/frames/${frameId}/categories`);
+  return (j.data || []).map((c) => ({
+    categoryId: String(c.id),
+    name: (c.attributes || {}).label || 'Unnamed',
+    color: (c.attributes || {}).color || '#8a7a5c',
+    isPerson: !!(c.attributes || {}).linked_to_profile,
+    photo: (c.attributes || {}).profile_pic_url || null,
+  })).filter((c) => c.isPerson);
+}
+
+async function hhChores(H, frameId, { from, to } = {}) {
+  const q = new URLSearchParams();
+  if (from) q.set('after', from);
+  if (to) q.set('before', to);
+  q.set('include_late', 'true');
+  const j = await skyH(H, `/api/frames/${frameId}/chores?${q}`);
+  const idx = {};
+  for (const inc of (j.included || [])) if (inc.type === 'category') idx[String(inc.id)] = (inc.attributes || {}).label || null;
+  return (j.data || []).map((c) => normaliseChore(c, idx));
+}
 
 /* ============================================================ proof shots == */
 //
@@ -435,24 +406,24 @@ async function blobPut(pathname, bytes, contentType) {
   catch { throw new SkylightError('photo_store_failed', 'upload response was not JSON', r.status); }
 }
 
-const proofSetKey = K('proofset');            // chore GROUP ids that require a photo
-const photoKey  = (choreId) => K('photo:' + choreId);
+const proofSetKey = (hh) => K('hh:' + hh + ':proofset');   // chore GROUPs needing a photo
+const photoKey  = (hh, choreId) => K('hh:' + hh + ':photo:' + choreId);
 
 /** Which of these chore groups need a photo? One round trip, not N. */
-async function proofGroups() {
+async function proofGroups(hh) {
   if (!storeReady()) return new Set();
-  const m = await redis('SMEMBERS', proofSetKey).catch(() => []);
+  const m = await redis('SMEMBERS', proofSetKey(hh)).catch(() => []);
   return new Set((m || []).map(String));
 }
 
 /** Attach needsProof + any photo already taken. */
-async function decorate(chores) {
+async function decorate(hh, chores) {
   if (!storeReady() || !chores.length) return chores;
-  const need = await proofGroups();
+  const need = await proofGroups(hh);
   const withProof = chores.filter((c) => need.has(String(c.group)));
   const photos = {};
   for (const c of withProof) {
-    const p = await getJSON(photoKey(c.id)).catch(() => null);
+    const p = await getJSON(photoKey(hh, c.id)).catch(() => null);
     if (p) photos[c.id] = p;
   }
   for (const c of chores) {
@@ -471,7 +442,13 @@ async function queueParentAlert(entry) {
   await redis('LPUSH', K('parentq'), JSON.stringify(entry)).catch(() => {});
   await redis('LTRIM', K('parentq'), 0, 99).catch(() => {});
   // Feeds the evening digest.
-  await redis('LPUSH', K('digest:' + new Date().toISOString().slice(0, 10)), JSON.stringify(entry)).catch(() => {});
+  // Per household. A shared list would mean one family's evening summary named
+  // another family's children — the digest is grouped by kid name, so it would
+  // have leaked across households the moment two families used one deployment.
+  const day = new Date().toISOString().slice(0, 10);
+  await redis('LPUSH', K('digest:' + entry.hh + ':' + day), JSON.stringify(entry)).catch(() => {});
+  await redis('SADD', K('digestdays:' + day), entry.hh).catch(() => {});
+  await redis('EXPIRE', K('digestdays:' + day), '172800').catch(() => {});
   await redis('EXPIRE', K('digest:' + new Date().toISOString().slice(0, 10)), 172800).catch(() => {});
 }
 
@@ -522,371 +499,326 @@ export default async function handler(req, res) {
 }
 
 async function route(op, b, req) {
+  const H = await household(b.hh);          // the signed-in family, or null
+
   /* ---------------------------------------------------------- status ---- */
-  // Honest capability report. The app renders exactly what this says and never
-  // claims a feature that is dark.
   if (op === 'status') {
     const st = {
       ok: true,
       store: storeReady(),
-      skylight: skyConfigured(),
       push: !!((process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) || storeReady()),
-      sms: !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_FROM),
       photos: blobReady(),
       photoDays: PHOTO_DAYS,
-      parentLock: !!process.env.PARENT_PIN,
       vapidPublicKey: await vapidPublicKey(),
+      // Text backup is the fallback, not the main road. Reported honestly so the
+      // app can say "Text backup off" instead of implying a message will arrive.
+      sms: !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_FROM),
+      signedIn: !!H,
+      pinSet: !!(H && H.pin),
     };
-    if (st.skylight) {
+    if (H) {
       try {
-        const f = await skyFrame();
-        st.frame = { id: f.id, name: f.name || null, plus: !!f.plus, tz: f.tz || null };
+        const f = await hhFrame(H);
         st.connected = true;
+        st.email = H.email;
+        st.frame = { id: f.id, name: f.name, plus: !!f.plus, tz: f.tz };
       } catch (e) {
         st.connected = false;
         st.skylightReason = e.reason || 'error';
         st.skylightDetail = e.detail || '';
       }
-    } else {
-      st.connected = false;
-      st.skylightReason = 'no_skylight';
-    }
+    } else st.connected = false;
     return st;
   }
 
-  /* ---------------------------------------------------- parent unlock ---- */
-  if (op === 'parent.unlock') {
-    const pin = process.env.PARENT_PIN || '';
-    if (!pin) return { ok: true, unlocked: true, unlocked_because: 'no_pin_set' };
-    if (!safeEqual(String(b.pin || ''), pin)) {
-      await new Promise((r) => setTimeout(r, 400)); // blunt the guessing
-      return { ok: false, reason: 'bad_pin' };
-    }
-    return { ok: true, unlocked: true, session: rnd(24) };
+  /* --------------------------------------------------- sign in / out ---- */
+
+  if (op === 'parent.connect') {
+    if (!storeReady()) return { ok: false, reason: 'no_kv' };
+    const email = String(b.email || '').trim();
+    const password = String(b.password || '');
+    if (!email || !password) return { ok: false, reason: 'need_login' };
+
+    // One use only. We exchange it for a token and never write it anywhere.
+    const t = await skyAuthorize(email, password);
+
+    const id = rnd(24);
+    const rec = { id, email, ...t, at: Date.now() };
+    // A deployment-wide PARENT_PIN still seeds the first lock, so the original
+    // single-account setup keeps behaving exactly as it did. Families who sign
+    // up on a deployment without one simply start unlocked and can set their own.
+    if (isPin(process.env.PARENT_PIN)) rec.pin = pinHash(id, process.env.PARENT_PIN);
+    await setJSON(hhKey(id), rec);
+    let frame = null;
+    try { frame = await hhFrame(rec); } catch {}
+    return { ok: true, hh: id, email, frame };
   }
 
-  const requireParent = () => {
-    const pin = process.env.PARENT_PIN || '';
-    if (!pin) return;                                  // no lock configured — say so in the UI, don't fake one
-    if (!safeEqual(String(b.pin || ''), pin)) throw new SkylightError('locked', 'parent PIN required', 401);
+  if (op === 'parent.disconnect') {
+    if (!H) return { ok: true, removed: 0 };
+    // Take every kid phone with it — their tokens point at this household.
+    const kids = await redis('SMEMBERS', K('hh:' + H.id + ':kids')).catch(() => []);
+    for (const t of (kids || [])) await redis('DEL', kidKey(t)).catch(() => {});
+    await redis('DEL', K('hh:' + H.id + ':kids')).catch(() => {});
+    await redis('DEL', hhKey(H.id)).catch(() => {});
+    return { ok: true, removed: (kids || []).length, signedOut: true };
+  }
+
+  const needH = () => { if (!H) throw new SkylightError('not_connected', 'sign in with Skylight first', 401); return H; };
+
+  // Every parent-side op goes through here. `locked` is a plain answer, not an
+  // error, so the app can show a keypad instead of an alarming failure.
+  const gate = () => {
+    needH();
+    if (!pinOk(H, b.pin)) throw new SkylightError('locked', 'that PIN did not match', 401);
+    return H;
   };
+
+  /* --------------------------------------------------------- the PIN ---- */
+  //
+  // Set, change, or clear this family's parent PIN. Changing or clearing needs
+  // the current one, so someone holding a borrowed phone can't lock the parent
+  // out of their own household.
+  if (op === 'parent.pin') {
+    gate();                                   // proves they know the current PIN
+    const next = b.newPin === null || b.newPin === '' ? null : String(b.newPin || '');
+    if (next !== null && !isPin(next)) return { ok: false, reason: 'bad_pin', detail: '4 to 8 digits' };
+    const rec = { ...H };
+    if (next === null) delete rec.pin; else rec.pin = pinHash(H.id, next);
+    await setJSON(hhKey(H.id), rec);
+    return { ok: true, pinSet: !!rec.pin };
+  }
 
   /* ------------------------------------------------------- parent side --- */
 
   if (op === 'children') {
-    requireParent();
-    const f = await skyFrame();
-    const kids = await skyChildren(f.id);
-    if (storeReady()) {
-      // Decorate with our own link state — which kids actually have a phone attached.
-      for (const k of kids) {
-        const rec = await getJSON(childKey(k.categoryId)).catch(() => null);
-        k.linked   = !!(rec && rec.devices && rec.devices.length);
-        k.devices  = rec ? (rec.devices || []).length : 0;
-        k.phone    = rec && rec.phone ? String(rec.phone).replace(/\d(?=\d{4})/g, '•') : null;
-        k.pendingCode = rec && rec.code ? rec.code : null;
-      }
+    gate();
+    const f = await hhFrame(H);
+    const kids = await hhChildren(H, f.id);
+    for (const k of kids) {
+      const rec = await getJSON(childKey(H.id, k.categoryId)).catch(() => null);
+      k.linked  = !!(rec && rec.devices && rec.devices.length);
+      k.devices = rec ? (rec.devices || []).length : 0;
+      k.phone   = rec && rec.phone ? String(rec.phone).replace(/\d(?=\d{4})/g, '•') : null;
     }
-    return { ok: true, frame: { id: f.id, name: f.name, tz: f.tz, plus: f.plus }, children: kids };
+    return { ok: true, frame: f, children: kids };
   }
 
   if (op === 'chores') {
-    requireParent();
-    const f = await skyFrame();
+    gate();
+    const f = await hhFrame(H);
     const from = b.from || todayISO(f.tz);
     const to   = b.to   || from;
-    return { ok: true, from, to, chores: await decorate(await skyChores(f.id, { from, to })) };
+    return { ok: true, from, to, chores: await decorate(H.id, await hhChores(H, f.id, { from, to })) };
   }
 
   if (op === 'chore.create') {
-    requireParent();
+    gate();
     if (!b.summary || !String(b.summary).trim()) return { ok: false, reason: 'no_summary' };
     if (!b.categoryId) return { ok: false, reason: 'no_child' };
-    const f = await skyFrame();
-
-    const made = await skyCreateChore(f.id, {
+    const f = await hhFrame(H);
+    const j = await skyH(H, `/api/frames/${f.id}/chores/create_multiple`, { method: 'POST', body: {
       summary: String(b.summary).trim().slice(0, 200),
-      date: b.date || todayISO(f.tz),
-      time: b.time || null,
+      start: b.date || todayISO(f.tz),
+      start_time: b.time || null,
       recurring: !!b.recurring,
       recurrence_set: b.recurrence_set || null,
-      until: b.until || null,
-      points: b.points ?? null,
-      emoji: b.emoji || null,
-      categoryId: b.categoryId,
-    });
+      recurring_until: b.until || null,
+      routine: true,
+      reward_points: b.points ?? null,
+      emoji_icon: b.emoji || null,
+      category_id: String(b.categoryId),
+      category_ids: [String(b.categoryId)],
+    }});
+    const made = ((j && j.data) || []).map((c) => normaliseChore(c, null));
 
-    // A job needs a photo per SERIES, so every repeat of it inherits the rule.
-    if (storeReady() && made.length) {
+    if (made.length) {
       const grp = String(made[0].group);
-      if (b.needsProof) await redis('SADD', proofSetKey, grp).catch(() => {});
-      else              await redis('SREM', proofSetKey, grp).catch(() => {});
-    }
-
-    // Queue the alert. Delivery is the alert endpoint's job, not this one's —
-    // a slow push service must never make a parent's Save button hang.
-    if (storeReady() && made.length) {
+      if (b.needsProof) await redis('SADD', proofSetKey(H.id), grp).catch(() => {});
+      else              await redis('SREM', proofSetKey(H.id), grp).catch(() => {});
       await redis('LPUSH', K('alerts'), JSON.stringify({
-        at: Date.now(),
-        categoryId: String(b.categoryId),
-        choreId: made[0].id,
-        summary: made[0].summary,
-        time: made[0].time,
-        date: made[0].date,
+        at: Date.now(), hh: H.id, categoryId: String(b.categoryId),
+        choreId: made[0].id, summary: made[0].summary, time: made[0].time, date: made[0].date,
       })).catch(() => {});
       await redis('LTRIM', K('alerts'), 0, 499).catch(() => {});
     }
-
-    return { ok: true, created: made, queuedAlert: storeReady() };
+    return { ok: true, created: made, queuedAlert: true };
   }
 
   if (op === 'chore.complete') {
-    requireParent();
-    const f = await skyFrame();
-    await skySetStatus(f.id, b.choreId, b.done === false ? 'pending' : 'complete');
+    gate();
+    const f = await hhFrame(H);
+    await skyH(H, `/api/frames/${f.id}/chores/${encodeURIComponent(b.choreId)}`,
+               { method: 'PUT', body: { status: b.done === false ? 'pending' : 'complete' } });
     return { ok: true };
   }
 
   if (op === 'chore.delete') {
-    requireParent();
-    const f = await skyFrame();
-    await skyDeleteChore(f.id, b.choreId, b.all !== false);
+    gate();
+    const f = await hhFrame(H);
+    await skyH(H, `/api/frames/${f.id}/chores/${encodeURIComponent(b.choreId)}${b.all !== false ? '?apply_to=all' : ''}`,
+               { method: 'DELETE' });
     return { ok: true };
   }
 
   /* --------------------------------------------------- linking a child --- */
 
   if (op === 'child.code') {
-    requireParent();
-    if (!storeReady()) return { ok: false, reason: 'no_kv' };
+    gate();
     if (!b.categoryId) return { ok: false, reason: 'no_child' };
-
-    const f = await skyFrame();
-    const kids = await skyChildren(f.id);
-    const kid = kids.find((k) => k.categoryId === String(b.categoryId));
+    const f = await hhFrame(H);
+    const kid = (await hhChildren(H, f.id)).find((k) => k.categoryId === String(b.categoryId));
     if (!kid) return { ok: false, reason: 'unknown_child' };
 
-    const rec = (await getJSON(childKey(kid.categoryId))) || { devices: [] };
+    const rec = (await getJSON(childKey(H.id, kid.categoryId))) || { devices: [] };
     if (rec.code) await redis('DEL', codeKey(rec.code)).catch(() => {});
-
     const code = joinCode(6);
-    rec.code = code;
-    rec.name = kid.name;
-    rec.color = kid.color;
-    await setJSON(childKey(kid.categoryId), rec);
-    // A join code is a key to a child's task list. It expires in an hour.
-    await setJSON(codeKey(code), { categoryId: kid.categoryId, name: kid.name, color: kid.color }, 3600);
-
+    Object.assign(rec, { code, name: kid.name, color: kid.color });
+    await setJSON(childKey(H.id, kid.categoryId), rec);
+    await setJSON(codeKey(code), { hh: H.id, categoryId: kid.categoryId, name: kid.name, color: kid.color }, 3600);
     return { ok: true, code, expiresInMinutes: 60, child: kid.name };
   }
 
   if (op === 'child.phone') {
-    requireParent();
-    if (!storeReady()) return { ok: false, reason: 'no_kv' };
+    gate();
     const digits = String(b.phone || '').replace(/[^\d+]/g, '');
-    const rec = (await getJSON(childKey(String(b.categoryId)))) || { devices: [] };
-    if (!digits) { delete rec.phone; }
+    const rec = (await getJSON(childKey(H.id, String(b.categoryId)))) || { devices: [] };
+    if (!digits) delete rec.phone;
     else {
       if (!/^\+?\d{10,15}$/.test(digits)) return { ok: false, reason: 'bad_phone' };
       rec.phone = digits.startsWith('+') ? digits : '+1' + digits;
     }
-    await setJSON(childKey(String(b.categoryId)), rec);
+    await setJSON(childKey(H.id, String(b.categoryId)), rec);
     return { ok: true, phone: rec.phone ? rec.phone.replace(/\d(?=\d{4})/g, '•') : null };
   }
 
   if (op === 'child.unlink') {
-    requireParent();
-    if (!storeReady()) return { ok: false, reason: 'no_kv' };
-    const rec = await getJSON(childKey(String(b.categoryId)));
+    gate();
+    const rec = await getJSON(childKey(H.id, String(b.categoryId)));
     if (!rec) return { ok: true, removed: 0 };
     let n = 0;
     for (const d of (rec.devices || [])) { await redis('DEL', kidKey(d.token)).catch(() => {}); n++; }
     rec.devices = [];
     if (rec.code) { await redis('DEL', codeKey(rec.code)).catch(() => {}); delete rec.code; }
-    await setJSON(childKey(String(b.categoryId)), rec);
+    await setJSON(childKey(H.id, String(b.categoryId)), rec);
     return { ok: true, removed: n };
   }
 
+  if (op === 'parent.push') {
+    gate();
+    const sub = b.subscription;
+    if (!sub || !sub.endpoint || !sub.keys) return { ok: false, reason: 'bad_subscription' };
+    const pid = rnd(12);
+    await setJSON(K('hh:' + H.id + ':parentpush:' + pid),
+      { endpoint: sub.endpoint, p256dh: sub.keys.p256dh, auth: sub.keys.auth, at: Date.now() });
+    await redis('SADD', K('hh:' + H.id + ':parentpushids'), pid).catch(() => {});
+    return { ok: true };
+  }
+
   /* ------------------------------------------------------- child side ---- */
-  // Everything below trusts the TOKEN and nothing else in the request.
 
   if (op === 'kid.join') {
     if (!storeReady()) return { ok: false, reason: 'no_kv' };
     const code = String(b.code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
     if (code.length !== 6) return { ok: false, reason: 'bad_code' };
-
     const claim = await getJSON(codeKey(code));
     if (!claim) return { ok: false, reason: 'bad_code' };
 
     const token = rnd(32);
-    await setJSON(kidKey(token), {
-      categoryId: claim.categoryId, name: claim.name, color: claim.color, since: Date.now(),
-    });
-
-    const rec = (await getJSON(childKey(claim.categoryId))) || { devices: [] };
+    await setJSON(kidKey(token), { hh: claim.hh, categoryId: claim.categoryId,
+                                   name: claim.name, color: claim.color, since: Date.now() });
+    const rec = (await getJSON(childKey(claim.hh, claim.categoryId))) || { devices: [] };
     rec.devices = rec.devices || [];
     rec.devices.push({ token, since: Date.now(), label: String(b.device || 'phone').slice(0, 40) });
     delete rec.code;
-    await setJSON(childKey(claim.categoryId), rec);
-    await redis('DEL', codeKey(code)).catch(() => {});   // one code, one phone
-
+    await setJSON(childKey(claim.hh, claim.categoryId), rec);
+    await redis('SADD', K('hh:' + claim.hh + ':kids'), token).catch(() => {});
+    await redis('DEL', codeKey(code)).catch(() => {});
     return { ok: true, token, name: claim.name, color: claim.color };
   }
 
-  if (op === 'kid.mine') {
-    if (!storeReady()) return { ok: false, reason: 'no_kv' };
+  // Every child op resolves the household FROM THE TOKEN — never from the request.
+  const kidCtx = async () => {
     const kid = await resolveKid(b.token);
-    if (!kid) return { ok: false, reason: 'not_linked' };
+    if (!kid) return null;
+    const KH = await household(kid.hh);
+    if (!KH) return null;
+    return { kid, H: KH };
+  };
 
-    const f = await skyFrame();
+  if (op === 'kid.mine') {
+    const c = await kidCtx();
+    if (!c) return { ok: false, reason: 'not_linked' };
+    const f = await hhFrame(c.H);
     const day = b.date || todayISO(f.tz);
-    const all = await skyChores(f.id, { from: day, to: day });
-
-    // THE LINE. Filtered server-side against the token's category, never the request's.
-    const mine = all.filter((c) => c.categoryId === kid.categoryId)
-                    .sort((a, z) => (a.time || '99:99').localeCompare(z.time || '99:99') || a.position - z.position);
-
-    await decorate(mine);
-    return {
-      ok: true, name: kid.name, color: kid.color, date: day,
-      needsPhotoSupported: blobReady(),
-      chores: mine,
-      done: mine.filter((c) => c.done).length,
-      total: mine.length,
-    };
+    const mine = (await hhChores(c.H, f.id, { from: day, to: day }))
+      .filter((x) => x.categoryId === c.kid.categoryId)
+      .sort((a, z) => (a.time || '99:99').localeCompare(z.time || '99:99') || a.position - z.position);
+    await decorate(c.H.id, mine);
+    return { ok: true, name: c.kid.name, color: c.kid.color, date: day,
+             chores: mine, done: mine.filter((x) => x.done).length, total: mine.length };
   }
 
   if (op === 'kid.done') {
-    if (!storeReady()) return { ok: false, reason: 'no_kv' };
-    const kid = await resolveKid(b.token);
-    if (!kid) return { ok: false, reason: 'not_linked' };
-
-    const f = await skyFrame();
+    const c = await kidCtx();
+    if (!c) return { ok: false, reason: 'not_linked' };
+    const f = await hhFrame(c.H);
     const day = (String(b.choreId || '').match(/-(\d{4}-\d{2}-\d{2})-/) || [])[1] || todayISO(f.tz);
-    const all = await skyChores(f.id, { from: day, to: day });
-
-    // Re-check ownership against the token before writing. A child cannot complete
-    // a sibling's chore by pasting its id, even a real one.
-    const target = all.find((c) => c.id === String(b.choreId));
+    const target = (await hhChores(c.H, f.id, { from: day, to: day })).find((x) => x.id === String(b.choreId));
     if (!target) return { ok: false, reason: 'unknown_chore' };
-    if (target.categoryId !== kid.categoryId) return { ok: false, reason: 'not_yours' };
-
-    // A job marked "needs a photo" cannot be ticked off without one. Checked HERE,
-    // on the server, so it holds even if the kid's app is old or tampered with.
-    if (b.done !== false && storeReady()) {
-      const need = await proofGroups();
-      if (need.has(String(target.group))) {
-        const shot = await getJSON(photoKey(target.id)).catch(() => null);
-        if (!shot) return { ok: false, reason: 'needs_photo', summary: target.summary };
-      }
-    }
-
-    await skySetStatus(f.id, target.id, b.done === false ? 'pending' : 'complete');
-
-    // Clear any pending SMS fallback — the job is done, don't nag a kid who finished.
-    await redis('SREM', K('ack'), String(b.choreId)).catch(() => {});
-    await redis('SADD', K('acked'), String(b.choreId)).catch(() => {});
-    await redis('EXPIRE', K('acked'), 172800).catch(() => {});
+    if (target.categoryId !== c.kid.categoryId) return { ok: false, reason: 'not_yours' };
 
     if (b.done !== false) {
-      await queueParentAlert({ child: kid.name, summary: target.summary,
-                               choreId: target.id, photo: null, at: Date.now() });
+      const need = await proofGroups(c.H.id);
+      if (need.has(String(target.group)) && !(await getJSON(photoKey(c.H.id, target.id)).catch(() => null)))
+        return { ok: false, reason: 'needs_photo', summary: target.summary };
     }
+    await skyH(c.H, `/api/frames/${f.id}/chores/${encodeURIComponent(target.id)}`,
+               { method: 'PUT', body: { status: b.done === false ? 'pending' : 'complete' } });
+    await redis('SADD', K('acked'), String(target.id)).catch(() => {});
+    await redis('EXPIRE', K('acked'), 172800).catch(() => {});
+    if (b.done !== false) await queueParentAlert({ hh: c.H.id, child: c.kid.name, summary: target.summary,
+                                                   choreId: target.id, photo: null, at: Date.now() });
     return { ok: true, done: b.done !== false };
   }
 
-  if (op === 'kid.push') {
-    if (!storeReady()) return { ok: false, reason: 'no_kv' };
-    const kid = await resolveKid(b.token);
-    if (!kid) return { ok: false, reason: 'not_linked' };
-    const sub = b.subscription;
-    if (!sub || !sub.endpoint || !sub.keys || !sub.keys.p256dh || !sub.keys.auth) {
-      return { ok: false, reason: 'bad_subscription' };
-    }
-    await setJSON(K('push:' + b.token), {
-      endpoint: sub.endpoint, p256dh: sub.keys.p256dh, auth: sub.keys.auth,
-      categoryId: kid.categoryId, name: kid.name, at: Date.now(),
-    });
-    await redis('SADD', K('pushtokens'), b.token).catch(() => {});
-    return { ok: true };
-  }
-
-
-  /* ------------------------------------------------- proof photo (kid) --- */
-
   if (op === 'kid.proof') {
-    if (!storeReady()) return { ok: false, reason: 'no_kv' };
-    if (!blobReady())  return { ok: false, reason: 'no_photo_store' };
-    const kid = await resolveKid(b.token);
-    if (!kid) return { ok: false, reason: 'not_linked' };
-
-    // The phone shrinks the picture before sending. Anything large is a bug or abuse.
-    const raw = String(b.image || '');
-    const m = raw.match(/^data:(image\/(?:jpeg|png|webp));base64,(.+)$/);
+    if (!blobReady()) return { ok: false, reason: 'no_photo_store' };
+    const c = await kidCtx();
+    if (!c) return { ok: false, reason: 'not_linked' };
+    const m = String(b.image || '').match(/^data:(image\/(?:jpeg|png|webp));base64,(.+)$/);
     if (!m) return { ok: false, reason: 'bad_image' };
     const bytes = Buffer.from(m[2], 'base64');
     if (bytes.length > 1_500_000) return { ok: false, reason: 'image_too_big' };
 
-    const f = await skyFrame();
+    const f = await hhFrame(c.H);
     const day = (String(b.choreId || '').match(/-(\d{4}-\d{2}-\d{2})-/) || [])[1] || todayISO(f.tz);
-    const all = await skyChores(f.id, { from: day, to: day });
-    const target = all.find((c) => c.id === String(b.choreId));
+    const target = (await hhChores(c.H, f.id, { from: day, to: day })).find((x) => x.id === String(b.choreId));
     if (!target) return { ok: false, reason: 'unknown_chore' };
-    // Same ownership line as everywhere else: the token decides, not the request.
-    if (target.categoryId !== kid.categoryId) return { ok: false, reason: 'not_yours' };
+    if (target.categoryId !== c.kid.categoryId) return { ok: false, reason: 'not_yours' };
 
     const up = await blobPut(`kangatodo/${rnd(12)}.jpg`, bytes, m[1]);
-    const rec = { url: up.url, at: Date.now(), choreId: target.id, summary: target.summary,
-                  categoryId: kid.categoryId, child: kid.name };
-    await setJSON(photoKey(target.id), rec, PHOTO_DAYS * 86400 + 3600);
-    // Retention queue — the cron deletes the actual blob when this comes due.
+    await setJSON(photoKey(c.H.id, target.id), { url: up.url, at: Date.now(), choreId: target.id,
+      summary: target.summary, child: c.kid.name }, PHOTO_DAYS * 86400 + 3600);
     await redis('ZADD', K('photoq'), String(Date.now() + PHOTO_DAYS * 86400000),
-                JSON.stringify({ url: up.url, choreId: target.id })).catch(() => {});
+      JSON.stringify({ url: up.url, choreId: target.id, hh: c.H.id })).catch(() => {});
 
-    // Now the job may complete.
-    await skySetStatus(f.id, target.id, 'complete');
-    await redis('SREM', K('ack'), String(target.id)).catch(() => {});
+    await skyH(c.H, `/api/frames/${f.id}/chores/${encodeURIComponent(target.id)}`,
+               { method: 'PUT', body: { status: 'complete' } });
     await redis('SADD', K('acked'), String(target.id)).catch(() => {});
-    await redis('EXPIRE', K('acked'), 172800).catch(() => {});
-
-    await queueParentAlert({ child: kid.name, summary: target.summary,
+    await queueParentAlert({ hh: c.H.id, child: c.kid.name, summary: target.summary,
                              choreId: target.id, photo: up.url, at: Date.now() });
     return { ok: true, photo: up.url, done: true };
   }
 
-  /* --------------------------------------------- finished-alerts (parent) */
-
-  if (op === 'parent.push') {
-    requireParent();
-    if (!storeReady()) return { ok: false, reason: 'no_kv' };
+  if (op === 'kid.push') {
+    const c = await kidCtx();
+    if (!c) return { ok: false, reason: 'not_linked' };
     const sub = b.subscription;
-    if (!sub || !sub.endpoint || !sub.keys || !sub.keys.p256dh || !sub.keys.auth) {
-      return { ok: false, reason: 'bad_subscription' };
-    }
-    const id = rnd(12);
-    await setJSON(K('parentpush:' + id), {
-      endpoint: sub.endpoint, p256dh: sub.keys.p256dh, auth: sub.keys.auth, at: Date.now(),
-    });
-    await redis('SADD', K('parentpushids'), id).catch(() => {});
-    return { ok: true, devices: await redis('SCARD', K('parentpushids')).catch(() => 1) };
-  }
-
-  if (op === 'parent.unpush') {
-    requireParent();
-    if (!storeReady()) return { ok: false, reason: 'no_kv' };
-    const ids = await redis('SMEMBERS', K('parentpushids')).catch(() => []);
-    for (const id of (ids || [])) await redis('DEL', K('parentpush:' + id)).catch(() => {});
-    await redis('DEL', K('parentpushids')).catch(() => {});
-    return { ok: true, removed: (ids || []).length };
-  }
-
-  if (op === 'photos') {
-    requireParent();
-    if (!storeReady()) return { ok: false, reason: 'no_kv' };
-    const raw = await redis('LRANGE', K('finished'), '0', '49').catch(() => []);
-    return { ok: true, photoDays: PHOTO_DAYS,
-             finished: (raw || []).map((x) => { try { return JSON.parse(x); } catch { return null; } })
-                                  .filter(Boolean) };
+    if (!sub || !sub.endpoint || !sub.keys) return { ok: false, reason: 'bad_subscription' };
+    await setJSON(K('push:' + b.token), { endpoint: sub.endpoint, p256dh: sub.keys.p256dh,
+      auth: sub.keys.auth, hh: c.H.id, categoryId: c.kid.categoryId, name: c.kid.name, at: Date.now() });
+    return { ok: true };
   }
 
   return { ok: false, reason: 'unknown_op', detail: op };

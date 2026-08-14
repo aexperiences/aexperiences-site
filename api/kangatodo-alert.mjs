@@ -236,7 +236,7 @@ async function sendSMS(to, text) {
 
 /** Push one queued alert to every device belonging to that child. */
 async function deliver(alert) {
-  const rec = await getJSON(K('child:' + alert.categoryId));
+  const rec = await getJSON(K('hh:' + alert.hh + ':child:' + alert.categoryId));
   const devices = (rec && rec.devices) || [];
   const name = (rec && rec.name) || 'your list';
 
@@ -267,7 +267,7 @@ async function deliver(alert) {
   if (rec && rec.phone) {
     const dueAt = delivered > 0 ? Date.now() + ACK_MINUTES * 60000 : Date.now();
     await redis('ZADD', K('smsq'), String(dueAt), JSON.stringify({
-      choreId: alert.choreId, categoryId: alert.categoryId,
+      hh: alert.hh, choreId: alert.choreId, categoryId: alert.categoryId,
       summary: alert.summary, time: alert.time || null, name,
       pushed: delivered > 0,
     })).catch(() => {});
@@ -295,7 +295,7 @@ async function runSMSQueue() {
     const already = await redis('SISMEMBER', K('smssent'), String(job.choreId)).catch(() => 0);
     if (already) { out.push({ choreId: job.choreId, skipped: 'already_texted' }); continue; }
 
-    const rec = await getJSON(K('child:' + job.categoryId)).catch(() => null);
+    const rec = await getJSON(K('hh:' + job.hh + ':child:' + job.categoryId)).catch(() => null);
     if (!rec || !rec.phone) { out.push({ choreId: job.choreId, skipped: 'no_phone' }); continue; }
 
     const when = job.time ? ` (${job.time})` : '';
@@ -314,17 +314,17 @@ async function runSMSQueue() {
 /* ==================================================== parent-side alerts == */
 
 /** Buzz every device the parent has registered. */
-async function pushParents(payload) {
-  const ids = await redis('SMEMBERS', K('parentpushids')).catch(() => []);
+async function pushParents(payload, hh) {
+  const ids = await redis('SMEMBERS', K('hh:' + hh + ':parentpushids')).catch(() => []);
   let delivered = 0, reaped = 0;
   for (const id of (ids || [])) {
-    const sub = await getJSON(K('parentpush:' + id)).catch(() => null);
+    const sub = await getJSON(K('hh:' + hh + ':parentpush:' + id)).catch(() => null);
     if (!sub) continue;
     const r = await sendPush(sub, payload);
     if (r.ok) delivered++;
     else if (r.gone) {
-      await redis('DEL', K('parentpush:' + id)).catch(() => {});
-      await redis('SREM', K('parentpushids'), id).catch(() => {});
+      await redis('DEL', K('hh:' + hh + ':parentpush:' + id)).catch(() => {});
+      await redis('SREM', K('hh:' + hh + ':parentpushids'), id).catch(() => {});
       reaped++;
     }
   }
@@ -344,7 +344,7 @@ async function runParentQueue() {
       image: e.photo || undefined,          // Android shows this inline
       url: APP_URL,
       choreId: e.choreId,
-    });
+    }, e.hh);
     // No parent device subscribed? Email instead — same information, no new key.
     let mail = null;
     if (r.delivered === 0 && emailReady()) {
@@ -358,25 +358,32 @@ async function runParentQueue() {
   return out;
 }
 
-/** One evening summary of everything finished today. */
+/** One evening summary of everything finished today — one per family. */
 async function runDigest() {
   const day = new Date().toISOString().slice(0, 10);
-  const raw = await redis('LRANGE', K('digest:' + day), '0', '99').catch(() => []);
-  const items = (raw || []).map((x) => { try { return JSON.parse(x); } catch { return null; } }).filter(Boolean);
-  if (!items.length) return { sent: false, reason: 'nothing_finished_today' };
+  const hhs = await redis('SMEMBERS', K('digestdays:' + day)).catch(() => []);
+  if (!hhs || !hhs.length) return { sent: false, reason: 'nothing_finished_today', families: 0 };
 
-  const byKid = {};
-  for (const it of items) (byKid[it.child] = byKid[it.child] || []).push(it);
-  const line = Object.entries(byKid)
-    .map(([n, l]) => `${n} ${l.length}`).join(' · ');
-  const withPhotos = items.filter((i) => i.photo).length;
+  let families = 0, delivered = 0;
+  for (const hh of hhs) {
+    const raw = await redis('LRANGE', K('digest:' + hh + ':' + day), '0', '99').catch(() => []);
+    const items = (raw || []).map((x) => { try { return JSON.parse(x); } catch { return null; } }).filter(Boolean);
+    if (!items.length) continue;
 
-  const r = await pushParents({
-    title: `Today: ${items.length} job${items.length === 1 ? '' : 's'} done`,
-    body: line + (withPhotos ? ` · ${withPhotos} photo${withPhotos === 1 ? '' : 's'}` : ''),
-    url: APP_URL,
-  });
-  return { sent: r.delivered > 0, items: items.length, ...r };
+    const byKid = {};
+    for (const it of items) (byKid[it.child] = byKid[it.child] || []).push(it);
+    const line = Object.entries(byKid).map(([n, l]) => `${n} ${l.length}`).join(' · ');
+    const withPhotos = items.filter((i) => i.photo).length;
+
+    // Addressed to THIS household's parents only.
+    const r = await pushParents({
+      title: `Today: ${items.length} job${items.length === 1 ? '' : 's'} done`,
+      body: line + (withPhotos ? ` · ${withPhotos} photo${withPhotos === 1 ? '' : 's'}` : ''),
+      url: APP_URL,
+    }, hh);
+    families++; delivered += (r.delivered || 0);
+  }
+  return { sent: delivered > 0, families, delivered };
 }
 
 /* ================================================= photo retention purge == */
@@ -407,7 +414,7 @@ async function purgePhotos() {
   } catch { ok = false; }
 
   // Drop the pointers too, so the app never links a photo that is gone.
-  for (const e of entries) await redis('DEL', K('photo:' + e.choreId)).catch(() => {});
+  for (const e of entries) await redis('DEL', K('hh:' + e.hh + ':photo:' + e.choreId)).catch(() => {});
   return { purged: urls.length, blobDeleted: ok };
 }
 
