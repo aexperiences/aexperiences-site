@@ -475,6 +475,25 @@ async function queueParentAlert(entry) {
   await redis('EXPIRE', K('digest:' + new Date().toISOString().slice(0, 10)), 172800).catch(() => {});
 }
 
+/**
+ * The public half of the VAPID identity the alert engine will sign with.
+ * Same resolution order: env, then the shared `ef:vapid` slot in Upstash that
+ * ESPOfocus already populated for this domain, then generate-and-store.
+ * The browser needs this exact value as `applicationServerKey` or the push
+ * it subscribes with cannot be signed for later.
+ */
+async function vapidPublicKey() {
+  if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) return process.env.VAPID_PUBLIC_KEY;
+  if (!storeReady()) return null;
+  let v = await getJSON('ef:vapid').catch(() => null);
+  if (v && v.pub) return v.pub;
+  const kp = crypto.generateKeyPairSync('ec', { namedCurve: 'prime256v1' });
+  const raw = kp.publicKey.export({ type: 'spki', format: 'der' }).subarray(-65);
+  v = { pub: b64url(raw), jwk: kp.privateKey.export({ format: 'jwk' }) };
+  await redis('SET', 'ef:vapid', JSON.stringify(v)).catch(() => {});
+  return v.pub;
+}
+
 /* ================================================================ routing == */
 
 export default async function handler(req, res) {
@@ -511,12 +530,12 @@ async function route(op, b, req) {
       ok: true,
       store: storeReady(),
       skylight: skyConfigured(),
-      push: !!(process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY),
+      push: !!((process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) || storeReady()),
       sms: !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_FROM),
       photos: blobReady(),
       photoDays: PHOTO_DAYS,
       parentLock: !!process.env.PARENT_PIN,
-      vapidPublicKey: process.env.VAPID_PUBLIC_KEY || null,
+      vapidPublicKey: await vapidPublicKey(),
     };
     if (st.skylight) {
       try {

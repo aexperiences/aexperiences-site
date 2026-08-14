@@ -48,7 +48,8 @@ const setJSON = (k, v, ttl) => ttl ? redis('SET', k, JSON.stringify(v), 'EX', St
 const VAPID_PUB  = process.env.VAPID_PUBLIC_KEY  || '';
 const VAPID_PRIV = process.env.VAPID_PRIVATE_KEY || '';
 const VAPID_SUB  = process.env.VAPID_SUBJECT || 'mailto:help@aexperiences.com';
-const pushReady  = () => !!(VAPID_PUB && VAPID_PRIV);
+// Push is ready whenever we can resolve an identity — env OR the shared store.
+const pushReady  = () => !!((VAPID_PUB && VAPID_PRIV) || storeReady());
 
 const TW_SID  = process.env.TWILIO_ACCOUNT_SID || '';
 const TW_TOK  = process.env.TWILIO_AUTH_TOKEN  || '';
@@ -76,23 +77,43 @@ const hmac = (key, data) => crypto.createHmac('sha256', key).update(data).digest
 const hkdf = (salt, ikm, info, len) =>
   hmac(hmac(salt, ikm), Buffer.concat([Buffer.from(info), Buffer.from([1])])).subarray(0, len);
 
-/** Build a signing key from the raw VAPID pair, via JWK. */
-function vapidKey() {
-  const pub = unb64url(VAPID_PUB);
-  if (pub.length !== 65 || pub[0] !== 0x04) throw new Error('vapid_public_malformed');
-  return crypto.createPrivateKey({
-    format: 'jwk',
-    key: {
+/**
+ * Resolve the VAPID identity. Three sources, in order:
+ *   1. VAPID_PUBLIC_KEY / VAPID_PRIVATE_KEY env, if someone set them.
+ *   2. `ef:vapid` in the shared Upstash store — the keypair ESPOfocus already
+ *      generated for this same domain. Reusing it means nothing to paste, and
+ *      it is the SAME application server, so it is the correct identity.
+ *   3. Nothing there yet: generate a P-256 pair and store it in that same slot,
+ *      in ESPOfocus's exact {pub, jwk} shape, so both apps keep sharing one.
+ */
+let _vapid = null;
+async function getVapid() {
+  if (_vapid) return _vapid;
+
+  if (VAPID_PUB && VAPID_PRIV) {
+    const pub = unb64url(VAPID_PUB);
+    if (pub.length !== 65 || pub[0] !== 0x04) throw new Error('vapid_public_malformed');
+    _vapid = { pub: VAPID_PUB, key: crypto.createPrivateKey({ format: 'jwk', key: {
       kty: 'EC', crv: 'P-256',
-      x: b64url(pub.subarray(1, 33)),
-      y: b64url(pub.subarray(33, 65)),
-      d: b64url(unb64url(VAPID_PRIV)),
-    },
-  });
+      x: b64url(pub.subarray(1, 33)), y: b64url(pub.subarray(33, 65)),
+      d: b64url(unb64url(VAPID_PRIV)) } }) };
+    return _vapid;
+  }
+  if (!storeReady()) return null;
+
+  let v = await getJSON('ef:vapid').catch(() => null);
+  if (!v || !v.pub || !v.jwk) {
+    const kp = crypto.generateKeyPairSync('ec', { namedCurve: 'prime256v1' });
+    const raw = kp.publicKey.export({ type: 'spki', format: 'der' }).subarray(-65);
+    v = { pub: b64url(raw), jwk: kp.privateKey.export({ format: 'jwk' }) };
+    await redis('SET', 'ef:vapid', JSON.stringify(v)).catch(() => {});
+  }
+  _vapid = { pub: v.pub, key: crypto.createPrivateKey({ format: 'jwk', key: v.jwk }) };
+  return _vapid;
 }
 
 /** The VAPID Authorization header: a 12h ES256 JWT bound to the push service origin. */
-function vapidHeader(endpoint) {
+function vapidHeader(endpoint, v) {
   const aud = new URL(endpoint).origin;
   const head = b64url(JSON.stringify({ typ: 'JWT', alg: 'ES256' }));
   const claim = b64url(JSON.stringify({
@@ -100,8 +121,8 @@ function vapidHeader(endpoint) {
   }));
   const sig = crypto.createSign('SHA256').update(`${head}.${claim}`)
     // Raw r||s, not DER — push services reject DER signatures.
-    .sign({ key: vapidKey(), dsaEncoding: 'ieee-p1363' });
-  return `vapid t=${head}.${claim}.${b64url(sig)}, k=${VAPID_PUB}`;
+    .sign({ key: v.key, dsaEncoding: 'ieee-p1363' });
+  return `vapid t=${head}.${claim}.${b64url(sig)}, k=${v.pub}`;
 }
 
 /** Encrypt a payload to one subscription. Returns the aes128gcm body. */
@@ -143,7 +164,8 @@ function encrypt(payload, p256dhB64, authB64) {
  *          that is also the signal that this child needs the SMS fallback.
  */
 async function sendPush(sub, payloadObj) {
-  if (!pushReady()) return { ok: false, status: 0, gone: false, reason: 'no_key' };
+  const v = await getVapid();
+  if (!v) return { ok: false, status: 0, gone: false, reason: 'no_key' };
   try {
     const body = encrypt(JSON.stringify(payloadObj), sub.p256dh, sub.auth);
     const r = await fetch(sub.endpoint, {
@@ -154,7 +176,7 @@ async function sendPush(sub, payloadObj) {
         'Content-Encoding': 'aes128gcm',
         'Content-Type': 'application/octet-stream',
         'Content-Length': String(body.length),
-        Authorization: vapidHeader(sub.endpoint),
+        Authorization: vapidHeader(sub.endpoint, v),
       },
       body,
     });
@@ -165,6 +187,28 @@ async function sendPush(sub, payloadObj) {
   } catch (e) {
     return { ok: false, status: 0, gone: false, reason: String(e.message || e).slice(0, 80) };
   }
+}
+
+/* ================================================================ email === */
+// Reuses RESEND_API_KEY / INQUIRY_FROM, already configured on this project for
+// /api/inquiry. Costs nothing extra and needs no phone number.
+
+const RESEND_KEY  = process.env.RESEND_API_KEY || '';
+const RESEND_FROM = process.env.INQUIRY_FROM || 'KangaToDo <onboarding@resend.dev>';
+const PARENT_EMAIL = process.env.KANGATODO_PARENT_EMAIL || process.env.INQUIRY_TO || '';
+const emailReady = () => !!(RESEND_KEY && PARENT_EMAIL);
+
+async function sendEmail(subject, html) {
+  if (!emailReady()) return { ok: false, reason: 'no_key' };
+  try {
+    const r = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { authorization: `Bearer ${RESEND_KEY}`, 'content-type': 'application/json' },
+      body: JSON.stringify({ from: RESEND_FROM, to: PARENT_EMAIL, subject, html }),
+    });
+    const j = await r.json().catch(() => ({}));
+    return r.ok ? { ok: true, id: j.id } : { ok: false, reason: 'resend_' + r.status };
+  } catch (e) { return { ok: false, reason: String(e.message || e).slice(0, 60) }; }
 }
 
 /* ================================================================== sms === */
@@ -301,7 +345,15 @@ async function runParentQueue() {
       url: APP_URL,
       choreId: e.choreId,
     });
-    out.push({ child: e.child, summary: e.summary, hasPhoto: !!e.photo, ...r });
+    // No parent device subscribed? Email instead — same information, no new key.
+    let mail = null;
+    if (r.delivered === 0 && emailReady()) {
+      mail = await sendEmail(`${e.child} finished ${e.summary}`,
+        `<p><b>${e.child}</b> finished <b>${e.summary}</b>.</p>` +
+        (e.photo ? `<p><img src="${e.photo}" alt="" style="max-width:420px;border-radius:12px"></p>` : '') +
+        `<p style="color:#888;font-size:12px">KangaToDo · Accelerated Experiences LLC</p>`);
+    }
+    out.push({ child: e.child, summary: e.summary, hasPhoto: !!e.photo, ...r, email: mail });
   }
   return out;
 }
@@ -367,6 +419,7 @@ export default async function handler(req, res) {
   const capability = {
     push: pushReady() ? { ok: true } : { ok: false, reason: 'no_key' },
     sms:  smsReady()  ? { ok: true } : { ok: false, reason: 'no_key' },
+    email: emailReady() ? { ok: true } : { ok: false, reason: 'no_key' },
     store: storeReady(),
     photos: !!BLOB_TOKEN ? { ok: true } : { ok: false, reason: 'no_key' },
     ackMinutes: ACK_MINUTES,
