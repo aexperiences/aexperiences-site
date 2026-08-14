@@ -154,6 +154,10 @@
     {
       "path": "/api/espofocus-nudge",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/kangatodo-alert",
+      "schedule": "*/10 * * * *"
     }
   ]
 }
