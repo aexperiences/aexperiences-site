@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KangaToDo — Privacy &amp; your data</title>
+<meta name="description" content="Plainly, what KangaToDo stores, for how long, and how to delete all of it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FFF9F0; --card:#FFFFFF; --sand:#FDF0DA; --field:#FFFCF6;
+  --line:#F3DFC8; --hair:#F8EBD8;
+  --ink:#4A2C38; --ink2:#7A5B67; --mut:#876471;
+  --blush:#F7B7C8; --blush-l:#FFE3EA;
+  --rose:#CD3B66;
+  --butter:#FDE49A; --sun:#F7C948; --sunbg:#FFF6DF;
+  --ok:#3C7C53; --okbg:#EAF7EF;
+  --round:'Fredoka',system-ui,sans-serif; --sans:'Nunito',system-ui,-apple-system,sans-serif;
+  --r:20px; --wrap:640px;
+  --sh:0 2px 0 var(--line), 0 8px 22px rgba(74,44,56,.07);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;
+  padding:0 0 env(safe-area-inset-bottom);-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 18px}
+h1,h2,h3{font-family:var(--round);font-weight:600;letter-spacing:-.005em;margin:0}
+a{color:var(--rose);text-underline-offset:3px}
+
+header.top{padding:18px 0 6px}
+.brandrow{display:flex;align-items:center;gap:12px}
+.brandmark{width:46px;height:46px;border-radius:14px;background:var(--blush-l);
+  display:grid;place-items:center;flex:none;overflow:hidden}
+.brandmark img{width:100%;height:100%;object-fit:contain}
+.brandname{font-family:var(--round);font-size:21px;font-weight:600;line-height:1}
+.brandname i{font-style:normal;color:var(--rose)}
+.brandsub{font-size:13px;color:var(--mut);margin-top:3px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px;margin:16px 0;box-shadow:var(--sh)}
+.card h2{font-size:19px;margin-bottom:4px}
+.sub{color:var(--mut);font-size:14px;margin-bottom:12px}
+.lede{font-size:17px;color:var(--ink2)}
+
+dl{margin:0}
+dt{font-weight:700;margin-top:14px}
+dt:first-child{margin-top:0}
+dd{margin:2px 0 0;color:var(--ink2)}
+
+.plain{background:var(--okbg);border:1px solid #CDE7D6;border-radius:14px;padding:14px 16px;margin:14px 0}
+.plain b{color:var(--ok)}
+.note{background:var(--sunbg);border:1px solid var(--butter);border-radius:14px;padding:14px 16px;margin:14px 0}
+
+ul{margin:8px 0 0;padding-left:20px}
+li{margin:5px 0;color:var(--ink2)}
+
+.big{display:block;text-align:center;background:var(--blush-l);border:1px solid var(--blush);
+  border-radius:16px;padding:14px;margin-top:14px;font-weight:700;text-decoration:none;color:var(--rose)}
+
+footer{margin:26px 0 34px;padding-top:16px;border-top:1px solid var(--hair);
+  color:var(--mut);font-size:13px;text-align:center;line-height:1.7}
+footer img{width:18px;height:18px;vertical-align:-4px;margin-right:6px}
+.upd{color:var(--mut);font-size:13px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brandrow">
+      <div class="brandmark"><img src="icon-180.png" alt="" onerror="this.parentNode.style.display='none'"></div>
+      <div>
+        <div class="brandname">Kanga<i>ToDo</i></div>
+        <div class="brandsub">Privacy &amp; your data</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="card">
+    <p class="lede" style="margin-top:0">
+      This is the whole thing, in plain words. KangaToDo is made by
+      <b>Accelerated Experiences LLC</b>. It is not affiliated with or endorsed by Skylight.
+    </p>
+    <div class="plain">
+      <b>The short version.</b> We never see your Skylight password. Photos of your kids are
+      private, and delete themselves after 7 days. We don't sell anything, we don't advertise,
+      and there are no trackers. One button in the app deletes every trace of your family.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>What we keep</h2>
+    <div class="sub">And why each thing has to exist.</div>
+    <dl>
+      <dt>Your Skylight sign-in</dt>
+      <dd>Your email address, and a <b>connection token</b> Skylight gives us when you sign in.
+          <b>Your password is used once and never stored</b> — not encrypted, not hashed, not
+          anywhere. The token is what lets the app write jobs onto your calendar.</dd>
+
+      <dt>Your children's names</dt>
+      <dd>Read from your own Skylight account so a job can be pointed at the right kid.
+          We don't ask for birthdays, addresses, or anything else about them.</dd>
+
+      <dt>Photos of finished jobs</dt>
+      <dd>Only when you tick "needs a photo". They're stored privately, so the link alone opens
+          nothing — the app fetches them through our server, which checks it's you or that
+          particular child asking. <b>They delete themselves after 7 days</b>, automatically.</dd>
+
+      <dt>Which phones are joined</dt>
+      <dd>A code links one phone to one child. That phone holds a random token, not a name or a
+          login. It's how a kid only ever sees their own list.</dd>
+
+      <dt>A phone number, only if you add one</dt>
+      <dd>Optional, and only used to text a reminder if the buzz doesn't reach them.</dd>
+
+      <dt>A PIN, only if you set one</dt>
+      <dd>Stored scrambled, never in plain text. It's a lock on the grown-up side, nothing more.</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h2>What we don't do</h2>
+    <ul>
+      <li>No advertising, and nothing is ever sold or shared with anyone.</li>
+      <li>No analytics, no tracking pixels, no third-party scripts watching you.</li>
+      <li>No photos in emails — an email links you to the app instead, because it's a picture of a child.</li>
+      <li>No accounts to create, no marketing list, no newsletter.</li>
+      <li>We don't read your calendar for anything other than showing you your own jobs.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Children</h2>
+    <div class="sub">The part that matters most.</div>
+    <p style="margin:0;color:var(--ink2)">
+      KangaToDo is set up by a parent, for their own children, using the parent's own Skylight
+      account. A child never creates an account, never types an email address, and never gives us
+      a name — their name comes from the account you already had.
+    </p>
+    <p style="margin:10px 0 0;color:var(--ink2)">
+      The only thing a child can send is a photo of a finished job, and only when you've asked for
+      one. Those pictures are private, are never used for anything else, and are gone within 7 days
+      whether or not anyone deletes them.
+    </p>
+    <div class="note">
+      <b>You are in control of it.</b> As the parent you can see every photo, unlink any phone,
+      turn photos off entirely by not requiring them, and delete everything at any moment — with
+      no email to send and nobody to ask.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Deleting everything</h2>
+    <div class="sub">One button, and it really is everything.</div>
+    <p style="margin:0;color:var(--ink2)">
+      In the app, open <b>Kids</b> and tap <b>Delete everything &amp; disconnect</b>. That removes:
+    </p>
+    <ul>
+      <li>the Skylight connection and its token — you'd sign in again from scratch;</li>
+      <li>every photo, the actual pictures and not just the links to them;</li>
+      <li>every child record, phone number and joined phone;</li>
+      <li>every pending alert and the evening summary queue.</li>
+    </ul>
+    <p style="margin:10px 0 0;color:var(--ink2)">
+      Nothing is kept back, and there is no archive or backup copy of it waiting somewhere. Jobs
+      already written into Skylight stay in <em>your</em> Skylight account — they're yours, and you
+      delete those in Skylight the same way you'd delete anything else there.
+    </p>
+    <a class="big" href="./">Open KangaToDo</a>
+  </div>
+
+  <div class="card">
+    <h2>Where it lives, and who can reach it</h2>
+    <p style="margin:0;color:var(--ink2)">
+      Data is held on Vercel's servers in the United States. Photos sit in private storage that
+      needs a key we hold on the server; the app never hands that key to a browser or a phone.
+      Access is limited to what's needed to run the app.
+    </p>
+    <div class="note">
+      <b>Honest about the limits.</b> No system is perfect, and we won't pretend otherwise. What we
+      can promise is that we hold as little as possible, for as short a time as possible, and that
+      the delete button does what it says.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Questions, or ask us to delete something</h2>
+    <p style="margin:0;color:var(--ink2)">
+      Email <a href="mailto:hello@aexperiences.com">hello@aexperiences.com</a>. If you want your
+      data gone and can't get to the button, say so and we'll do it.
+    </p>
+    <p class="upd">Last updated 14 August 2026. If this ever changes in a way that matters, the app
+      will say so rather than quietly updating this page.</p>
+  </div>
+
+  <footer>
+    <img src="/ae-disc.png" alt="" onerror="this.style.display='none'">
+    Powered by <b>Accelerated Experiences LLC</b> · <a href="/shop.html">More from the App Shop</a> ·
+    <a href="./">Back to KangaToDo</a><br>
+    Not affiliated with or endorsed by Skylight.
+  </footer>
+
+</div>
+</body>
+</html>

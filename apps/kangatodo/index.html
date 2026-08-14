@@ -386,8 +386,9 @@ const MARK=rooSVG()
   .replace('<g id="pouchStars"></g>', starPath(178,150,.95)+starPath(196,152,.8))
   .replace(/class="pstar"/g,'');
 const FOOTER=`<footer>
-  <img src="/ae-mark.png" alt="" onerror="this.style.display='none'">
-  Powered by <b>Accelerated Experiences LLC</b> · <a href="/shop.html">More from the App Shop</a><br>
+  <img src="/ae-disc.png" alt="" onerror="this.style.display='none'">
+  Powered by <b>Accelerated Experiences LLC</b> · <a href="/shop.html">More from the App Shop</a> ·
+  <a href="privacy.html">Privacy &amp; your data</a><br>
   Not affiliated with or endorsed by Skylight. Jobs are written to your own Skylight account.
 </footer>`;
 
@@ -988,12 +989,19 @@ const Parent={
     });
     host.append(el('div',{id:'pincard',style:'padding-top:18px'}));
     this.pinCard();
-    host.append(el('div',{style:'padding-top:16px'},
-      `<button class="btn ghost sm" id="signout" style="width:100%">Disconnect Skylight</button>`));
+    host.append(el('div',{style:'padding-top:18px'},
+      `<button class="btn ghost sm" id="signout" style="width:100%">Delete everything &amp; disconnect</button>
+       <div style="font-size:12.5px;color:var(--mut);margin-top:8px;line-height:1.55">
+         Removes the Skylight connection, every kid's phone, and every photo — the pictures
+         themselves, not just the links. Nothing of yours is kept.
+         <a href="privacy.html">What we store</a>
+       </div>`));
     $('#signout').onclick=async()=>{
-      if(!confirm('Disconnect Skylight? Every kid phone will need a new code.'))return;
-      await api(API,{do:'parent.disconnect',hh:store.get('hh')});
-      store.del('hh'); toast('Disconnected.'); this.status=null; await this.refreshStatus();
+      if(!confirm('Delete everything?\n\nThe Skylight connection, every kid phone, and every photo will be deleted for good. This cannot be undone.'))return;
+      const r=await api(API,{do:'parent.forget',hh:store.get('hh')});
+      store.del('hh'); store.del('pin');
+      toast(r&&r.photos?('Deleted. '+r.photos+' photo'+(r.photos===1?'':'s')+' removed.'):'Deleted.',4000);
+      this.status=null; this.pin=''; await this.refreshStatus();
     };
     this.buzzCard();
   },
