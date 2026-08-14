@@ -31,6 +31,7 @@
   --ease-out:cubic-bezier(.22,.9,.28,1);
   --ease-spring:cubic-bezier(.34,1.42,.5,1);
 }
+@keyframes a2hsUp{from{transform:translateY(14px);opacity:0}to{transform:none;opacity:1}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
 body{background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;
@@ -388,9 +389,164 @@ const MARK=rooSVG()
 const FOOTER=`<footer>
   <img src="/ae-disc.png" alt="" onerror="this.style.display='none'">
   Powered by <b>Accelerated Experiences LLC</b> · <a href="/shop.html">More from the App Shop</a> ·
-  <a href="privacy.html">Privacy &amp; your data</a><br>
+  <a href="privacy.html">Privacy &amp; your data</a> ·
+  <a href="#" onclick="event.preventDefault();Install.sheet(location.hash.indexOf('kid')>-1)">Add to Home Screen</a><br>
   Not affiliated with or endorsed by Skylight. Jobs are written to your own Skylight account.
 </footer>`;
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PUT IT ON THE HOME SCREEN
+   Apple only lets a web app send notifications once it has been added to the
+   Home Screen, so for a kid's phone this is not a nicety — without it the
+   whole product is silent. These are drawn steps rather than a sentence,
+   because the person following them is often nine.
+   ══════════════════════════════════════════════════════════════════════════ */
+const Install = {
+  iOS(){ return /iPad|iPhone|iPod/.test(navigator.userAgent)
+      || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1); },   // iPadOS lies
+  iPad(){ return /iPad/.test(navigator.userAgent)
+      || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1); },
+  android(){ return /Android/.test(navigator.userAgent); },
+  standalone(){ return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone===true; },
+  /* Safari is the only iOS browser we can promise this in. Chrome/Firefox on
+     iOS put it somewhere different or not at all, and an in-app browser
+     (Instagram, Facebook, Messenger) has no Share sheet worth the name. */
+  iosBrowser(){
+    const u=navigator.userAgent;
+    if(/FBAN|FBAV|Instagram|Line|Twitter|Snapchat/i.test(u)) return 'inapp';
+    if(/CriOS/i.test(u))  return 'chrome';
+    if(/FxiOS/i.test(u))  return 'firefox';
+    if(/EdgiOS/i.test(u)) return 'edge';
+    return 'safari';
+  },
+  needed(){ return !this.standalone() && (this.iOS() || this.android()); },
+
+  /* Apple's share glyph, drawn rather than described. */
+  shareIcon(size){
+    const s=size||20;
+    return `<svg viewBox="0 0 24 24" width="${s}" height="${s}" aria-hidden="true" focusable="false"
+      style="vertical-align:-4px;flex:none">
+      <path d="M12 3.2l3.2 3.2M12 3.2L8.8 6.4M12 3.2v11.4" fill="none" stroke="#1B85F3"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M7.4 10.2H6.2a1.6 1.6 0 00-1.6 1.6v7.4a1.6 1.6 0 001.6 1.6h11.6a1.6 1.6 0 001.6-1.6v-7.4a1.6 1.6 0 00-1.6-1.6h-1.2"
+        fill="none" stroke="#1B85F3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+  },
+  plusIcon(){
+    return `<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" focusable="false"
+      style="vertical-align:-4px;flex:none">
+      <rect x="3.5" y="3.5" width="17" height="17" rx="4.5" fill="none" stroke="#1B85F3" stroke-width="2"/>
+      <path d="M12 8.2v7.6M8.2 12h7.6" stroke="#1B85F3" stroke-width="2" stroke-linecap="round"/>
+    </svg>`;
+  },
+
+  step(n, html){
+    return `<li style="display:flex;gap:11px;align-items:flex-start;margin:0 0 11px">
+      <span style="flex:none;width:25px;height:25px;border-radius:50%;background:var(--blush-l);
+        border:1px solid var(--blush);color:var(--rose);font-weight:700;font-size:13.5px;
+        display:grid;place-items:center;line-height:1">${n}</span>
+      <span style="padding-top:2px">${html}</span></li>`;
+  },
+
+  /** kid = softer words, and it matters more, so it shouts a little louder. */
+  html(kid){
+    if(this.standalone()) return '';
+    const who = kid ? 'you' : 'your phone';
+
+    if(this.iOS()){
+      const br=this.iosBrowser();
+      if(br!=='safari'){
+        const name={inapp:'this app',chrome:'Chrome',firefox:'Firefox',edge:'Edge'}[br];
+        return `<div class="card">
+          <h2>Open this in Safari first</h2>
+          <div class="sub">${name} can't add KangaToDo to the Home Screen on an iPhone.</div>
+          <ol style="list-style:none;padding:0;margin:12px 0 0">
+            ${this.step(1, `Tap ${this.shareIcon()} <b>Share</b>, then <b>Open in Safari</b>.
+                            ${br==='inapp' ? 'Or tap the <b>…</b> button and choose <b>Open in browser</b>.' : ''}`)}
+            ${this.step(2, `When Safari opens, come back here — it will show ${kid?'you':'you'} what to do next.`)}
+          </ol>
+          <div class="notice" style="margin-top:12px">Same page, just a different door. Nothing is lost.</div>
+        </div>`;
+      }
+      const where = this.iPad() ? 'at the <b>top right</b>' : 'at the <b>bottom</b> of the screen';
+      return `<div class="card">
+        <h2>${kid ? 'Put me on your Home Screen' : 'Put KangaToDo on the Home Screen'}</h2>
+        <div class="sub">${kid
+          ? 'Then your phone can buzz you when a job hops in. It takes about ten seconds.'
+          : `Apple only lets ${who} buzz once the app lives on the Home Screen.`}</div>
+        <ol style="list-style:none;padding:0;margin:12px 0 0">
+          ${this.step(1, `Tap ${this.shareIcon()} <b>Share</b> ${where}.`)}
+          ${this.step(2, `Scroll the grey list and tap ${this.plusIcon()} <b>Add to Home Screen</b>.`)}
+          ${this.step(3, `Tap <b>Add</b> in the top corner.`)}
+          ${this.step(4, `Close Safari. Open the ${kid?'kangaroo':'<b>KangaToDo</b>'} icon from your Home Screen from now on.`)}
+        </ol>
+        <div class="notice good" style="margin-top:12px">
+          ${kid ? "That's it. Open the kangaroo and say yes when it asks about buzzing."
+                : "Then tap <b>Buzz my phone</b> and allow notifications."}
+        </div>
+        <div style="font-size:12.5px;color:var(--mut);margin-top:10px;line-height:1.55">
+          Don't see <b>Add to Home Screen</b>? Scroll that list further down, or tap
+          <b>Edit Actions</b> at the very bottom and switch it on.
+        </div>
+      </div>`;
+    }
+
+    /* Android / Chrome */
+    return `<div class="card">
+      <h2>${kid ? 'Put me on your Home Screen' : 'Put KangaToDo on the Home Screen'}</h2>
+      <div class="sub">So it opens like a proper app${kid?' and can buzz you':''}.</div>
+      <ol style="list-style:none;padding:0;margin:12px 0 0">
+        ${this.step(1, 'Tap the <b>⋮</b> menu at the top right of Chrome.')}
+        ${this.step(2, 'Tap <b>Add to Home screen</b>, then <b>Install</b>.')}
+        ${this.step(3, 'Open KangaToDo from the Home Screen from now on.')}
+      </ol>
+      <div id="a2hs-slot"></div>
+    </div>`;
+  },
+
+  /* Chrome fires this; when it does we can offer a real one-tap button
+     instead of asking anyone to hunt through a menu. */
+  deferred:null,
+  listen(){
+    window.addEventListener('beforeinstallprompt',(e)=>{ e.preventDefault(); this.deferred=e; this.paintButton(); });
+  },
+  paintButton(){
+    const slot=$('#a2hs-slot'); if(!slot||!this.deferred) return;
+    slot.innerHTML=`<div style="height:12px"></div><button class="btn sun" id="a2hs">Add it for me</button>`;
+    $('#a2hs').onclick=async()=>{ const d=this.deferred; if(!d) return;
+      d.prompt(); try{ await d.userChoice; }catch(e){} this.deferred=null; slot.innerHTML=''; };
+  },
+
+  /* The steps on demand, from anywhere — a parent showing a kid, or a kid who
+     dismissed them. Same content, over the top of whatever is on screen. */
+  sheet(kid){
+    document.querySelectorAll('.a2hs-sheet').forEach(e=>e.remove());
+    const wrap=document.createElement('div');
+    wrap.className='a2hs-sheet';
+    wrap.setAttribute('style','position:fixed;inset:0;z-index:80;background:rgba(74,44,56,.44);'+
+      'display:flex;align-items:flex-end;justify-content:center;padding:14px;overflow:auto');
+    const inner=document.createElement('div');
+    inner.setAttribute('style','width:100%;max-width:var(--wrap);animation:a2hsUp .28s var(--ease-spring) both');
+    inner.innerHTML=(this.html(kid)||`<div class="card"><h2>Already on the Home Screen</h2>
+        <div class="sub">Nothing to do — you are opening it the right way.</div></div>`)+
+      `<button class="btn ghost" id="a2hs-close" style="width:100%;margin:10px 0 6px">Close</button>`;
+    wrap.appendChild(inner);
+    wrap.onclick=(e)=>{ if(e.target===wrap) wrap.remove(); };
+    document.body.appendChild(wrap);
+    const c=document.getElementById('a2hs-close'); if(c) c.onclick=()=>wrap.remove();
+    this.paintButton();
+  },
+
+  /* Paint into a slot, and keep it honest if they installed it meanwhile. */
+  paint(sel,kid){
+    const el=$(sel); if(!el) return false;
+    const h=this.html(kid);
+    el.innerHTML=h;
+    if(h) this.paintButton();
+    return !!h;
+  }
+};
 
 /* ══════════════════════════════════════════════════════════════════════════
    KID MODE
@@ -564,9 +720,7 @@ const Kid={
     const supported='serviceWorker' in navigator&&'PushManager' in window;
 
     if(!st.push){slot.innerHTML=`<div class="notice">Buzzing is not switched on yet. A grown-up needs to finish setting it up.</div>`;return;}
-    if(iOS&&!standalone){slot.innerHTML=`<div class="notice"><b>Make this buzz</b><br>
-      Tap <b>Share</b> at the bottom of Safari, then <b>Add to Home Screen</b>. Open KangaToDo from there
-      and your phone can buzz when a job hops in. (Apple only allows it that way.)</div>`;return;}
+    if(!standalone && (iOS||Install.android())){ slot.innerHTML=Install.html(true); Install.paintButton(); return; }
     if(!supported){slot.innerHTML=`<div class="notice">This browser cannot buzz. Try Safari or Chrome.</div>`;return;}
     if(Notification.permission==='granted'&&store.get('pushed')){slot.innerHTML='';return;}
     if(Notification.permission==='denied'){slot.innerHTML=`<div class="notice">Notifications are switched off for KangaToDo in your phone settings. Turn them on there to get buzzed.</div>`;return;}
@@ -961,7 +1115,14 @@ const Parent={
         if(!r.ok)return slot.innerHTML=noticeFor(r);
         slot.innerHTML=`<div class="code">${esc(r.code)}</div>
           <div class="codehint">On ${esc(k.name)}'s phone open<br>
-            <b>aexperiences.com/apps/kangatodo/#kid</b><br>and type this code. It lasts one hour.</div>`;
+            <b>aexperiences.com/apps/kangatodo/#kid</b><br>and type this code. It lasts one hour.</div>
+          <div class="notice" style="margin-top:10px;text-align:left">
+            <b>Then, on their phone:</b> add it to the Home Screen and open it from there —
+            otherwise Apple will not let it buzz. The app walks them through it, or
+            <a href="#" data-a="howto">see the steps</a>.
+          </div>`;
+        const ht=slot.querySelector('[data-a="howto"]');
+        if(ht) ht.onclick=(e)=>{e.preventDefault();Install.sheet(true);};
         buzz(12);
       };
       const un=box.querySelector('[data-a="unlink"]');
@@ -1048,11 +1209,7 @@ const Parent={
     if(!st.push){slot.innerHTML=`<div class="notice">Buzzing is off, so you will not be told when a job is finished.</div>`;return;}
     const iOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
     const standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
-    if(iOS&&!standalone){
-      slot.innerHTML=`<div class="notice"><b>Get told when they finish</b><br>
-        Tap <b>Share</b> then <b>Add to Home Screen</b>, and open KangaToDo from there.
-        Apple only allows notifications that way.</div>`;return;
-    }
+    if(!standalone && (iOS||Install.android())){ slot.innerHTML=Install.html(false); Install.paintButton(); return; }
     if(!('serviceWorker' in navigator&&'PushManager' in window)){slot.innerHTML='';return;}
     if(Notification.permission==='granted'&&store.get('parentPushed')){
       slot.innerHTML=`<div class="notice good" style="display:flex;align-items:center;gap:10px;justify-content:space-between">
@@ -1085,6 +1242,7 @@ const Parent={
 };
 
 /* ═══════════════════════════════ boot ═══════════════════════════════ */
+Install.listen();
 (function boot(){
   const isKid=location.hash.replace(/^#\/?/,'').toLowerCase().startsWith('kid')||!!store.get('kidToken');
   if(isKid)Kid.start();else Parent.start();
