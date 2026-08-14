@@ -305,9 +305,10 @@
       blurb:'The weekly ADHD monitoring report your provider asks for — parents, teachers and behavior specialists rate the same 15 things each week, and ESPOfocus charts whether the plan is working. Not a diagnosis; private, initials only.',
       price:'Free right now', priceNote:'A private monitoring aid — no ads, no tracking. Paid plans not switched on yet.' },
 
-    { id:'kangatodo', name:'KangaToDo', tag:'Chores to every kid\'s phone', genre:'family', state:'dev',
+    { id:'kangatodo', name:'KangaToDo', tag:'Chores to every kid\'s phone', genre:'family', state:'live',
       acc:'#C78425', mark:'/marks/kangatodo.svg', family:'Accelerated Experiences', url:'/apps/kangatodo/',
-      blurb:'A grown-up types a job on their phone and picks a kid. It writes into your own Skylight account — so it shows on the Calendar and on that child\'s Buddy — and then buzzes that child\'s phone. Every kid in the house, each with their own pouch, each seeing only their own list. Jobs can require a photo before they tick off.' },
+      blurb:'A grown-up types a job on their phone and picks a kid. It writes into your own Skylight account — so it shows on the Calendar and on that child\'s Buddy — and then buzzes that child\'s phone. Every kid in the house, each with their own pouch, each seeing only their own list. Jobs can require a photo before they tick off.',
+      price:'Free right now', priceNote:'Needs a Skylight Calendar account. Your Skylight password is used once to connect and is never stored. Paid plans not switched on yet.' },
   ];
 
   var GENRES = [

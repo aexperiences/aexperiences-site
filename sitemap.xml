@@ -32,7 +32,8 @@
 
   <!-- App Shop listings -->
   <url><loc>https://www.aexperiences.com/apps/aefunkmaster/</loc><lastmod>2026-07-27</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.aexperiences.com/apps/espohystory/</loc><lastmod>2026-07-27</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.aexperiences.com/apps/kangatodo/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.aexperiences.com/apps/espohystory/</loc><lastmod>2026-07-27</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.aexperiences.com/apps/esponatlparks/</loc><lastmod>2026-07-27</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.aexperiences.com/apps/esponest/</loc><lastmod>2026-07-27</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.aexperiences.com/apps/esporacket/</loc><lastmod>2026-07-27</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
@@ -61,6 +62,7 @@
 <url><loc>https://www.aexperiences.com/app/espobarista.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://www.aexperiences.com/app/espodraw.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://www.aexperiences.com/app/espofocus.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.aexperiences.com/app/kangatodo.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://www.aexperiences.com/app/espohystory.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://www.aexperiences.com/app/esponatlparks.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://www.aexperiences.com/app/esponest.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
