@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -27 257 237" width="48" height="48" role="img" aria-label="KangaToDo">
+ <!-- TAIL: nearly as long as the body, sweeping back almost horizontally. THE cue. -->
+ <path d="M156 142 C 134 168, 100 186, 62 191 C 38 194, 16 191, 8 185
+          C 2 180, 5 172, 13 172 C 48 174, 88 166, 116 148 C 130 139, 140 128, 146 118 Z" fill="#9C5934"/>
+ <!-- BIG FLAT FOOT, toes forward -->
+ <path d="M124 176 C 112 176, 106 186, 110 194 C 113 201, 123 204, 134 204
+          L 214 204 C 227 204, 230 192, 219 188 L 150 178 Z" fill="#A76620"/>
+ <path d="M219 188 l14 2 M219 194 l15 1 M218 199 l13 0" stroke="#A76620" stroke-width="7" stroke-linecap="round"/>
+ <!-- HEAVY HIND THIGH — the widest part of the animal -->
+ <path d="M124 118 C 158 108, 190 132, 188 166 C 186 192, 158 204, 134 191
+          C 112 179, 104 126, 124 118 Z" fill="#B37124"/>
+ <!-- BODY: teardrop — narrow chest up top, heavy hips below -->
+ <path d="M198 58 C 218 76, 222 112, 216 146 C 209 182, 186 197, 163 192
+          C 136 186, 128 150, 133 112 C 139 72, 174 40, 198 58 Z" fill="#C78425"/>
+ <!-- PALE BELLY PANEL, chin to legs -->
+ <path d="M190 70 C 204 82, 209 108, 206 138 C 203 166, 190 180, 175 178
+          C 159 176, 153 150, 156 120 C 159 90, 176 60, 190 70 Z" fill="#FFDC92"/>
+ <!-- POUCH -->
+ <path d="M152 120 L 218 120 C 220 150, 203 174, 183 174 C 163 174, 150 150, 152 120 Z" fill="#FFF6E2"/>
+ <g><path d="M174 152 l4.1 8.4 9.2 1.3 -6.7 6.5 1.6 9.2 -8.2-4.3 -8.2 4.3 1.6-9.2 -6.7-6.5 9.2-1.3 Z" fill="#E09B12"/><path d="M196 152 l3.1 6.3 7 1 -5.1 4.9 1.2 7 -6.2-3.3 -6.2 3.3 1.2-7 -5.1-4.9 7-1 Z" fill="#F7C948"/></g>
+ <!-- JOEY, wholly above the rim -->
+ <g>
+  <ellipse cx="173" cy="76" rx="8" ry="14" transform="rotate(-28 173 76)" fill="#A96A20"/>
+  <ellipse cx="174" cy="78" rx="4.3" ry="8.5" transform="rotate(-28 174 78)" fill="#FF9E7A"/>
+  <ellipse cx="200" cy="74" rx="8" ry="14" transform="rotate(24 200 74)" fill="#A96A20"/>
+  <ellipse cx="199" cy="76" rx="4.3" ry="8.5" transform="rotate(24 199 76)" fill="#FF9E7A"/>
+  <ellipse cx="184" cy="98" rx="19" ry="17.5" fill="#D89230"/>
+  <ellipse cx="173" cy="104" rx="6.2" ry="4.3" fill="#E8734A" opacity=".45"/>
+  <ellipse cx="199" cy="104" rx="6.2" ry="4.3" fill="#E8734A" opacity=".45"/>
+  <circle cx="179" cy="96" r="5" fill="#4A2A12"/><circle cx="180.8" cy="94" r="1.9" fill="#fff"/>
+  <circle cx="193.6" cy="96" r="5" fill="#4A2A12"/><circle cx="195.4" cy="94" r="1.9" fill="#fff"/>
+  <ellipse cx="186.3" cy="106.5" rx="7.2" ry="5.4" fill="#FFE8B4"/>
+  <ellipse cx="186.3" cy="104" rx="2.8" ry="2.2" fill="#7A4A1E"/>
+  <path d="M183 108.6 q3.3 3.1 6.6 0" stroke="#7A4A1E" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <path d="M163 119 q6 -9 14 -4" stroke="#D89230" stroke-width="7.5" fill="none" stroke-linecap="round"/>
+  <path d="M210 118 q-6 -9 -14 -4" stroke="#D89230" stroke-width="7.5" fill="none" stroke-linecap="round"/>
+ </g>
+ <path d="M152 120 L 218 120" stroke="#E0AE5E" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+ <!-- SMALL FOREARMS, held close at the chest -->
+ <path d="M206 84 C 219 80, 231 89, 232 99 C 233 108, 224 112, 217 106 C 209 100, 203 90, 206 84 Z" fill="#B37124"/>
+ <!-- EARS: tall, rounded tips, angled slightly out -->
+ <ellipse cx="186" cy="10" rx="12" ry="25" transform="rotate(-26 186 10)" fill="#C78425"/>
+ <ellipse cx="187" cy="13" rx="6.5" ry="16" transform="rotate(-26 187 13)" fill="#FF9E7A"/>
+ <ellipse cx="229" cy="7" rx="12" ry="25" transform="rotate(22 229 7)" fill="#C78425"/>
+ <ellipse cx="228" cy="10" rx="6.5" ry="16" transform="rotate(22 228 10)" fill="#FF9E7A"/>
+ <!-- HEAD: big for cute, on a short neck -->
+ <ellipse cx="206" cy="44" rx="35" ry="32" fill="#C78425"/>
+ <ellipse cx="228" cy="59" rx="20" ry="14.5" fill="#FFE8B4"/>
+ <ellipse cx="183" cy="56" rx="9.5" ry="7" fill="#E8734A" opacity=".4"/>
+ <circle cx="196" cy="39" r="9.2" fill="#4A2A12"/><circle cx="199.4" cy="36" r="3.4" fill="#fff"/>
+ <circle cx="225" cy="36" r="9.2" fill="#4A2A12"/><circle cx="228.4" cy="33" r="3.4" fill="#fff"/>
+ <ellipse cx="235" cy="53" rx="4.8" ry="3.9" fill="#7A4A1E"/>
+ <path d="M229 60 q5 4.6 9.6 1" stroke="#7A4A1E" stroke-width="2.1" fill="none" stroke-linecap="round"/>
+</svg>
