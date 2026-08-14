@@ -255,6 +255,17 @@ function dayLabel(iso){
   if(isNaN(d)) return 'Today';
   return d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
 }
+/* Photos live in a PRIVATE store, so the browser cannot fetch one by URL.
+   We ask the server, which checks who is asking before handing over the bytes.
+   Cached per chore so opening the same photo twice costs one round trip. */
+const _shots={};
+async function loadShot(img, body){
+  const k=JSON.stringify(body);
+  if(_shots[k]){ img.src=_shots[k]; return true; }
+  const r=await api(API,{do:'photo.view',...body});
+  if(!r.ok||!r.dataUrl){ img.replaceWith(el('span',{class:'meta'},'photo unavailable')); return false; }
+  _shots[k]=r.dataUrl; img.src=r.dataUrl; return true;
+}
 async function api(url,body){
   const hh=store.get('hh'); if(hh) body={...body,hh};
   try{
@@ -354,7 +365,10 @@ const REASONS={
   signed_out:['Skylight signed you out.','Sign in again — it only takes a second.'],
   skylight_bad_login:['That email or password did not work.','Use the same login as the Skylight app.'],
   needs_photo:['This one needs a photo first.','Tap the camera and show them it is done.'],
-  no_photo_store:['Photos are not switched on yet.','A grown-up needs to add <code>BLOB_READ_WRITE_TOKEN</code> in Vercel.'],
+  no_photo_store:['Photos are not switched on yet.','The photo store is not connected to this app.'],
+  not_yours:['That photo belongs to someone else.',''],
+  no_photo:['There is no photo on this one.',''],
+  photo_unreadable:['That photo would not open.','It may have been cleared out already.'],
   bad_image:['That did not come through as a picture.','Try taking it again.'],
   image_too_big:['That picture is too big.','Try taking it again.'],
   photo_store_failed:['The photo would not save.','Nothing was lost — the job is still on your list. Try again in a moment.'],
@@ -478,7 +492,10 @@ const Kid={
         row.append(control,el('div',{class:'body'},
           `<div class="ttl">${c.emoji?esc(c.emoji)+' ':''}${esc(c.summary)}</div>`+
           (meta.length?`<div class="meta">${meta.join('<span style="opacity:.4">·</span>')}</div>`:'')));
-        if(c.photo) row.append(el('img',{class:'thumb',src:c.photo,alt:'Photo of '+c.summary,loading:'lazy'}));
+        if(c.photo){
+          const th=el('img',{class:'thumb',alt:'Photo of '+c.summary,loading:'lazy'});
+          row.append(th); loadShot(th,{choreId:c.id,token:store.get('kidToken')});
+        }
         list.append(row);
       });
     }
@@ -640,7 +657,7 @@ const Parent={
     if(!s.store) m.push(['Storage','Vercel → Storage → connect an <b>Upstash Redis</b> store (set the prefix to <code>KV</code>), then redeploy.']);
     if(s.signedIn && !s.connected) m.push(['Skylight connection',why(s.skylightReason)[1]||'Sign in again — Skylight did not accept the saved connection.']);
     if(!s.push) m.push(['Buzzing','Add <code>VAPID_PUBLIC_KEY</code> and <code>VAPID_PRIVATE_KEY</code>, then redeploy.']);
-    if(!s.photos) m.push(['Photos','Vercel → Storage → create a <b>Blob</b> store. That sets <code>BLOB_READ_WRITE_TOKEN</code> for you. Without it, "needs a photo" jobs cannot be finished.']);
+    if(!s.photos) m.push(['Photos','The photo store is not connected, so jobs that need a picture cannot be finished yet.']);
     return m;
   },
 
@@ -805,18 +822,20 @@ const Parent={
           `<div class="ttl">${c.emoji?esc(c.emoji)+' ':''}${esc(c.summary)}</div>`+
           (meta.length?`<div class="meta">${meta.join('<span style="opacity:.4">·</span>')}</div>`:'')));
         if(c.photo){
-          const t=el('img',{class:'thumb',src:c.photo,alt:'Photo from '+(c.childName||'them'),loading:'lazy'});
+          const t=el('img',{class:'thumb',alt:'Photo from '+(c.childName||'them'),loading:'lazy'});
+          const days=this.status&&this.status.photoDays?this.status.photoDays:7;
           t.onclick=()=>{
             const box=row.nextElementSibling;
             if(box&&box.classList.contains('shotwrap')){box.remove();return;}
-            const w=el('div',{class:'shotwrap'},
-              `<img src="${esc(c.photo)}" alt="Photo of ${esc(c.summary)}">
-               <div style="font-size:12.5px;color:var(--mut);margin-top:6px">
-                 Kept ${this.status&&this.status.photoDays?this.status.photoDays:7} days, then deleted automatically.
-                 Save it to your phone if you want to keep it.</div>`);
+            const big=el('img',{alt:'Photo of '+c.summary});
+            const w=el('div',{class:'shotwrap'});
+            w.append(big, el('div',{style:'font-size:12.5px;color:var(--mut);margin-top:6px'},
+              'Kept '+days+' days, then deleted automatically. Save it to your phone if you want to keep it.'));
             row.after(w);
+            loadShot(big,{choreId:c.id,pin:this.pin});
           };
           row.append(t);
+          loadShot(t,{choreId:c.id,pin:this.pin});
         }
         row.append(del);
         host.append(row);
