@@ -396,6 +396,7 @@ async function blobPut(pathname, bytes, contentType) {
       'x-api-version': '7',
       'x-content-type': contentType,
       'x-add-random-suffix': '1',            // unguessable, even if a chore id leaks
+      'x-access': 'private',                 // a child's photo is never readable by URL alone
       'x-cache-control-max-age': String(PHOTO_DAYS * 86400),
     },
     body: bytes,
@@ -404,6 +405,19 @@ async function blobPut(pathname, bytes, contentType) {
   if (!r.ok) throw new SkylightError('photo_store_failed', text.slice(0, 200), r.status);
   try { return JSON.parse(text); }
   catch { throw new SkylightError('photo_store_failed', 'upload response was not JSON', r.status); }
+}
+
+/**
+ * Read a private blob back. The store is PRIVATE, so the URL alone is useless —
+ * every read carries the token and therefore has to go through this server,
+ * which is the point: the same ownership checks that guard the rest of the app
+ * guard the photograph too. A leaked link is not a leaked photo.
+ */
+async function blobGet(url) {
+  const r = await fetch(url, { headers: { authorization: `Bearer ${BLOB_TOKEN}` } });
+  if (!r.ok) throw new SkylightError('photo_unreadable', 'blob read ' + r.status, r.status);
+  const buf = Buffer.from(await r.arrayBuffer());
+  return { bytes: buf, type: r.headers.get('content-type') || 'image/jpeg' };
 }
 
 const proofSetKey = (hh) => K('hh:' + hh + ':proofset');   // chore GROUPs needing a photo
@@ -428,7 +442,10 @@ async function decorate(hh, chores) {
   }
   for (const c of chores) {
     c.needsProof = need.has(String(c.group));
-    c.photo = photos[c.id] ? photos[c.id].url : null;
+    // The store is PRIVATE — the URL is useless without the token, so we do not
+    // ship it to the browser at all. `photo:true` means "ask for it", and the
+    // photo.view op below re-checks who is asking before handing the bytes over.
+    c.photo = photos[c.id] ? true : null;
     c.photoAt = photos[c.id] ? photos[c.id].at : null;
   }
   return chores;
@@ -661,6 +678,41 @@ async function route(op, b, req) {
     return { ok: true };
   }
 
+  /* ------------------------------------------------ looking at a photo --- */
+  //
+  // The blob store is PRIVATE, so a photograph of a child can only be read by
+  // this server, holding the token. That makes the ownership check unavoidable
+  // rather than advisory: a parent may see any photo in THEIR household, and a
+  // kid may see only their own. Bytes come back as a data URL so the browser
+  // never touches the store directly.
+  if (op === 'photo.view') {
+    const choreId = String(b.choreId || '');
+    if (!choreId) return { ok: false, reason: 'no_chore' };
+    if (!blobReady()) return { ok: false, reason: 'no_photo_store' };
+
+    let hhId = null;
+    if (b.token) {
+      const kid = await resolveKid(b.token);
+      if (!kid) return { ok: false, reason: 'bad_token' };
+      const KH = await household(kid.hh);
+      if (!KH) return { ok: false, reason: 'not_connected' };
+      const f = await hhFrame(KH);
+      const mine = await hhChores(KH, f.id, { from: todayISO(f.tz), to: todayISO(f.tz) });
+      // A sibling cannot read another child's photo by guessing a chore id.
+      if (!mine.some((c) => String(c.id) === choreId && String(c.categoryId) === String(kid.categoryId)))
+        return { ok: false, reason: 'not_yours' };
+      hhId = kid.hh;
+    } else {
+      gate();                       // parent side: signed in, and past the PIN
+      hhId = H.id;
+    }
+
+    const rec = await getJSON(photoKey(hhId, choreId)).catch(() => null);
+    if (!rec || !rec.url) return { ok: false, reason: 'no_photo' };
+    const got = await blobGet(rec.url);
+    return { ok: true, dataUrl: `data:${got.type};base64,` + got.bytes.toString('base64'), at: rec.at };
+  }
+
   /* --------------------------------------------------- linking a child --- */
 
   if (op === 'child.code') {
@@ -807,8 +859,8 @@ async function route(op, b, req) {
                { method: 'PUT', body: { status: 'complete' } });
     await redis('SADD', K('acked'), String(target.id)).catch(() => {});
     await queueParentAlert({ hh: c.H.id, child: c.kid.name, summary: target.summary,
-                             choreId: target.id, photo: up.url, at: Date.now() });
-    return { ok: true, photo: up.url, done: true };
+                             choreId: target.id, photo: up.url, at: Date.now() });   // server-side only
+    return { ok: true, photo: true, done: true };
   }
 
   if (op === 'kid.push') {

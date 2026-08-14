@@ -341,7 +341,9 @@ async function runParentQueue() {
     const r = await pushParents({
       title: `${e.child} finished ${e.summary}`,
       body: e.photo ? 'Tap to see the photo.' : 'Ticked off just now.',
-      image: e.photo || undefined,          // Android shows this inline
+      // No inline image: the store is PRIVATE, so a phone cannot fetch the blob
+      // on its own. Tapping opens the app, which asks the server for the bytes
+      // after checking who is asking. Better a tap than a broken picture.
       url: APP_URL,
       choreId: e.choreId,
     }, e.hh);
@@ -350,7 +352,7 @@ async function runParentQueue() {
     if (r.delivered === 0 && emailReady()) {
       mail = await sendEmail(`${e.child} finished ${e.summary}`,
         `<p><b>${e.child}</b> finished <b>${e.summary}</b>.</p>` +
-        (e.photo ? `<p><img src="${e.photo}" alt="" style="max-width:420px;border-radius:12px"></p>` : '') +
+        (e.photo ? `<p><a href="${APP_URL}">See the photo in KangaToDo</a> — it is not emailed, because it is a photograph of a child.</p>` : '') +
         `<p style="color:#888;font-size:12px">KangaToDo · Accelerated Experiences LLC</p>`);
     }
     out.push({ child: e.child, summary: e.summary, hasPhoto: !!e.photo, ...r, email: mail });
