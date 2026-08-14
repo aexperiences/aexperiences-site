@@ -210,10 +210,10 @@
       blurb:'Point your camera at the shelf — Revolver identifies your vinyl, even several covers in one photo, and files them by genre. Your collection stays on your device, export free.',
       price:'Free right now', priceNote:'Photo identification runs on our AI — free while we tune it' },
 
-    { id:'thread', name:'The Thread', tag:'Holds what the doorway wipes', genre:'mind', state:'live',
-      acc:'#c8965a', mark:'/apps/thread/icon.png', family:'Neuro Divulge', url:'/apps/thread/',
-      blurb:'For heads that lose the thread at the doorway. One thing on screen, a parking lot for stray thoughts, tap-through quests for the kids (no fail states), and homes for the things you can never find. Built by a neurodivergent founder for his own house.',
-      price:'Free right now', priceNote:'Part of the Neuro Divulge family' },
+    { id:'thread', name:'ESPO Thread', tag:'Your master list — and the thing you were doing', genre:'mind', state:'live',
+      acc:'#2E7060', mark:'/apps/thread/icon.png', family:'Neuro Divulge', url:'/apps/thread/',
+      blurb:'A master list that works the way a busy head does: write it down in any order, number it afterwards, notes under every task — and finished work turns yellow and STAYS on the list so you can see the day you had. Sort by number, group by mode, drag to reorder. Plus the thread card that tells you what you were doing after the doorway wipes it, tap-through quests for the kids (no fail states, no timers), and homes for the things you can never find. Mint classroom look with a dark skin.',
+      price:'Free right now', priceNote:'Free — from the Neuro Divulge work' },
 
     { id:'tucasa', name:'Tu Casa OS', tag:'The home operating system', genre:'family', state:'dev',
       acc:'#c45c3c', mark:'/apps/tucasa/icon.png', family:'Tu Casa', url:'/apps/tucasa/',
