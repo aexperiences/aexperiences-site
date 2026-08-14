@@ -7,8 +7,8 @@
 <meta name="description" content="A grown-up pops a job on their phone and picks a kid. It lands on the Skylight and buzzes that kid's phone — and only that kid's. Every child in the house, each with their own pouch. From Accelerated Experiences LLC.">
 <meta name="theme-color" content="#FFF9F0">
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="apple-touch-icon" href="./icon-180.png">
-<link rel="icon" href="./icon.svg">
+<link rel="apple-touch-icon" href="./icon.png">
+<link rel="icon" href="./icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="KangaToDo">
@@ -249,7 +249,14 @@ function toast(msg,ms){const t=$('#toast');t.textContent=msg;t.classList.add('sh
   clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),ms||2600);}
 function buzz(ms){try{navigator.vibrate&&navigator.vibrate(ms||8);}catch{}}
 
+/* A date we cannot parse must never reach the screen as "Invalid Date". */
+function dayLabel(iso){
+  const d=new Date(String(iso||'')+'T12:00:00');
+  if(isNaN(d)) return 'Today';
+  return d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+}
 async function api(url,body){
+  const hh=store.get('hh'); if(hh) body={...body,hh};
   try{
     const r=await fetch(url,{method:'POST',headers:{'content-type':'application/json'},
                             body:JSON.stringify(body),cache:'no-store'});
@@ -335,12 +342,17 @@ const REASONS={
   skylight_rate_limited:['Skylight is asking us to slow down.','Give it a minute and try again.'],
   skylight_no_frame:['That Skylight account has no frame on it.','Set up your Skylight Calendar or Buddy first, then come back.'],
   skylight_error:['Skylight sent back an error.','Nothing was saved. Try again in a moment.'],
-  locked:['That PIN did not match.',''], bad_pin:['That PIN did not match.',''],
+  locked:['That PIN did not match.',''], bad_pin:['A PIN needs to be 4 to 8 digits.',''],
+  not_connected:['Sign in with Skylight first.',''],
   offline:['No connection.','The phone is offline, or the server did not answer.'],
   not_linked:['This phone is not joined to anyone yet.','Ask a grown-up for a join code.'],
   bad_code:['That code did not work.','Codes last one hour and work once. Ask for a fresh one.'],
   bad_phone:['That does not look like a phone number.','Use 10 digits, or +1 and the number.'],
   no_key:['Not set up yet.',''],
+  not_connected:['Sign in with Skylight first.',''],
+  need_login:['Pop in your email and password.',''],
+  signed_out:['Skylight signed you out.','Sign in again — it only takes a second.'],
+  skylight_bad_login:['That email or password did not work.','Use the same login as the Skylight app.'],
   needs_photo:['This one needs a photo first.','Tap the camera and show them it is done.'],
   no_photo_store:['Photos are not switched on yet.','A grown-up needs to add <code>BLOB_READ_WRITE_TOKEN</code> in Vercel.'],
   bad_image:['That did not come through as a picture.','Try taking it again.'],
@@ -422,7 +434,7 @@ const Kid={
 
   render(){
     const d=this.data,done=d.done,total=d.total,left=total-done;
-    const dateTxt=new Date(d.date+'T12:00:00').toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+    const dateTxt=dayLabel(d.date);
     $('#app').innerHTML=`<div class="wrap">
       <div class="kidhead"><div class="kidhello">${esc(d.name)}</div>
         <div class="kiddate">${esc(dateTxt)}</div></div>
@@ -617,35 +629,26 @@ const Parent={
     const p=(on,a,b)=>`<span class="pill ${on?'on':'off'}"><span class="dot"></span>${on?a:b}</span>`;
     return `<div class="status">
       ${p(s.connected,'Skylight connected','Skylight not connected')}
-      ${p(s.store,'Storage on','Storage off')}
       ${p(s.push,'Buzzing on','Buzzing off')}
+      ${p(s.photos,'Photos on','Photos off')}
       ${p(s.sms,'Text backup on','Text backup off')}
-      ${p(s.photos,'Photos on','Photos off')}</div>`;
+      ${s.email?`<span class="pill on"><span class="dot"></span>${esc(s.email)}</span>`:''}</div>`;
   },
 
   setupNeeded(){
     const s=this.status||{},m=[];
     if(!s.store) m.push(['Storage','Vercel → Storage → connect an <b>Upstash Redis</b> store (set the prefix to <code>KV</code>), then redeploy.']);
-    if(!s.skylight) m.push(['Skylight sign-in','Vercel → Settings → Environment Variables → add <code>SKYLIGHT_EMAIL</code> and <code>SKYLIGHT_PASSWORD</code>, then redeploy.']);
-    else if(!s.connected) m.push(['Skylight connection',why(s.skylightReason)[1]||'Check the credentials in Vercel.']);
+    if(s.signedIn && !s.connected) m.push(['Skylight connection',why(s.skylightReason)[1]||'Sign in again — Skylight did not accept the saved connection.']);
     if(!s.push) m.push(['Buzzing','Add <code>VAPID_PUBLIC_KEY</code> and <code>VAPID_PRIVATE_KEY</code>, then redeploy.']);
     if(!s.photos) m.push(['Photos','Vercel → Storage → create a <b>Blob</b> store. That sets <code>BLOB_READ_WRITE_TOKEN</code> for you. Without it, "needs a photo" jobs cannot be finished.']);
     return m;
   },
 
   render(){
-    const s=this.status||{},missing=this.setupNeeded(),m=$('#main');
-    if(!s.connected){
-      m.innerHTML=`${this.statusStrip()}
-        <div class="card"><h2>Not connected yet</h2>
-          <div class="sub">KangaToDo is installed and running. It needs three things before it can move a job.</div>
-          ${missing.map(([t,b])=>`<div class="notice"><b>${t}</b><br>${b}</div>`).join('')}
-          <div class="hr"></div><button class="btn ghost" id="recheck">Check again</button></div>
-        ${this.aboutCard()}${FOOTER}`;
-      $('#recheck').onclick=()=>this.refreshStatus();return;
-    }
+    const s=this.status||{},m=$('#main');
+    if(!s.signedIn || !s.connected){ return this.renderSignIn(s); }
+    if(s.pinSet && !this.pin){ return this.renderLock(); }
     m.innerHTML=`${this.statusStrip()}
-      ${missing.length?`<div class="notice">${missing.map(([t,b])=>`<b>${t}</b> — ${b}`).join('<br><br>')}</div>`:''}
       <div class="tabs" role="tablist">
         <button role="tab" aria-selected="${this.tab==='today'}" data-t="today">Today</button>
         <button role="tab" aria-selected="${this.tab==='assign'}" data-t="assign">Pop one in</button>
@@ -653,6 +656,69 @@ const Parent={
       </div><div id="pane"></div>${FOOTER}`;
     m.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{this.tab=b.dataset.t;this.render();});
     this.pane();
+  },
+
+  // A second lock, only if this family chose one. The household is already
+  // signed in at this point — this exists so a kid holding an unlocked phone
+  // can't open the grown-up side.
+  renderLock(again){
+    const m=$('#main');
+    m.innerHTML=`
+      <div class="card">
+        <div style="width:104px;margin:2px auto 10px">${MARK}</div>
+        <h2 style="text-align:center">Grown-ups only</h2>
+        <div class="sub" style="text-align:center">Pop in your PIN.</div>
+        ${again?noticeFor({reason:'locked'}):''}
+        <input id="pin" class="inp" type="password" inputmode="numeric" autocomplete="off"
+               maxlength="8" placeholder="••••" style="text-align:center;letter-spacing:.5em;font-size:22px">
+        <div style="height:14px"></div>
+        <button class="btn" id="unlock">Unlock</button>
+        <div style="height:10px"></div>
+        <button class="btn ghost sm" id="forgot">I forgot it</button>
+      </div>${FOOTER}`;
+    const go=async()=>{
+      const v=$('#pin').value.trim();
+      if(!v) return;
+      const r=await api(API,{do:'children',hh:store.get('hh'),pin:v});
+      if(!r.ok){ $('#pin').value=''; return this.renderLock(true); }
+      this.pin=v; store.set('pin',v); this.render();
+    };
+    $('#unlock').onclick=go;
+    $('#pin').addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
+    $('#pin').focus();
+    $('#forgot').onclick=()=>toast('Disconnect and sign in with Skylight again — that clears the PIN.',5000);
+  },
+
+  renderSignIn(s,err){
+    const m=$('#main');
+    m.innerHTML=`
+      <div class="card">
+        <h2>Sign in with Skylight</h2>
+        <div class="sub">Use the same email and password you use for the Skylight app. KangaToDo then puts jobs straight onto your calendar and your kids' Buddys.</div>
+        ${err?noticeFor(err):''}
+        <label class="lbl" for="em">Email</label>
+        <input id="em" class="inp" type="email" inputmode="email" autocomplete="username" placeholder="you@example.com">
+        <label class="lbl" for="pw">Password</label>
+        <input id="pw" class="inp" type="password" autocomplete="current-password" placeholder="Your Skylight password">
+        <div style="height:16px"></div>
+        <button class="btn" id="signin">Connect my Skylight</button>
+        <div style="font-size:12.5px;color:var(--mut);margin-top:12px;line-height:1.55">
+          Your password is used once to connect and is never saved. You can disconnect any time,
+          which deletes the connection and unlinks every kid's phone.<br>
+          KangaToDo is not affiliated with or endorsed by Skylight.
+        </div>
+      </div>${FOOTER}`;
+    const go=async()=>{
+      const email=$('#em').value.trim(), password=$('#pw').value;
+      if(!email||!password) return toast('Email and password, please.');
+      const b=$('#signin'); b.disabled=true; b.textContent='Connecting…';
+      const r=await api(API,{do:'parent.connect',email,password});
+      if(!r.ok){ b.disabled=false; b.textContent='Connect my Skylight'; return this.renderSignIn(s,r); }
+      store.set('hh',r.hh); toast('Connected!',2500);
+      await this.refreshStatus();
+    };
+    $('#signin').onclick=go;
+    $('#pw').addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
   },
 
   aboutCard(){return `<div class="card"><h2>What KangaToDo does</h2>
@@ -687,7 +753,7 @@ const Parent={
     if(!r.ok)return p.innerHTML=`<div class="card">${noticeFor(r)}</div>`;
     this.chores=r.chores||[];this.date=r.from;
     const byKid={};for(const c of this.chores){(byKid[c.categoryId]=byKid[c.categoryId]||[]).push(c);}
-    const dateTxt=new Date(r.from+'T12:00:00').toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+    const dateTxt=dayLabel(r.from);
 
     let html=`<div class="card"><h2>${esc(dateTxt)}</h2>
       <div class="sub">${this.chores.length} job${this.chores.length===1?'':'s'} · ${this.chores.filter(c=>c.done).length} in pouches</div>`;
@@ -848,8 +914,8 @@ const Parent={
       <div class="sub">Each kid gets their own code. One code joins one phone, and that phone only ever sees that kid's pouch.</div>
       <div id="kidlist"></div></div>
       ${this.status&&!this.status.sms?`<div class="notice"><b>Text backup is off.</b><br>
-        Add <code>TWILIO_ACCOUNT_SID</code>, <code>TWILIO_AUTH_TOKEN</code> and <code>TWILIO_FROM</code> in Vercel to switch it on.
-        Until then a kid with no joined phone simply gets no alert — KangaToDo will not pretend otherwise.</div>`:''}`;
+        A kid with no joined phone simply gets no alert. KangaToDo will not pretend otherwise —
+        join their phone with a code above and they get buzzed properly.</div>`:''}`;
 
     const host=$('#kidlist');
     kids.forEach(k=>{
@@ -901,7 +967,51 @@ const Parent={
       };
       box.append(ph);host.append(box);
     });
+    host.append(el('div',{id:'pincard',style:'padding-top:18px'}));
+    this.pinCard();
+    host.append(el('div',{style:'padding-top:16px'},
+      `<button class="btn ghost sm" id="signout" style="width:100%">Disconnect Skylight</button>`));
+    $('#signout').onclick=async()=>{
+      if(!confirm('Disconnect Skylight? Every kid phone will need a new code.'))return;
+      await api(API,{do:'parent.disconnect',hh:store.get('hh')});
+      store.del('hh'); toast('Disconnected.'); this.status=null; await this.refreshStatus();
+    };
     this.buzzCard();
+  },
+
+  /* The grown-up lock. Optional on purpose — a parent who doesn't want one
+     shouldn't be made to invent a number they'll forget. */
+  pinCard(){
+    const slot=$('#pincard'); if(!slot) return;
+    const on=!!(this.status&&this.status.pinSet);
+    slot.innerHTML=`<div class="card">
+      <h2>Grown-ups-only PIN</h2>
+      <div class="sub">${on
+        ? 'On. This side asks for the PIN before it opens.'
+        : 'Off. Anyone holding this phone can open the grown-up side. Add one if the kids use your phone.'}</div>
+      <input id="np" class="inp" type="password" inputmode="numeric" maxlength="8" autocomplete="off"
+             placeholder="${on?'New PIN (4–8 digits)':'Choose a PIN (4–8 digits)'}"
+             style="text-align:center">
+      <div style="height:12px"></div>
+      <button class="btn sun" id="setpin">${on?'Change it':'Turn it on'}</button>
+      ${on?`<div style="height:10px"></div>
+        <button class="btn ghost sm" id="clearpin" style="width:100%">Turn it off</button>`:''}
+    </div>`;
+    const save=async(np)=>{
+      const r=await api(API,{do:'parent.pin',hh:store.get('hh'),pin:this.pin,newPin:np});
+      if(!r.ok) return toast(why(r.reason)[0]||'That did not work.');
+      if(np===null){ this.pin=''; store.del('pin'); toast('PIN off.'); }
+      else { this.pin=np; store.set('pin',np); toast('PIN saved.'); }
+      this.status=await api(API,{do:'status',hh:store.get('hh')});
+      this.pinCard();
+    };
+    $('#setpin').onclick=()=>{
+      const v=$('#np').value.trim();
+      if(!/^[0-9]{4,8}$/.test(v)) return toast('4 to 8 digits, please.');
+      save(v);
+    };
+    const c=$('#clearpin');
+    if(c) c.onclick=()=>{ if(confirm('Turn the PIN off? Anyone with this phone can then open the grown-up side.')) save(null); };
   },
 
   /* Your own phone, subscribed the same way a kid's is. */
