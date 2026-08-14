@@ -144,6 +144,15 @@
       blurb:'Write with Roz your coach, run lines from a real play library, scan your own script, warm up, and learn every job in the room — for actors, writers and theater teachers, ages 5 to 90.',
       price:'Free right now', priceNote:'Paid plans not switched on yet' },
 
+    /* AE Comply — readiness monitoring. state:'dev' until Stripe and Wave 2 land.
+       NEVER describe this as certification: it monitors and evidences, it does not certify. */
+    { id:'ae-comply', name:'AE Comply', tag:'Compliance readiness monitoring', genre:'business', state:'dev',
+      aisles:['business'],
+      acc:'#2C6639', mark:'/marks/aecomply.svg', img:'/marks/aecomply.svg',
+      url:'https://www.aexperiences.com/apps/comply/',
+      blurb:'Around-the-clock checks on the settings that decide whether a stranger can send email as you, whether your site is encrypted, and whether a browser is told to protect your visitors. Every failure comes with a plain-English fix, and every check is kept as dated, sealed evidence you can hand an inspector or an insurer. It monitors readiness \u2014 it does not certify.',
+      priceNote:'Pricing set, not switched on yet' },
+
     { id:'esposocial', name:'ESPOsocial', tag:'Private groups & video', genre:'social', state:'dev',
       acc:'#5a5fd6', url:'https://esposocial.com/', img:'/logo-social.png',
       blurb:'A quiet place for a real group — private chat, live video, and Tag for the conversations that do not fit a live call.', priceNote:'Paid plans not switched on yet' },
