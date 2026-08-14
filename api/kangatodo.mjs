@@ -198,6 +198,15 @@ async function skyAuthorize(email, password) {
   if (r.status !== 302 && r.status !== 303) {
     throw new SkylightError('skylight_bad_login', 'Skylight rejected the email or password', r.status);
   }
+  // Rails 302s on FAILURE too — straight back to the login form. Learned by
+  // probing the live server with deliberately wrong credentials: without this
+  // check a typo'd password reads as "Skylight changed something", which sends
+  // a parent hunting for an outage instead of retyping their password.
+  {
+    const dest = new URL(r.headers.get('location') || '/', SKY_BASE);
+    if (dest.pathname.startsWith('/auth/session'))
+      throw new SkylightError('skylight_bad_login', 'Skylight rejected the email or password', r.status);
+  }
 
   // 4 — catch the code. Rails remembers where you were going, so the login's
   // own redirect chain often delivers it; we walk that first (staying on
