@@ -1,4 +1,36 @@
-{ "name":"The Thread — Neuro Divulge","short_name":"Thread","description":"It holds the thread when the doorway wipes it. By Accelerated Experiences, LLC.",
-  "start_url":"/apps/thread/","scope":"/apps/thread/","display":"standalone",
-  "background_color":"#221d18","theme_color":"#221d18",
-  "icons":[{"src":"icon.png","sizes":"1024x1024","type":"image/png","purpose":"any"},{"src":"icon.png","sizes":"1024x1024","type":"image/png","purpose":"maskable"}] }
+{
+ "name": "ESPO Thread — master list + the thing you were doing",
+ "short_name": "ESPO Thread",
+ "description": "Holds the one thing you were doing, and keeps your Master List: write it in any order, number it after, notes under everything, finished stays visible. By Accelerated Experiences, LLC.",
+ "start_url": "/apps/thread/",
+ "scope": "/apps/thread/",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#F4FAF7",
+ "theme_color": "#2E7060",
+ "categories": [
+  "productivity",
+  "lifestyle",
+  "education"
+ ],
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon-maskable.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}
