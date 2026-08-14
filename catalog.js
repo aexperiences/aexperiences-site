@@ -308,7 +308,7 @@
     { id:'kangatodo', name:'KangaToDo', tag:'Chores to every kid\'s phone', genre:'family', state:'live',
       acc:'#C78425', mark:'/marks/kangatodo.svg', family:'Accelerated Experiences', url:'/apps/kangatodo/',
       blurb:'A grown-up types a job on their phone and picks a kid. It writes into your own Skylight account — so it shows on the Calendar and on that child\'s Buddy — and then buzzes that child\'s phone. Every kid in the house, each with their own pouch, each seeing only their own list. Jobs can require a photo before they tick off.',
-      price:'Free right now', priceNote:'Needs a Skylight Calendar account. Your Skylight password is used once to connect and is never stored. Paid plans not switched on yet.' },
+      price:'Free right now', priceNote:'No account needed \u2014 start in one tap. If you own a Skylight Calendar you can connect it and jobs land there too. Paid plans not switched on yet.' },
   ];
 
   var GENRES = [
