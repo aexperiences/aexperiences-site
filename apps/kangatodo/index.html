@@ -270,6 +270,7 @@ async function loadShot(img, body){
 }
 async function api(url,body){
   const hh=store.get('hh'); if(hh) body={...body,hh};
+  const pdev=store.get('pdev'); if(pdev&&body&&body.do&&!String(body.do).startsWith('kid.')) body={...body,pdev};
   try{
     const r=await fetch(url,{method:'POST',headers:{'content-type':'application/json'},
                             body:JSON.stringify(body),cache:'no-store'});
@@ -369,6 +370,16 @@ const REASONS={
   needs_photo:['This one needs a photo first.','Tap the camera and show them it is done.'],
   no_photo_store:['Photos are not switched on yet.','The photo store is not connected to this app.'],
   not_yours:['That photo belongs to someone else.',''],
+  no_name:['What is their name?',''],
+  bad_code:['That code has expired or was already used.','Ask them for a fresh one.'],
+  no_code:['Pop in the code.',''],
+  household_gone:['That household was deleted.',''],
+  last_grownup:['You are the only grown-up.','Add another phone first, or use Delete everything.'],
+  not_this_device:['This phone was removed from the household.','Ask another grown-up for a new code.'],
+  name_taken:['You already have a kid with that name.',''],
+  too_many_kids:['That is as many kids as one household can hold.',''],
+  skylight_owns_kids:['Your kids come from Skylight.','Add or remove them in the Skylight app and they will show up here.'],
+  no_such_job:['That job is not on the list any more.',''],
   no_photo:['There is no photo on this one.',''],
   photo_unreadable:['That photo would not open.','It may have been cleared out already.'],
   bad_image:['That did not come through as a picture.','Try taking it again.'],
@@ -801,7 +812,9 @@ const Parent={
     const s=this.status||{};
     const p=(on,a,b)=>`<span class="pill ${on?'on':'off'}"><span class="dot"></span>${on?a:b}</span>`;
     return `<div class="status">
-      ${p(s.connected,'Skylight connected','Skylight not connected')}
+      ${s.mode==='local'
+          ? `<span class="pill on"><span class="dot"></span>Your own list</span>`
+          : p(s.connected,'Skylight connected','Skylight not connected')}
       ${p(s.push,'Buzzing on','Buzzing off')}
       ${p(s.photos,'Photos on','Photos off')}
       ${p(s.sms,'Text backup on','Text backup off')}
@@ -866,32 +879,88 @@ const Parent={
     const m=$('#main');
     m.innerHTML=`
       <div class="card">
-        <h2>Sign in with Skylight</h2>
-        <div class="sub">Use the same email and password you use for the Skylight app. KangaToDo then puts jobs straight onto your calendar and your kids' Buddys.</div>
+        <div style="width:104px;margin:2px auto 10px">${MARK}</div>
+        <h2 style="text-align:center">Jobs hop to the right kid</h2>
+        <div class="sub" style="text-align:center">Pick how you want to start. You can change your mind later.</div>
         ${err?noticeFor(err):''}
-        <label class="lbl" for="em">Email</label>
-        <input id="em" class="inp" type="email" inputmode="email" autocomplete="username" placeholder="you@example.com">
-        <label class="lbl" for="pw">Password</label>
-        <input id="pw" class="inp" type="password" autocomplete="current-password" placeholder="Your Skylight password">
-        <div style="height:16px"></div>
-        <button class="btn" id="signin">Connect my Skylight</button>
-        <div style="font-size:12.5px;color:var(--mut);margin-top:12px;line-height:1.55">
-          Your password is used once to connect and is never saved. You can disconnect any time,
-          which deletes the connection and unlinks every kid's phone.<br>
+
+        <div style="height:6px"></div>
+        <button class="btn" id="startlocal">Start without Skylight</button>
+        <div style="font-size:12.5px;color:var(--mut);margin-top:8px;line-height:1.55;text-align:center">
+          Nothing to sign up for. Add your kids, type a job, and it buzzes their phone.
+        </div>
+
+        <div style="display:flex;align-items:center;gap:12px;margin:18px 0 14px;color:var(--mut);font-size:13px">
+          <span style="flex:1;height:1px;background:var(--line)"></span>or<span style="flex:1;height:1px;background:var(--line)"></span>
+        </div>
+
+        <details class="fold" id="skyfold"${err?' open':''}>
+          <summary>I have a Skylight Calendar</summary>
+          <div style="padding-top:6px">
+            <div class="sub" style="margin-bottom:10px">Jobs also land on your Skylight Calendar and on that child's Buddy.</div>
+            <label class="lbl" for="em">Email</label>
+            <input id="em" class="inp" type="email" inputmode="email" autocomplete="username" placeholder="you@example.com">
+            <label class="lbl" for="pw">Password</label>
+            <input id="pw" class="inp" type="password" autocomplete="current-password" placeholder="Your Skylight password">
+            <div style="height:14px"></div>
+            <button class="btn ghost" id="signin">Connect my Skylight</button>
+            <div style="font-size:12.5px;color:var(--mut);margin-top:10px;line-height:1.55">
+              Your password is used once to connect and is never saved.
+            </div>
+          </div>
+        </details>
+
+        <details class="fold" style="margin-top:12px">
+          <summary>Someone already set this up</summary>
+          <div style="padding-top:6px">
+            <div class="sub" style="margin-bottom:10px">They can make you a grown-up code in <b>Kids</b>.</div>
+            <input id="pcode" class="inp" maxlength="8" placeholder="6-letter code"
+                   style="text-align:center;letter-spacing:.35em;text-transform:uppercase" aria-label="Grown-up code">
+            <div style="height:12px"></div>
+            <button class="btn ghost" id="joinparent">Join the household</button>
+          </div>
+        </details>
+
+        <div style="font-size:12.5px;color:var(--mut);margin-top:14px;line-height:1.55">
+          Either way you can delete everything with one button.
+          <a href="privacy.html">What we store</a>.<br>
           KangaToDo is not affiliated with or endorsed by Skylight.
         </div>
       </div>${FOOTER}`;
+
+    $('#startlocal').onclick=async()=>{
+      const b=$('#startlocal'); b.disabled=true; b.textContent='Setting up…';
+      let tz='UTC'; try{ tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC'; }catch(e){}
+      const r=await api(API,{do:'parent.start',tz});
+      if(!r.ok){ b.disabled=false; b.textContent='Start without Skylight'; return this.renderSignIn(s,r); }
+      store.set('hh',r.hh); if(r.pdev) store.set('pdev',r.pdev);
+      this.status=null; toast('Ready. Add your kids.',2600);
+      await this.refreshStatus(); this.tab='kids'; this.render();
+    };
+
     const go=async()=>{
       const email=$('#em').value.trim(), password=$('#pw').value;
       if(!email||!password) return toast('Email and password, please.');
       const b=$('#signin'); b.disabled=true; b.textContent='Connecting…';
       const r=await api(API,{do:'parent.connect',email,password});
       if(!r.ok){ b.disabled=false; b.textContent='Connect my Skylight'; return this.renderSignIn(s,r); }
-      store.set('hh',r.hh); toast('Connected!',2500);
+      store.set('hh',r.hh); if(r.pdev) store.set('pdev',r.pdev); toast('Connected!',2500);
       await this.refreshStatus();
     };
     $('#signin').onclick=go;
     $('#pw').addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
+
+    const joinP=async()=>{
+      const code=$('#pcode').value.trim().toUpperCase();
+      if(!code) return toast('Pop in the code.');
+      const b=$('#joinparent'); b.disabled=true; b.textContent='Joining…';
+      const r=await api(API,{do:'parent.accept',code,label:'A phone'});
+      if(!r.ok){ b.disabled=false; b.textContent='Join the household'; return toast(why(r.reason)[0]||'That code did not work.'); }
+      store.set('hh',r.hh); store.set('pdev',r.pdev); this.status=null;
+      toast('You are in.',2400); await this.refreshStatus();
+    };
+    $('#joinparent').onclick=joinP;
+    $('#pcode').addEventListener('keydown',e=>{ if(e.key==='Enter') joinP(); });
   },
 
   aboutCard(){return `<div class="card"><h2>What KangaToDo does</h2>
@@ -1087,7 +1156,16 @@ const Parent={
     p.innerHTML=`<div id="parentbuzz"></div>
       <div class="card"><h2>Kids &amp; phones</h2>
       <div class="sub">Each kid gets their own code. One code joins one phone, and that phone only ever sees that kid's pouch.</div>
-      <div id="kidlist"></div></div>
+      <div id="kidlist"></div>
+      ${this.status&&this.status.mode==='local'?`
+        <div style="border-top:1px solid var(--hair);margin-top:16px;padding-top:14px">
+          <label class="lbl" for="newkid">Add a kid</label>
+          <div class="row">
+            <input id="newkid" class="inp" maxlength="40" placeholder="Their first name" aria-label="New kid's first name">
+            <button class="btn sun" id="addkid" style="flex:none;min-width:96px">Add</button>
+          </div>
+        </div>`:''}
+      </div>
       ${this.status&&!this.status.sms?`<div class="notice"><b>Text backup is off.</b><br>
         A kid with no joined phone simply gets no alert. KangaToDo will not pretend otherwise —
         join their phone with a code above and they get buzzed properly.</div>`:''}`;
@@ -1106,6 +1184,7 @@ const Parent={
         <div class="row" style="margin-top:11px">
           <button class="btn ghost sm" data-a="code" style="flex:1">Get a join code</button>
           ${k.devices?`<button class="btn ghost sm" data-a="unlink" style="flex:none">Unjoin</button>`:''}
+          ${this.status&&this.status.mode==='local'?`<button class="btn ghost sm" data-a="removekid" style="flex:none">Remove</button>`:''}
         </div><div data-slot></div>`;
 
       box.querySelector('[data-a="code"]').onclick=async(e)=>{
@@ -1125,6 +1204,14 @@ const Parent={
         const ht=slot.querySelector('[data-a="howto"]');
         if(ht) ht.onclick=(e)=>{e.preventDefault();Install.sheet(true);};
         buzz(12);
+      };
+      const rm=box.querySelector('[data-a="removekid"]');
+      if(rm)rm.onclick=async()=>{
+        if(!confirm(`Remove ${k.name}?\n\nTheir jobs and any photos go too, and their phone stops working. This cannot be undone.`))return;
+        const r=await api(API,{do:'child.remove',pin:this.pin,categoryId:k.categoryId});
+        if(!r.ok)return toast(why(r.reason)[0]||'That did not work.');
+        toast(r.removedJobs?`Removed. ${r.removedJobs} job${r.removedJobs===1?'':'s'} went too.`:'Removed.',3000);
+        this.children=[];this.paneKids(p);
       };
       const un=box.querySelector('[data-a="unlink"]');
       if(un)un.onclick=async()=>{
@@ -1149,6 +1236,8 @@ const Parent={
       };
       box.append(ph);host.append(box);
     });
+    host.append(el('div',{id:'grownups',style:'padding-top:18px'}));
+    this.grownupsCard();
     host.append(el('div',{id:'pincard',style:'padding-top:18px'}));
     this.pinCard();
     host.append(el('div',{style:'padding-top:18px'},
@@ -1165,7 +1254,73 @@ const Parent={
       toast(r&&r.photos?('Deleted. '+r.photos+' photo'+(r.photos===1?'':'s')+' removed.'):'Deleted.',4000);
       this.status=null; this.pin=''; await this.refreshStatus();
     };
+    const ak=$('#addkid');
+    if(ak) ak.onclick=async()=>{
+      const inp=$('#newkid'), name=inp.value.trim();
+      if(!name) return toast('What is their name?');
+      ak.disabled=true;
+      const r=await api(API,{do:'child.add',pin:this.pin,name});
+      ak.disabled=false;
+      if(!r.ok) return toast(why(r.reason)[0]||'That did not work.');
+      inp.value=''; toast(`${r.child.name} added.`,2200); buzz(10);
+      this.children=[]; this.paneKids(p);
+    };
+    const nk=$('#newkid');
+    if(nk) nk.addEventListener('keydown',e=>{ if(e.key==='Enter'&&$('#addkid')) $('#addkid').click(); });
+
     this.buzzCard();
+  },
+
+  /* More than one parent. Mum's phone, Dad's phone, a grandparent. */
+  async grownupsCard(){
+    const slot=$('#grownups'); if(!slot) return;
+    const r=await api(API,{do:'parent.devices'});
+    const list=(r&&r.ok&&r.devices)||[];
+    slot.innerHTML=`<div class="card">
+      <h2>Grown-ups</h2>
+      <div class="sub">${list.length<2
+        ? 'Only this phone can add jobs. Add another grown-up and you both can.'
+        : `${list.length} phones can add jobs to this household.`}</div>
+      <div id="gulist"></div>
+      <div style="height:12px"></div>
+      <button class="btn sun" id="invite">Add another grown-up</button>
+      <div id="invout"></div>
+    </div>`;
+    const host=$('#gulist');
+    list.forEach(d=>{
+      const row=el('div',{class:'row',style:'align-items:center;padding:8px 0;border-bottom:1px solid var(--hair)'});
+      const when=d.at?new Date(d.at).toLocaleDateString(undefined,{month:'short',day:'numeric'}):'';
+      row.innerHTML=`<div style="flex:1">
+          <div style="font-weight:700">${esc(d.label)}${d.isYou?' <span style="font-weight:400;color:var(--mut)">· this phone</span>':''}</div>
+          ${when?`<div class="meta">joined ${esc(when)}</div>`:''}
+        </div>`;
+      if(list.length>1){
+        const b=el('button',{class:'btn ghost sm',style:'flex:none'},'Remove');
+        b.onclick=async()=>{
+          if(!confirm(d.isYou
+            ? 'Remove THIS phone?\n\nYou will be signed out of the household on this device.'
+            : `Remove ${d.label}?\n\nThat phone stops being able to see or add jobs straight away.`))return;
+          const rr=await api(API,{do:'parent.removedevice',pin:this.pin,device:d.id});
+          if(!rr.ok) return toast(why(rr.reason)[0]||'That did not work.');
+          if(rr.removedSelf){ store.del('hh'); store.del('pdev'); store.del('pin');
+            this.status=null; this.pin=''; toast('Signed out.',2500); return this.refreshStatus(); }
+          toast('Removed.'); this.grownupsCard();
+        };
+        row.append(b);
+      }
+      host.append(row);
+    });
+    const inv=$('#invite');
+    if(inv) inv.onclick=async()=>{
+      inv.disabled=true;
+      const rr=await api(API,{do:'parent.invite',pin:this.pin});
+      inv.disabled=false;
+      if(!rr.ok) return toast(why(rr.reason)[0]||'That did not work.');
+      $('#invout').innerHTML=`<div class="code">${esc(rr.code)}</div>
+        <div class="codehint">On their phone open<br><b>aexperiences.com/apps/kangatodo/</b><br>
+          tap <b>Someone already set this up</b> and type this code. It lasts an hour and works once.</div>`;
+      buzz(12);
+    };
   },
 
   /* The grown-up lock. Optional on purpose — a parent who doesn't want one
