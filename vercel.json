@@ -138,6 +138,18 @@
     {
       "source": "/apps/moments/:path*",
       "destination": "https://ae-moments-showroom.vercel.app/:path*"
+    },
+    {
+      "source": "/apps/comply/",
+      "destination": "https://aecomply.vercel.app/index.html"
+    },
+    {
+      "source": "/apps/comply/:path*",
+      "destination": "https://aecomply.vercel.app/:path*"
+    },
+    {
+      "source": "/api/comply-run",
+      "destination": "https://aecomply.vercel.app/api/comply-run"
     }
   ],
   "headers": [
