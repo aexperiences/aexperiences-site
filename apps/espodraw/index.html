@@ -174,6 +174,7 @@ body.big .wordChoice button{font-size:25px;min-height:70px}
           <label for="liPw">Password</label>
           <input id="liPw" type="password" autocomplete="current-password">
           <button class="btn wide" type="submit" style="margin-top:12px">Sign in</button>
+          <button class="btn ghost wide" id="btnGuest" type="button" style="margin-top:10px">Play as a guest — no email</button>
           <button class="btn quiet" id="btnForgot" type="button">I have a recovery code</button>
         </form>
 
@@ -336,6 +337,30 @@ showForm('Login');
 $('#tabLogin').onclick=()=>showForm('Login');
 $('#tabSignup').onclick=()=>showForm('Signup');
 $('#btnForgot').onclick=()=>showForm('Recover');
+
+async function becomeGuest(rawName){
+  let did=LS.get('ed.guest.did');
+  if(!did){ did=(Date.now().toString(36)+Math.random().toString(36).slice(2,12)).replace(/[^a-z0-9]/g,''); LS.set('ed.guest.did',did); }
+  const email='guest-'+did+'@espodraw.guest';
+  const pw='gd'+did;
+  if(LS.get('ed.guest.made')==='1'){ tookToken(await auth({do:'login', email, password:pw})); return; }
+  let base=String(rawName||'').replace(/[^A-Za-z0-9_.-]/g,''); if(base.length<3) base='player'; base=base.slice(0,16);
+  let handle=base;
+  for(let tries=0; ; tries++){
+    try{ tookToken(await auth({do:'signup', handle, email, password:pw})); LS.set('ed.guest.made','1'); return; }
+    catch(err){
+      if(err.status===409 && /email/i.test(err.message)){ tookToken(await auth({do:'login', email, password:pw})); LS.set('ed.guest.made','1'); return; }
+      if(err.status===409 && tries<12){ const suffix=String((Math.floor(Math.random()*900)+100)); handle=base.slice(0,16-suffix.length)+suffix; continue; }
+      throw err;
+    }
+  }
+}
+$('#btnGuest').onclick=async()=>{
+  const _r=window.prompt('First name only — it is just what shows on your drawings:',''); if(_r===null) return; const name=_r.trim();
+  const b=$('#btnGuest'), label=b.textContent; b.disabled=true; b.textContent='One moment…';
+  try{ await becomeGuest(name); }
+  catch(err){ say($('#authMsg'),'err',err.message); b.disabled=false; b.textContent=label; }
+};
 
 $('#formLogin').onsubmit=async e=>{ e.preventDefault();
   try{ tookToken(await auth({do:'login', email:$('#liEmail').value, password:$('#liPw').value})); }
@@ -733,6 +758,7 @@ applyBig();
     catch(e){ signedOut(); }
   } else { signedOut(); }
 
+  if(invite && !me){ try{ await becomeGuest(''); }catch(err){ say($('#authMsg'),'err',err.message); } }
   if(!me) return;
   if(invite){
     try{ const r=await api({do:'join', code:invite});
