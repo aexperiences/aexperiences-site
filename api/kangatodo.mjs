@@ -149,6 +149,13 @@ async function skyAuthorize(email, password) {
   const state     = rnd(16);
   const jar       = {};
 
+  // NOTE, learned from the FIRST real sign-in (Aug 14 2026): this URL must NOT
+  // carry `prompt=login`. That parameter orders Skylight to demand a login on
+  // EVERY authorize — including the replay after we have just logged in — so
+  // step 4 bounced back to the login form instead of issuing a code, and the
+  // very first real user saw "no authorization code returned". An
+  // unauthenticated authorize lands on the login form anyway; the flag bought
+  // nothing and broke everything.
   const authUrl = `${SKY_BASE}/oauth/authorize?` + new URLSearchParams({
     client_id: SKY_CLIENT_ID,
     code_challenge: challenge,
@@ -157,7 +164,6 @@ async function skyAuthorize(email, password) {
     response_type: 'code',
     scope: SKY_SCOPE,
     state,
-    prompt: 'login',
   });
 
   // 1 — start the authorize, pick up the session cookie.
@@ -193,13 +199,39 @@ async function skyAuthorize(email, password) {
     throw new SkylightError('skylight_bad_login', 'Skylight rejected the email or password', r.status);
   }
 
-  // 4 — replay the authorize, now authenticated, and catch the code off the redirect.
-  r = await fetch(authUrl, { redirect: 'manual', headers: { accept: 'text/html', cookie: jarHeader(jar) } });
-  jarPut(jar, readSetCookie(r));
-  const back = r.headers.get('location') || '';
-  const got = new URL(back, SKY_BASE).searchParams;
+  // 4 — catch the code. Rails remembers where you were going, so the login's
+  // own redirect chain often delivers it; we walk that first (staying on
+  // Skylight's host), and only then replay the authorize ourselves.
+  const codeFrom = (loc) => {
+    if (!loc) return null;
+    const u = new URL(loc, SKY_BASE);
+    if (!(SKY_REDIRECT.startsWith(u.origin) && SKY_REDIRECT.includes(u.pathname))) return null;
+    return u.searchParams;
+  };
+  let got = codeFrom(r.headers.get('location'));
+  let hop = r.headers.get('location'); let lastLoc = hop;
+  for (let i = 0; i < 3 && !got && hop; i++) {
+    const u = new URL(hop, SKY_BASE);
+    if (u.origin !== SKY_BASE) break;                    // left their app — stop walking
+    r = await fetch(u, { redirect: 'manual', headers: { accept: 'text/html', cookie: jarHeader(jar) } });
+    jarPut(jar, readSetCookie(r));
+    hop = r.headers.get('location'); if (hop) lastLoc = hop;
+    got = codeFrom(hop);
+  }
+  if (!got) {
+    r = await fetch(authUrl, { redirect: 'manual', headers: { accept: 'text/html', cookie: jarHeader(jar) } });
+    jarPut(jar, readSetCookie(r));
+    const back = r.headers.get('location') || ''; if (back) lastLoc = back;
+    got = codeFrom(back);
+  }
+  if (!got || !got.get('code')) {
+    // Say WHERE it bounced — host and path only, never the query, so a token
+    // or code can never end up in an error message.
+    let where = 'nowhere';
+    try { const u = new URL(lastLoc || '', SKY_BASE); where = u.origin + u.pathname; } catch {}
+    throw new SkylightError('skylight_changed', 'no authorization code returned (redirected to ' + where + ')', r.status);
+  }
   const code = got.get('code');
-  if (!code) throw new SkylightError('skylight_changed', 'no authorization code returned', r.status);
   if (got.get('state') !== state) throw new SkylightError('skylight_changed', 'oauth state mismatch', r.status);
 
   // 5 — trade the code for a token.
