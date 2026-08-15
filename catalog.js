@@ -176,7 +176,7 @@
     { id:'espofunkmaster', name:'ESPOfunkmaster', tag:'Studio, looper & chop shop', genre:'arts', state:'live',
       family:'ESPO Music', aisles:['personal','business'], partOf:'ae-cre8',
       acc:'#e0a83a', mark:'/marks/espofunkmaster.png', img:'/marks/espofunkmaster.png', url:'/apps/espofunkmaster/',
-      shots:['/shots/aefunkmaster.png','/shots/aefunkmaster-2.png','/shots/aefunkmaster-desktop.png'],
+      shots:['/shots/espofunkmaster.png','/shots/espofunkmaster-2.png','/shots/espofunkmaster-desktop.png'],
       blurb:'A real studio in your browser, in plain English: a true drum kit, real-instrument keys, a bar-synced looper, your microphone, a mixing desk — and "Put it on wax" to make it sound like a record. Bring in your own song or a video you shot, chop it onto the pads, and send the finished track straight into ESPO Cutlabs as the music under your edit. Nothing uploaded, nothing collected.',
       price:'Free right now', priceNote:'Pricing set: $4.99/mo · $29.99/yr — payments not switched on yet' },
 
