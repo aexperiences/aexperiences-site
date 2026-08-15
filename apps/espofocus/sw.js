@@ -1,6 +1,6 @@
-/* ESPOfocus service worker — network-first for the page (fresh deploys win),
+/* ND Focus service worker — network-first for the page (fresh deploys win),
    cache-first for assets. Weekly logging works offline. Accelerated Experiences LLC */
-var C = "espofocus-v2";
+var C = "espofocus-v3";
 var ASSETS = ["./","./index.html","./icon.svg","./icon.png","./manifest.webmanifest",
   "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap"];
 self.addEventListener("install", function(e){ e.waitUntil(caches.open(C).then(function(c){

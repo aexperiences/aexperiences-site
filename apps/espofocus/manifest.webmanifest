@@ -1,6 +1,6 @@
 {
-  "name": "ESPOfocus",
-  "short_name": "ESPOfocus",
+  "name": "ND Focus",
+  "short_name": "ND Focus",
   "description": "A calm weekly tracker for a child's ADHD treatment plan. Parents, teachers and behavior specialists rate the same 15 things each week; ESPOfocus charts whether the plan is working. Not a diagnosis. By Accelerated Experiences, LLC.",
   "start_url": "/apps/espofocus/",
   "scope": "/apps/espofocus/",
