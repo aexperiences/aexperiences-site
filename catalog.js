@@ -210,8 +210,8 @@
       blurb:'Point your camera at the shelf — Revolver identifies your vinyl, even several covers in one photo, and files them by genre. Your collection stays on your device, export free.',
       price:'Free right now', priceNote:'Photo identification runs on our AI — free while we tune it' },
 
-    { id:'thread', name:'ESPO Thread', tag:'Your master list — and the thing you were doing', genre:'mind', state:'live',
-      acc:'#2E7060', mark:'/apps/thread/icon.png', family:'Neuro Divulge', url:'/apps/thread/',
+    { id:'thread', name:'ND Thread', tag:'Your master list — and the thing you were doing', genre:'mind', state:'live',
+      acc:'#9A7A2C', mark:'/apps/thread/icon.png', family:'Neuro Divulge', url:'/apps/thread/',
       blurb:'A master list that works the way a busy head does: write it down in any order, number it afterwards, notes under every task — and finished work turns yellow and STAYS on the list so you can see the day you had. Sort by number, group by mode, drag to reorder. Plus the thread card that tells you what you were doing after the doorway wipes it, tap-through quests for the kids (no fail states, no timers), and homes for the things you can never find. Mint classroom look with a dark skin.',
       price:'Free right now', priceNote:'Free — from the Neuro Divulge work' },
 
@@ -226,8 +226,8 @@
       blurb:'A word a day that actually sticks — etymology, a journal, your own word list. No ads, works offline, export free.',
       price:'Free right now', priceNote:'Plus coming: $1.99/mo · $14.99/yr — not switched on yet' },
 
-    { id:'espotendency', name:'ESPOtendency', tag:'Mood & habits', genre:'mind', state:'live',
-      acc:'#232946', mark:M+'espotendency.svg', family:'ESPOmindpeace', url:'/apps/espotendency/',
+    { id:'espotendency', name:'ND Tendency', tag:'Mood & habits', genre:'mind', state:'live',
+      acc:'#C23359', mark:'/apps/espotendency/icon.png', family:'Neuro Divulge', url:'/apps/espotendency/',
       shots:['/shots/espotendency.png'],
       blurb:'A 10-second daily check-in and one tiny win at a time. Everything stays on your device — no account, no cloud.',
       price:'Free right now', priceNote:'Plus coming: $1.99/mo · $19.99/yr — core stays free forever' },
@@ -245,8 +245,8 @@
 
     /* ─────────── IN DEVELOPMENT — no price, no buy path, notify-me only ─────────── */
 
-    { id:'esporegulator', name:'ESPOregulator', tag:'Emotional skills', genre:'mind', state:'live',
-      acc:'#2B2350', mark:M+'esporegulator.svg', family:'ESPOmindpeace', url:'/apps/esporegulator/',
+    { id:'esporegulator', name:'ND Regulator', tag:'Emotional skills', genre:'mind', state:'live',
+      acc:'#A32226', mark:'/apps/esporegulator/icon.png', family:'Neuro Divulge', url:'/apps/esporegulator/',
       blurb:'Five-minute practice for anger, stress and anxiety — a real skills ladder plus right-now SOS tools. Skills, not affirmations.',
       price:'Free right now', priceNote:'Plus coming: $1.99/mo · $19.99/yr — Level 1 + every SOS tool free forever' },
 
@@ -300,9 +300,10 @@
       blurb:'Run your very own salon — give every happy customer amazing hair, nails, makeup and outfits. The customers talk out loud, so it works even before kids can read. No losing, no timers, no ads, nothing collected, and it works offline.',
       price:'Free', priceNote:'A free kids’ game — no ads, no accounts, nothing to buy, nothing collected' },
 
-    { id:'espofocus', name:'ESPOfocus', tag:'ADHD weekly tracker', genre:'family', state:'live',
-      acc:'#4c63d2', mark:'/apps/espofocus/icon.svg', url:'/apps/espofocus/',
-      blurb:'The weekly ADHD monitoring report your provider asks for — parents, teachers and behavior specialists rate the same 15 things each week, and ESPOfocus charts whether the plan is working. Not a diagnosis; private, initials only.',
+    { id:'espofocus', name:'ND Focus', tag:'ADHD weekly tracker', genre:'family', state:'live',
+      family:'Neuro Divulge',
+      acc:'#93A82F', mark:'/apps/espofocus/icon.svg', url:'/apps/espofocus/',
+      blurb:'The weekly ADHD monitoring report your provider asks for — parents, teachers and behavior specialists rate the same 15 things each week, and ND Focus charts whether the plan is working. Not a diagnosis; private, initials only.',
       price:'Free right now', priceNote:'A private monitoring aid — no ads, no tracking. Paid plans not switched on yet.' },
 
     { id:'kangatodo', name:'KangaToDo', tag:'Chores to every kid\'s phone', genre:'family', state:'live',
