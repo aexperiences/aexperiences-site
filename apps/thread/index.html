@@ -1,11 +1,11 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ESPO Thread — the master list that holds what the doorway wipes</title>
-<meta name="description" content="ESPO Thread holds the one thing you were doing, and keeps your Master List — write it down in any order, number it after, tap any task for a full page of notes, swipe to archive, forward or delete. Finished stays visible. By Accelerated Experiences, LLC.">
+<title>ND Thread — the master list that holds what the doorway wipes</title>
+<meta name="description" content="ND Thread holds the one thing you were doing, and keeps your Master List — write it down in any order, number it after, tap any task for a full page of notes, swipe to archive, forward or delete. Finished stays visible. By Accelerated Experiences, LLC.">
 <meta name="theme-color" content="#2E7060">
 <link rel="canonical" href="https://www.aexperiences.com/apps/thread/">
 <link rel="icon" href="/apps/thread/icon.png"><link rel="apple-touch-icon" href="/apps/thread/icon-180.png"><link rel="manifest" href="/apps/thread/manifest.webmanifest">
-<meta property="og:title" content="ESPO Thread — the master list that holds the thread">
+<meta property="og:title" content="ND Thread — the master list that holds the thread">
 <meta property="og:description" content="One thing on screen. A Master List you can sort, swipe and archive. Quests for the kids, homes for the things.">
 <meta property="og:image" content="https://www.aexperiences.com/apps/thread/icon.png">
 <meta property="og:type" content="product">
@@ -285,7 +285,7 @@ html[data-skin="dark"] .toast button{color:#0d1614}
 <div class="wrap">
 <header>
   <img class="mk" src="/apps/thread/icon.png" alt="">
-  <div><h1>ESPO <span>Thread</span></h1><div class="tag">your master list — and the thing you were doing</div></div>
+  <div><h1>ND <span>Thread</span></h1><div class="tag">your master list — and the thing you were doing</div></div>
   <div class="skinbtn" id="skinbtn">
     <button data-k="light" title="Classroom (light)">☀</button>
     <button data-k="dark" title="Chalkboard (dark)">☾</button>
@@ -348,7 +348,7 @@ html[data-skin="dark"] .toast button{color:#0d1614}
 
 <footer>
   Powered by <b>Accelerated Experiences, LLC</b> · everything stays on this device · no accounts, nothing collected<br>
-  ESPO Thread — from the <b>Neuro Divulge</b> work: the store, the memoir, the podcast, and this.
+  ND Thread — from the <b>Neuro Divulge</b> work: the store, the memoir, the podcast, and this.
 </footer>
 </div>
 
@@ -449,7 +449,7 @@ function drawThread(){
   if(!S.thread){
     host.style.removeProperty('--p');
     host.innerHTML='<div class="big">What are you doing right now?</div>'
-      +'<div class="mut" style="margin-top:5px">Two taps. Then go do it — ESPO Thread remembers so you don\'t have to.</div>'
+      +'<div class="mut" style="margin-top:5px">Two taps. Then go do it — ND Thread remembers so you don\'t have to.</div>'
       +'<div class="modes">'+MODES.map(function(m,i){return '<button class="mode" data-i="'+i+'" style="--p:'+pv(m[2])+'"><span class="e">'+m[0]+'</span>'+m[1]+'</button>'}).join('')+'</div>'
       +'<input type="text" id="what" placeholder="Optional: the specific thing (&lsquo;brown the beef&rsquo;)">'
       +'<button class="btn btn-mint btn-big" id="startBtn" style="margin-top:10px">Hold this thread →</button>';
@@ -628,7 +628,7 @@ function collapseThen(id,fn){
 
 /* ── forward ── */
 function forward(t){
-  var body=(t.text||'')+(t.notes?'\n\n'+t.notes:'')+'\n\n— sent from ESPO Thread';
+  var body=(t.text||'')+(t.notes?'\n\n'+t.notes:'')+'\n\n— sent from ND Thread';
   var subj=(t.text||'A thought').slice(0,90);
   if(navigator.share){
     navigator.share({title:subj,text:body}).catch(function(){fwdSheet(subj,body)});

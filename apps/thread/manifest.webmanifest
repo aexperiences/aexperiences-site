@@ -1,6 +1,6 @@
 {
- "name": "ESPO Thread — master list + the thing you were doing",
- "short_name": "ESPO Thread",
+ "name": "ND Thread — master list + the thing you were doing",
+ "short_name": "ND Thread",
  "description": "Holds the one thing you were doing, and keeps your Master List: write it in any order, number it after, notes under everything, finished stays visible. By Accelerated Experiences, LLC.",
  "start_url": "/apps/thread/",
  "scope": "/apps/thread/",

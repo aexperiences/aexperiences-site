@@ -1,5 +1,5 @@
-/* ESPO Thread — offline shell. Accelerated Experiences, LLC */
-var C='espo-thread-v2';
+/* ND Thread — offline shell. Accelerated Experiences, LLC */
+var C='nd-thread-v3';
 var FILES=['/apps/thread/','/apps/thread/index.html','/apps/thread/icon.png','/apps/thread/icon-180.png','/apps/thread/icon-192.png','/apps/thread/icon-maskable.png','/apps/thread/manifest.webmanifest'];
 self.addEventListener('install',function(e){
   e.waitUntil(caches.open(C).then(function(c){return c.addAll(FILES)}).catch(function(){}).then(function(){return self.skipWaiting()}));
