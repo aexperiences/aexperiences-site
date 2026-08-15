@@ -1,6 +1,6 @@
-/* ESPOtendency service worker — network-first for the page, stale-while-revalidate for assets.
+/* ND Tendency service worker — network-first for the page, stale-while-revalidate for assets.
    Accelerated Experiences, LLC */
-var C = "espotendency-v3";
+var C = "espotendency-v4";
 var ASSETS = ["./", "./index.html", "./icon.png", "./manifest.webmanifest",
   "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700&display=swap"];
 self.addEventListener("install", function (e) {

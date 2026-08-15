@@ -1,6 +1,6 @@
 {
-  "name": "ESPOtendency",
-  "short_name": "ESPOtendency",
+  "name": "ND Tendency",
+  "short_name": "ND Tendency",
   "description": "A 10-second daily check-in and one tiny win at a time. By Accelerated Experiences, LLC.",
   "start_url": "/apps/espotendency/",
   "scope": "/apps/espotendency/",
