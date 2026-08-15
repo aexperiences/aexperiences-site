@@ -1,0 +1,114 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A Small Family Business That Builds Big Software — The Build Log | Accelerated Experiences LLC</title>
+<meta name="description" content="Accelerated Experiences LLC is a small family software business in Post Falls, Idaho: complete business operating systems, specialized web apps, websites, online stores, point of sale, market analysis, targeted marketing, and business solutions for every size of operation.">
+<link rel="canonical" href="https://www.aexperiences.com/blog/what-we-build.html">
+<meta property="og:type" content="article"><meta property="og:title" content="A Small Family Business That Builds Big Software — The Build Log | Accelerated Experiences LLC">
+<meta property="og:description" content="Accelerated Experiences LLC is a small family software business in Post Falls, Idaho: complete business operating systems, specialized web apps, websites, online stores, point of sale, market analysis, targeted marketing, and business solutions for every size of operation."><meta property="og:url" content="https://www.aexperiences.com/blog/what-we-build.html">
+<meta property="og:image" content="https://www.aexperiences.com/ae-disc.png">
+<link rel="icon" href="https://www.aexperiences.com/ae-disc.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "A Small Family Business That Builds Big Software", "description": "Accelerated Experiences LLC is a small family software business in Post Falls, Idaho: complete business operating systems, specialized web apps, websites, online stores, point of sale, market analysis, targeted marketing, and business solutions for every size of operation.", "datePublished": "2026-07-02", "dateModified": "2026-07-02", "author": {"@type": "Person", "name": "Anthony Esposito"}, "publisher": {"@type": "Organization", "name": "Accelerated Experiences LLC", "logo": {"@type": "ImageObject", "url": "https://www.aexperiences.com/ae-disc.png"}}, "mainEntityOfPage": "https://www.aexperiences.com/blog/what-we-build.html", "image": "https://www.aexperiences.com/ae-disc.png"}</script>
+<style>
+:root{--espresso:#2a1810;--forest:#1c3d22;--gold:#e0a83a;--cream:#f4eede;--clay:#c8794f;--paper:#fdfaf3;--ink:#22303d;--soft:#6b7684;--ease:cubic-bezier(.22,1,.36,1)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.65;overscroll-behavior-y:none}
+a{color:#1a5c8a;text-decoration:none}
+.serif{font-family:'Fraunces',Georgia,serif}
+.mono{font-family:'JetBrains Mono',monospace}
+.dark{background:linear-gradient(120deg,var(--espresso) 0%,var(--forest) 100%);color:var(--cream);position:relative;overflow:hidden}
+.grid-ov{position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,rgba(224,168,58,.08) 0,rgba(224,168,58,.08) 1px,transparent 1px,transparent 56px),repeating-linear-gradient(90deg,rgba(224,168,58,.08) 0,rgba(224,168,58,.08) 1px,transparent 1px,transparent 56px)}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px;position:relative}
+.narrow{max-width:680px}
+.kick{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 0;position:relative;z-index:2}
+.topbar .brand{display:flex;align-items:center;gap:10px;color:var(--cream);font-weight:600;letter-spacing:.04em}
+.topbar .brand img{width:26px;height:26px;border-radius:50%}
+.topbar nav a{color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-left:18px}
+.hero{padding:54px 0 62px}
+.hero h1{font-family:'Fraunces',Georgia,serif;font-size:clamp(34px,7vw,58px);line-height:1.05;font-weight:700;margin:14px 0 16px}
+.hero .dek{font-size:clamp(16px,2.6vw,19px);color:rgba(244,238,222,.85);max-width:640px}
+.hero .dek b{color:var(--gold);font-weight:600}
+.cta{display:inline-block;background:var(--gold);color:#2a1810;font-weight:700;padding:11px 20px;border-radius:999px;margin-top:22px;transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+.cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.cta.ghost{background:transparent;color:var(--gold);border:1.5px solid var(--gold);margin-left:10px}
+main{padding:44px 0 20px}
+.sec-kick{margin:34px 0 14px;display:flex;align-items:center;gap:12px}
+.sec-kick:after{content:"";flex:1;height:1px;background:rgba(34,48,61,.15)}
+.feature{display:block;background:#fff;border:1px solid rgba(34,48,61,.14);border-radius:16px;overflow:hidden;box-shadow:5px 5px 0 rgba(28,61,34,.08);transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+.feature:hover{transform:translateY(-3px);box-shadow:8px 10px 0 rgba(28,61,34,.10)}
+.feature .band{height:9px;background:linear-gradient(90deg,var(--forest),var(--gold))}
+.feature .pad{padding:26px 26px 24px}
+.feature h2{font-family:'Fraunces',serif;font-size:clamp(24px,4vw,34px);line-height:1.14;color:var(--espresso);margin:8px 0 10px}
+.feature p{color:var(--soft);font-size:16px;max-width:640px}
+.meta{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#8a6a2f}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin-top:6px}
+.card{background:#fff;border:1px solid rgba(34,48,61,.14);border-radius:14px;padding:20px 20px 18px;display:flex;flex-direction:column;gap:8px;transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+.card:hover{transform:translateY(-3px);box-shadow:6px 8px 0 rgba(28,61,34,.10)}
+.card h3{font-family:'Fraunces',serif;font-size:20px;line-height:1.2;color:var(--espresso)}
+.card p{font-size:14px;color:var(--soft);flex:1}
+.guides{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.guide{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid rgba(34,48,61,.14);border-radius:12px;padding:12px 14px;transition:transform .3s var(--ease)}
+.guide:hover{transform:translateY(-2px)}
+.guide .dot{width:10px;height:10px;border-radius:50%;background:var(--forest);box-shadow:0 0 0 3px rgba(28,61,34,.12);flex:none}
+.guide b{color:var(--espresso);font-family:'Fraunces',serif;font-size:15.5px}
+.guide span{display:block;font-size:11.5px;color:var(--soft)}
+.band-cta{margin:52px 0 0;border-radius:18px;padding:38px 30px;text-align:center}
+.band-cta h2{font-family:'Fraunces',serif;font-size:clamp(24px,4.5vw,34px);margin:10px 0 8px}
+.band-cta p{color:rgba(244,238,222,.85);max-width:560px;margin:0 auto}
+article{padding:46px 0 10px}
+article .kick{color:#8a6a2f}
+article h1{font-family:'Fraunces',serif;font-size:clamp(30px,6vw,46px);line-height:1.08;color:var(--espresso);margin:12px 0 14px}
+article .dek{font-size:19px;line-height:1.5;color:var(--soft);font-family:'Fraunces',serif;margin-bottom:14px}
+article .byline{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8a6a2f;border-top:1px solid rgba(34,48,61,.14);border-bottom:1px solid rgba(34,48,61,.14);padding:10px 0;margin:18px 0 28px;display:flex;gap:18px;flex-wrap:wrap}
+article p{font-size:17px;margin:0 0 18px}
+article h2{font-family:'Fraunces',serif;font-size:26px;color:var(--espresso);margin:30px 0 12px}
+article .pull{border-left:4px solid var(--gold);padding:6px 0 6px 18px;font-family:'Fraunces',serif;font-size:22px;line-height:1.4;color:var(--forest);font-weight:600;margin:26px 0}
+article ul{margin:0 0 18px 2px;list-style:none}
+article li{font-size:16.5px;padding-left:22px;position:relative;margin-bottom:9px}
+article li:before{content:"—";position:absolute;left:0;color:var(--gold);font-weight:700}
+.next{display:flex;gap:12px;flex-wrap:wrap;margin:34px 0 8px}
+.next a{background:var(--forest);color:var(--cream);padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px;transition:transform .3s var(--ease)}
+.next a:hover{transform:translateY(-2px)}
+.next a.gold{background:var(--gold);color:#2a1810}
+footer{margin-top:56px;background:linear-gradient(120deg,var(--espresso) 0%,var(--forest) 100%);color:rgba(244,238,222,.8);position:relative;overflow:hidden}
+footer .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:26px;padding-bottom:26px;flex-wrap:wrap}
+footer .co{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--cream)}
+footer .co img{width:22px;height:22px;border-radius:50%}
+footer .fine{font-size:12.5px}
+footer a{color:var(--gold)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+@media (max-width:480px){.topbar nav a{margin-left:12px;font-size:10px}.feature .pad{padding:20px 18px}}
+</style>
+</head><body><header class="dark"><div class="grid-ov"></div><div class="wrap">
+<div class="topbar">
+  <a class="brand" href="index.html"><img src="https://www.aexperiences.com/ae-disc.png" alt="Accelerated Experiences LLC mark"><span>The Build Log</span></a>
+  <nav><a href="index.html">Log</a><a href="https://www.aexperiences.com/shop.html">The Store</a><a href="https://www.aexperiences.com/studio.html">About</a></nav>
+</div></div></header><main><div class="wrap narrow"><article>
+<span class="kick">The Shop</span>
+<h1>A Small Family Business That Builds Big Software</h1>
+<div class="dek">Operating systems, specialized web apps, websites, stores, point of sale, market analysis, targeted marketing. A father, a nurse, and four kids who keep us honest.</div>
+<div class="byline"><span>Anthony Esposito</span><span>July 2, 2026</span><span>2 min read</span></div>
+
+<p>Accelerated Experiences LLC is a family business in Post Falls, Idaho. A father, a nurse, and four kids who keep us honest. No sales floor, no account managers, no phone tree — the person who built your system is the person who answers about it.</p>
+<p>Here's the honest spread of what we do, because it's wider than one shelf:</p>
+<ul>
+<li><b>Complete business operating systems</b> — fourteen industries so far, from dental practices to theaters to home-care agencies. The whole operation in one place: schedule, money, pipeline, paperwork.</li>
+<li><b>Specialized web apps</b> — purpose-built tools that do one job extremely well, for a business or for one person.</li>
+<li><b>Websites and online stores</b> — built, hosted, and maintained, with the selling wired in from day one.</li>
+<li><b>Point of sale and taking payment</b> — box office seats, in-store checkout, deposits and invoices, built into the systems instead of bolted on.</li>
+<li><b>Market analysis and targeted marketing</b> — the twenty-three-year craft this company was built on: real census and consumer data, segmentation, and campaigns pointed at the people who actually buy.</li>
+</ul>
+<div class="pull">Solutions for everyone — a solo chair, a family shop, a multi-office firm. Sized to the operation, never per-seat.</div>
+<p>The reason a small shop can carry a list like that is focus in the build: one store where everything lives, one price record, one standard of quality, and no demos anywhere — everything on the shelf is the real, working thing. You don't book a call to find out what we do. You walk in and click it.</p>
+<p>If your operation needs something that isn't on a shelf yet, that's the other half of the family business: we build to order, and what we build for you gets maintained like everything else here — better than yesterday, never finished.</p>
+
+<div class="next"><a class="gold" href="https://www.aexperiences.com/shop.html">Walk into the store →</a>
+<a href="the-record.html">Next: I've Spent 23 Years Building Operating Systems. This Year They Became Software.</a></div>
+</article></div></main><footer><div class="grid-ov"></div><div class="wrap">
+  <div class="co"><img src="https://www.aexperiences.com/ae-disc.png" alt=""><span>Accelerated Experiences LLC</span></div>
+  <div class="fine">Post Falls, Idaho · The store is the product — <a href="https://www.aexperiences.com/shop.html">walk in and use it</a>.</div>
+  <div class="fine">Craft first. Claims last.</div>
+</div></footer></body></html>
