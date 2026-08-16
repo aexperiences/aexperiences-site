@@ -452,7 +452,7 @@
                  shots:['/media/truss/s1.jpg', '/media/truss/s2.jpg', '/media/truss/s3.jpg', '/media/truss/s4.jpg', '/media/truss/s5.jpg', '/media/truss/s6.jpg'],
                  long:'/media/truss/long.mp4', longPoster:'/media/truss/long-poster.jpg', longLen:'8:09' },
     musical:     { preview:'/media/musical/preview.mp4', poster:'/media/musical/poster.jpg', len:'2:41',
-                 shots:['/media/musical/s1.jpg', '/media/musical/s2.jpg', '/media/musical/s3.jpg', '/media/musical/s4.jpg', '/media/musical/s5.jpg', '/media/musical/s6.jpg', '/media/musical/s7.jpg'] },
+                 shots:['/media/musical/s1.jpg', '/media/musical/s2.jpg', '/media/musical/s3.jpg', '/media/musical/s4.jpg', '/media/musical/s5.jpg', '/media/musical/s6.jpg', '/media/musical/s7.jpg'], long:'/media/musical/long.mp4', longPoster:'/media/musical/long-poster.jpg', longLen:'5:43' },
     '8mm':         { preview:'/media/8mm/preview.mp4', poster:'/media/8mm/poster.jpg', len:'3:05',
                  shots:['/media/8mm/s1.jpg', '/media/8mm/s2.jpg', '/media/8mm/s3.jpg', '/media/8mm/s4.jpg', '/media/8mm/s5.jpg', '/media/8mm/s6.jpg', '/media/8mm/s7.jpg', '/media/8mm/s8.jpg'] },
     amphitheater: { preview:'/media/amphitheater/preview.mp4', poster:'/media/amphitheater/poster.jpg', len:'3:03',
