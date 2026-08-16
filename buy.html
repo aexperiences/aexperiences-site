@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout — Accelerated Experiences LLC</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{ --espresso:#2a1810; --forest:#1c3d22; --gold:#e0a83a; --cream:#f4eede; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(120deg,var(--espresso),var(--forest));
+    background-attachment:scroll; color:var(--cream);
+    font-family:'Outfit','IBM Plex Sans',system-ui,sans-serif; padding:24px;
+  }
+  .card{ max-width:560px; width:100%; text-align:center; padding:48px 28px;
+    border:1px solid rgba(224,168,58,.25); border-radius:18px; background:rgba(0,0,0,.25); }
+  .mark{ width:72px; height:72px; margin:0 auto 18px; display:block; }
+  .kicker{ color:var(--gold); font-family:'JetBrains Mono','IBM Plex Mono',monospace;
+    font-size:12px; letter-spacing:.18em; text-transform:uppercase; margin-bottom:10px; }
+  h1{ font-family:'Fraunces',Georgia,serif; font-size:clamp(26px,5vw,34px); margin-bottom:12px; }
+  p{ opacity:.85; line-height:1.55; margin-bottom:8px; }
+  a.btn{ display:inline-block; margin-top:22px; padding:12px 26px; border-radius:999px;
+    background:var(--gold); color:var(--espresso); text-decoration:none; font-weight:600; }
+  a.quiet{ display:inline-block; margin-top:14px; color:var(--gold); text-decoration:none; opacity:.8; font-size:14px; }
+  footer{ margin-top:26px; font-size:12px; opacity:.55; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <img class="mark" src="/ae-disc.png" alt="Accelerated Experiences LLC">
+    <div class="kicker" id="kicker">Checkout</div>
+    <h1 id="headline">One moment…</h1>
+    <p id="line1"></p>
+    <p id="line2"></p>
+    <a class="btn" href="/shop.html" id="cta">Back to the store</a>
+    <div><a class="quiet" href="/" id="home">aexperiences.com</a></div>
+    <footer>Accelerated Experiences LLC</footer>
+  </div>
+<script>
+  var q = new URLSearchParams(location.search);
+  var state = q.get('state');
+  var k = document.getElementById('kicker'), h = document.getElementById('headline'),
+      l1 = document.getElementById('line1'), l2 = document.getElementById('line2'),
+      cta = document.getElementById('cta');
+  if (state === 'success') {
+    k.textContent = 'Order received';
+    h.textContent = 'You’re in. Welcome aboard.';
+    l1.textContent = 'Your payment went through and your receipt is on its way to your email.';
+    l2.textContent = 'We start setting up your operating system right away — you’ll hear from us directly to get your team on board.';
+    cta.textContent = 'Back to the store';
+  } else if (state === 'cancel') {
+    k.textContent = 'Checkout canceled';
+    h.textContent = 'No charge — nothing happened.';
+    l1.textContent = 'Your card was not charged. The tier you were looking at is still there whenever you’re ready.';
+    cta.textContent = 'Back to pricing';
+  } else {
+    h.textContent = 'Checkout';
+    l1.textContent = 'Pick any operating system in the store to get started.';
+  }
+</script>
+</body>
+</html>
