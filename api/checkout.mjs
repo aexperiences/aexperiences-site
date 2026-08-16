@@ -26,7 +26,8 @@ async function priceSpine() {
   const r = await fetch(SITE + '/api/pricing', { cache: 'no-store' });
   if (!r.ok) throw new Error('price record unavailable (' + r.status + ')');
   const j = await r.json();
-  return Array.isArray(j) ? j : (j.products || []);
+  // Live shape (verified Aug 15 2026): { ok, updatedAt, source, appShop, hubs:[{id,name,tag,tiers:[{n,name,mo,inc,firstYear}]}] }
+  return Array.isArray(j) ? j : (j.hubs || j.products || []);
 }
 
 export default async function handler(req, res) {
@@ -42,29 +43,30 @@ export default async function handler(req, res) {
 
     // Validate against the store's one price record — never trust a client-sent amount.
     const spine = await priceSpine();
-    const prod = spine.find((p) => String(p.slug || '').toLowerCase() === want || String(p.name || '').toLowerCase() === want);
+    const prod = spine.find((p) => String(p.id || p.slug || '').toLowerCase() === want || String(p.name || '').toLowerCase() === want);
     if (!prod) return send(res, 404, { error: 'UNKNOWN_PRODUCT', product: want });
-    const tier = (prod.tiers || []).find((t) => String(t.name || '').toLowerCase() === wantTier);
-    if (!tier || !(tier.monthly > 0)) return send(res, 404, { error: 'UNKNOWN_TIER', product: prod.name, tier: wantTier });
+    const tier = (prod.tiers || []).find((t) => String(t.name || t.n || '').toLowerCase() === wantTier);
+    const monthly = tier ? Number(tier.mo != null ? tier.mo : tier.monthly) : 0;
+    if (!tier || !(monthly > 0)) return send(res, 404, { error: 'UNKNOWN_TIER', product: prod.name, tier: wantTier });
 
     if (!key) {
       // Honest OFF state — the store shows the path; nothing can charge until Anthony pastes keys.
-      return send(res, 200, { ready: false, product: prod.name, tier: tier.name, monthly: tier.monthly,
+      return send(res, 200, { ready: false, product: prod.name, tier: tier.name || tier.n, monthly,
         message: 'Checkout is not connected yet. Stripe stays off until Accelerated Experiences LLC turns it on.' });
     }
 
     const form = new URLSearchParams();
     form.set('mode', 'subscription');
-    form.set('success_url', SITE + '/buy.html?state=success&product=' + encodeURIComponent(prod.slug || prod.name) + '&session_id={CHECKOUT_SESSION_ID}');
-    form.set('cancel_url', SITE + '/buy.html?state=cancel&product=' + encodeURIComponent(prod.slug || prod.name));
+    form.set('success_url', SITE + '/buy.html?state=success&product=' + encodeURIComponent(prod.id || prod.name) + '&session_id={CHECKOUT_SESSION_ID}');
+    form.set('cancel_url', SITE + '/buy.html?state=cancel&product=' + encodeURIComponent(prod.id || prod.name));
     form.set('line_items[0][quantity]', '1');
     form.set('line_items[0][price_data][currency]', 'usd');
-    form.set('line_items[0][price_data][unit_amount]', String(Math.round(tier.monthly * 100)));
+    form.set('line_items[0][price_data][unit_amount]', String(Math.round(monthly * 100)));
     form.set('line_items[0][price_data][recurring][interval]', 'month');
-    form.set('line_items[0][price_data][product_data][name]', prod.name + ' — ' + tier.name + ' (monthly)');
-    form.set('metadata[product]', prod.slug || prod.name);
-    form.set('metadata[tier]', tier.name);
-    form.set('metadata[monthly]', String(tier.monthly));
+    form.set('line_items[0][price_data][product_data][name]', prod.name + ' — ' + (tier.name || tier.n) + ' (monthly)');
+    form.set('metadata[product]', prod.id || prod.name);
+    form.set('metadata[tier]', tier.name || tier.n);
+    form.set('metadata[monthly]', String(monthly));
     form.set('allow_promotion_codes', 'false');
 
     const sr = await fetch('https://api.stripe.com/v1/checkout/sessions', {
@@ -76,7 +78,7 @@ export default async function handler(req, res) {
     if (!sr.ok) return send(res, 502, { error: 'STRIPE', message: (sj && sj.error && sj.error.message) || ('stripe ' + sr.status) });
 
     if (isGet) { res.statusCode = 302; res.setHeader('location', sj.url); return res.end(); }
-    return send(res, 200, { ready: true, url: sj.url, id: sj.id, product: prod.name, tier: tier.name, monthly: tier.monthly,
+    return send(res, 200, { ready: true, url: sj.url, id: sj.id, product: prod.name, tier: tier.name || tier.n, monthly,
       livemode: !!sj.livemode });
   } catch (e) {
     return send(res, 500, { error: 'SERVER', message: String((e && e.message) || e) });
