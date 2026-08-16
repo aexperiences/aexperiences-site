@@ -205,7 +205,7 @@
       priceNote:'Seven of the eight are open to anyone today · Voice still runs inside the AE OS · Cre8 is not priced yet' },
 
     /* ─────────── ESPO REMAKES — live, in-shop apps (/apps/<name>/) ─────────── */
-    { id:'revolver', name:'Revolver OS', tag:'Record collection', genre:'arts', state:'live',
+    { id:'revolver', name:'AE Revolver', tag:'Record collection', genre:'arts', state:'live',
       acc:'#c43c36', mark:'/apps/revolver/icon.png', family:'Revolver', url:'/apps/revolver/',
       blurb:'Point your camera at the shelf — Revolver identifies your vinyl, even several covers in one photo, and files them by genre. Your collection stays on your device, export free.',
       price:'Free right now', priceNote:'Photo identification runs on our AI — free while we tune it' },
