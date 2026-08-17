@@ -11,7 +11,7 @@
 (function (root) {
   var M = '/marks/';   // the real app marks (1024 icons, SVG)
 
-  var CATALOG = [
+  var CATALOG = [ { id:'ae-wire', name:'AE Wire', tag:'Meeting notes', genre:'work', state:'live', acc:'#d9a441', url:'/apps/wire/', blurb:'It records the meeting and turns it into notes where every action item is one tap from the moment it was said. On-device, nothing uploaded.', price:'$2.99/mo', priceNote:'Personal, one person, on-device. $23.88/yr. Business plan coming.', svg:'<rect x="19" y="7" width="10" height="18" rx="5"/><path d="M24 25v6"/><path d="M24 31c-6 2-4 10 2 8s4-9-2-7"/>' },
 
     /* ─────────── BUSINESS OS — live, sold as a subscription ─────────── */
     { id:'abode', mark:'/os-icons/Abode_OS.png', name:'Abode OS', img:'/Abode_OS.png', tag:'Real estate', genre:'business', state:'live',
@@ -324,7 +324,7 @@
     { id:'sport',    label:'Sport' },
     { id:'savor',    label:'Food & drink' },
     { id:'social',   label:'Social' },
-    { id:'games',    label:'Games' }
+    { id:'games',    label:'Games' }, { id:'work', label:'Meetings' }
   ];
 
   /* HARD GUARD — nobody gets into something that isn't finished.
