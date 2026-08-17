@@ -309,7 +309,7 @@
     { id:'kangatodo', name:'KangaToDo', tag:'Chores to every kid\'s phone', genre:'family', state:'live',
       acc:'#C78425', mark:'/marks/kangatodo.svg', family:'Accelerated Experiences', url:'/apps/kangatodo/',
       blurb:'A grown-up types a job on their phone and picks a kid. It writes into your own Skylight account — so it shows on the Calendar and on that child\'s Buddy — and then buzzes that child\'s phone. Every kid in the house, each with their own pouch, each seeing only their own list. Jobs can require a photo before they tick off.',
-      price:'Free right now', priceNote:'No account needed \u2014 start in one tap. If you own a Skylight Calendar you can connect it and jobs land there too. Paid plans not switched on yet.' },
+      price:'Free right now', priceNote:'No account needed \u2014 start in one tap. If you own a Skylight Calendar you can connect it and jobs land there too. Paid plans not switched on yet.' }, { id:'ae-wire', name:'AE Wire', tag:'Meeting notes', genre:'work', state:'live', acc:'#d9a441', url:'/apps/wire/', svg:'<rect x="19" y="7" width="10" height="18" rx="5"/><path d="M16 21v2a8 8 0 0 0 16 0v-2"/><path d="M24 31v6"/><path d="M18 37h12"/>', blurb:'It records the meeting and turns it into notes where every action item is one tap from the moment it was said. On-device, nothing uploaded.', price:'Free right now', priceNote:'Limited-time launch offer — regularly $2.99/mo · $23.88/yr, one person, on-device. Business plan coming.' },
   ];
 
   var GENRES = [
@@ -324,7 +324,7 @@
     { id:'sport',    label:'Sport' },
     { id:'savor',    label:'Food & drink' },
     { id:'social',   label:'Social' },
-    { id:'games',    label:'Games' }
+    { id:'games',    label:'Games' }, { id:'work', label:'Meetings' }
   ];
 
   /* HARD GUARD — nobody gets into something that isn't finished.
