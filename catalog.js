@@ -11,7 +11,7 @@
 (function (root) {
   var M = '/marks/';   // the real app marks (1024 icons, SVG)
 
-  var CATALOG = [ { id:'ae-wire', name:'AE Wire', tag:'Meeting notes', genre:'work', state:'live', acc:'#d9a441', url:'/apps/wire/', blurb:'It records the meeting and turns it into notes where every action item is one tap from the moment it was said. On-device, nothing uploaded.', price:'$2.99/mo', priceNote:'Personal, one person, on-device. $23.88/yr. Business plan coming.', svg:'<rect x="19" y="7" width="10" height="18" rx="5"/><path d="M24 25v6"/><path d="M24 31c-6 2-4 10 2 8s4-9-2-7"/>' },
+  var CATALOG = [
 
     /* ─────────── BUSINESS OS — live, sold as a subscription ─────────── */
     { id:'abode', mark:'/os-icons/Abode_OS.png', name:'Abode OS', img:'/Abode_OS.png', tag:'Real estate', genre:'business', state:'live',
@@ -324,7 +324,7 @@
     { id:'sport',    label:'Sport' },
     { id:'savor',    label:'Food & drink' },
     { id:'social',   label:'Social' },
-    { id:'games',    label:'Games' }, { id:'work', label:'Meetings' }
+    { id:'games',    label:'Games' }
   ];
 
   /* HARD GUARD — nobody gets into something that isn't finished.
@@ -448,9 +448,13 @@
     buttress:    { preview:'/media/buttress/preview.mp4', poster:'/media/buttress/poster.jpg', len:'2:16',
                  shots:['/media/buttress/s1.jpg', '/media/buttress/s2.jpg', '/media/buttress/s3.jpg', '/media/buttress/s4.jpg', '/media/buttress/s5.jpg', '/media/buttress/s6.jpg', '/media/buttress/s7.jpg', '/media/buttress/s8.jpg'],
                  long:'/media/buttress/long.mp4', longPoster:'/media/buttress/long-poster.jpg', longLen:'10:30' },
+    /* Truss walkthrough pulled Aug 17 2026: media/truss/long.mp4 on this repo is a
+       truncated upload (2,621,488 bytes, no moov atom) and will not play in any
+       browser. Per the honesty rule above, the store shows no walkthrough rather
+       than a broken player. Restore long / longPoster / longLen when the
+       walkthrough is re-rendered. */
     truss:       { preview:'/media/truss/preview.mp4', poster:'/media/truss/poster.jpg', len:'2:42',
-                 shots:['/media/truss/s1.jpg', '/media/truss/s2.jpg', '/media/truss/s3.jpg', '/media/truss/s4.jpg', '/media/truss/s5.jpg', '/media/truss/s6.jpg'],
-                 long:'/media/truss/long.mp4', longPoster:'/media/truss/long-poster.jpg', longLen:'8:09' },
+                 shots:['/media/truss/s1.jpg', '/media/truss/s2.jpg', '/media/truss/s3.jpg', '/media/truss/s4.jpg', '/media/truss/s5.jpg', '/media/truss/s6.jpg'] },
     musical:     { preview:'/media/musical/preview.mp4', poster:'/media/musical/poster.jpg', len:'2:41',
                  shots:['/media/musical/s1.jpg', '/media/musical/s2.jpg', '/media/musical/s3.jpg', '/media/musical/s4.jpg', '/media/musical/s5.jpg', '/media/musical/s6.jpg', '/media/musical/s7.jpg'], long:'/media/musical/long.mp4', longPoster:'/media/musical/long-poster.jpg', longLen:'5:43' },
     '8mm':         { preview:'/media/8mm/preview.mp4', poster:'/media/8mm/poster.jpg', len:'3:05',
