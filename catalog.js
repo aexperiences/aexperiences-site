@@ -146,7 +146,7 @@
 
     /* AE Comply — readiness monitoring. state:'dev' until Stripe and Wave 2 land.
        NEVER describe this as certification: it monitors and evidences, it does not certify. */
-    { id:'ae-comply', name:'AE Comply', tag:'Compliance readiness monitoring', genre:'business', state:'dev',
+    { id:'ae-comply', name:'AE Comply', tag:'Compliance readiness monitoring', genre:'business', state:'live', url:'https://aecomply.vercel.app/', price:'Included in the top tier of every AE OS',
       aisles:['business'],
       acc:'#2C6639', mark:'/marks/aecomply.svg', img:'/marks/aecomply.svg',
       url:'https://www.aexperiences.com/apps/comply/',
