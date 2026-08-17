@@ -26,7 +26,7 @@
       "permanent": false
     }
   ],
-  "rewrites": [
+  "rewrites": [ { "source": "/apps/wire/", "destination": "https://ae-wire-accelerated-experiences.vercel.app/index.html" },
     {
       "source": "/apps/abode/",
       "destination": "https://ae-abode-showroom.vercel.app/index.html"
