@@ -255,6 +255,10 @@ main{padding:24px 0 40px}
 /* ── product sheet ───────────────────────────────────── */
 .scrim{position:fixed;inset:0;z-index:90;background:rgba(4,12,6,.72);opacity:0;pointer-events:none;transition:opacity .22s}
 .scrim.on{opacity:1;pointer-events:auto}
+/* The hidden attribute loses to .sheet's display:flex, so on desktop the closed sheet sat
+   as an invisible centered box eating clicks over the middle of the grid (same fix the
+   findbar already carries). This line is why every tile now clicks on the first try. */
+.sheet[hidden]{display:none!important}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:91;background:var(--forest);border-radius:22px 22px 0 0;box-shadow:0 -20px 70px rgba(0,0,0,.6);max-height:93vh;display:flex;flex-direction:column;transform:translateY(101%);transition:transform .27s cubic-bezier(.32,.72,0,1);padding-bottom:var(--safe-b)}
 .sheet.on{transform:none}
 @media(min-width:760px){
