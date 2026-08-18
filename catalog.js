@@ -310,6 +310,10 @@
       acc:'#C78425', mark:'/marks/kangatodo.svg', family:'Accelerated Experiences', url:'/apps/kangatodo/',
       blurb:'A grown-up types a job on their phone and picks a kid. It writes into your own Skylight account — so it shows on the Calendar and on that child\'s Buddy — and then buzzes that child\'s phone. Every kid in the house, each with their own pouch, each seeing only their own list. Jobs can require a photo before they tick off.',
       price:'Free right now', priceNote:'No account needed \u2014 start in one tap. If you own a Skylight Calendar you can connect it and jobs land there too. Paid plans not switched on yet.' }, { id:'ae-wire', name:'AE Wire', tag:'Meeting notes', genre:'work', state:'live', acc:'#d9a441', url:'/apps/wire/', svg:'<rect x="19" y="7" width="10" height="18" rx="5"/><path d="M16 21v2a8 8 0 0 0 16 0v-2"/><path d="M24 31v6"/><path d="M18 37h12"/>', blurb:'It records the meeting and turns it into notes where every action item is one tap from the moment it was said. On-device, nothing uploaded.', price:'Free right now', priceNote:'Limited-time launch offer — regularly $2.99/mo · $23.88/yr, one person, on-device. Business plan coming.' },
+ { id:'ae-blastpack', name:'AE Blastpack', tag:'Post everywhere at once', genre:'social', state:'dev',
+      acc:'#4f8a80', url:'/apps/blastpack/', mark:'/apps/blastpack/icon-512.png', img:'/apps/blastpack/icon-512.png',
+      blurb:'Start from the video already on your phone and send it to every platform in one tap. As many accounts and brands as you have, colour-coded so you never post to the wrong one \u2014 one caption, or a different one per platform \u2014 and it tells you exactly where every post landed.',
+      priceNote:'In production \u2014 the pipeline is live and the door opens when Meta app review clears.' },
   ];
 
   var GENRES = [
