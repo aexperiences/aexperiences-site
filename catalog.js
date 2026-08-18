@@ -300,7 +300,7 @@
       blurb:'Run your very own salon — give every happy customer amazing hair, nails, makeup and outfits. The customers talk out loud, so it works even before kids can read. No losing, no timers, no ads, nothing collected, and it works offline.',
       price:'Free', priceNote:'A free kids’ game — no ads, no accounts, nothing to buy, nothing collected' },
 
-    { id:'espofocus', name:'ND Focus', tag:'ADHD weekly tracker', genre:'family', state:'live',
+    { id:'espofocus', name:'ND Focus', tag:'ADHD weekly tracker', genre:'mind', state:'live',
       family:'Neuro Divulge',
       acc:'#93A82F', mark:'/apps/espofocus/icon.svg', url:'/apps/espofocus/',
       blurb:'The weekly ADHD monitoring report your provider asks for — parents, teachers and behavior specialists rate the same 15 things each week, and ND Focus charts whether the plan is working. Not a diagnosis; private, initials only.',
