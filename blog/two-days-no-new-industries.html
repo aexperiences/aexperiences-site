@@ -1,0 +1,92 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Two Days, and Not One New Industry — B~Log | Accelerated Experiences LLC</title>
+<meta name="description" content="The build log of a small family software business: no new industries this week, but the store got its own commercials, its own original music, two tools made findable, one honest rename, and one app count told straight.">
+<link rel="canonical" href="https://www.aexperiences.com/blog/two-days-no-new-industries.html">
+<meta property="og:type" content="article"><meta property="og:title" content="Two Days, and Not One New Industry — B~Log | Accelerated Experiences LLC">
+<meta property="og:description" content="The build log of a small family software business: no new industries this week, but the store got its own commercials, its own original music, two tools made findable, one honest rename, and one app count told straight."><meta property="og:url" content="https://www.aexperiences.com/blog/two-days-no-new-industries.html">
+<meta property="og:image" content="https://www.aexperiences.com/ae-disc.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="https://www.aexperiences.com/ae-disc.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Two Days, and Not One New Industry","description":"The build log of a small family software business: no new industries this week, but the store got its own commercials, its own original music, two tools made findable, one honest rename, and one app count told straight.","datePublished":"2026-08-19","dateModified":"2026-08-19","author":{"@type":"Person","name":"Anthony Esposito"},"publisher":{"@type":"Organization","name":"Accelerated Experiences LLC","logo":{"@type":"ImageObject","url":"https://www.aexperiences.com/ae-disc.png"}},"mainEntityOfPage":"https://www.aexperiences.com/blog/two-days-no-new-industries.html","image":"https://www.aexperiences.com/ae-disc.png"}</script>
+<style>
+:root{--espresso:#2a1810;--forest:#1c3d22;--gold:#e0a83a;--cream:#f4eede;--clay:#c8794f;--paper:#fdfaf3;--ink:#22303d;--soft:#6b7684;--ease:cubic-bezier(.22,1,.36,1)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.65;overscroll-behavior-y:none}
+a{color:#1a5c8a;text-decoration:none}
+.serif{font-family:'Fraunces',Georgia,serif}
+.mono{font-family:'JetBrains Mono',monospace}
+.dark{background:linear-gradient(120deg,var(--espresso) 0%,var(--forest) 100%);color:var(--cream);position:relative;overflow:hidden}
+.grid-ov{position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,rgba(224,168,58,.08) 0,rgba(224,168,58,.08) 1px,transparent 1px,transparent 56px),repeating-linear-gradient(90deg,rgba(224,168,58,.08) 0,rgba(224,168,58,.08) 1px,transparent 1px,transparent 56px)}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px;position:relative}
+.narrow{max-width:680px}
+.kick{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 0;position:relative;z-index:2}
+.topbar .brand{display:flex;align-items:center;gap:10px;color:var(--cream);font-weight:600;letter-spacing:.04em}
+.topbar .brand img{width:26px;height:26px;border-radius:50%}
+.topbar nav a{color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-left:18px}
+main{padding:44px 0 20px}
+article{padding:46px 0 10px}
+article .kick{color:#8a6a2f}
+article h1{font-family:'Fraunces',serif;font-size:clamp(30px,6vw,46px);line-height:1.08;color:var(--espresso);margin:12px 0 14px}
+article .dek{font-size:19px;line-height:1.5;color:var(--soft);font-family:'Fraunces',serif;margin-bottom:14px}
+article .byline{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8a6a2f;border-top:1px solid rgba(34,48,61,.14);border-bottom:1px solid rgba(34,48,61,.14);padding:10px 0;margin:18px 0 28px;display:flex;gap:18px;flex-wrap:wrap}
+article p{font-size:17px;margin:0 0 18px}
+article h2{font-family:'Fraunces',serif;font-size:26px;color:var(--espresso);margin:30px 0 12px}
+article .pull{border-left:4px solid var(--gold);padding:6px 0 6px 18px;font-family:'Fraunces',serif;font-size:22px;line-height:1.4;color:var(--forest);font-weight:600;margin:26px 0}
+article ul{margin:0 0 18px 2px;list-style:none}
+article li{font-size:16.5px;padding-left:22px;position:relative;margin-bottom:9px}
+article li:before{content:"\2014";position:absolute;left:0;color:var(--gold);font-weight:700}
+.next{display:flex;gap:12px;flex-wrap:wrap;margin:34px 0 8px}
+.next a{background:var(--forest);color:var(--cream);padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px;transition:transform .3s var(--ease)}
+.next a:hover{transform:translateY(-2px)}
+.next a.gold{background:var(--gold);color:#2a1810}
+footer{margin-top:56px;background:linear-gradient(120deg,var(--espresso) 0%,var(--forest) 100%);color:rgba(244,238,222,.8);position:relative;overflow:hidden}
+footer .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:26px;padding-bottom:26px;flex-wrap:wrap}
+footer .co{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--cream)}
+footer .co img{width:22px;height:22px;border-radius:50%}
+footer .fine{font-size:12.5px}
+footer a{color:var(--gold)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+@media (max-width:480px){.topbar nav a{margin-left:12px;font-size:10px}}
+</style>
+</head><body><header class="dark"><div class="grid-ov"></div><div class="wrap">
+<div class="topbar">
+  <a class="brand" href="index.html" aria-label="B~Log — the Accelerated Experiences blog"><img src="https://www.aexperiences.com/ae-disc.png" alt="Accelerated Experiences LLC mark"><span>B~Log</span></a>
+  <nav><a href="index.html" aria-label="B~Log — the Accelerated Experiences blog">B~Log</a><a href="https://www.aexperiences.com/shop.html">The Store</a><a href="https://www.aexperiences.com/studio.html">About</a></nav>
+</div></div></header><main><div class="wrap narrow"><article>
+<span class="kick">The Work</span>
+<h1>Two Days, and Not One New Industry</h1>
+<div class="dek">The fleet didn't grow this week. The store got a voice instead — our own commercials, our own music, and two tools finally sitting where people can find them.</div>
+<div class="byline"><span>Anthony Esposito</span><span>August 19, 2026</span><span>4 min read</span></div>
+<p>Monday's post was the whole making of one app, start to finish. Since then: fourteen operating systems, thirty-four apps. Exactly what it was on Monday. Nothing new got added to the fleet, and I'm not going to dress that up.</p>
+<div class="pull">Some weeks you build another door. Some weeks you go back and put a sign on the ones you already built.</div>
+<p>This was the second kind. Here's the honest accounting of it.</p>
+<h2>We started making our own commercials</h2>
+<p>Twenty-one years in media and operations means I have bought, placed, and measured a great deal of advertising for other people. Newspapers, national media groups, senior living. I know what a media buy costs and I know what a production house charges to make the thing you're buying space for.</p>
+<p>So we make ours here. Every operating system in the store is getting a commercial and a long walkthrough — not a hype reel, an actual tour of the software doing the job. The first long walkthrough shipped for the theater system. Seven more verticals are queued behind it. The photo-and-video system got the full treatment: a straight comparison against what else is on the market, and a sixty-second cut.</p>
+<h2>And our own music</h2>
+<p>Stock library music sounds like stock library music. You have heard the same four beds under a thousand ads and your ear knows it, even if you couldn't name why the ad felt cheap.</p>
+<p>So the beats under our spots are written here — three volumes of them now, original, used nowhere but our own work. Nothing licensed, nothing rented, nothing that shows up under somebody else's commercial next quarter. That is not a technology claim. It's the same instinct as everything else in this company: if the bought version is mediocre and we can make a better one, we make it.</p>
+<h2>Two tools got put where people can find them</h2>
+<p>AE Wire takes notes in your meetings so you don't have to. It had been sitting in the catalog for weeks — real, finished, openable — but no shelf in the store actually named it, so it kept landing in the catch-all where nobody looks. That is not a small bug. A product nobody can find is a product that doesn't exist. It's on its own shelf now, under Work, and you can open it.</p>
+<p>AE Blastpack — make the video once, have it land everywhere you post — now has its card in the store too. Straight about this one: the card is up, the app is still finishing. It says so on the card. I'd rather you see it coming than find a locked door.</p>
+<h2>One rename, because I was being clever</h2>
+<p>There was a product here called Revolver OS. All it does is remember what albums you own. Calling that an operating system was me enjoying my own naming convention at the customer's expense — somebody shopping for a way to catalog their records is not shopping for an OS. It's <b>AE Revolver</b> now. Consumer app, named like one. Same app, same address, nothing lost but a word I liked too much.</p>
+<h2>One number corrected</h2>
+<p>The store and this blog disagreed about how many apps exist. Not by a lot, but they disagreed, and a company that publishes two different counts of its own catalog has a credibility problem whichever number is right.</p>
+<p>So it got recounted off the live store rather than off anybody's memory: <b>thirty-four apps in the catalog, thirty of which you can open right this second.</b> The other four are still being finished. Both numbers are on the front page now. The bigger one is the honest headline and the smaller one is the honest promise, and there was no version of this where I published only the flattering half.</p>
+<h2>What's on the bench</h2>
+<p>A curriculum system for teachers and homeschool families is in production. And there's early market research underway on a fraud tool for banks — research, not a product. No date, no promises, nothing to show. When there is something to show, it'll be in the store like everything else, not in a press release.</p>
+<p>That's the two days. No new industries, one product findable that wasn't, one name fixed, one number told straight, and a company that now scores its own ads. Next week may look different. This is the log, not the highlight reel.</p>
+<div class="next"><a href="index.html" aria-label="B~Log — the Accelerated Experiences blog">All posts</a>
+<a href="how-an-app-gets-made.html">Older: How an App Actually Gets Made →</a>
+<a class="gold" href="https://www.aexperiences.com/shop.html">Walk into the store →</a></div>
+</article></div></main><footer><div class="grid-ov"></div><div class="wrap">
+  <div class="co"><img src="https://www.aexperiences.com/ae-disc.png" alt=""><span>Accelerated Experiences LLC</span></div>
+  <div class="fine">Post Falls, Idaho · The store is the product — <a href="https://www.aexperiences.com/shop.html">walk in and use it</a>.</div>
+  <div class="fine">Craft first. Claims last.</div>
+</div></footer></body></html>
