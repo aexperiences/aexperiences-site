@@ -26,7 +26,11 @@
       "permanent": false
     }
   ],
-  "rewrites": [ { "source": "/apps/wire/", "destination": "https://ae-wire-accelerated-experiences.vercel.app/index.html" },
+  "rewrites": [
+    {
+      "source": "/apps/wire/",
+      "destination": "https://ae-wire-accelerated-experiences.vercel.app/index.html"
+    },
     {
       "source": "/apps/abode/",
       "destination": "https://ae-abode-showroom.vercel.app/index.html"
@@ -150,6 +154,14 @@
     {
       "source": "/apps/comply/:path*",
       "destination": "https://aecomply.vercel.app/:path*"
+    },
+    {
+      "source": "/apps/fraud-division/",
+      "destination": "https://ae-fraud-division.vercel.app/index.html"
+    },
+    {
+      "source": "/apps/fraud-division/:path*",
+      "destination": "https://ae-fraud-division.vercel.app/:path*"
     },
     {
       "source": "/api/comply-run",
