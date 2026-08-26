@@ -380,7 +380,12 @@ async function parentDeviceOk(H, pdev) {
 // are the only place that difference exists; every op above calls them and
 // stays ignorant.
 
-const isLocal   = (H) => !H || H.mode === 'local' || !H.refresh_token;
+// A household is local ONLY if it says so. This used to also treat "no refresh
+// token" as local, which meant a real Skylight family whose token response
+// omitted a refresh_token was silently downgraded to a local household — and
+// their kids, which live in Skylight, vanished. (Found 15 Aug 2026 when
+// Anthony's wife connected successfully and saw no children.)
+const isLocal   = (H) => !H || H.mode === 'local' || (!H.mode && !H.refresh_token);
 const kidsKey   = (hh)      => K('hh:' + hh + ':kidlist');
 const personKey = (hh, cid) => K('hh:' + hh + ':person:' + cid);
 const choreKey  = (hh, id)  => K('hh:' + hh + ':chore:' + id);
@@ -515,13 +520,28 @@ async function hhFrame(H) {
 async function hhChildren(H, frameId) {
   if (isLocal(H)) return await localChildren(H);
   const j = await skyH(H, `/api/frames/${frameId}/categories`);
-  return (j.data || []).map((c) => ({
-    categoryId: String(c.id),
-    name: (c.attributes || {}).label || 'Unnamed',
-    color: (c.attributes || {}).color || '#8a7a5c',
-    isPerson: !!(c.attributes || {}).linked_to_profile,
-    photo: (c.attributes || {}).profile_pic_url || null,
-  })).filter((c) => c.isPerson);
+  const all = (j.data || []).map((c) => {
+    const a = c.attributes || {};
+    return {
+      categoryId: String(c.id),
+      name: a.label || 'Unnamed',
+      color: a.color || '#8a7a5c',
+      // Skylight marks a person-category with linked_to_profile. Accept the
+      // obvious aliases too — this is a private API and the field has moved
+      // before.
+      isPerson: !!(a.linked_to_profile ?? a.linkedToProfile ?? a.profile_id ?? a.profile),
+      onChoreChart: !!(a.selected_for_chore_chart ?? a.selectedForChoreChart),
+      photo: a.profile_pic_url || a.profilePicUrl || null,
+    };
+  });
+  const people = all.filter((c) => c.isPerson);
+  if (people.length) return people;
+  // Nothing looked like a person. Rather than show a parent an empty house —
+  // which reads as "this app cannot see my children" — offer what IS on the
+  // chore chart, then anything at all, and let the UI say where it came from.
+  const chart = all.filter((c) => c.onChoreChart);
+  const fallback = (chart.length ? chart : all).map((c) => ({ ...c, isPerson: true, guessed: true }));
+  return fallback;
 }
 
 async function hhChores(H, frameId, { from, to } = {}) {
@@ -822,7 +842,7 @@ async function route(op, b, req) {
     const t = await skyAuthorize(email, password);
 
     const id = rnd(24);
-    const rec = { id, email, ...t, at: Date.now() };
+    const rec = { id, email, ...t, at: Date.now(), mode: 'skylight' };
     // A deployment-wide PARENT_PIN still seeds the first lock, so the original
     // single-account setup keeps behaving exactly as it did. Families who sign
     // up on a deployment without one simply start unlocked and can set their own.
@@ -897,6 +917,45 @@ async function route(op, b, req) {
     await redis('DEL', personKey(H.id, cid)).catch(() => {});
     await redis('SREM', kidsKey(H.id), cid).catch(() => {});
     return { ok: true, removedJobs: removed };
+  }
+
+  /* --------------------------------------------- what did Skylight say? -- */
+  //
+  // A read-only window for debugging a family whose kids do not appear. It
+  // reports SHAPE, never content: counts, which attribute names came back, and
+  // HTTP statuses. No child's name, colour or photo ever leaves this op, so it
+  // is safe to read out over the phone or paste into a log.
+  if (op === 'sky.debug') {
+    gate();
+    const out = { mode: isLocal(H) ? 'local' : 'skylight', hasRefreshToken: !!H.refresh_token };
+    if (isLocal(H)) { out.note = 'This household is LOCAL — it is not talking to Skylight at all.'; return { ok: true, debug: out }; }
+    try {
+      const f = await hhFrame(H);
+      out.frameId = f.id; out.frameName = f.name ? 'set' : 'missing'; out.plus = !!f.plus;
+      const j = await skyH(H, `/api/frames/${f.id}/categories`);
+      const rows = j.data || [];
+      out.categoriesReturned = rows.length;
+      out.attributeNames = [...new Set(rows.flatMap((c) => Object.keys(c.attributes || {})))].sort();
+      out.withLinkedToProfile = rows.filter((c) => (c.attributes || {}).linked_to_profile).length;
+      out.onChoreChart = rows.filter((c) => (c.attributes || {}).selected_for_chore_chart).length;
+      out.types = [...new Set(rows.map((c) => c.type))];
+    } catch (e) {
+      out.categoriesError = e.reason || String(e.message || e);
+    }
+    // Probe the endpoints a person MIGHT live on now. Status codes only.
+    for (const path of ['profiles', 'people', 'members', 'chore_chart']) {
+      try {
+        const f = await hhFrame(H);
+        const r = await fetch(`${SKY_BASE}/api/frames/${f.id}/${path}`, {
+          headers: { authorization: `Bearer ${await hhAccess(H, false)}`,
+                     accept: 'application/json', 'skylight-api-version': SKY_API_VER },
+        });
+        let n = null;
+        if (r.ok) { try { const jj = await r.json(); n = (jj.data || []).length; } catch {} }
+        out['probe_' + path] = r.status + (n === null ? '' : ' · ' + n + ' rows');
+      } catch (e) { out['probe_' + path] = 'threw'; }
+    }
+    return { ok: true, debug: out };
   }
 
   /* ------------------------------------------------- more grown-ups ----- */
