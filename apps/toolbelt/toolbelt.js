@@ -1654,13 +1654,13 @@
       { href:"checkpoints.html",label:"Checkpoints",        ic:"☑", room:"work", accent:"work" , icon:"icons/comply.svg"} ]},
     { group:"The Trucks", items:[
       { href:"licences.html",  label:"Licences",        ic:"⛨", room:"licences", accent:"licence" , icon:"icons/law.svg"},
-      { href:"truck.html",     label:"Truck Stock",     ic:"▣", room:"truck",    accent:"ops" },
-      { href:"fleetview.html",label:"FleetView · Trucks",ic:"◍", room:"fleet",  accent:"dispatch" } ]},
+      { href:"truck.html",     label:"Truck Stock",     ic:"▣", room:"truck",    accent:"ops", icon:"icons/truck-stock.svg" },
+      { href:"fleetview.html",label:"FleetView · Trucks",ic:"◍", room:"fleet",  accent:"dispatch", icon:"icons/fleetview.svg" } ]},
     { group:"Growth", items:[
       { href:"estimates.html", label:"Estimates",       ic:"✦", room:"estimate", accent:"estimate" , icon:"icons/funnel.svg"},
       { href:"plans.html",     label:"Service Plans",   ic:"❉", room:"plans",    accent:"money" , icon:"icons/tuition.svg"},
-      { href:"referrals.html", label:"Referral CRM",    ic:"◈", room:"crm",      accent:"crm" },
-      { href:"portal.html",    label:"Customer Portal", ic:"☗", room:"portal",   accent:"portal" },
+      { href:"referrals.html", label:"Referral CRM",    ic:"◈", room:"crm",      accent:"crm", icon:"icons/referral-crm.svg" },
+      { href:"portal.html",    label:"Customer Portal", ic:"☗", room:"portal",   accent:"portal", icon:"icons/customer-portal.svg" },
       { href:"recruiting.html",label:"Recruiting · ATS",ic:"★", room:"recruit",  accent:"recruit" , icon:"icons/hr.svg"} ]},
     { group:"Paper", items:[
       { href:"sign.html",      label:"e-Sign",          ic:"✍", room:"sign",     accent:"sign" , icon:"icons/docs.svg"} ]},
