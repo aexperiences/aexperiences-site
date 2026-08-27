@@ -1642,6 +1642,7 @@
       { href:"calendar.html",  label:"Calendar",       ic:"▤" , icon:"icons/calendar.svg"},
       { href:"contacts.html",  label:"Contacts",       ic:"☎" , icon:"icons/families.svg"},
       { href:"connect.html",   label:"Connect · Video",ic:"◉" , icon:"icons/connect.svg"},
+      { href:"masterlist.html",label:"Master List",    ic:"▤" , icon:"icons/master-list.svg"},
       { href:"records.html",   label:"Records · Filing",ic:"▤" , icon:"icons/records.svg"},
       { href:"approvals.html", label:"Approval Desk",  ic:"✓", accent:"ops" , icon:"icons/approvals.svg"} ]},
     { group:"Front Desk", items:[
