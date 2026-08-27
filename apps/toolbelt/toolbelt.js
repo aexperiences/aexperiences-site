@@ -1638,37 +1638,37 @@
   };
   var DEPTS = [
     { group:"Command", items:[
-      { href:"dashboard.html", label:"Command Center", ic:"◎" },
-      { href:"calendar.html",  label:"Calendar",       ic:"▤" },
-      { href:"contacts.html",  label:"Contacts",       ic:"☎" },
-      { href:"connect.html",   label:"Connect · Video",ic:"◉" },
-      { href:"records.html",   label:"Records · Filing",ic:"▤" },
-      { href:"approvals.html", label:"Approval Desk",  ic:"✓", accent:"ops" } ]},
+      { href:"dashboard.html", label:"Command Center", ic:"◎" , icon:"icons/command-center.svg"},
+      { href:"calendar.html",  label:"Calendar",       ic:"▤" , icon:"icons/calendar.svg"},
+      { href:"contacts.html",  label:"Contacts",       ic:"☎" , icon:"icons/families.svg"},
+      { href:"connect.html",   label:"Connect · Video",ic:"◉" , icon:"icons/connect.svg"},
+      { href:"records.html",   label:"Records · Filing",ic:"▤" , icon:"icons/records.svg"},
+      { href:"approvals.html", label:"Approval Desk",  ic:"✓", accent:"ops" , icon:"icons/approvals.svg"} ]},
     { group:"Front Desk", items:[
-      { href:"switchboard.html", label:"Switchboard · Phones", ic:"☏", room:"phones", accent:"crm" },
-      { href:"book.html",        label:"Web Booking",          ic:"◷", room:"webbook", accent:"portal" } ]},
+      { href:"switchboard.html", label:"Switchboard · Phones", ic:"☏", room:"phones", accent:"crm" , icon:"icons/desk.svg"},
+      { href:"book.html",        label:"Web Booking",          ic:"◷", room:"webbook", accent:"portal" , icon:"icons/enroll.svg"} ]},
     { group:"The Day", items:[
-      { href:"dispatch.html",  label:"Dispatch & Board",ic:"▦", room:"dispatch", accent:"dispatch" },
-      { href:"field.html",     label:"Field & Proof",   ic:"◉", room:"field",    accent:"field" },
-      { href:"worksheets.html",label:"Worksheets & Permits",ic:"✎", room:"work", accent:"work" },
-      { href:"checkpoints.html",label:"Checkpoints",        ic:"☑", room:"work", accent:"work" } ]},
+      { href:"dispatch.html",  label:"Dispatch & Board",ic:"▦", room:"dispatch", accent:"dispatch" , icon:"icons/schedule.svg"},
+      { href:"field.html",     label:"Field & Proof",   ic:"◉", room:"field",    accent:"field" , icon:"icons/checkin.svg"},
+      { href:"worksheets.html",label:"Worksheets & Permits",ic:"✎", room:"work", accent:"work" , icon:"icons/list.svg"},
+      { href:"checkpoints.html",label:"Checkpoints",        ic:"☑", room:"work", accent:"work" , icon:"icons/comply.svg"} ]},
     { group:"The Trucks", items:[
-      { href:"licences.html",  label:"Licences",        ic:"⛨", room:"licences", accent:"licence" },
+      { href:"licences.html",  label:"Licences",        ic:"⛨", room:"licences", accent:"licence" , icon:"icons/law.svg"},
       { href:"truck.html",     label:"Truck Stock",     ic:"▣", room:"truck",    accent:"ops" },
       { href:"fleetview.html",label:"FleetView · Trucks",ic:"◍", room:"fleet",  accent:"dispatch" } ]},
     { group:"Growth", items:[
-      { href:"estimates.html", label:"Estimates",       ic:"✦", room:"estimate", accent:"estimate" },
-      { href:"plans.html",     label:"Service Plans",   ic:"❉", room:"plans",    accent:"money" },
+      { href:"estimates.html", label:"Estimates",       ic:"✦", room:"estimate", accent:"estimate" , icon:"icons/funnel.svg"},
+      { href:"plans.html",     label:"Service Plans",   ic:"❉", room:"plans",    accent:"money" , icon:"icons/tuition.svg"},
       { href:"referrals.html", label:"Referral CRM",    ic:"◈", room:"crm",      accent:"crm" },
       { href:"portal.html",    label:"Customer Portal", ic:"☗", room:"portal",   accent:"portal" },
-      { href:"recruiting.html",label:"Recruiting · ATS",ic:"★", room:"recruit",  accent:"recruit" } ]},
+      { href:"recruiting.html",label:"Recruiting · ATS",ic:"★", room:"recruit",  accent:"recruit" , icon:"icons/hr.svg"} ]},
     { group:"Paper", items:[
-      { href:"sign.html",      label:"e-Sign",          ic:"✍", room:"sign",     accent:"sign" } ]},
+      { href:"sign.html",      label:"e-Sign",          ic:"✍", room:"sign",     accent:"sign" , icon:"icons/docs.svg"} ]},
     { group:"Money", items:[
-      { href:"money.html",     label:"Invoicing & Payroll",ic:"◧", room:"money", accent:"money" },
-      { href:"books.html",     label:"Books & Metrics", ic:"◭", room:"books",    accent:"money" } ]},
+      { href:"money.html",     label:"Invoicing & Payroll",ic:"◧", room:"money", accent:"money" , icon:"icons/payroll.svg"},
+      { href:"books.html",     label:"Books & Metrics", ic:"◭", room:"books",    accent:"money" , icon:"icons/books.svg"} ]},
     { group:"The Org", items:[
-      { href:"org.html",       label:"Agent Org · Bus", ic:"❖", room:"org",      accent:"ops" } ]}
+      { href:"org.html",       label:"Agent Org · Bus", ic:"❖", room:"org",      accent:"ops" , icon:"icons/org.svg"} ]}
   ];
 
   function tier(){ return db().tier||"grandsuite"; }
@@ -1733,8 +1733,8 @@
       g.items.forEach(function(it){
         var off=it.room && on.indexOf(it.room)<0;
         var a=el('<a href="'+(off?"javascript:void(0)":it.href)+'" class="navlink '+(it.href===active?"active":"")+
-          (off?" locked":"")+'"'+(it.accent?' data-accent="'+it.accent+'"':"")+'><span class="ic">'+it.ic+
-          '</span><span class="lb">'+esc(it.label)+'</span>'+(off?'<span class="tier-tag">+'+money(ROOMS[it.room].mo)+'</span>':'')+'</a>');
+          (off?" locked":"")+'"'+(it.accent?' data-accent="'+it.accent+'"':"")+'>'+(it.icon?'<img class="ic ic-img" src="'+it.icon+'" alt="">':'<span class="ic">'+it.ic+'</span>')+
+          '<span class="lb">'+esc(it.label)+'</span>'+(off?'<span class="tier-tag">+'+money(ROOMS[it.room].mo)+'</span>':'')+'</a>');
         if(off){ a.title="Not in this build — add "+ROOMS[it.room].label+" for "+money(ROOMS[it.room].mo)+"/mo";
           a.addEventListener("click",function(){ toggleRoom(it.room);
             toast(ROOMS[it.room].label+" added — "+priceLabel(),"ok");
@@ -1743,23 +1743,30 @@
     });
     side.appendChild(nav); return side;
   }
-  var MOBILE_NAV=[{href:"dashboard.html",label:"Home",ic:"◎"},
-    {href:"dispatch.html",label:"Board",ic:"▦",room:"dispatch"},
-    {href:"field.html",label:"Field",ic:"◉",room:"field"},
-    {href:"money.html",label:"Money",ic:"◧",room:"money"},
-    {href:"approvals.html",label:"Approvals",ic:"✓"}];
+  var MOBILE_NAV=[{href:"dashboard.html",label:"Home",ic:"◎",icon:"icons/command-center.svg"},
+    {href:"dispatch.html",label:"Board",ic:"▦",room:"dispatch",icon:"icons/schedule.svg"},
+    {href:"field.html",label:"Field",ic:"◉",room:"field",icon:"icons/checkin.svg"},
+    {href:"money.html",label:"Money",ic:"◧",room:"money",icon:"icons/payroll.svg"},
+    {href:"approvals.html",label:"Approvals",ic:"✓",icon:"icons/approvals.svg"}];
   function renderMobileBar(active){
     var bar=document.createElement("nav"); bar.className="mobilebar"; var on=activeRooms();
     MOBILE_NAV.forEach(function(it){ var off=it.room&&on.indexOf(it.room)<0;
       bar.appendChild(el('<a href="'+(off?"javascript:void(0)":it.href)+'" class="mb-link '+(it.href===active?"active":"")+
-        '"><span class="mb-ic">'+it.ic+'</span><span class="mb-lb">'+esc(it.label)+'</span></a>')); });
+        '">'+(it.icon?'<img class="mb-ic mb-img" src="'+it.icon+'" alt="">':'<span class="mb-ic">'+it.ic+'</span>')+
+        '<span class="mb-lb">'+esc(it.label)+'</span></a>')); });
     bar.appendChild(el('<button class="mb-link mb-menu" id="mbMenu"><span class="mb-ic">☰</span><span class="mb-lb">Menu</span></button>'));
     return bar; }
-  function renderTopbar(crumb){
+  function iconFor(href){
+    for(var g=0;g<DEPTS.length;g++){ for(var i=0;i<DEPTS[g].items.length;i++){
+      if(DEPTS[g].items[i].href===href) return DEPTS[g].items[i].icon||null; } }
+    return null; }
+  function renderTopbar(crumb, active){
     var p=priceNow(), s=db().shop;
     var bar=document.createElement("div"); bar.className="topbar";
     var ini=(s.owner||"DK").split(" ").map(function(w){return w[0];}).join("").slice(0,2).toUpperCase();
+    var hic=iconFor(active);
     bar.innerHTML='<button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>'+
+      (hic?'<img class="crumb-ic" src="'+hic+'" alt="">':'')+
       '<div class="crumbs">Toolbelt OS · <b>'+esc(crumb)+'</b></div><div class="spacer"></div>'+
       '<div class="tierpill" id="tierPillStatic"><span class="dot"></span><div><b>'+esc(p.tier.name)+
       (p.changed?' <i class="cfg">configured</i>':'')+'</b> <span class="price">'+money(p.mo)+'/mo licensed</span></div></div><div class="who"><div class="av">'+esc(ini)+'</div><div>'+esc(s.owner)+
@@ -1789,7 +1796,7 @@
     var app=document.createElement("div"); app.className="app";
     var side=renderShell(o.active), backdrop=el('<div class="nav-backdrop" id="navBackdrop"></div>');
     var main=document.createElement("div"); main.className="main";
-    main.appendChild(ribbon()); main.appendChild(renderTopbar(o.crumb||"Command Center"));
+    main.appendChild(ribbon()); main.appendChild(renderTopbar(o.crumb||"Command Center", o.active));
     var content=document.createElement("div"); content.className="content"; content.id="content";
     main.appendChild(content); main.appendChild(footer());
     app.appendChild(side); app.appendChild(main);
@@ -1896,7 +1903,7 @@
     SEATS:SEATS, BRAIN:BRAIN, bus:bus, approvals:approvals, decideApproval:decideApproval,
     TIERS:TIERS, ROOMS:ROOMS, DEPTS:DEPTS, tier:tier, setTier:setTier, activeRooms:activeRooms,
     hasRoom:hasRoom, toggleRoom:toggleRoom, priceNow:priceNow, priceLabel:priceLabel,
-    manual:manual, askManual:askManual, kpis:kpis,
+    manual:manual, askManual:askManual, kpis:kpis, iconFor:iconFor,
     calls:calls, callById:callById, callStats:callStats, callLabel:callLabel,
     trucks:trucks, truckById:truckById, truckForTech:truckForTech, fleetState:fleetState,
     truckState:truckState, currentJobFor:currentJobFor, etaFor:etaFor, serviceDue:serviceDue,
