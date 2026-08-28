@@ -1820,7 +1820,10 @@
         paintMenu(); menu.classList.add('open');
       };
       menu.onclick=function(e){ e.stopPropagation(); };
-      document.addEventListener('click', function(){ menu.classList.remove('open'); });
+      document.addEventListener('click', function(ev){
+        if(pill.contains(ev.target) || menu.contains(ev.target)) return;
+        menu.classList.remove('open');
+      });
     }
 
     return bar; }
