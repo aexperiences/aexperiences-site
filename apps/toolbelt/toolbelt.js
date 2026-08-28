@@ -1623,15 +1623,15 @@
       why:"The AI department chains, the event bus and the confidence gates." }
   };
   var TIERS = {
-    truck: { key:"truck", name:"Truck", rank:1, mo:450, build:3900,
+    truck: { key:"truck", name:"Truck", ed:"LT", edname:"Lite", rank:1, mo:450, build:3900,
       desc:"One to three trucks. The whole system, sized for an owner who is still turning wrenches.",
       base:"Up to 3 techs · the full spine",
       includes:["dispatch","field","work","licences","truck","estimate","portal","sign","money"] },
-    shop: { key:"shop", name:"Shop", rank:2, mo:950, build:8200,
+    shop: { key:"shop", name:"Shop", ed:"ST", edname:"Standard", rank:2, mo:950, build:8200,
       desc:"A real shop with a dispatcher. Adds the referral book, recruiting, books & metrics and the AI department org.",
       base:"Unlimited techs · dispatcher seat · referral CRM · agent org",
       includes:["dispatch","field","work","licences","truck","estimate","crm","portal","recruit","sign","money","books","org"] },
-    grandsuite: { key:"grandsuite", name:"Grandsuite", rank:3, mo:2200, build:13800,
+    grandsuite: { key:"grandsuite", name:"Grandsuite", ed:"GS", edname:"Grandsuite", rank:3, mo:2200, build:13800,
       desc:"Nothing held back. Multi-location, multi-trade, dedicated environment, data migration and your own branded tech app.",
       base:"Multi-location · multi-trade · dedicated environment · migration · branded app",
       includes:["dispatch","field","work","licences","truck","estimate","crm","portal","recruit","sign","money","books","org","phones","webbook","fleet","plans"] }
@@ -1673,6 +1673,16 @@
   ];
 
   function tier(){ return db().tier||"grandsuite"; }
+  var BUILD_VER = "V3.1";
+  /* Owner tool gate. The customer sees three sizes and nothing else.
+     Anthony and Barry turn the room switches on with ?owner=1 and off with ?owner=0;
+     the choice sticks in this browser until it is turned back off. */
+  function isOwner(){
+    try{ var q=String(location.search||"");
+      if(/[?&]owner=1/.test(q)) save(function(d){ d.ownerMode=true; });
+      if(/[?&]owner=0/.test(q)) save(function(d){ d.ownerMode=false; });
+    }catch(e){}
+    return !!db().ownerMode; }
   function setTier(k){ return save(function(d){ d.tier=k; d.adds=[]; d.offs=[]; }); }
   function activeRooms(){ var d=db(), t=TIERS[d.tier]||TIERS.grandsuite, set=t.includes.slice();
     (d.adds||[]).forEach(function(k){ if(set.indexOf(k)<0) set.push(k); });
@@ -1770,7 +1780,9 @@
       (hic?'<img class="crumb-ic" src="'+hic+'" alt="">':'')+
       '<div class="crumbs">Toolbelt OS · <b>'+esc(crumb)+'</b></div><div class="spacer"></div>'+
       '<div class="tierpill" id="tierPillStatic"><span class="dot"></span><div><b>'+esc(p.tier.name)+
-      (p.changed?' <i class="cfg">configured</i>':'')+'</b> <span class="price">'+money(p.mo)+'/mo licensed</span></div></div><div class="who"><div class="av">'+esc(ini)+'</div><div>'+esc(s.owner)+
+      '</b> <i class="cfg">'+esc(p.tier.ed)+' '+BUILD_VER+'</i>'+
+      (p.changed&&isOwner()?' <i class="cfg">configured</i>':'')+
+      ' <span class="price">'+money(p.mo)+'/mo licensed</span></div></div><div class="who"><div class="av">'+esc(ini)+'</div><div>'+esc(s.owner)+
       '<br><span class="muted small">Owner · '+esc(s.name)+'</span></div></div>';
 
     /* ---- THE CONFIGURATOR: click the price pill, size the system ---- */
@@ -1783,28 +1795,35 @@
       bar.appendChild(menu);
 
       function paintMenu(){
-        var d=db(), cur=d.tier||'grandsuite', p=priceNow();
+        var d=db(), cur=d.tier||'grandsuite', p=priceNow(), own=isOwner();
         var order=['truck','shop','grandsuite'];
         var h='<div class="tm-head">Every shop is a different size. Pick the one that matches yours &mdash; ' +
-          'the rooms below switch on and off with it, and you can add or drop any single room.</div>';
+          'the system switches the rooms on and off to match, and the price is the price.</div>';
         h+='<div class="tm-sub">The three sizes</div>';
         h+=order.map(function(k){ var T=TIERS[k];
           return '<div class="tieropt'+(k===cur?' on':'')+'" data-tier="'+k+'">'+
-            '<div class="to-top"><span class="to-name">'+esc(T.name)+'</span>'+
+            '<div class="to-top"><span class="to-name">'+esc(T.name)+
+            ' <i class="rr-flag">Toolbelt OS '+esc(T.ed)+' &middot; '+esc(T.edname)+'</i></span>'+
             '<span class="to-price">'+money(T.mo)+'/mo</span></div>'+
             '<div class="to-desc">'+esc(T.desc)+'</div>'+
             '<div class="to-base">'+esc(T.base)+'</div></div>';
         }).join('');
-        h+='<div class="tm-sub">The rooms &mdash; '+activeRooms().length+' of '+Object.keys(ROOMS).length+' on</div>';
-        h+='<div class="roomlist">'+Object.keys(ROOMS).map(function(k){
-          var R=ROOMS[k], on=hasRoom(k), inTier=(TIERS[cur].includes||[]).indexOf(k)>-1;
-          return '<div class="roomrow'+(on?' on':'')+'" data-room="'+k+'">'+
-            '<span class="rr-box">&#10003;</span>'+
-            '<span class="rr-name">'+esc(R.label)+(inTier?'':' <i class="rr-flag">add-on</i>')+'</span>'+
-            '<span class="to-price">'+(inTier?'included':'+'+money(R.mo)+'/mo')+'</span></div>';
-        }).join('')+'</div>';
         h+='<div class="tm-head" style="border-top:1px solid var(--line-2);border-bottom:0">'+
-          '<b>'+money(p.mo)+'/mo</b> as configured'+(p.changed?' &mdash; changed from the '+esc(p.tier.name)+' default':'')+'</div>';
+          'Licensed monthly, nothing down, no per-technician fee. Every size can also carry your own name, '+
+          'colors and web address &mdash; we quote that part with you. Just ask.</div>';
+        if(own){
+          h+='<div class="tm-sub">Owner tool &mdash; rooms ('+activeRooms().length+' of '+Object.keys(ROOMS).length+' on)</div>';
+          h+='<div class="roomlist">'+Object.keys(ROOMS).map(function(k){
+            var R=ROOMS[k], on=hasRoom(k), inTier=(TIERS[cur].includes||[]).indexOf(k)>-1;
+            return '<div class="roomrow'+(on?' on':'')+'" data-room="'+k+'">'+
+              '<span class="rr-box">&#10003;</span>'+
+              '<span class="rr-name">'+esc(R.label)+(inTier?'':' <i class="rr-flag">add-on</i>')+'</span>'+
+              '<span class="to-price">'+(inTier?'included':'+'+money(R.mo)+'/mo')+'</span></div>';
+          }).join('')+'</div>';
+          h+='<div class="tm-head" style="border-top:1px solid var(--line-2);border-bottom:0">'+
+            '<b>'+money(p.mo)+'/mo</b> as configured'+(p.changed?' &mdash; changed from the '+esc(p.tier.name)+' default':'')+
+            ' <span class="muted small">&middot; owner view, hidden from the customer</span></div>';
+        }
         menu.innerHTML=h;
         menu.querySelectorAll('[data-tier]').forEach(function(r){
           r.onclick=function(e){ e.stopPropagation(); setTier(r.getAttribute('data-tier')); location.reload(); };
