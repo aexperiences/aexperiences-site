@@ -1772,6 +1772,57 @@
       '<div class="tierpill" id="tierPillStatic"><span class="dot"></span><div><b>'+esc(p.tier.name)+
       (p.changed?' <i class="cfg">configured</i>':'')+'</b> <span class="price">'+money(p.mo)+'/mo licensed</span></div></div><div class="who"><div class="av">'+esc(ini)+'</div><div>'+esc(s.owner)+
       '<br><span class="muted small">Owner · '+esc(s.name)+'</span></div></div>';
+
+    /* ---- THE CONFIGURATOR: click the price pill, size the system ---- */
+    var pill = bar.querySelector('#tierPillStatic');
+    if(pill){
+      pill.style.cursor='pointer';
+      pill.title='Click to size the system';
+      var menu = document.createElement('div');
+      menu.className='tiermenu';
+      bar.appendChild(menu);
+
+      function paintMenu(){
+        var d=db(), cur=d.tier||'grandsuite', p=priceNow();
+        var order=['truck','shop','grandsuite'];
+        var h='<div class="tm-head">Every shop is a different size. Pick the one that matches yours &mdash; ' +
+          'the rooms below switch on and off with it, and you can add or drop any single room.</div>';
+        h+='<div class="tm-sub">The three sizes</div>';
+        h+=order.map(function(k){ var T=TIERS[k];
+          return '<div class="tieropt'+(k===cur?' on':'')+'" data-tier="'+k+'">'+
+            '<div class="to-top"><span class="to-name">'+esc(T.name)+'</span>'+
+            '<span class="to-price">'+money(T.mo)+'/mo</span></div>'+
+            '<div class="to-desc">'+esc(T.desc)+'</div>'+
+            '<div class="to-base">'+esc(T.base)+'</div></div>';
+        }).join('');
+        h+='<div class="tm-sub">The rooms &mdash; '+activeRooms().length+' of '+Object.keys(ROOMS).length+' on</div>';
+        h+='<div class="roomlist">'+Object.keys(ROOMS).map(function(k){
+          var R=ROOMS[k], on=hasRoom(k), inTier=(TIERS[cur].includes||[]).indexOf(k)>-1;
+          return '<div class="roomrow'+(on?' on':'')+'" data-room="'+k+'">'+
+            '<span class="rr-box">&#10003;</span>'+
+            '<span class="rr-name">'+esc(R.label)+(inTier?'':' <i class="rr-flag">add-on</i>')+'</span>'+
+            '<span class="to-price">'+(inTier?'included':'+'+money(R.mo)+'/mo')+'</span></div>';
+        }).join('')+'</div>';
+        h+='<div class="tm-head" style="border-top:1px solid var(--line-2);border-bottom:0">'+
+          '<b>'+money(p.mo)+'/mo</b> as configured'+(p.changed?' &mdash; changed from the '+esc(p.tier.name)+' default':'')+'</div>';
+        menu.innerHTML=h;
+        menu.querySelectorAll('[data-tier]').forEach(function(r){
+          r.onclick=function(e){ e.stopPropagation(); setTier(r.getAttribute('data-tier')); location.reload(); };
+        });
+        menu.querySelectorAll('[data-room]').forEach(function(r){
+          r.onclick=function(e){ e.stopPropagation(); toggleRoom(r.getAttribute('data-room')); location.reload(); };
+        });
+      }
+
+      pill.onclick=function(e){
+        e.stopPropagation();
+        if(menu.classList.contains('open')){ menu.classList.remove('open'); return; }
+        paintMenu(); menu.classList.add('open');
+      };
+      menu.onclick=function(e){ e.stopPropagation(); };
+      document.addEventListener('click', function(){ menu.classList.remove('open'); });
+    }
+
     return bar; }
   function ribbon(){ return el('<div class="ribbon"><span class="live">LIVE SHOWROOM</span>'+
     ' — this is the real operating system, not a slideshow. Type anywhere; it saves in your browser. '+
