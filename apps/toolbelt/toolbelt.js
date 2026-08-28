@@ -1651,7 +1651,7 @@
     { group:"The Day", items:[
       { href:"dispatch.html",  label:"Dispatch & Board",ic:"▦", room:"dispatch", accent:"dispatch" , icon:"icons/schedule.svg"},
       { href:"field.html",     label:"Field & Proof",   ic:"◉", room:"field",    accent:"field" , icon:"icons/checkin.svg"},
-      { href:"worksheets.html",label:"Worksheets & Permits",ic:"✎", room:"work", accent:"work" , icon:"icons/list.svg"},
+      { href:"worksheets.html",label:"Worksheets & Permits",ic:"✎", room:"work", accent:"work" , icon:"icons/law.svg"},
       { href:"checkpoints.html",label:"Checkpoints",        ic:"☑", room:"work", accent:"work" , icon:"icons/comply.svg"} ]},
     { group:"The Trucks", items:[
       { href:"licences.html",  label:"Licences",        ic:"⛨", room:"licences", accent:"licence" , icon:"icons/law.svg"},
