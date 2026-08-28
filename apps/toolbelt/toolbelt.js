@@ -1607,6 +1607,8 @@
       why:"Your own careers page and a pipeline scored against the trades you are actually short." },
     sign:     { label:"e-Sign",               mo:65,  build:500,
       why:"Work authorisations, change orders and estimate approvals signed in any browser, with an audit trail." },
+    docs:     { label:"Documents",            mo:60,  build:450,
+      why:"Proposals, change orders, SOPs, safety meetings and price sheets — written here, saved as real Word and Excel files, and filed into Records without anybody retyping them." },
     money:    { label:"Invoicing & Payroll",  mo:110, build:850,
       why:"Labor, parts and trip fee kept separate. Overtime, drive time, burden — and the callback line nobody else shows you." },
     books:    { label:"Books & Metrics",      mo:80,  build:600,
@@ -1622,19 +1624,180 @@
     org:      { label:"Agent Org · Bus",      mo:140, build:1100,
       why:"The AI department chains, the event bus and the confidence gates." }
   };
+
+  /* ================================================================ THE SKIN
+     A skin is a palette, not a rebuild. Every surface in this system reads
+     from CSS variables, so one object below repaints the whole operating
+     system — sidebar, cards, charts, the lot. The shop picks its own; the
+     house default is dark, because these floors get read in a truck at 6am
+     and in a shop office with the lights off. */
+  var SKIN_KEY = "toolbelt_skin_v1";
+  var SKINS = {
+    graphite: {
+      name:"Graphite Night", dark:true,
+      note:"The house default. Near-black graphite, safety orange on top.",
+      v:{ "--glass":"rgba(20,25,30,.86)", "--paper":"#101418","--card":"#181e24","--sunk":"#212932",
+          "--rail":"#0b0e11","--rail-2":"#141a1f",
+          "--ink":"#e8eef4","--ink-2":"#b8c4cf","--mut":"#8493a1",
+          "--line":"#2b343d","--line-2":"#222a31",
+          "--on-rail":"#e8eef4","--on-rail-mut":"#8493a1",
+          "--tang-wash":"rgba(228,131,43,.16)","--teal-wash":"rgba(47,125,140,.18)",
+          "--gold-wash":"rgba(228,166,43,.18)",
+          "--good-w":"rgba(47,143,107,.20)","--watch-w":"rgba(228,166,43,.20)","--bad-w":"rgba(180,72,94,.20)",
+          "--dot-1":"rgba(242,121,46,.06)","--dot-2":"rgba(23,162,162,.06)",
+          "--sh":"0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7)",
+          "--sh-lg":"0 2px 4px rgba(0,0,0,.45), 0 24px 56px -24px rgba(0,0,0,.8)" } },
+    espresso: {
+      name:"Espresso Night", dark:true,
+      note:"Warm dark. Reads easy at the end of a long day.",
+      v:{ "--glass":"rgba(29,24,19,.86)", "--paper":"#16120e","--card":"#211b15","--sunk":"#2c241c",
+          "--rail":"#0f0c09","--rail-2":"#1a1510",
+          "--ink":"#f0e8dd","--ink-2":"#cbbdac","--mut":"#9a8b79",
+          "--line":"#3a2f25","--line-2":"#2b231b",
+          "--on-rail":"#f0e8dd","--on-rail-mut":"#9a8b79",
+          "--tang-wash":"rgba(228,131,43,.18)","--teal-wash":"rgba(47,125,140,.18)",
+          "--gold-wash":"rgba(228,166,43,.20)",
+          "--good-w":"rgba(47,143,107,.20)","--watch-w":"rgba(228,166,43,.22)","--bad-w":"rgba(180,72,94,.20)",
+          "--dot-1":"rgba(242,121,46,.07)","--dot-2":"rgba(228,166,43,.05)",
+          "--sh":"0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7)",
+          "--sh-lg":"0 2px 4px rgba(0,0,0,.45), 0 24px 56px -24px rgba(0,0,0,.8)" } },
+    steel: {
+      name:"Steel Blue", dark:true,
+      note:"Cool and technical. The one that looks like the truck's gauge cluster.",
+      v:{ "--glass":"rgba(18,26,33,.86)", "--paper":"#0e1419","--card":"#161f27","--sunk":"#1f2a34",
+          "--rail":"#080d11","--rail-2":"#111a21",
+          "--ink":"#e4edf4","--ink-2":"#b0c1ce","--mut":"#7d90a0",
+          "--line":"#27343f","--line-2":"#1e2932",
+          "--on-rail":"#e4edf4","--on-rail-mut":"#7d90a0",
+          "--tang-wash":"rgba(228,131,43,.16)","--teal-wash":"rgba(47,125,140,.22)",
+          "--gold-wash":"rgba(228,166,43,.18)",
+          "--good-w":"rgba(47,143,107,.20)","--watch-w":"rgba(228,166,43,.20)","--bad-w":"rgba(180,72,94,.20)",
+          "--dot-1":"rgba(47,125,140,.08)","--dot-2":"rgba(242,121,46,.05)",
+          "--sh":"0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7)",
+          "--sh-lg":"0 2px 4px rgba(0,0,0,.45), 0 24px 56px -24px rgba(0,0,0,.8)" } },
+    daylight: {
+      name:"Workshop Daylight", dark:false,
+      note:"Cool paper. The bright one, for a shop with windows.",
+      v:{ "--glass":"rgba(255,253,249,.88)", "--paper":"#f4f6f8","--card":"#ffffff","--sunk":"#e9edf1",
+          "--rail":"#232b33","--rail-2":"#2e3842",
+          "--ink":"#1f272e","--ink-2":"#4a5763","--mut":"#8391a0",
+          "--line":"#dbe2e8","--line-2":"#eef2f5",
+          "--on-rail":"#e6ecf2","--on-rail-mut":"#93a3b3",
+          "--tang-wash":"rgba(228,131,43,.11)","--teal-wash":"rgba(47,125,140,.12)",
+          "--gold-wash":"rgba(228,166,43,.15)",
+          "--good-w":"rgba(47,143,107,.13)","--watch-w":"rgba(228,166,43,.17)","--bad-w":"rgba(180,72,94,.12)",
+          "--dot-1":"rgba(242,121,46,.05)","--dot-2":"rgba(23,162,162,.05)",
+          "--sh":"0 1px 2px rgba(31,39,46,.05), 0 8px 24px -12px rgba(31,39,46,.18)",
+          "--sh-lg":"0 2px 4px rgba(31,39,46,.06), 0 24px 56px -24px rgba(31,39,46,.30)" } },
+    linen: {
+      name:"Linen", dark:false,
+      note:"Warm paper. Softer than daylight, easier on the eyes.",
+      v:{ "--glass":"rgba(255,252,246,.90)", "--paper":"#f6f2ea","--card":"#fffdf8","--sunk":"#ece5d8",
+          "--rail":"#2b2419","--rail-2":"#3a3123",
+          "--ink":"#221d16","--ink-2":"#524738","--mut":"#8b7f6c",
+          "--line":"#e0d7c6","--line-2":"#f0eae0",
+          "--on-rail":"#f4ede1","--on-rail-mut":"#a99884",
+          "--tang-wash":"rgba(228,131,43,.12)","--teal-wash":"rgba(47,125,140,.12)",
+          "--gold-wash":"rgba(228,166,43,.16)",
+          "--good-w":"rgba(47,143,107,.13)","--watch-w":"rgba(228,166,43,.17)","--bad-w":"rgba(180,72,94,.12)",
+          "--dot-1":"rgba(228,166,43,.07)","--dot-2":"rgba(242,121,46,.05)",
+          "--sh":"0 1px 2px rgba(43,36,25,.05), 0 8px 24px -12px rgba(43,36,25,.20)",
+          "--sh-lg":"0 2px 4px rgba(43,36,25,.06), 0 24px 56px -24px rgba(43,36,25,.32)" } }
+  };
+  var SKIN_DEFAULT = "graphite";
+
+  function skinRead(){
+    try{ var v=JSON.parse(localStorage.getItem(SKIN_KEY)); if(v&&v.k) return v; }catch(e){}
+    return { k:SKIN_DEFAULT, accent:null };
+  }
+  function skinWrite(v){ try{ localStorage.setItem(SKIN_KEY,JSON.stringify(v)); }catch(e){} }
+  function skinNow(){ var v=skinRead(); return SKINS[v.k]?v:{k:SKIN_DEFAULT,accent:v.accent||null}; }
+  function shade(hex,amt){
+    var h=String(hex||"").replace("#","");
+    if(h.length===3) h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+    var n=parseInt(h,16); if(isNaN(n)) return hex;
+    var r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+    function m(x){ return Math.max(0,Math.min(255, Math.round(x+(amt<0?x:255-x)*amt))); }
+    return "#"+[m(r),m(g),m(b)].map(function(x){return ("0"+x.toString(16)).slice(-2);}).join("");
+  }
+  function applySkin(){
+    var cur=skinNow(), sk=SKINS[cur.k]||SKINS[SKIN_DEFAULT], root=document.documentElement;
+    Object.keys(SKINS[SKIN_DEFAULT].v).forEach(function(k){ root.style.removeProperty(k); });
+    Object.keys(sk.v).forEach(function(k){ root.style.setProperty(k, sk.v[k]); });
+    if(cur.accent){
+      root.style.setProperty("--tang", cur.accent);
+      root.style.setProperty("--tang-2", shade(cur.accent,-0.22));
+      root.style.setProperty("--tang-3", shade(cur.accent, 0.28));
+      root.style.setProperty("--a-dispatch", cur.accent);
+      root.style.setProperty("--a-schedule", cur.accent);
+    } else {
+      ["--tang","--tang-2","--tang-3","--a-dispatch","--a-schedule"].forEach(function(k){ root.style.removeProperty(k); });
+    }
+    root.setAttribute("data-skin", cur.k);
+    root.setAttribute("data-dark", sk.dark?"1":"0");
+    return sk;
+  }
+  function setSkin(k, accent){
+    var cur=skinNow();
+    skinWrite({ k:(k||cur.k), accent:(accent===undefined?cur.accent:accent) });
+    return applySkin();
+  }
+  function skinAccent(){ return skinNow().accent || null; }
+  try{ applySkin(); }catch(e){}
+
+  function renderSkinPill(){
+    var cur=skinNow(), sk=SKINS[cur.k]||SKINS[SKIN_DEFAULT];
+    var pill=el('<div class="skinpill" title="Change the skin">'+
+      '<span class="sw" style="background:'+(cur.accent||sk.v["--tang"]||"#e4832b")+'"></span>'+
+      '<span>'+esc(sk.name)+'</span><span class="car">&#9650;</span></div>');
+    var menu=el('<div class="skinmenu"></div>');
+    function paint(){
+      var c=skinNow();
+      var h='<h4>Skins</h4>'+Object.keys(SKINS).map(function(k){ var s=SKINS[k];
+        return '<div class="skinopt'+(k===c.k?" on":"")+'" data-skin="'+k+'">'+
+          '<span class="chips"><i style="background:'+s.v["--rail"]+'"></i>'+
+          '<i style="background:'+s.v["--paper"]+'"></i>'+
+          '<i style="background:'+s.v["--card"]+'"></i>'+
+          '<i style="background:'+(c.accent||"#e4832b")+'"></i></span>'+
+          '<span><b>'+esc(s.name)+'</b><span>'+esc(s.note)+'</span></span></div>';
+      }).join('');
+      h+='<button class="more" id="skinMore">Open the Skin Room &rarr;</button>';
+      menu.innerHTML=h;
+      menu.querySelectorAll("[data-skin]").forEach(function(r){
+        r.onclick=function(ev){ ev.stopPropagation();
+          setSkin(r.getAttribute("data-skin"));
+          var s2=SKINS[skinNow().k];
+          pill.querySelector("span:nth-child(2)").textContent=s2.name;
+          pill.querySelector(".sw").style.background=skinNow().accent||s2.v["--tang"]||"#e4832b";
+          paint(); toast(s2.name+" on.","ok"); };
+      });
+      var mb=menu.querySelector("#skinMore");
+      if(mb) mb.onclick=function(ev){ ev.stopPropagation(); location.href="skins.html"; };
+    }
+    pill.onclick=function(ev){ ev.stopPropagation();
+      if(menu.classList.contains("open")){ menu.classList.remove("open"); return; }
+      paint(); menu.classList.add("open"); };
+    menu.onclick=function(ev){ ev.stopPropagation(); };
+    document.addEventListener("click",function(ev){
+      if(pill.contains(ev.target)||menu.contains(ev.target)) return;
+      menu.classList.remove("open"); });
+    document.body.appendChild(menu);
+    document.body.appendChild(pill);
+  }
+
   var TIERS = {
     truck: { key:"truck", name:"Truck", ed:"LT", edname:"Lite", rank:1, mo:450, build:3900,
       desc:"One to three trucks. The whole system, sized for an owner who is still turning wrenches.",
       base:"Up to 3 techs · the full spine",
-      includes:["dispatch","field","work","licences","truck","estimate","portal","sign","money"] },
+      includes:["dispatch","field","work","licences","truck","estimate","portal","sign","docs","money"] },
     shop: { key:"shop", name:"Shop", ed:"ST", edname:"Standard", rank:2, mo:950, build:8200,
       desc:"A real shop with a dispatcher. Adds the referral book, recruiting, books & metrics and the AI department org.",
       base:"Unlimited techs · dispatcher seat · referral CRM · agent org",
-      includes:["dispatch","field","work","licences","truck","estimate","crm","portal","recruit","sign","money","books","org"] },
+      includes:["dispatch","field","work","licences","truck","estimate","crm","portal","recruit","sign","docs","money","books","org"] },
     grandsuite: { key:"grandsuite", name:"Grandsuite", ed:"GS", edname:"Grandsuite", rank:3, mo:2200, build:13800,
       desc:"Nothing held back. Multi-location, multi-trade, dedicated environment, data migration and your own branded tech app.",
       base:"Multi-location · multi-trade · dedicated environment · migration · branded app",
-      includes:["dispatch","field","work","licences","truck","estimate","crm","portal","recruit","sign","money","books","org","phones","webbook","fleet","plans"] }
+      includes:["dispatch","field","work","licences","truck","estimate","crm","portal","recruit","sign","docs","money","books","org","phones","webbook","fleet","plans"] }
   };
   var DEPTS = [
     { group:"Command", items:[
@@ -1664,7 +1827,10 @@
       { href:"portal.html",    label:"Customer Portal", ic:"☗", room:"portal",   accent:"portal", icon:"icons/customer-portal.svg" },
       { href:"recruiting.html",label:"Recruiting · ATS",ic:"★", room:"recruit",  accent:"recruit" , icon:"icons/hr.svg"} ]},
     { group:"Paper", items:[
-      { href:"sign.html",      label:"e-Sign",          ic:"✍", room:"sign",     accent:"sign" , icon:"icons/docs.svg"} ]},
+      { href:"sign.html",      label:"e-Sign",          ic:"✍", room:"sign",     accent:"sign" , icon:"icons/docs.svg"},
+      { href:"documents.html", label:"Documents",       ic:"▤", room:"docs",     accent:"sign" , icon:"icons/documents.svg"} ]},
+    { group:"The House", items:[
+      { href:"skins.html",     label:"Skin Machine",    ic:"◐" , icon:"icons/skins.svg"} ]},
     { group:"Money", items:[
       { href:"money.html",     label:"Invoicing & Payroll",ic:"◧", room:"money", accent:"money" , icon:"icons/payroll.svg"},
       { href:"books.html",     label:"Books & Metrics", ic:"◭", room:"books",    accent:"money" , icon:"icons/books.svg"} ]},
@@ -1877,6 +2043,7 @@
     document.body.innerHTML=""; document.body.appendChild(app); document.body.appendChild(backdrop);
     document.body.appendChild(renderMobileBar(o.active));
     document.body.appendChild(el('<div id="toast-wrap"></div>'));
+    try{ applySkin(); renderSkinPill(); }catch(e){}
     setTimeout(function(){
       var r=document.getElementById("resetFloor");
       if(r) r.addEventListener("click",function(){
@@ -1978,6 +2145,8 @@
     TIERS:TIERS, ROOMS:ROOMS, DEPTS:DEPTS, tier:tier, setTier:setTier, activeRooms:activeRooms,
     hasRoom:hasRoom, toggleRoom:toggleRoom, priceNow:priceNow, priceLabel:priceLabel,
     manual:manual, askManual:askManual, kpis:kpis, iconFor:iconFor,
+    SKINS:SKINS, SKIN_DEFAULT:SKIN_DEFAULT, skinNow:skinNow, setSkin:setSkin,
+    applySkin:applySkin, skinAccent:skinAccent, shade:shade,
     calls:calls, callById:callById, callStats:callStats, callLabel:callLabel,
     trucks:trucks, truckById:truckById, truckForTech:truckForTech, fleetState:fleetState,
     truckState:truckState, currentJobFor:currentJobFor, etaFor:etaFor, serviceDue:serviceDue,
