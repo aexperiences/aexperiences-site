@@ -1617,6 +1617,8 @@
       why:"The inbound call becomes a booked job while the caller is still on the line — logged, summarized, on the board. Your number is wired at purchase." },
     webbook:  { label:"24/7 Web Booking",     mo:70,  build:500,
       why:"A booking page under your brand on your own site, offering only slots the live board can actually take." },
+    mail:     { label:"Mail",                 mo:55,  build:420,
+      why:"The shop's inbox, where a message lands on the job it is about instead of in somebody's pile — answered, filed onto the customer, or turned into work without anybody forwarding anything." },
     plans:    { label:"Service Plans",        mo:85,  build:650,
       why:"Maintenance agreements that schedule their own visits, bill themselves, price the member's repairs, and get chased for renewal by the department instead of by you." },
     fleet:    { label:"FleetView · Trucks",   mo:100, build:750,
@@ -1789,15 +1791,15 @@
     truck: { key:"truck", name:"Truck", ed:"LT", edname:"Lite", rank:1, mo:450, build:3900,
       desc:"One to three trucks. The whole system, sized for an owner who is still turning wrenches.",
       base:"Up to 3 techs · the full spine",
-      includes:["dispatch","field","work","licences","truck","estimate","portal","sign","docs","money"] },
+      includes:["dispatch","field","work","licences","truck","estimate","portal","sign","docs","money","mail"] },
     shop: { key:"shop", name:"Shop", ed:"ST", edname:"Standard", rank:2, mo:950, build:8200,
       desc:"A real shop with a dispatcher. Adds the referral book, recruiting, books & metrics and the AI department org.",
       base:"Unlimited techs · dispatcher seat · referral CRM · agent org",
-      includes:["dispatch","field","work","licences","truck","estimate","crm","portal","recruit","sign","docs","money","books","org"] },
+      includes:["dispatch","field","work","licences","truck","estimate","crm","portal","recruit","sign","docs","money","books","org","mail"] },
     grandsuite: { key:"grandsuite", name:"Grandsuite", ed:"GS", edname:"Grandsuite", rank:3, mo:2200, build:13800,
       desc:"Nothing held back. Multi-location, multi-trade, dedicated environment, data migration and your own branded tech app.",
       base:"Multi-location · multi-trade · dedicated environment · migration · branded app",
-      includes:["dispatch","field","work","licences","truck","estimate","crm","portal","recruit","sign","docs","money","books","org","phones","webbook","fleet","plans"] }
+      includes:["dispatch","field","work","licences","truck","estimate","crm","portal","recruit","sign","docs","money","books","org","phones","webbook","fleet","plans","mail"] }
   };
   var DEPTS = [
     { group:"Command", items:[
@@ -1810,7 +1812,8 @@
       { href:"approvals.html", label:"Approval Desk",  ic:"✓", accent:"ops" , icon:"icons/approvals.svg"} ]},
     { group:"Front Desk", items:[
       { href:"switchboard.html", label:"Switchboard · Phones", ic:"☏", room:"phones", accent:"crm" , icon:"icons/desk.svg"},
-      { href:"book.html",        label:"Web Booking",          ic:"◷", room:"webbook", accent:"portal" , icon:"icons/enroll.svg"} ]},
+      { href:"book.html",        label:"Web Booking",          ic:"◷", room:"webbook", accent:"portal" , icon:"icons/enroll.svg"},
+      { href:"mail.html",        label:"Mail",                 ic:"✉", room:"mail", accent:"intake" , icon:"icons/mail.svg"} ]},
     { group:"The Day", items:[
       { href:"dispatch.html",  label:"Dispatch & Board",ic:"▦", room:"dispatch", accent:"dispatch" , icon:"icons/schedule.svg"},
       { href:"field.html",     label:"Field & Proof",   ic:"◉", room:"field",    accent:"field" , icon:"icons/checkin.svg"},
