@@ -27,6 +27,8 @@
     }
   ],
   "rewrites": [
+    {"source": "/apps/xpense/", "destination": "https://xpense-os.vercel.app/index.html"},
+    {"source": "/apps/xpense/:path*", "destination": "https://xpense-os.vercel.app/:path*"},
     {
       "source": "/apps/wire/",
       "destination": "https://ae-wire-accelerated-experiences.vercel.app/index.html"
