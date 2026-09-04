@@ -225,7 +225,7 @@ main{padding:24px 0 40px}
 .row-app:hover .get{background:var(--gold);color:#16210f}
 
 .get.soon{background:transparent;border:1.5px solid var(--line-2);color:var(--mute);font-size:11.5px;letter-spacing:.05em}
-.badge-age{font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 7px;border-radius:9px;background:rgba(255,255,255,.12);color:var(--cream-2);margin-left:6px;font-family:var(--mono)}
+.badge-age{font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 7px;border-radius:9px;background:rgba(255,255,255,.12);color:var(--cream-2);margin-left:6px;font-family:var(--mono)} .badge-phase{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:9px;border:1px solid var(--gold);color:var(--gold);margin-left:6px;font-family:var(--mono);vertical-align:middle}
 .empty{text-align:center;color:var(--mute);padding:48px 16px;font-size:15px;line-height:1.6}
 /* Business OS rows — a little extra shine so the flagship products catch the eye */
 .row-app.hubrow .icon{position:relative;transition:transform .16s ease,box-shadow .22s ease;
@@ -565,7 +565,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
   // The App Store verb — but ours means "walk in", not "download".
   function verb(a){
     if(a.state==='dev') return '<span class="get soon">Soon</span>';
-    return '<span class="get">Open</span>';
+    if(a.phase) return '<span class="get">Try it</span>'; return '<span class="get">Open</span>';
   }
   function subline(a){
     if(a.state==='dev') return 'In production' + (a.family?' · '+a.family:'');
@@ -595,7 +595,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     if(a.acc) b.style.setProperty('--rowacc', a.acc);
     b.setAttribute('aria-label', a.name+' — '+(a.state==='dev'?'in production, not for sale yet':'open it'));
     b.innerHTML='<div class="icon" style="background:'+esc(a.acc)+'">'+iconHTML(a)+'</div>'
-      +'<div class="meta"><div class="nm">'+esc(a.name)+(a.age?'<span class="badge-age">'+esc(a.age)+'</span>':'')+'</div>'
+      +'<div class="meta"><div class="nm">'+esc(a.name)+(a.age?'<span class="badge-age">'+esc(a.age)+'</span>':'')+(a.phase?'<span class="badge-phase">'+esc(a.phase)+'</span>':'')+'</div>'
       +'<div class="tg">'+esc(a.tag)+'</div>'
       +suiteChips(a)+suiteRibbon(a)
       +(DEPTH[a.id]?'<div class="depth">'+esc(DEPTH[a.id])+'</div>':'')
@@ -913,7 +913,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     var a=C.byId(id); if(!a) return;
     lastFocus=document.activeElement;
     var ic=document.getElementById('shIcon'); ic.style.background=a.acc; ic.innerHTML=iconHTML(a);
-    document.getElementById('shName').innerHTML=esc(a.name)+(a.age?'<span class="badge-age">'+esc(a.age)+'</span>':'');
+    document.getElementById('shName').innerHTML=esc(a.name)+(a.age?'<span class="badge-age">'+esc(a.age)+'</span>':'')+(a.phase?'<span class="badge-phase">'+esc(a.phase)+'</span>':'');
     document.getElementById('shTag').textContent=a.tag+(a.family?' · '+a.family:'');
     document.getElementById('shPr').innerHTML=verb(a);
 
@@ -921,8 +921,8 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     if(a.state==='live'){
       body+=(a.tiers&&a.tiers.length?('<h4>Plans</h4><div class="tiers">'+a.tiers.map(function(t){return '<div class="tier"><div class="tn">'+esc(t[0])+'</div><div class="tp">$'+Number(t[1]).toLocaleString()+'<small>/mo</small></div><div class="ti">'+esc(t[3])+'</div></div>';}).join('')+'</div><p class="tnote">A flat monthly, nothing down. Annual billing saves about two months. Final numbers are confirmed with you before anything is signed — nothing here auto-charges.</p>'):'')+'<div class="rows"'+(a.tiers&&a.tiers.length?' hidden':'')+'><div class="rw"><span>Price</span><span>'+esc(a.price||'—')+'</span></div>'
         +(a.priceNote?'<div class="rw"><span>Details</span><span>'+esc(a.priceNote)+'</span></div>':'')
-        +'<div class="rw"><span>Status</span><span>Live — open it today</span></div></div>';
-      if(/not switched on/i.test(a.priceNote||''))
+        +'<div class="rw"><span>Status</span><span>'+(a.phase?'In testing — free, open it today':'Live — open it today')+'</span></div></div>';
+      if(a.phase) body+='<div class="note"><b>Testing phase.</b> Free to use, no account and no card. Your book is kept under your own code. Paid plans come later and will show up here first — nothing auto-charges.</div>'; else if(/not switched on/i.test(a.priceNote||''))
         body+='<div class="note">Free to use right now. Paid plans are not switched on yet — when they are, the price shows up here first.</div>';
     } else {
       body+='<div class="note"><b>This app is being built.</b> There is no price yet and nothing to buy. Leave your email and you will hear from us the day it opens — nothing else, ever.</div>';
