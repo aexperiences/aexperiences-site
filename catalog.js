@@ -247,11 +247,11 @@
     /* ─────────── AE XPENSE — live, and on both shelves ─────────── */
     { id:'xpense', name:'Xpense OS', tag:'Expenses, spoken', genre:'money', state:'live',
       aisles:['personal','business'],
-      acc:'#e0a83a', mark:'/os-icons/Xpense_OS.png', img:'/os-icons/Xpense_OS.png',
+      acc:'#e0a83a', mark:'/os-icons/Xpense_OS.png', img:'/os-icons/Xpense_OS.png', phase:'Testing',
             url:'/apps/xpense/',
       blurb:'Tell Brian what you spent and he writes it down. Say "I drove forty-five miles and bought five books for resale — twelve, eight, fifteen, nine and twenty-four" and it lands as mileage at your own rate plus five separately priced line items. He asks the one thing he cannot work out — business or personal — so nothing is left to go back and mark later. Day, week, month, quarter or year; business only, personal only, or both together; straight out to QuickBooks when your accountant wants it. One book for a household and a business, kept under your own twelve-character book code — so it is still there after a cleared browser, a new phone, or a lost one.',
-      price:'Free while being tested',
-      priceNote:'Pricing set: $9/mo · $79/yr — payments not switched on yet' },
+      price:'Free while in testing',
+      priceNote:'Testing phase — free, no account, no card. Launch pricing set: $9/mo · $79/yr — payments not switched on yet' },
 
     /* ─────────── IN DEVELOPMENT — no price, no buy path, notify-me only ─────────── */
 
