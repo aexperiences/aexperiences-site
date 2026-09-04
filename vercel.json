@@ -27,6 +27,8 @@
     }
   ],
   "rewrites": [
+    {"source": "/apps/cut-and-effect/", "destination": "https://ae-cut-and-effect.vercel.app/index.html"},
+    {"source": "/apps/cut-and-effect/:path*", "destination": "https://ae-cut-and-effect.vercel.app/:path*"},
     {"source": "/apps/xpense/", "destination": "https://xpense-os.vercel.app/index.html"},
     {"source": "/apps/xpense/:path*", "destination": "https://xpense-os.vercel.app/:path*"},
     {
