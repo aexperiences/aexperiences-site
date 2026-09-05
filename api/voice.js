@@ -14,6 +14,7 @@
 // Built by Accelerated Experiences, LLC.
 
 const BRIAN_FALLBACK_VOICE = 'nPczCjzI2devNBz1zQrb'; // ElevenLabs public "Brian" — shared AE brand voice
+const ROZ_VOICE = '21m00Tcm4TlvDq8ikWAM';            // the shared "Roz" voice (same ID espohystory-voice.js uses)
 
 module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') { res.statusCode = 204; res.end(); return; }
@@ -35,10 +36,12 @@ module.exports = async (req, res) => {
       try { body = JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}'); } catch (e) { body = {}; }
     }
     const text = (typeof body.text === 'string' ? body.text : '').trim().slice(0, 1500);
+    const who = String(body.voice || 'brian').toLowerCase();
+    const chosenVoice = who === 'roz' ? ROZ_VOICE : voiceId;
     if (!text) { res.statusCode = 400; res.setHeader('content-type', 'application/json'); res.end(JSON.stringify({ ok: false, reason: 'no_text' })); return; }
 
     const upstream = await fetch(
-      'https://api.elevenlabs.io/v1/text-to-speech/' + encodeURIComponent(voiceId) + '?optimize_streaming_latency=4&output_format=mp3_44100_64',
+      'https://api.elevenlabs.io/v1/text-to-speech/' + encodeURIComponent(chosenVoice) + '?optimize_streaming_latency=4&output_format=mp3_44100_64',
       {
         method: 'POST',
         headers: { 'xi-api-key': key, 'content-type': 'application/json', 'accept': 'audio/mpeg' },
