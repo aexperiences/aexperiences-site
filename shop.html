@@ -16,18 +16,20 @@
 <link rel="icon" href="/ae-disc.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,600&family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* Charcoal & Electric — the AE store, Sep 5 2026 */
-  --forest:#101214; --forest-d:#0b0d0f; --forest-dd:#070809; --forest-l:#16191c;
-  --clay:#3d8bff; --clay-d:#2f74dd; --gold:#3d8bff;
-  --cream:#f5f6f7; --cream-2:#c9cfd6; --mute:#a3abb3;
-  --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.16);
-  --card:#16191c;
-  --good:#5fd08a;
-  --acc:#3d8bff; --acc2:#6aa6ff;
+  /* Forest & cream — the AE store, Sep 5 2026. Green is ink, not a wall. */
+  --forest:#f4eede; --forest-d:#f4eede; --forest-dd:#ede5d0; --forest-l:#fbf7ec;
+  --clay:#c8794f; --clay-d:#b3653d; --gold:#1c3d22;
+  --cream:#1c3d22; --cream-2:#2f4a35; --mute:#5a6a5e;
+  --line:rgba(28,61,34,.16); --line-2:rgba(28,61,34,.24);
+  --card:#fffdf8;
+  --good:#1c3d22;
+  --acc:#c8794f; --acc2:#e0a83a;
+  --ink-dark:#f4eede;
   --sans:'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --serif:'Fraunces',Georgia,serif;
   --mono:'Space Grotesk',ui-monospace,monospace;
   --wrap:1140px; --tap:48px; --safe-b:env(safe-area-inset-bottom,0px);
 }
@@ -48,7 +50,7 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 .skip:focus{left:0}
 
 /* ── bar ─────────────────────────────────────────────── */
-.bar{position:sticky;top:0;z-index:60;background:rgba(11,13,15,.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.bar{position:sticky;top:0;z-index:60;background:rgba(28,61,34,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .bar .wrap{display:flex;align-items:center;gap:14px;min-height:58px}
 .logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex:none}
 .logo img{width:31px;height:31px;object-fit:contain}
@@ -58,12 +60,12 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 .bar nav{margin-left:auto;display:none;align-items:center;gap:4px}
 @media(min-width:900px){ .bar nav{display:flex} }
 .navlink{text-decoration:none;font-size:14px;font-weight:600;color:var(--mute);padding:9px 11px;border-radius:9px}
-.navlink:hover{color:var(--cream);background:rgba(255,255,255,.07)}
+.navlink:hover{color:var(--cream);background:rgba(28,61,34,.07)}
 .navlink[aria-current]{color:var(--gold)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:var(--tap);padding:0 18px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;transition:transform .12s,filter .12s}
 .btn:active{transform:scale(.975)}
-.btn-primary{background:linear-gradient(180deg,var(--clay),var(--clay-d));color:#fff;box-shadow:0 6px 20px rgba(168,95,56,.35)}
-.btn-ghost{background:rgba(255,255,255,.06);color:var(--cream);border:1.5px solid var(--line-2)}
+.btn-primary{background:linear-gradient(180deg,var(--clay),var(--clay-d));color:#fff;box-shadow:0 6px 20px rgba(200,121,79,.35)}
+.btn-ghost{background:rgba(28,61,34,.06);color:var(--cream);border:1.5px solid var(--line-2)}
 .btn-block{width:100%}
 
 /* ── hero ────────────────────────────────────────────── */
@@ -73,20 +75,20 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 .hero h1 em{font-style:normal;color:var(--gold)}
 .hero p{margin:12px 0 0;font-size:clamp(15px,3.9vw,19px);line-height:1.5;color:var(--cream-2);max-width:52ch}
 .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
-.fact{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#c9d6ff;background:rgba(255,255,255,.08);border:1px solid var(--line-2);padding:7px 11px;border-radius:20px}
+.fact{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#1c3d22;background:rgba(28,61,34,.08);border:1px solid var(--line-2);padding:7px 11px;border-radius:20px}
 
 /* the two doors — the first and only decision on the page */
 .doors{display:grid;grid-template-columns:1fr;gap:11px;margin-top:22px}
 @media(min-width:620px){ .doors{grid-template-columns:1fr 1fr;gap:14px} }
-.door{text-align:left;background:rgba(255,255,255,.07);border:1.5px solid var(--line-2);border-radius:16px;padding:16px 17px;display:flex;flex-direction:column;gap:4px;transition:transform .13s,border-color .13s,background .13s}
-.door:hover{border-color:var(--gold);background:rgba(255,255,255,.11)}
+.door{text-align:left;background:rgba(28,61,34,.07);border:1.5px solid var(--line-2);border-radius:16px;padding:16px 17px;display:flex;flex-direction:column;gap:4px;transition:transform .13s,border-color .13s,background .13s}
+.door:hover{border-color:var(--gold);background:rgba(28,61,34,.11)}
 .door:active{transform:scale(.985)}
 .door .dl{font-size:18px;font-weight:800;letter-spacing:-.015em;color:var(--cream)}
 .door .dd{font-size:13.5px;color:var(--cream-2);line-height:1.45}
 .door .dn{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-top:5px}
 
 /* segmented aisle switch — stays with you as you scroll */
-.seg{display:flex;gap:4px;background:rgba(255,255,255,.06);border:1px solid var(--line-2);border-radius:12px;padding:4px;margin-bottom:0}
+.seg{display:flex;gap:4px;background:rgba(28,61,34,.06);border:1px solid var(--line-2);border-radius:12px;padding:4px;margin-bottom:0}
 .seg button{flex:1;min-height:38px;border-radius:9px;font-size:14px;font-weight:700;color:var(--cream-2);white-space:nowrap}
 .seg button[aria-selected="true"]{background:var(--gold);color:#ffffff}
 .aisle-note{font-size:13.5px;color:var(--mute);line-height:1.5;margin:0 0 16px;max-width:60ch}
@@ -95,29 +97,29 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 /* ── search + genre rail ─────────────────────────────── */
 .tools{padding:11px 0 0}
 /* only the aisle switch stays pinned; search + categories + count scroll away (used once, at the start) */
-.aislebar{position:sticky;top:58px;z-index:50;background:rgba(11,13,15,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);margin:0 -16px 11px;padding:11px 16px}
+.aislebar{position:sticky;top:58px;z-index:50;background:rgba(244,238,222,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);margin:0 -16px 11px;padding:11px 16px}
 @media(min-width:700px){ .aislebar{margin:0 -24px 11px;padding:11px 24px} }
 .search{position:relative;display:flex;align-items:center}
 .search svg{position:absolute;left:14px;width:19px;height:19px;stroke:var(--mute);fill:none;stroke-width:2;pointer-events:none}
-.search input{width:100%;min-height:var(--tap);padding:0 44px 0 42px;border-radius:13px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.06);font-size:16px;font-family:var(--sans);color:var(--cream)}
+.search input{width:100%;min-height:var(--tap);padding:0 44px 0 42px;border-radius:13px;border:1.5px solid var(--line-2);background:rgba(28,61,34,.06);font-size:16px;font-family:var(--sans);color:var(--cream)}
 .search input::placeholder{color:var(--mute)}
-.search input:focus{outline:none;border-color:var(--gold);background:rgba(255,255,255,.09)}
+.search input:focus{outline:none;border-color:var(--gold);background:rgba(28,61,34,.09)}
 .search .clr{position:absolute;right:6px;width:36px;height:36px;border-radius:50%;font-size:19px;color:var(--mute);display:none;align-items:center;justify-content:center}
 .search .clr.on{display:flex}
 .rail{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;margin:0 -16px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
 .rail::-webkit-scrollbar{display:none}
 @media(min-width:700px){ .rail{margin:0 -24px;padding:12px 24px;flex-wrap:wrap;overflow:visible} }
-.chip{flex:none;scroll-snap-align:start;min-height:40px;padding:0 15px;border-radius:20px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.05);font-size:14px;font-weight:600;color:var(--cream-2);white-space:nowrap;display:inline-flex;align-items:center}
+.chip{flex:none;scroll-snap-align:start;min-height:40px;padding:0 15px;border-radius:20px;border:1.5px solid var(--line-2);background:rgba(28,61,34,.05);font-size:14px;font-weight:600;color:var(--cream-2);white-space:nowrap;display:inline-flex;align-items:center}
 .chip[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#ffffff}
 .count{font-size:12.5px;color:var(--mute);padding:0 0 11px;font-family:var(--mono)}
     .findrow{display:flex;gap:9px;align-items:stretch;margin-bottom:2px}
     .findrow .search{flex:1 1 auto;min-width:0}
-    .sortsel{flex:none;min-height:44px;border-radius:12px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.05);color:var(--cream-2);font:600 13.5px/1 inherit;padding:0 30px 0 12px;cursor:pointer;
+    .sortsel{flex:none;min-height:44px;border-radius:12px;border:1.5px solid var(--line-2);background:rgba(28,61,34,.05);color:var(--cream-2);font:600 13.5px/1 inherit;padding:0 30px 0 12px;cursor:pointer;
       -webkit-appearance:none;appearance:none;
       background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23cfd8cf' stroke-width='1.8' stroke-linecap='round'/></svg>");
       background-repeat:no-repeat;background-position:right 11px center;background-size:11px}
-    .sortsel option{background:#16191c;color:#f5f6f7}
-    .catbtn{flex:none;min-height:44px;padding:0 14px;border-radius:12px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.05);color:var(--cream-2);font:600 13.5px/1 inherit;cursor:pointer}
+    .sortsel option{background:#fffdf8;color:#1c3d22}
+    .catbtn{flex:none;min-height:44px;padding:0 14px;border-radius:12px;border:1.5px solid var(--line-2);background:rgba(28,61,34,.05);color:var(--cream-2);font:600 13.5px/1 inherit;cursor:pointer}
     .catbtn[aria-expanded="false"]{opacity:.72}
     .rail[hidden]{display:none!important}
     .chip .cn{margin-left:7px;opacity:.6;font-weight:500;font-variant-numeric:tabular-nums}
@@ -144,15 +146,15 @@ main{padding:24px 0 40px}
       display:flex; flex-direction:column; align-items:flex-start; gap:0;
       width:100%; text-align:left; padding:14px 13px 13px;
       border:1px solid var(--line); border-bottom:1px solid var(--line);
-      border-radius:18px; background:rgba(255,255,255,.028);
+      border-radius:18px; background:rgba(28,61,34,.028);
       transition:transform .15s cubic-bezier(.2,.7,.3,1), border-color .15s, background .15s;
       position:relative; min-height:100%;
     }
-    .row-app:hover{ transform:translateY(-2px); border-color:var(--rowacc,var(--gold)); background:rgba(255,255,255,.055); }
+    .row-app:hover{ transform:translateY(-2px); border-color:var(--rowacc,var(--gold)); background:rgba(28,61,34,.055); }
     .row-app:active{ transform:translateY(0); }
     .row-app .icon{
       width:62px; height:62px; border-radius:16px; flex:none; margin-bottom:11px;
-      box-shadow:0 6px 18px -8px rgba(0,0,0,.6);
+      box-shadow:0 6px 18px -8px rgba(28,61,34,.18);
     }
     .row-app .icon img{ width:100%; height:100%; border-radius:inherit; object-fit:cover; display:block; }
     .row-app .icon svg{ width:60%; height:60%; }
@@ -179,10 +181,10 @@ main{padding:24px 0 40px}
     .row-app .get{
       position:absolute; top:13px; right:12px;
       font-size:10px; letter-spacing:.1em; padding:4px 8px; border-radius:20px;
-      background:rgba(255,255,255,.1); color:var(--cream-2);
+      background:rgba(28,61,34,.1); color:var(--cream-2);
     }
     .row-app:hover .get{ background:var(--gold); color:#ffffff; }
-    .row-app .get.soon{ background:rgba(255,255,255,.06); color:var(--mute); }
+    .row-app .get.soon{ background:rgba(28,61,34,.06); color:var(--mute); }
     .row-app .badge-age{ font-size:9.5px; padding:1px 5px; }
     @media(min-width:560px){ .grid{grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:14px} }
     @media(min-width:1000px){ .grid{grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:16px} }
@@ -197,15 +199,15 @@ main{padding:24px 0 40px}
   display:flex; flex-direction:column; align-items:flex-start;
   width:100%; text-align:left; padding:14px 13px 13px;
   border:1px solid var(--line); border-radius:18px;
-  background:rgba(255,255,255,.028); position:relative; min-height:100%;
+  background:rgba(28,61,34,.028); position:relative; min-height:100%;
   transition:transform .15s cubic-bezier(.2,.7,.3,1), border-color .15s, background .15s;
 }
-.row-app:hover{ transform:translateY(-2px); background:rgba(255,255,255,.06); border-color:var(--rowacc,var(--gold)); }
+.row-app:hover{ transform:translateY(-2px); background:rgba(28,61,34,.06); border-color:var(--rowacc,var(--gold)); }
 .row-app:active{ transform:translateY(0); opacity:.8 }
 .icon{
   width:60px; height:60px; border-radius:15px; flex:none; overflow:hidden; margin-bottom:11px;
   display:flex; align-items:center; justify-content:center;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.13), 0 6px 16px -6px rgba(0,0,0,.55);
+  box-shadow:inset 0 0 0 1px rgba(28,61,34,.13), 0 6px 16px -6px rgba(28,61,34,.16);
 }
 .icon img{width:100%;height:100%;object-fit:cover}
 .icon svg{width:31px;height:31px;stroke:#fff;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
@@ -219,36 +221,36 @@ main{padding:24px 0 40px}
 /* the action pill sits in the corner so it never pushes the name around */
 .get{
   position:absolute;top:12px;right:11px;
-  padding:4px 9px;border-radius:20px;background:rgba(255,255,255,.11);color:var(--cream);
+  padding:4px 9px;border-radius:20px;background:rgba(28,61,34,.11);color:var(--cream);
   font-weight:800;font-size:10px;letter-spacing:.09em;text-transform:uppercase;
   display:inline-flex;align-items:center;font-family:var(--sans);
 }
 .row-app:hover .get{background:var(--gold);color:#ffffff}
 
 .get.soon{background:transparent;border:1.5px solid var(--line-2);color:var(--mute);font-size:11.5px;letter-spacing:.05em}
-.badge-age{font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 7px;border-radius:9px;background:rgba(255,255,255,.12);color:var(--cream-2);margin-left:6px;font-family:var(--mono)} .badge-phase{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:9px;border:1px solid var(--gold);color:var(--gold);margin-left:6px;font-family:var(--mono);vertical-align:middle}
+.badge-age{font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 7px;border-radius:9px;background:rgba(28,61,34,.12);color:var(--cream-2);margin-left:6px;font-family:var(--mono)} .badge-phase{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:9px;border:1px solid var(--gold);color:var(--gold);margin-left:6px;font-family:var(--mono);vertical-align:middle}
 .empty{text-align:center;color:var(--mute);padding:48px 16px;font-size:15px;line-height:1.6}
 /* Business OS rows — a little extra shine so the flagship products catch the eye */
 .row-app.hubrow .icon{position:relative;transition:transform .16s ease,box-shadow .22s ease;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 6px 16px -4px color-mix(in srgb,var(--rowacc,#3d8bff) 70%,transparent),0 0 0 4px color-mix(in srgb,var(--rowacc,#3d8bff) 15%,transparent)}
+  box-shadow:inset 0 0 0 1px rgba(28,61,34,.18),0 6px 16px -4px color-mix(in srgb,var(--rowacc,#c8794f) 70%,transparent),0 0 0 4px color-mix(in srgb,var(--rowacc,#c8794f) 15%,transparent)}
 .row-app.hubrow .icon::after{content:"";position:absolute;inset:0;pointer-events:none;transform:translateX(-130%);
   background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.30) 50%,transparent 58%)}
 .row-app.hubrow:hover .icon{transform:translateY(-2px) scale(1.03)}
 .row-app.hubrow:hover .icon::after{animation:hubshine .85s ease}
 @keyframes hubshine{to{transform:translateX(130%)}}
-.row-app.hubrow:hover .get{background:var(--rowacc,#3d8bff);color:#fff}
+.row-app.hubrow:hover .get{background:var(--rowacc,#c8794f);color:#fff}
 
 /* ── suites ──────────────────────────────────────────────
    A suite and its parts sit on the same shelf, and without a visual difference that
    reads as the same product listed four times. So the suite gets a gold keyline and
    names what is inside it, and each part carries a quiet "in AE Cre8" line. One
    glance says "one box, three tools" instead of "why is this here twice". */
-.row-app.suiterow{ border-color:rgba(61,139,255,.55); background:rgba(61,139,255,.055); grid-column:span 2 }
+.row-app.suiterow{ border-color:rgba(28,61,34,.55); background:rgba(28,61,34,.055); grid-column:span 2 }
 @media(max-width:560px){ .row-app.suiterow{ grid-column:span 1 } }
 .row-app.suiterow:hover{ border-color:var(--gold) }
 .suite-in{ display:flex; flex-wrap:wrap; gap:5px; margin:2px 0 9px }
 .suite-in span{ font-family:var(--mono); font-size:10.5px; letter-spacing:.03em; padding:2.5px 8px;
-  border-radius:20px; border:1px solid rgba(61,139,255,.45); color:#c9d6ff; background:rgba(61,139,255,.10) }
+  border-radius:20px; border:1px solid rgba(28,61,34,.45); color:#1c3d22; background:rgba(28,61,34,.10) }
 .suite-in span.soon{ border-color:var(--line-2); color:var(--mute); background:transparent }
 .inSuite{ font-family:var(--mono); font-size:10.5px; letter-spacing:.04em; text-transform:uppercase;
   color:var(--gold); margin-bottom:6px }
@@ -260,7 +262,7 @@ main{padding:24px 0 40px}
    as an invisible centered box eating clicks over the middle of the grid (same fix the
    findbar already carries). This line is why every tile now clicks on the first try. */
 .sheet[hidden]{display:none!important}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:91;background:var(--forest);border-radius:22px 22px 0 0;box-shadow:0 -20px 70px rgba(0,0,0,.6);max-height:93vh;display:flex;flex-direction:column;transform:translateY(101%);transition:transform .27s cubic-bezier(.32,.72,0,1);padding-bottom:var(--safe-b)}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:91;background:var(--forest);border-radius:22px 22px 0 0;box-shadow:0 -20px 70px rgba(28,61,34,.18);max-height:93vh;display:flex;flex-direction:column;transform:translateY(101%);transition:transform .27s cubic-bezier(.32,.72,0,1);padding-bottom:var(--safe-b)}
 .sheet.on{transform:none}
 @media(min-width:760px){
   .sheet{left:50%;right:auto;bottom:auto;top:50%;width:640px;max-height:88vh;border-radius:20px;transform:translate(-50%,-46%) scale(.97);opacity:0;transition:transform .2s,opacity .2s}
@@ -269,7 +271,7 @@ main{padding:24px 0 40px}
 .grab{padding:9px 0 3px;display:flex;justify-content:center;flex:none}
 .grab i{width:38px;height:4px;border-radius:3px;background:var(--line-2);display:block}
 @media(min-width:760px){ .grab{display:none} }
-.sh-x{position:absolute;top:13px;right:13px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.13);display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;z-index:3}
+.sh-x{position:absolute;top:13px;right:13px;width:36px;height:36px;border-radius:50%;background:rgba(28,61,34,.13);display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;z-index:3}
 /* sheet header mirrors the store row, bigger — the App Store product page */
 .sh-head{display:flex;gap:15px;align-items:center;padding:12px 18px 18px;flex:none;border-bottom:1px solid var(--line)}
 .sh-head .icon{width:88px;height:88px;border-radius:20px}
@@ -289,10 +291,10 @@ main{padding:24px 0 40px}
 .gal-item img,.gal-item video{width:100%;height:100%;object-fit:cover;display:block}
 .gal-item.vid{cursor:pointer}
 .gal-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.55));transition:opacity .2s}
+  background:linear-gradient(180deg,rgba(0,0,0,.12),rgba(28,61,34,.16));transition:opacity .2s}
 .gal-play i{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.94);display:flex;
   align-items:center;justify-content:center;box-shadow:0 6px 22px rgba(0,0,0,.45)}
-.gal-play i::after{content:"";border-left:17px solid #101214;border-top:11px solid transparent;
+.gal-play i::after{content:"";border-left:17px solid #f4eede;border-top:11px solid transparent;
   border-bottom:11px solid transparent;margin-left:5px}
 .gal-play b{position:absolute;left:12px;bottom:11px;font-family:var(--mono);font-size:11px;letter-spacing:.09em;
   text-transform:uppercase;background:rgba(0,0,0,.62);padding:5px 9px;border-radius:7px;font-weight:600}
@@ -304,16 +306,16 @@ main{padding:24px 0 40px}
 .gal-dots i.on{background:var(--gold);width:15px;border-radius:3px}
 .sh-body h4{margin:0 0 8px;font-size:11.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--mute);font-family:var(--mono)}
 .sh-body p{margin:0 0 20px;font-size:15.5px;line-height:1.6;color:var(--cream)}
-.rows{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:20px;background:rgba(255,255,255,.04)}
+.rows{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:20px;background:rgba(28,61,34,.04)}
 .rw{display:flex;justify-content:space-between;gap:14px;padding:13px 15px;font-size:14.5px;border-bottom:1px solid var(--line)}
 .rw:last-child{border-bottom:none}
 .rw span:first-child{color:var(--mute)}
 .rw span:last-child{font-weight:700;text-align:right}
-.note{background:rgba(61,139,255,.12);border:1px solid rgba(61,139,255,.38);border-radius:14px;padding:13px 15px;font-size:14px;line-height:1.55;color:#d6e2ff;margin-bottom:20px}
+.note{background:rgba(224,168,58,.16);border:1px solid rgba(224,168,58,.5);border-radius:14px;padding:13px 15px;font-size:14px;line-height:1.55;color:#2a1810;margin-bottom:20px}
 .sh-foot{flex:none;padding:14px 18px calc(16px + var(--safe-b));border-top:1px solid var(--line);background:var(--forest-d);display:flex;flex-direction:column;gap:9px}
 @media(min-width:760px){ .sh-foot{flex-direction:row}.sh-foot .btn{flex:1} }
 .notify{display:flex;flex-direction:column;gap:9px;width:100%}
-.notify input{min-height:var(--tap);padding:0 14px;border-radius:12px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.07);font-size:16px;font-family:var(--sans);color:var(--cream)}
+.notify input{min-height:var(--tap);padding:0 14px;border-radius:12px;border:1.5px solid var(--line-2);background:rgba(28,61,34,.07);font-size:16px;font-family:var(--sans);color:var(--cream)}
 .notify input::placeholder{color:var(--mute)}
 .notify input:focus{outline:none;border-color:var(--gold)}
 
@@ -322,12 +324,12 @@ main{padding:24px 0 40px}
 @media(min-width:900px){ .tabbar{display:none} }
 .dock{pointer-events:auto;position:relative;display:flex;width:100%;max-width:560px;justify-content:space-between;gap:2px;
  padding:6px;border-radius:24px;overflow:hidden;
- background:linear-gradient(180deg,rgba(22,25,28,.78),rgba(11,13,15,.86));
+ background:linear-gradient(180deg,rgba(28,61,34,.88),rgba(20,44,25,.94));
  backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);
- border:1px solid rgba(190,210,255,.28);
- box-shadow:0 14px 40px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.2), inset 0 -1px 0 rgba(0,0,0,.3)}
+ border:1px solid rgba(224,168,58,.42);
+ box-shadow:0 14px 40px rgba(28,61,34,.16), inset 0 1px 0 rgba(28,61,34,.2), inset 0 -1px 0 rgba(0,0,0,.3)}
 .dock::after{content:"";position:absolute;top:0;bottom:0;width:46%;left:-60%;pointer-events:none;
- background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.14) 45%,rgba(255,255,255,.3) 50%,rgba(255,255,255,.14) 55%,transparent 100%);
+ background:linear-gradient(105deg,transparent 0%,rgba(28,61,34,.14) 45%,rgba(255,255,255,.3) 50%,rgba(28,61,34,.14) 55%,transparent 100%);
  animation:iceglint 6.5s ease-in-out infinite}
 @keyframes iceglint{0%,64%{left:-60%}88%,100%{left:120%}}
 .dock a,.dock button{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
@@ -336,9 +338,9 @@ main{padding:24px 0 40px}
  transition:transform .16s ease,background .2s ease,color .2s ease,box-shadow .2s ease}
 .dock a:active,.dock button:active{transform:scale(.93)}
 .dock svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.dock .on{background:linear-gradient(165deg,#ffffff 0%,#dfe9ff 55%,#bcd2ff 100%);color:#0b1a3a;
+.dock .on{background:linear-gradient(165deg,#fdfaf3 0%,#f4e3bf 55%,#e0a83a 100%);color:#2a1810;
  transform:translateY(-3px);
- box-shadow:0 6px 18px rgba(61,139,255,.45), 0 1px 0 rgba(255,255,255,.9) inset, 0 -6px 14px -8px rgba(22,25,28,.5) inset}
+ box-shadow:0 6px 18px rgba(224,168,58,.45), 0 1px 0 rgba(28,61,34,.9) inset, 0 -6px 14px -8px rgba(20,44,25,.5) inset}
 .dock .roll{animation:diceroll .5s ease}
 
 /* ---- bottom find bar — search where your thumb already is (the Apple way) ----
@@ -348,34 +350,56 @@ main{padding:24px 0 40px}
 .findbar{position:fixed;left:10px;right:10px;z-index:72;display:flex;align-items:center;gap:8px;
  bottom:calc(var(--fbb,88px) + env(safe-area-inset-bottom));
  max-width:560px;margin:0 auto;padding:8px 8px 8px 14px;border-radius:20px;
- background:linear-gradient(180deg,rgba(22,25,28,.9),rgba(11,13,15,.94));
+ background:linear-gradient(180deg,rgba(28,61,34,.92),rgba(20,44,25,.96));
  backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);
- border:1px solid rgba(255,255,255,.14);box-shadow:0 10px 30px rgba(0,0,0,.45)}
+ border:1px solid rgba(28,61,34,.14);box-shadow:0 10px 30px rgba(0,0,0,.3)}
 .findbar[hidden]{display:none!important}
-.findbar svg{width:18px;height:18px;flex:none;stroke:var(--mute);fill:none;stroke-width:2}
-.findbar input{flex:1;min-width:0;border:0;background:none;color:var(--cream);
+.findbar svg{width:18px;height:18px;flex:none;stroke:rgba(244,238,222,.7);fill:none;stroke-width:2}
+.findbar input{flex:1;min-width:0;border:0;background:none;color:#f4eede;
  font-size:16px;font-family:var(--sans);min-height:40px;padding:0}
 .findbar input:focus{outline:none}
 .findbar input::placeholder{color:var(--mute)}
-.fbcount{flex:none;font-family:var(--mono);font-size:11px;color:var(--gold);min-width:2ch;text-align:right}
+.fbcount{flex:none;font-family:var(--mono);font-size:11px;color:#e0a83a;min-width:2ch;text-align:right}
 .fbcancel{flex:none;min-height:40px;padding:0 13px;border-radius:14px;border:0;cursor:pointer;
- background:rgba(255,255,255,.1);color:var(--cream-2);font:700 12.5px/1 inherit}
+ background:rgba(28,61,34,.1);color:#f4eede;font:700 12.5px/1 inherit}
 @media(min-width:900px){ .findbar{display:none!important} }
-@keyframes diceroll{0%{transform:rotate(0)}40%{transform:rotate(-14deg) scale(1.08)}
+@keyframes diceroll{0%{transform:rotate(0)}40%{transform:rotate(-14deg) scale(1.08)}100%{transform:rotate(0)}}
 
 footer{background:var(--forest-dd);color:var(--mute);padding:32px 0 40px;font-size:13.5px;line-height:1.7;border-top:1px solid var(--line)}
 footer a{color:var(--cream-2)}
 footer .fwrap{display:flex;flex-direction:column;gap:8px}
 
 .tiers{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
-.tier{border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:13px 15px;background:rgba(255,255,255,.04);transition:border-color .15s,background .15s}
-.tier:hover{border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.06)}
+.tier{border:1px solid rgba(28,61,34,.12);border-radius:14px;padding:13px 15px;background:rgba(28,61,34,.04);transition:border-color .15s,background .15s}
+.tier:hover{border-color:rgba(28,61,34,.28);background:rgba(28,61,34,.06)}
 .tier .tn{font-weight:800;font-size:14px;letter-spacing:.01em}
 .tier .tp{font-size:24px;font-weight:800;line-height:1.1;margin-top:3px}
-.tier .tp small{font-size:13px;font-weight:600;color:#a3abb3;letter-spacing:0}
-.tier .tb{font-size:12.5px;color:#a3abb3;margin-top:1px}
-.tier .ti{font-size:13.5px;line-height:1.5;color:#f5f6f7;opacity:.88;margin-top:7px;border-top:1px solid rgba(255,255,255,.12);padding-top:8px}
-.tnote{font-size:12.5px;line-height:1.55;color:#a3abb3;margin:0 2px 20px}
+.tier .tp small{font-size:13px;font-weight:600;color:#5a6a5e;letter-spacing:0}
+.tier .tb{font-size:12.5px;color:#5a6a5e;margin-top:1px}
+.tier .ti{font-size:13.5px;line-height:1.5;color:#1c3d22;opacity:.88;margin-top:7px;border-top:1px solid rgba(28,61,34,.12);padding-top:8px}
+.tnote{font-size:12.5px;line-height:1.55;color:#5a6a5e;margin:0 2px 20px}
+
+/* ── Forest & cream overrides ── */
+.bar{color:#f4eede}
+.bar .logo-text{color:#f4eede}.bar .logo-text b{color:rgba(244,238,222,.7)}
+.bar .navlink{color:rgba(244,238,222,.8)}
+.bar .navlink:hover{color:#f4eede;background:rgba(255,255,255,.09)}
+.bar .navlink[aria-current]{color:#e0a83a}
+.bar .btn-primary{box-shadow:none}
+.bar .btn-ghost{background:rgba(255,255,255,.08);color:#f4eede;border-color:rgba(244,238,222,.3)}
+.hero h1{font-family:var(--serif);font-weight:600;letter-spacing:-.01em;line-height:1.04}
+.hero h1 em{font-style:italic;color:var(--clay)}
+.shelf h2{font-family:var(--serif);font-weight:600;letter-spacing:0}
+.meta .nm,.row-app .nm{font-family:var(--serif);font-weight:600;letter-spacing:0}
+.sh-head .nm{font-family:var(--serif);font-weight:600;letter-spacing:0}
+.row-app{background:var(--card)!important;border-color:var(--line)!important;box-shadow:5px 5px 0 rgba(28,61,34,.07)}
+.row-app:hover{background:#fff!important;box-shadow:5px 5px 0 rgba(28,61,34,.12)}
+.row-app .get{background:var(--clay)!important;color:#fff!important}
+.row-app:hover .get{background:var(--gold)!important;color:#f4eede!important}
+.row-app .get.soon{background:rgba(28,61,34,.08)!important;color:var(--mute)!important}
+.seg button[aria-selected="true"],.chip[aria-pressed="true"]{color:#f4eede}
+.seg{background:#fff}
+.tier .ti{color:#1c3d22}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Accelerated Experiences LLC", "url": "https://www.aexperiences.com", "logo": "https://www.aexperiences.com/ae-disc.png", "description": "A software store and studio in Post Falls, Idaho. Builds white-label business operating systems for specific trades, plus a family of consumer apps.", "address": {"@type": "PostalAddress", "addressLocality": "Post Falls", "addressRegion": "ID", "addressCountry": "US"}, "email": "anthonye@aexperiences.studio"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"The AE App Shop — every product built by Accelerated Experiences LLC","description":"Business operating systems and apps. Every listing opens the real working software, not a demo.","numberOfItems":38,"itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"SoftwareApplication","name":"Abode OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/abode/","description":"Run a real-estate practice from one place — listings, clients, calendar, and the paperwork that follows a deal.","image":"https://www.aexperiences.com/Abode_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"450","description":"Solo / Team tier, per month"}}},{"@type":"ListItem","position":2,"item":{"@type":"SoftwareApplication","name":"Buttress OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/buttress/","description":"Projects, drawing sets, consultants and clients in one studio OS — built around how a practice actually runs.","image":"https://www.aexperiences.com/Buttress_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"550","description":"Studio tier, per month"}}},{"@type":"ListItem","position":3,"item":{"@type":"SoftwareApplication","name":"Truss OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/truss/","description":"Job tracking, submittals, field notes and billing for an engineering firm — one system instead of six.","image":"https://www.aexperiences.com/Truss_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"650","description":"Practice tier, per month"}}},{"@type":"ListItem","position":4,"item":{"@type":"SoftwareApplication","name":"Musical OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/musical/","description":"Box office, season, giving, sponsorship, volunteers and classes — the whole playhouse on one spine, and the only theatre OS that speaks non-profit.","image":"https://www.aexperiences.com/Musical_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"650","description":"Community tier, per month"}}},{"@type":"ListItem","position":5,"item":{"@type":"SoftwareApplication","name":"8mm OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/8mm/","description":"Productions, crew, call sheets, gear and post — from greenlight to delivery.","image":"https://www.aexperiences.com/8mm_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"500","description":"Single / Twin tier, per month"}}},{"@type":"ListItem","position":6,"item":{"@type":"SoftwareApplication","name":"Amphitheater OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/amphitheater/","description":"Shows, ticketing, artists, riders and settlement — the venue back office in one place.","image":"https://www.aexperiences.com/Amphitheater_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"600","description":"Club tier, per month"}}},{"@type":"ListItem","position":7,"item":{"@type":"SoftwareApplication","name":"LilNinja OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/lilninja/","description":"Classes, enrollment, waivers, parents and payments — for gyms, camps and kids programs.","image":"https://www.aexperiences.com/LilNinja_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"400","description":"Studio tier, per month"}}},{"@type":"ListItem","position":8,"item":{"@type":"SoftwareApplication","name":"Smiley OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/smiley/","description":"Production, the PPO write-off and the patient portion kept apart — because adding them together is how a practice reads a record month and cannot make payroll. Insurance checked before the visit, and ortho as a module with its own contract ledger.","image":"https://www.aexperiences.com/Smiley_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"350","description":"Solo tier, per month"}}},{"@type":"ListItem","position":9,"item":{"@type":"SoftwareApplication","name":"Sleeves OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/sleeves/","description":"Request, review, quote, deposit — then a date. One-of-one flash inventory, per-session consent and health screening, and booth-rent splits computed at the chair.","image":"https://www.aexperiences.com/Sleeves_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"250","description":"Chair tier, per month"}}},{"@type":"ListItem","position":10,"item":{"@type":"SoftwareApplication","name":"Toolbelt OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/toolbelt/","description":"Dispatch with a match engine that shows its reasons, proof of service, licence and permit gates, truck stock, and the three-line money engine — for HVAC, plumbing and electrical shops.","image":"https://www.aexperiences.com/Toolbelt_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"450","description":"Truck tier, per month"}}},{"@type":"ListItem","position":11,"item":{"@type":"SoftwareApplication","name":"Stay@Home OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/stayathome/","description":"Recruiting, scheduling with an AI match engine, EVV field ops, care-plan guardrails, native e-sign, split-rate billing and payroll — for non-medical home care agencies.","image":"https://www.aexperiences.com/StayAtHome_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"550","description":"Office tier, per month"}}},{"@type":"ListItem","position":12,"item":{"@type":"SoftwareApplication","name":"4barrel OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/4barrel/","description":"Inventory, sales desk, leads and recon for independent and boutique used-car dealers.","image":"https://www.aexperiences.com/4barrel_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"450","description":"Lot tier, per month"}}},{"@type":"ListItem","position":13,"item":{"@type":"SoftwareApplication","name":"Targeted OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/targeted/dashboard","description":"CRM, pipeline, estimator and campaigns for a marketing agency or studio — on one branded OS.","image":"https://www.aexperiences.com/Targeted_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"450","description":"Freelance / Studio tier, per month"}}},{"@type":"ListItem","position":14,"item":{"@type":"SoftwareApplication","name":"ESPO Music","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://espomusic.com/","description":"Five instruments — guitar, piano, harmonica, ukulele, bass — each with a real coach that listens and responds.","image":"https://www.aexperiences.com/logo-music.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"From $5.99/mo"}}},{"@type":"ListItem","position":15,"item":{"@type":"SoftwareApplication","name":"ESPO Learning","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://espolearning.com/","description":"Handwriting, reading, math and writing for young kids. No fail states, no red marks, nothing collected.","image":"https://www.aexperiences.com/logo-learning.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free to try"}}},{"@type":"ListItem","position":16,"item":{"@type":"SoftwareApplication","name":"ESPO Genius","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://espogenius.com/","description":"The forms and fine print nobody explains — IEPs, benefits, care paperwork — translated into plain English.","image":"https://www.aexperiences.com/logo-genius.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":17,"item":{"@type":"SoftwareApplication","name":"ESPO Drama","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://espodrama.com/","description":"Write with Roz your coach, run lines from a real play library, scan your own script, warm up, and learn every job in the room — for actors, writers and theater teachers, ages 5 to 90.","image":"https://www.aexperiences.com/logo-drama.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":18,"item":{"@type":"SoftwareApplication","name":"The Narcs","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://marketnarc.com/open","description":"Two tools in one app: The Narc reads the fine print you were handed, MarketNarc watches the tickers you own.","image":"https://www.aexperiences.com/logo-narcs.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":19,"item":{"@type":"SoftwareApplication","name":"Neuro Divulge","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://neurodivulge.com/","description":"Practical regulation tools for ADHD and autistic brains — built by someone who needs them.","image":"https://www.aexperiences.com/logo-nd.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"$9 per tool"}}},{"@type":"ListItem","position":20,"item":{"@type":"SoftwareApplication","name":"ESPOfunkmaster","applicationCategory":"MultimediaApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espofunkmaster/","description":"A real studio in your browser, in plain English: a true drum kit, real-instrument keys, a bar-synced looper, your microphone and a mixing desk. Bring in your own song or a video you shot, chop it onto the pads, and send the finished track straight into ESPO Cutlabs. Nothing uploaded, nothing collected.","image":"https://www.aexperiences.com/marks/espofunkmaster.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":38,"item":{"@type":"SoftwareApplication","name":"ESPO Cutlabs","applicationCategory":"MultimediaApplication","operatingSystem":"Web browser","url":"https://ae-video-studio.vercel.app/","description":"Fast, punchy video editing that runs entirely in your browser — captions that pop, zoom punches, freeze frames, slow-mo and fast-forward, and a synthesized sound-effect palette. Your footage never leaves your machine.","image":"https://www.aexperiences.com/marks/espocutlabs.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":21,"item":{"@type":"SoftwareApplication","name":"ESPOvocab","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espovocab/","description":"A word a day that actually sticks — etymology, a journal, your own word list. No ads, works offline, export free.","image":"https://www.aexperiences.com/marks/espovocab.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":22,"item":{"@type":"SoftwareApplication","name":"ESPOtendency","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espotendency/","description":"A 10-second daily check-in and one tiny win at a time. Everything stays on your device — no account, no cloud.","image":"https://www.aexperiences.com/marks/espotendency.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":23,"item":{"@type":"SoftwareApplication","name":"ESPOnest","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/esponest/","description":"Sleep, feeds and diapers in one tap at 3am — nap-window estimate, growth log, free export, zero trackers.","image":"https://www.aexperiences.com/marks/esponest.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":24,"item":{"@type":"SoftwareApplication","name":"ESPOhystory","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espohystory/","description":"K–6 history told funny — 35 read-along stories that highlight each word as they read aloud.","image":"https://www.aexperiences.com/apps/espohystory/icon.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":25,"item":{"@type":"SoftwareApplication","name":"ESPOregulator","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/esporegulator/","description":"Five-minute practice for anger, stress and anxiety — a real skills ladder plus right-now SOS tools. Skills, not affirmations.","image":"https://www.aexperiences.com/marks/esporegulator.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":26,"item":{"@type":"SoftwareApplication","name":"ESPOtrek","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espotrek/","description":"Days, stops, one-tap map routes, a budget that splits itself, and a printable one-pager — offline by default.","image":"https://www.aexperiences.com/marks/espotrek.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":27,"item":{"@type":"SoftwareApplication","name":"ESPOnatlparks","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/esponatlparks/","description":"All 63 National Parks in a passport that stamps OFFLINE — one tap logs the visit, no signal required, never lost.","image":"https://www.aexperiences.com/marks/esponatlparks.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":28,"item":{"@type":"SoftwareApplication","name":"ESPOsign","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/esposign/","description":"Sign leases, school forms, waivers and contracts right in your browser — your document never leaves your device.","image":"https://www.aexperiences.com/marks/esposign.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":29,"item":{"@type":"SoftwareApplication","name":"ESPOvineyard","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espovineyard/","description":"A calm wine journal with a real Wine Country Notebook inside — no ads, no marketplace, a cellar that is actually yours.","image":"https://www.aexperiences.com/marks/espovineyard.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":30,"item":{"@type":"SoftwareApplication","name":"ESPOstogie","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espostogie/","description":"A cigar journal and humidor — vitola, wrapper, origin, strength, burn time and pairing, kept on your own device.","image":"https://www.aexperiences.com/apps/espostogie/icon.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":31,"item":{"@type":"SoftwareApplication","name":"ESPOwhiskey","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espowhiskey/","description":"A whiskey journal with two sides on one shelf — log a neat pour or a built cocktail, and the base spirit lands in the same place either way.","image":"https://www.aexperiences.com/apps/espowhiskey/icon.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":32,"item":{"@type":"SoftwareApplication","name":"ESPObarista","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espobarista/","description":"A coffee journal that logs both sides of the habit — the pour-over you brewed and the latte you bought.","image":"https://www.aexperiences.com/apps/espobarista/icon.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":33,"item":{"@type":"SoftwareApplication","name":"ESPOracket","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/esporacket/","description":"Load your match film, tag every point, tap a tag to jump straight to the moment — on any device, footage never uploaded.","image":"https://www.aexperiences.com/marks/esporacket.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":34,"item":{"@type":"SoftwareApplication","name":"ESPOwords","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espowords/","description":"A turn-based word game with the people you actually know. No ads, no coins, no power-ups, no hints for sale, no strangers, no chat. Free.","image":"https://www.aexperiences.com/marks/espowords.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free"}}},{"@type":"ListItem","position":35,"item":{"@type":"SoftwareApplication","name":"ESPOdraw","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espodraw/","description":"Draw a word, your friends guess it, then it comes back to you. Two to eight of you, in your own time. Every colour and every brush is there from the first round. No ads, no coins, no strangers.","image":"https://www.aexperiences.com/marks/espodraw.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free"}}},{"@type":"ListItem","position":36,"item":{"@type":"SoftwareApplication","name":"Sparkle Salon","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/sparklesalon/","description":"Run your very own salon — give every happy customer amazing hair, nails, makeup and outfits. The customers talk out loud, so it works even before kids can read. No losing, no timers, no ads, nothing collected, and it works offline.","image":"https://www.aexperiences.com/apps/sparklesalon/icon.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free"}}},{"@type":"ListItem","position":37,"item":{"@type":"SoftwareApplication","name":"ESPOfocus","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espofocus/","description":"The weekly ADHD monitoring report your provider asks for — parents, teachers and behavior specialists rate the same 15 things each week, and ESPOfocus charts whether the plan is working. Not a diagnosis; private, initials only.","image":"https://www.aexperiences.com/apps/espofocus/icon.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}}]} · <a href="/" style="color:inherit">Both stores</a></script>
