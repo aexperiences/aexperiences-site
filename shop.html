@@ -19,13 +19,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* Forest base — AE's dark green, deepened for a store that runs dark */
-  --forest:#1c3d22; --forest-d:#122a18; --forest-dd:#0c1d10; --forest-l:#25502d;
-  --clay:#c8794f; --clay-d:#a85f38; --gold:#e0a83a;
-  --cream:#f4eede; --cream-2:#d8cfb8; --mute:#9db09f;
+  /* Charcoal & Electric — the AE store, Sep 5 2026 */
+  --forest:#101214; --forest-d:#0b0d0f; --forest-dd:#070809; --forest-l:#16191c;
+  --clay:#3d8bff; --clay-d:#2f74dd; --gold:#3d8bff;
+  --cream:#f5f6f7; --cream-2:#c9cfd6; --mute:#a3abb3;
   --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.16);
-  --card:#1a3a21;
-  --good:#6fc98a;
+  --card:#16191c;
+  --good:#5fd08a;
+  --acc:#3d8bff; --acc2:#6aa6ff;
   --sans:'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   --mono:'Space Grotesk',ui-monospace,monospace;
   --wrap:1140px; --tap:48px; --safe-b:env(safe-area-inset-bottom,0px);
@@ -43,11 +44,11 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 .wrap{max-width:var(--wrap);margin:0 auto;padding:0 16px}
 @media(min-width:700px){ .wrap{padding:0 24px} }
 .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-.skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--gold);color:#231a06;padding:12px 18px;font-weight:700}
+.skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--gold);color:#ffffff;padding:12px 18px;font-weight:700}
 .skip:focus{left:0}
 
 /* ── bar ─────────────────────────────────────────────── */
-.bar{position:sticky;top:0;z-index:60;background:rgba(18,42,24,.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.bar{position:sticky;top:0;z-index:60;background:rgba(11,13,15,.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .bar .wrap{display:flex;align-items:center;gap:14px;min-height:58px}
 .logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex:none}
 .logo img{width:31px;height:31px;object-fit:contain}
@@ -72,7 +73,7 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 .hero h1 em{font-style:normal;color:var(--gold)}
 .hero p{margin:12px 0 0;font-size:clamp(15px,3.9vw,19px);line-height:1.5;color:var(--cream-2);max-width:52ch}
 .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
-.fact{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#ecd9b0;background:rgba(255,255,255,.08);border:1px solid var(--line-2);padding:7px 11px;border-radius:20px}
+.fact{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#c9d6ff;background:rgba(255,255,255,.08);border:1px solid var(--line-2);padding:7px 11px;border-radius:20px}
 
 /* the two doors — the first and only decision on the page */
 .doors{display:grid;grid-template-columns:1fr;gap:11px;margin-top:22px}
@@ -87,14 +88,14 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 /* segmented aisle switch — stays with you as you scroll */
 .seg{display:flex;gap:4px;background:rgba(255,255,255,.06);border:1px solid var(--line-2);border-radius:12px;padding:4px;margin-bottom:0}
 .seg button{flex:1;min-height:38px;border-radius:9px;font-size:14px;font-weight:700;color:var(--cream-2);white-space:nowrap}
-.seg button[aria-selected="true"]{background:var(--gold);color:#231a06}
+.seg button[aria-selected="true"]{background:var(--gold);color:#ffffff}
 .aisle-note{font-size:13.5px;color:var(--mute);line-height:1.5;margin:0 0 16px;max-width:60ch}
 .pricesrc{font-family:var(--mono);font-size:11px;color:var(--mute);margin-left:8px}
 
 /* ── search + genre rail ─────────────────────────────── */
 .tools{padding:11px 0 0}
 /* only the aisle switch stays pinned; search + categories + count scroll away (used once, at the start) */
-.aislebar{position:sticky;top:58px;z-index:50;background:rgba(18,42,24,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);margin:0 -16px 11px;padding:11px 16px}
+.aislebar{position:sticky;top:58px;z-index:50;background:rgba(11,13,15,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);margin:0 -16px 11px;padding:11px 16px}
 @media(min-width:700px){ .aislebar{margin:0 -24px 11px;padding:11px 24px} }
 .search{position:relative;display:flex;align-items:center}
 .search svg{position:absolute;left:14px;width:19px;height:19px;stroke:var(--mute);fill:none;stroke-width:2;pointer-events:none}
@@ -107,7 +108,7 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 .rail::-webkit-scrollbar{display:none}
 @media(min-width:700px){ .rail{margin:0 -24px;padding:12px 24px;flex-wrap:wrap;overflow:visible} }
 .chip{flex:none;scroll-snap-align:start;min-height:40px;padding:0 15px;border-radius:20px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.05);font-size:14px;font-weight:600;color:var(--cream-2);white-space:nowrap;display:inline-flex;align-items:center}
-.chip[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#231a06}
+.chip[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#ffffff}
 .count{font-size:12.5px;color:var(--mute);padding:0 0 11px;font-family:var(--mono)}
     .findrow{display:flex;gap:9px;align-items:stretch;margin-bottom:2px}
     .findrow .search{flex:1 1 auto;min-width:0}
@@ -115,7 +116,7 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
       -webkit-appearance:none;appearance:none;
       background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23cfd8cf' stroke-width='1.8' stroke-linecap='round'/></svg>");
       background-repeat:no-repeat;background-position:right 11px center;background-size:11px}
-    .sortsel option{background:#12281a;color:#eef3ea}
+    .sortsel option{background:#16191c;color:#f5f6f7}
     .catbtn{flex:none;min-height:44px;padding:0 14px;border-radius:12px;border:1.5px solid var(--line-2);background:rgba(255,255,255,.05);color:var(--cream-2);font:600 13.5px/1 inherit;cursor:pointer}
     .catbtn[aria-expanded="false"]{opacity:.72}
     .rail[hidden]{display:none!important}
@@ -180,7 +181,7 @@ main{padding:24px 0 40px}
       font-size:10px; letter-spacing:.1em; padding:4px 8px; border-radius:20px;
       background:rgba(255,255,255,.1); color:var(--cream-2);
     }
-    .row-app:hover .get{ background:var(--gold); color:#16210f; }
+    .row-app:hover .get{ background:var(--gold); color:#ffffff; }
     .row-app .get.soon{ background:rgba(255,255,255,.06); color:var(--mute); }
     .row-app .badge-age{ font-size:9.5px; padding:1px 5px; }
     @media(min-width:560px){ .grid{grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:14px} }
@@ -222,32 +223,32 @@ main{padding:24px 0 40px}
   font-weight:800;font-size:10px;letter-spacing:.09em;text-transform:uppercase;
   display:inline-flex;align-items:center;font-family:var(--sans);
 }
-.row-app:hover .get{background:var(--gold);color:#16210f}
+.row-app:hover .get{background:var(--gold);color:#ffffff}
 
 .get.soon{background:transparent;border:1.5px solid var(--line-2);color:var(--mute);font-size:11.5px;letter-spacing:.05em}
 .badge-age{font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 7px;border-radius:9px;background:rgba(255,255,255,.12);color:var(--cream-2);margin-left:6px;font-family:var(--mono)} .badge-phase{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:9px;border:1px solid var(--gold);color:var(--gold);margin-left:6px;font-family:var(--mono);vertical-align:middle}
 .empty{text-align:center;color:var(--mute);padding:48px 16px;font-size:15px;line-height:1.6}
 /* Business OS rows — a little extra shine so the flagship products catch the eye */
 .row-app.hubrow .icon{position:relative;transition:transform .16s ease,box-shadow .22s ease;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 6px 16px -4px color-mix(in srgb,var(--rowacc,#e0a83a) 70%,transparent),0 0 0 4px color-mix(in srgb,var(--rowacc,#e0a83a) 15%,transparent)}
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 6px 16px -4px color-mix(in srgb,var(--rowacc,#3d8bff) 70%,transparent),0 0 0 4px color-mix(in srgb,var(--rowacc,#3d8bff) 15%,transparent)}
 .row-app.hubrow .icon::after{content:"";position:absolute;inset:0;pointer-events:none;transform:translateX(-130%);
   background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.30) 50%,transparent 58%)}
 .row-app.hubrow:hover .icon{transform:translateY(-2px) scale(1.03)}
 .row-app.hubrow:hover .icon::after{animation:hubshine .85s ease}
 @keyframes hubshine{to{transform:translateX(130%)}}
-.row-app.hubrow:hover .get{background:var(--rowacc,#e0a83a);color:#fff}
+.row-app.hubrow:hover .get{background:var(--rowacc,#3d8bff);color:#fff}
 
 /* ── suites ──────────────────────────────────────────────
    A suite and its parts sit on the same shelf, and without a visual difference that
    reads as the same product listed four times. So the suite gets a gold keyline and
    names what is inside it, and each part carries a quiet "in AE Cre8" line. One
    glance says "one box, three tools" instead of "why is this here twice". */
-.row-app.suiterow{ border-color:rgba(224,168,58,.55); background:rgba(224,168,58,.055); grid-column:span 2 }
+.row-app.suiterow{ border-color:rgba(61,139,255,.55); background:rgba(61,139,255,.055); grid-column:span 2 }
 @media(max-width:560px){ .row-app.suiterow{ grid-column:span 1 } }
 .row-app.suiterow:hover{ border-color:var(--gold) }
 .suite-in{ display:flex; flex-wrap:wrap; gap:5px; margin:2px 0 9px }
 .suite-in span{ font-family:var(--mono); font-size:10.5px; letter-spacing:.03em; padding:2.5px 8px;
-  border-radius:20px; border:1px solid rgba(224,168,58,.4); color:#ecd9b0; background:rgba(224,168,58,.09) }
+  border-radius:20px; border:1px solid rgba(61,139,255,.45); color:#c9d6ff; background:rgba(61,139,255,.10) }
 .suite-in span.soon{ border-color:var(--line-2); color:var(--mute); background:transparent }
 .inSuite{ font-family:var(--mono); font-size:10.5px; letter-spacing:.04em; text-transform:uppercase;
   color:var(--gold); margin-bottom:6px }
@@ -291,7 +292,7 @@ main{padding:24px 0 40px}
   background:linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.55));transition:opacity .2s}
 .gal-play i{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.94);display:flex;
   align-items:center;justify-content:center;box-shadow:0 6px 22px rgba(0,0,0,.45)}
-.gal-play i::after{content:"";border-left:17px solid #14261a;border-top:11px solid transparent;
+.gal-play i::after{content:"";border-left:17px solid #101214;border-top:11px solid transparent;
   border-bottom:11px solid transparent;margin-left:5px}
 .gal-play b{position:absolute;left:12px;bottom:11px;font-family:var(--mono);font-size:11px;letter-spacing:.09em;
   text-transform:uppercase;background:rgba(0,0,0,.62);padding:5px 9px;border-radius:7px;font-weight:600}
@@ -308,7 +309,7 @@ main{padding:24px 0 40px}
 .rw:last-child{border-bottom:none}
 .rw span:first-child{color:var(--mute)}
 .rw span:last-child{font-weight:700;text-align:right}
-.note{background:rgba(224,168,58,.11);border:1px solid rgba(224,168,58,.34);border-radius:14px;padding:13px 15px;font-size:14px;line-height:1.55;color:#f0dcb0;margin-bottom:20px}
+.note{background:rgba(61,139,255,.12);border:1px solid rgba(61,139,255,.38);border-radius:14px;padding:13px 15px;font-size:14px;line-height:1.55;color:#d6e2ff;margin-bottom:20px}
 .sh-foot{flex:none;padding:14px 18px calc(16px + var(--safe-b));border-top:1px solid var(--line);background:var(--forest-d);display:flex;flex-direction:column;gap:9px}
 @media(min-width:760px){ .sh-foot{flex-direction:row}.sh-foot .btn{flex:1} }
 .notify{display:flex;flex-direction:column;gap:9px;width:100%}
@@ -321,9 +322,9 @@ main{padding:24px 0 40px}
 @media(min-width:900px){ .tabbar{display:none} }
 .dock{pointer-events:auto;position:relative;display:flex;width:100%;max-width:560px;justify-content:space-between;gap:2px;
  padding:6px;border-radius:24px;overflow:hidden;
- background:linear-gradient(180deg,rgba(24,48,32,.78),rgba(9,22,13,.86));
+ background:linear-gradient(180deg,rgba(22,25,28,.78),rgba(11,13,15,.86));
  backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);
- border:1px solid rgba(196,232,205,.28);
+ border:1px solid rgba(190,210,255,.28);
  box-shadow:0 14px 40px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.2), inset 0 -1px 0 rgba(0,0,0,.3)}
 .dock::after{content:"";position:absolute;top:0;bottom:0;width:46%;left:-60%;pointer-events:none;
  background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.14) 45%,rgba(255,255,255,.3) 50%,rgba(255,255,255,.14) 55%,transparent 100%);
@@ -335,9 +336,9 @@ main{padding:24px 0 40px}
  transition:transform .16s ease,background .2s ease,color .2s ease,box-shadow .2s ease}
 .dock a:active,.dock button:active{transform:scale(.93)}
 .dock svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.dock .on{background:linear-gradient(165deg,#F7FCF8 0%,#D9EEDF 55%,#B8D9C2 100%);color:#0E2416;
+.dock .on{background:linear-gradient(165deg,#ffffff 0%,#dfe9ff 55%,#bcd2ff 100%);color:#0b1a3a;
  transform:translateY(-3px);
- box-shadow:0 6px 18px rgba(130,200,155,.45), 0 1px 0 rgba(255,255,255,.9) inset, 0 -6px 14px -8px rgba(14,36,22,.5) inset}
+ box-shadow:0 6px 18px rgba(61,139,255,.45), 0 1px 0 rgba(255,255,255,.9) inset, 0 -6px 14px -8px rgba(22,25,28,.5) inset}
 .dock .roll{animation:diceroll .5s ease}
 
 /* ---- bottom find bar — search where your thumb already is (the Apple way) ----
@@ -347,7 +348,7 @@ main{padding:24px 0 40px}
 .findbar{position:fixed;left:10px;right:10px;z-index:72;display:flex;align-items:center;gap:8px;
  bottom:calc(var(--fbb,88px) + env(safe-area-inset-bottom));
  max-width:560px;margin:0 auto;padding:8px 8px 8px 14px;border-radius:20px;
- background:linear-gradient(180deg,rgba(24,48,32,.9),rgba(9,22,13,.94));
+ background:linear-gradient(180deg,rgba(22,25,28,.9),rgba(11,13,15,.94));
  backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);
  border:1px solid rgba(255,255,255,.14);box-shadow:0 10px 30px rgba(0,0,0,.45)}
 .findbar[hidden]{display:none!important}
@@ -371,10 +372,10 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
 .tier:hover{border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.06)}
 .tier .tn{font-weight:800;font-size:14px;letter-spacing:.01em}
 .tier .tp{font-size:24px;font-weight:800;line-height:1.1;margin-top:3px}
-.tier .tp small{font-size:13px;font-weight:600;color:#9db09f;letter-spacing:0}
-.tier .tb{font-size:12.5px;color:#9db09f;margin-top:1px}
-.tier .ti{font-size:13.5px;line-height:1.5;color:#f4eede;opacity:.88;margin-top:7px;border-top:1px solid rgba(255,255,255,.12);padding-top:8px}
-.tnote{font-size:12.5px;line-height:1.55;color:#9db09f;margin:0 2px 20px}
+.tier .tp small{font-size:13px;font-weight:600;color:#a3abb3;letter-spacing:0}
+.tier .tb{font-size:12.5px;color:#a3abb3;margin-top:1px}
+.tier .ti{font-size:13.5px;line-height:1.5;color:#f5f6f7;opacity:.88;margin-top:7px;border-top:1px solid rgba(255,255,255,.12);padding-top:8px}
+.tnote{font-size:12.5px;line-height:1.55;color:#a3abb3;margin:0 2px 20px}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Accelerated Experiences LLC", "url": "https://www.aexperiences.com", "logo": "https://www.aexperiences.com/ae-disc.png", "description": "A software store and studio in Post Falls, Idaho. Builds white-label business operating systems for specific trades, plus a family of consumer apps.", "address": {"@type": "PostalAddress", "addressLocality": "Post Falls", "addressRegion": "ID", "addressCountry": "US"}, "email": "anthonye@aexperiences.studio"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"The AE App Shop — every product built by Accelerated Experiences LLC","description":"Business operating systems and apps. Every listing opens the real working software, not a demo.","numberOfItems":38,"itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"SoftwareApplication","name":"Abode OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/abode/","description":"Run a real-estate practice from one place — listings, clients, calendar, and the paperwork that follows a deal.","image":"https://www.aexperiences.com/Abode_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"450","description":"Solo / Team tier, per month"}}},{"@type":"ListItem","position":2,"item":{"@type":"SoftwareApplication","name":"Buttress OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/buttress/","description":"Projects, drawing sets, consultants and clients in one studio OS — built around how a practice actually runs.","image":"https://www.aexperiences.com/Buttress_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"550","description":"Studio tier, per month"}}},{"@type":"ListItem","position":3,"item":{"@type":"SoftwareApplication","name":"Truss OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/truss/","description":"Job tracking, submittals, field notes and billing for an engineering firm — one system instead of six.","image":"https://www.aexperiences.com/Truss_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"650","description":"Practice tier, per month"}}},{"@type":"ListItem","position":4,"item":{"@type":"SoftwareApplication","name":"Musical OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/musical/","description":"Box office, season, giving, sponsorship, volunteers and classes — the whole playhouse on one spine, and the only theatre OS that speaks non-profit.","image":"https://www.aexperiences.com/Musical_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"650","description":"Community tier, per month"}}},{"@type":"ListItem","position":5,"item":{"@type":"SoftwareApplication","name":"8mm OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/8mm/","description":"Productions, crew, call sheets, gear and post — from greenlight to delivery.","image":"https://www.aexperiences.com/8mm_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"500","description":"Single / Twin tier, per month"}}},{"@type":"ListItem","position":6,"item":{"@type":"SoftwareApplication","name":"Amphitheater OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/amphitheater/","description":"Shows, ticketing, artists, riders and settlement — the venue back office in one place.","image":"https://www.aexperiences.com/Amphitheater_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"600","description":"Club tier, per month"}}},{"@type":"ListItem","position":7,"item":{"@type":"SoftwareApplication","name":"LilNinja OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/lilninja/","description":"Classes, enrollment, waivers, parents and payments — for gyms, camps and kids programs.","image":"https://www.aexperiences.com/LilNinja_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"400","description":"Studio tier, per month"}}},{"@type":"ListItem","position":8,"item":{"@type":"SoftwareApplication","name":"Smiley OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/smiley/","description":"Production, the PPO write-off and the patient portion kept apart — because adding them together is how a practice reads a record month and cannot make payroll. Insurance checked before the visit, and ortho as a module with its own contract ledger.","image":"https://www.aexperiences.com/Smiley_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"350","description":"Solo tier, per month"}}},{"@type":"ListItem","position":9,"item":{"@type":"SoftwareApplication","name":"Sleeves OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/sleeves/","description":"Request, review, quote, deposit — then a date. One-of-one flash inventory, per-session consent and health screening, and booth-rent splits computed at the chair.","image":"https://www.aexperiences.com/Sleeves_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"250","description":"Chair tier, per month"}}},{"@type":"ListItem","position":10,"item":{"@type":"SoftwareApplication","name":"Toolbelt OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/toolbelt/","description":"Dispatch with a match engine that shows its reasons, proof of service, licence and permit gates, truck stock, and the three-line money engine — for HVAC, plumbing and electrical shops.","image":"https://www.aexperiences.com/Toolbelt_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"450","description":"Truck tier, per month"}}},{"@type":"ListItem","position":11,"item":{"@type":"SoftwareApplication","name":"Stay@Home OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/stayathome/","description":"Recruiting, scheduling with an AI match engine, EVV field ops, care-plan guardrails, native e-sign, split-rate billing and payroll — for non-medical home care agencies.","image":"https://www.aexperiences.com/StayAtHome_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"550","description":"Office tier, per month"}}},{"@type":"ListItem","position":12,"item":{"@type":"SoftwareApplication","name":"4barrel OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/4barrel/","description":"Inventory, sales desk, leads and recon for independent and boutique used-car dealers.","image":"https://www.aexperiences.com/4barrel_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"450","description":"Lot tier, per month"}}},{"@type":"ListItem","position":13,"item":{"@type":"SoftwareApplication","name":"Targeted OS","applicationCategory":"BusinessApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/targeted/dashboard","description":"CRM, pipeline, estimator and campaigns for a marketing agency or studio — on one branded OS.","image":"https://www.aexperiences.com/Targeted_OS.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"450","description":"Freelance / Studio tier, per month"}}},{"@type":"ListItem","position":14,"item":{"@type":"SoftwareApplication","name":"ESPO Music","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://espomusic.com/","description":"Five instruments — guitar, piano, harmonica, ukulele, bass — each with a real coach that listens and responds.","image":"https://www.aexperiences.com/logo-music.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"From $5.99/mo"}}},{"@type":"ListItem","position":15,"item":{"@type":"SoftwareApplication","name":"ESPO Learning","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://espolearning.com/","description":"Handwriting, reading, math and writing for young kids. No fail states, no red marks, nothing collected.","image":"https://www.aexperiences.com/logo-learning.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free to try"}}},{"@type":"ListItem","position":16,"item":{"@type":"SoftwareApplication","name":"ESPO Genius","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://espogenius.com/","description":"The forms and fine print nobody explains — IEPs, benefits, care paperwork — translated into plain English.","image":"https://www.aexperiences.com/logo-genius.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":17,"item":{"@type":"SoftwareApplication","name":"ESPO Drama","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://espodrama.com/","description":"Write with Roz your coach, run lines from a real play library, scan your own script, warm up, and learn every job in the room — for actors, writers and theater teachers, ages 5 to 90.","image":"https://www.aexperiences.com/logo-drama.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":18,"item":{"@type":"SoftwareApplication","name":"The Narcs","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://marketnarc.com/open","description":"Two tools in one app: The Narc reads the fine print you were handed, MarketNarc watches the tickers you own.","image":"https://www.aexperiences.com/logo-narcs.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":19,"item":{"@type":"SoftwareApplication","name":"Neuro Divulge","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://neurodivulge.com/","description":"Practical regulation tools for ADHD and autistic brains — built by someone who needs them.","image":"https://www.aexperiences.com/logo-nd.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"$9 per tool"}}},{"@type":"ListItem","position":20,"item":{"@type":"SoftwareApplication","name":"ESPOfunkmaster","applicationCategory":"MultimediaApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espofunkmaster/","description":"A real studio in your browser, in plain English: a true drum kit, real-instrument keys, a bar-synced looper, your microphone and a mixing desk. Bring in your own song or a video you shot, chop it onto the pads, and send the finished track straight into ESPO Cutlabs. Nothing uploaded, nothing collected.","image":"https://www.aexperiences.com/marks/espofunkmaster.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":38,"item":{"@type":"SoftwareApplication","name":"ESPO Cutlabs","applicationCategory":"MultimediaApplication","operatingSystem":"Web browser","url":"https://ae-video-studio.vercel.app/","description":"Fast, punchy video editing that runs entirely in your browser — captions that pop, zoom punches, freeze frames, slow-mo and fast-forward, and a synthesized sound-effect palette. Your footage never leaves your machine.","image":"https://www.aexperiences.com/marks/espocutlabs.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":21,"item":{"@type":"SoftwareApplication","name":"ESPOvocab","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espovocab/","description":"A word a day that actually sticks — etymology, a journal, your own word list. No ads, works offline, export free.","image":"https://www.aexperiences.com/marks/espovocab.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":22,"item":{"@type":"SoftwareApplication","name":"ESPOtendency","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espotendency/","description":"A 10-second daily check-in and one tiny win at a time. Everything stays on your device — no account, no cloud.","image":"https://www.aexperiences.com/marks/espotendency.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":23,"item":{"@type":"SoftwareApplication","name":"ESPOnest","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/esponest/","description":"Sleep, feeds and diapers in one tap at 3am — nap-window estimate, growth log, free export, zero trackers.","image":"https://www.aexperiences.com/marks/esponest.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":24,"item":{"@type":"SoftwareApplication","name":"ESPOhystory","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espohystory/","description":"K–6 history told funny — 35 read-along stories that highlight each word as they read aloud.","image":"https://www.aexperiences.com/apps/espohystory/icon.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":25,"item":{"@type":"SoftwareApplication","name":"ESPOregulator","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/esporegulator/","description":"Five-minute practice for anger, stress and anxiety — a real skills ladder plus right-now SOS tools. Skills, not affirmations.","image":"https://www.aexperiences.com/marks/esporegulator.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":26,"item":{"@type":"SoftwareApplication","name":"ESPOtrek","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espotrek/","description":"Days, stops, one-tap map routes, a budget that splits itself, and a printable one-pager — offline by default.","image":"https://www.aexperiences.com/marks/espotrek.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":27,"item":{"@type":"SoftwareApplication","name":"ESPOnatlparks","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/esponatlparks/","description":"All 63 National Parks in a passport that stamps OFFLINE — one tap logs the visit, no signal required, never lost.","image":"https://www.aexperiences.com/marks/esponatlparks.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":28,"item":{"@type":"SoftwareApplication","name":"ESPOsign","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/esposign/","description":"Sign leases, school forms, waivers and contracts right in your browser — your document never leaves your device.","image":"https://www.aexperiences.com/marks/esposign.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":29,"item":{"@type":"SoftwareApplication","name":"ESPOvineyard","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espovineyard/","description":"A calm wine journal with a real Wine Country Notebook inside — no ads, no marketplace, a cellar that is actually yours.","image":"https://www.aexperiences.com/marks/espovineyard.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":30,"item":{"@type":"SoftwareApplication","name":"ESPOstogie","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espostogie/","description":"A cigar journal and humidor — vitola, wrapper, origin, strength, burn time and pairing, kept on your own device.","image":"https://www.aexperiences.com/apps/espostogie/icon.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":31,"item":{"@type":"SoftwareApplication","name":"ESPOwhiskey","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espowhiskey/","description":"A whiskey journal with two sides on one shelf — log a neat pour or a built cocktail, and the base spirit lands in the same place either way.","image":"https://www.aexperiences.com/apps/espowhiskey/icon.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":32,"item":{"@type":"SoftwareApplication","name":"ESPObarista","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espobarista/","description":"A coffee journal that logs both sides of the habit — the pour-over you brewed and the latte you bought.","image":"https://www.aexperiences.com/apps/espobarista/icon.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":33,"item":{"@type":"SoftwareApplication","name":"ESPOracket","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/esporacket/","description":"Load your match film, tag every point, tap a tag to jump straight to the moment — on any device, footage never uploaded.","image":"https://www.aexperiences.com/marks/esporacket.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}},{"@type":"ListItem","position":34,"item":{"@type":"SoftwareApplication","name":"ESPOwords","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espowords/","description":"A turn-based word game with the people you actually know. No ads, no coins, no power-ups, no hints for sale, no strangers, no chat. Free.","image":"https://www.aexperiences.com/marks/espowords.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free"}}},{"@type":"ListItem","position":35,"item":{"@type":"SoftwareApplication","name":"ESPOdraw","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espodraw/","description":"Draw a word, your friends guess it, then it comes back to you. Two to eight of you, in your own time. Every colour and every brush is there from the first round. No ads, no coins, no strangers.","image":"https://www.aexperiences.com/marks/espodraw.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free"}}},{"@type":"ListItem","position":36,"item":{"@type":"SoftwareApplication","name":"Sparkle Salon","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/sparklesalon/","description":"Run your very own salon — give every happy customer amazing hair, nails, makeup and outfits. The customers talk out loud, so it works even before kids can read. No losing, no timers, no ads, nothing collected, and it works offline.","image":"https://www.aexperiences.com/apps/sparklesalon/icon.png","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free"}}},{"@type":"ListItem","position":37,"item":{"@type":"SoftwareApplication","name":"ESPOfocus","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser","url":"https://www.aexperiences.com/apps/espofocus/","description":"The weekly ADHD monitoring report your provider asks for — parents, teachers and behavior specialists rate the same 15 things each week, and ESPOfocus charts whether the plan is working. Not a diagnosis; private, initials only.","image":"https://www.aexperiences.com/apps/espofocus/icon.svg","author":{"@type":"Organization","name":"Accelerated Experiences LLC"},"offers":{"@type":"Offer","priceCurrency":"USD","price":"0","description":"Free right now"}}}]} · <a href="/" style="color:inherit">Both stores</a></script>
@@ -389,11 +390,12 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
       <span class="logo-text">Accelerated Experiences<b>LLC</b></span>
     </a>
     <nav>
-      <a class="navlink" href="/studio.html#work">How we work</a>
-      <a class="navlink" href="/studio.html#aehub">AEHub</a>
-      <a class="navlink" href="/shop.html" aria-current="page">AE App Shop</a>
-      <a class="navlink" href="/studio.html#services">Services</a>
+      <a class="navlink" href="/">Home</a>
+      <a class="navlink" href="/shop.html" aria-current="page">The Store</a>
       <a class="navlink" href="/blog/" aria-label="B~Log — the Accelerated Experiences blog">B~Log</a>
+      <a class="navlink" href="/studio.html">Studio</a>
+      <a class="navlink" href="/about.html">About</a>
+      <a class="navlink" href="https://aexperiences.studio/">AE Hub</a>
       <a class="btn btn-primary" href="mailto:anthonye@aexperiences.studio?subject=Invent%20an%20App">Invent an App</a>
     </nav>
   </div>
@@ -1038,6 +1040,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
  });
 })();
 </script>
+<script src="/ae-concierge.js" data-persona="brian" defer></script>
 </body>
 </html>
 

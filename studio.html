@@ -1,667 +1,160 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Business Operating System Software for Small Business — Accelerated Experiences LLC</title>
-<meta name="description" content="Business operating system software built for one trade at a time — dental, home care, field service, real estate, engineering, photography, theater and more. One flat monthly, never per seat. Open any of them and use the real thing before you talk to anyone. Accelerated Experiences LLC, Post Falls, Idaho.">
-<meta name="theme-color" content="#2a1810">
-<link rel="icon" href="ae-disc.png">
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Studio — work with Accelerated Experiences LLC</title>
+<meta name="description" content="Done-for-you digital work from a family software business that builds its own operating systems. Websites, brand, video, podcast, copy, market research, custom apps and operating systems for your trade. Built from scratch, never handed off. Post Falls, Idaho, clients worldwide.">
 <link rel="canonical" href="https://www.aexperiences.com/studio.html">
-<meta property="og:url" content="https://www.aexperiences.com/">
-<!-- ESPO Genius wired into the family · 2026-06-29 -->
-
-<meta property="og:type" content="website">
-<meta property="og:title" content="Accelerated Experiences — studio &amp; product company">
-<meta property="og:description" content="Custom software, apps, and brands, built from scratch. Home of the ESPO family of products.">
-<meta property="og:image" content="https://www.aexperiences.com/og-aexperiences-home.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Accelerated Experiences — studio &amp; product company">
-<meta name="twitter:description" content="Custom software, apps, and brands, built from scratch. Home of the ESPO family of products.">
-<meta name="twitter:image" content="https://www.aexperiences.com/og-aexperiences-home.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Accelerated Experiences LLC","url":"https://aexperiences.com","location":{"@type":"Place","address":{"@type":"PostalAddress","addressLocality":"Post Falls","addressRegion":"ID","addressCountry":"US"}},"makesOffer":[{"@type":"Offer","itemOffered":{"@type":"SoftwareApplication","name":"ESPO Music","url":"https://espomusic.com"}},{"@type":"Offer","itemOffered":{"@type":"SoftwareApplication","name":"ESPO Studios","url":"https://espodrama.com"}},{"@type":"Offer","itemOffered":{"@type":"SoftwareApplication","name":"ESPO Genius","url":"https://espogenius.com"}},{"@type":"Offer","itemOffered":{"@type":"SoftwareApplication","name":"The Narcs","url":"https://marketnarc.com"}}],"sameAs":["https://espomusic.com","https://espodrama.com","https://espogenius.com","https://marketnarc.com"]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Accelerated Experiences","url":"https://aexperiences.com"}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta property="og:type" content="website"><meta property="og:title" content="Studio — work with Accelerated Experiences LLC"><meta property="og:description" content="Done-for-you digital work from a family software business that builds its own operating systems. Websites, brand, video, podcast, copy, market research, custom apps and operating systems for your trade. Built from scratch, never handed off. Post Falls, Idaho, clients worldwide."><meta property="og:url" content="https://www.aexperiences.com/studio.html"><meta property="og:image" content="https://www.aexperiences.com/studio-card.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://www.aexperiences.com/studio-card.jpg">
+<link rel="icon" href="/ae-disc.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    /* Warm AE palette — replaces the old corporate navy/blue. Echoes the AE mark's
-       clay-to-forest gradient: espresso dark base, terracotta/clay primary, warm gold
-       glow accent, cream light surfaces. */
-    --navy:#2a1810; --navy-2:#1c3d22; --ink:#2e2317;
-    --blue:#c8794f; --blue-deep:#a85f38; --blue-bright:#e0a83a;
-    --slate:#7a6b56; --good:#3f7a4f; --warn:#a85f38;
-    --line:#e6dcc4; --bg:#f4eede; --card:#fffdf7;
-    --radius:14px; --radius-sm:10px;
-    --shadow:0 18px 44px rgba(60,40,20,.12);
-    --shadow-lg:0 30px 70px rgba(20,15,8,.48);
-    --sans:'Outfit',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-    --mono:'Space Grotesk',ui-monospace,monospace;
-    --wrap:1140px; --gut:24px; --section:96px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  html{scroll-behavior:smooth;}
-  body{font-family:var(--sans);background:var(--bg);color:var(--navy);line-height:1.6;-webkit-font-smoothing:antialiased;}
-  a{color:inherit;text-decoration:none;}
-  img{max-width:100%;display:block;}
-  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gut);}
-  section{padding:var(--section) 0;}
-  @media(max-width:680px){ :root{--section:68px;} }
-
-  .eyebrow{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);}
-  .eyebrow.on-navy{color:var(--blue-bright);}
-  .hero-brand{display:flex;align-items:center;gap:22px;margin-bottom:36px;}.hero-brand img{height:96px;width:96px;display:block;border-radius:50%;}.hero-brand .word{font-family:var(--sans);line-height:1.05;}.hero-brand .word .name{display:block;font-weight:800;font-size:40px;letter-spacing:-.02em;color:#fff;text-transform:lowercase;}.hero-brand .word .llc{display:block;font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:.16em;color:var(--blue-bright);margin-top:5px;}@media(max-width:680px){.hero-brand{gap:14px;margin-bottom:26px;}.hero-brand img{height:64px;width:64px;}.hero-brand .word .name{font-size:26px;}.hero-brand .word .llc{font-size:12px;}}
-  h1,h2,h3{font-weight:800;letter-spacing:-.02em;line-height:1.07;}
-  h2{font-size:clamp(28px,4vw,42px);} h3{font-size:21px;letter-spacing:-.01em;}
-  .lede{color:var(--slate);font-size:18px;max-width:60ch;}
-  .grad-text{background:linear-gradient(120deg,#e8b25a,#5c8a5f);-webkit-background-clip:text;background-clip:text;color:transparent;}
-
-  /* buttons */
-  .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:600;font-size:15px;padding:12px 22px;border-radius:999px;cursor:pointer;border:1px solid transparent;transition:transform .12s ease, box-shadow .2s, background .2s, border-color .2s;}
-  .btn:focus-visible{outline:3px solid var(--blue);outline-offset:2px;}
-  .btn-primary{background:linear-gradient(135deg,var(--navy),var(--blue-deep));color:#fff;box-shadow:0 10px 24px rgba(168,95,56,.32);}
-  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(168,95,56,.42);}
-  .btn-ghost{background:transparent;border-color:var(--line);color:var(--navy);}
-  .btn-ghost:hover{border-color:var(--slate);}
-  .btn-ghost.on-navy{color:#fff;border-color:rgba(255,255,255,.28);}
-  .btn-ghost.on-navy:hover{border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.05);}
-  .btn-light{background:#fff;color:var(--navy);} .btn-light:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(0,0,0,.25);}
-
-  /* navy surface w/ grid */
-  .navy{position:relative;background:linear-gradient(120deg,var(--navy),var(--navy-2));color:#fff;overflow:hidden;}
-  .navy::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(224,168,58,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(224,168,58,.08) 1px,transparent 1px);background-size:56px 56px;-webkit-mask-image:radial-gradient(120% 90% at 70% 0%,#000,transparent 72%);mask-image:radial-gradient(120% 90% at 70% 0%,#000,transparent 72%);pointer-events:none;}
-  .navy .wrap{position:relative;z-index:1;}
-  .navy .lede{color:#e8dcc0;}
-
-  /* header */
-  header.bar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.86);backdrop-filter:saturate(150%) blur(12px);border-bottom:1px solid var(--line);}
-  .bar .wrap{display:flex;align-items:center;justify-content:space-between;min-height:68px;gap:12px;padding-top:8px;padding-bottom:8px;}
-  .bar .logo{display:flex;align-items:center;height:44px;gap:10px;} .bar .logo-text{font-family:var(--sans);font-weight:700;font-size:16px;color:var(--navy);letter-spacing:-.01em;white-space:nowrap;} .bar .logo-text b{font-weight:600;color:var(--slate);font-size:11.5px;margin-left:3px;letter-spacing:.04em;} @media(max-width:900px){.bar .logo-text{display:none;}}
-  .bar .logo img{height:42px;width:auto;}
-  .bar nav{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:flex-end;}
-  .bar nav a.navlink{font-weight:500;font-size:15px;color:var(--navy);opacity:.78;transition:opacity .15s;}
-  .bar nav a.navlink:hover{opacity:1;}
-  @media(max-width:820px){ .bar nav a.navlink{display:none;} }
-
-  /* hero */
-  .hero{padding:96px 0 84px;}
-  .hero h1{font-size:clamp(36px,6vw,66px);font-weight:900;max-width:16ch;}
-  .hero .lede{margin-top:22px;font-size:clamp(16px,2.1vw,20px);}
-  .hero .cta{margin-top:34px;display:flex;gap:14px;flex-wrap:wrap;}
-  .hero .stats{margin-top:54px;display:flex;flex-wrap:wrap;gap:14px 40px;border-top:1px solid rgba(255,255,255,.12);padding-top:26px;}
-  .stat .n{font-family:var(--mono);font-size:30px;font-weight:700;color:#fff;letter-spacing:-.01em;}
-  .stat .k{font-size:13.5px;color:#c9b896;margin-top:2px;}
-
-  /* section heads */
-  .shead{max-width:64ch;}
-  .shead h2{margin-top:12px;} .shead .lede{margin-top:14px;}
-
-  /* demo band */
-  .demoband .wrap{display:grid;grid-template-columns:1.02fr .98fr;gap:48px;align-items:center;}
-  @media(max-width:900px){ .demoband .wrap{grid-template-columns:1fr;gap:34px;} }
-  .demoband h2{margin-top:14px;} .demoband .lede{margin-top:14px;} .demoband .cta{margin-top:26px;}
-  .demo-frame{position:relative;justify-self:center;width:100%;max-width:452px;}
-  .demo-frame::before{content:"";position:absolute;inset:-14% -10%;background:radial-gradient(58% 48% at 50% 42%,rgba(234,168,58,.24),transparent 70%);filter:blur(10px);z-index:0;pointer-events:none;}
-  .demo-frame iframe{position:relative;z-index:1;display:block;width:100%;height:690px;border:0;border-radius:26px;background:#15100a;box-shadow:0 36px 90px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.07);}
-  @media(max-width:480px){ .demo-frame iframe{height:646px;} }
-  /* MarketNarc (ESPO Genius) demo — teal "Signal" glow to distinguish it from the amber Music demo */
-  .demo-frame.signal::before{background:radial-gradient(58% 48% at 50% 42%,rgba(56,178,172,.26),transparent 70%);}
-  .mn-note{display:inline-block;margin-left:6px;font-size:13.5px;color:#c9b896;font-weight:600;}
-
-  /* demo instrument tabs */
-  .demo-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;}
-  .demo-tabs .dtab{font-family:var(--sans);font-weight:600;font-size:14px;color:#f0dcae;background:rgba(224,168,58,.08);border:1px solid rgba(224,168,58,.26);padding:9px 15px;border-radius:999px;cursor:pointer;transition:all .15s;display:inline-flex;gap:6px;align-items:baseline;}
-  .demo-tabs .dtab span{font-size:11.5px;color:#c9b896;font-weight:500;}
-  .demo-tabs .dtab:hover{border-color:rgba(224,168,58,.5);}
-  .demo-tabs .dtab.on{background:#fff;color:var(--navy);border-color:#fff;}
-  .demo-tabs .dtab.on span{color:rgba(0,0,0,.55);}
-  .demo-tabs .dtab.on[data-inst="fret"]{background:#eaa83a;border-color:#eaa83a;color:#1a1207;box-shadow:0 4px 14px rgba(234,168,58,.60), 0 0 30px rgba(234,168,58,.48);}
-  .demo-tabs .dtab.on[data-inst="grand"]{background:#d4a64a;border-color:#d4a64a;color:#1a1207;box-shadow:0 4px 14px rgba(212,166,74,.60), 0 0 30px rgba(212,166,74,.48);}
-  .demo-tabs .dtab.on[data-inst="harp"]{background:#8fb3d9;border-color:#8fb3d9;color:#0a1422;box-shadow:0 4px 14px rgba(143,179,217,.62), 0 0 30px rgba(143,179,217,.50);}
-  .demo-tabs .dtab.on[data-inst="uke"]{background:#54c7a4;border-color:#54c7a4;color:#06231b;box-shadow:0 4px 14px rgba(84,199,164,.62), 0 0 30px rgba(84,199,164,.50);}
-  .demo-tabs .dtab.on[data-inst="bass"]{background:#9b8cff;border-color:#9b8cff;color:#0e0a1a;box-shadow:0 4px 14px rgba(155,140,255,.60), 0 0 30px rgba(155,140,255,.48);}
-
-  /* vals cards */
-  .vals{margin-top:42px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-  @media(max-width:820px){ .vals{grid-template-columns:1fr;} }
-  .tcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);transition:transform .15s,box-shadow .2s;}
-  .tcard:hover{transform:translateY(-3px);box-shadow:0 26px 56px rgba(60,40,20,.13);}
-  .tcard .ic{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#f6e9d8,#e9d9bc);display:flex;align-items:center;justify-content:center;color:var(--blue);font-family:var(--mono);font-weight:700;font-size:20px;}
-  .tcard h3{margin-top:16px;} .tcard p{margin-top:8px;color:var(--slate);font-size:15px;}
-
-  /* AEHub feature */
-  .hub .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;}
-  @media(max-width:880px){ .hub .wrap{grid-template-columns:1fr;gap:30px;} }
-  .hub h2{margin-top:14px;} .hub .lede{margin-top:16px;}
-  .hub .feat{margin-top:22px;display:flex;flex-direction:column;gap:10px;}
-  .hub .feat li{list-style:none;display:flex;gap:11px;align-items:flex-start;color:#e8dcc0;font-size:15.5px;}
-  .hub .feat li b{color:#fff;font-weight:600;}
-  .hub .feat .dot{flex:0 0 auto;width:8px;height:8px;border-radius:50%;background:var(--blue-bright);margin-top:8px;box-shadow:0 0 10px var(--blue-bright);}
-  .hub .cta{margin-top:28px;}
-  .hubcard{background:linear-gradient(160deg,rgba(224,168,58,.16),rgba(28,61,34,.5));border:1px solid rgba(224,168,58,.24);border-radius:20px;padding:30px;box-shadow:var(--shadow-lg);}
-  .hubcard .badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#f0dcae;background:rgba(224,168,58,.14);border:1px solid rgba(224,168,58,.3);padding:6px 12px;border-radius:999px;}
-  .hubcard .big{font-family:var(--mono);font-weight:700;font-size:clamp(34px,5vw,52px);color:#fff;margin-top:16px;letter-spacing:-.02em;}
-  .hubcard .sub{color:#e8dcc0;margin-top:6px;}
-  .hubcard .row{margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-  .hubcard .row .b{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:13px 10px;text-align:center;}
-  .hubcard .row .b .t{font-family:var(--mono);font-size:12px;color:#c9b896;}
-  .hubcard .row .b .v{font-weight:600;color:#fff;font-size:14px;margin-top:3px;}
-
-  /* products / ESPO family */
-  .fam{margin-top:42px;display:grid;grid-template-columns:repeat(2,1fr);gap:22px;}
-  @media(max-width:820px){ .fam{grid-template-columns:1fr;} }
-  .pcard{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);transition:transform .15s,box-shadow .2s,border-color .2s;display:flex;flex-direction:column;}
-  .pcard:hover{transform:translateY(-3px);box-shadow:0 26px 56px rgba(60,40,20,.14);border-color:#e6dcc4;}
-  .pcard .toprow{display:flex;align-items:center;justify-content:space-between;gap:12px;}
-  .pcard .name{font-family:var(--sans);font-weight:800;font-size:22px;letter-spacing:-.01em;}
-  .pcard .name .espo{color:var(--blue);}
-  .tag{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 11px;border-radius:999px;white-space:nowrap;}
-  .tag.live{color:#0c6b4a;background:rgba(15,138,95,.12);border:1px solid rgba(15,138,95,.3);}
-  .tag.prod{color:#8a5a1a;background:rgba(224,168,58,.14);border:1px solid rgba(224,168,58,.35);}
-  .tag.soon{color:var(--slate);background:#f4eede;border:1px solid var(--line);}
-  .pcard .desc{margin-top:12px;color:var(--slate);font-size:15px;}
-  .pcard .apps{margin-top:14px;display:flex;flex-wrap:wrap;gap:7px;}
-  .pcard .apps span{font-family:var(--mono);font-size:12.5px;color:var(--navy);background:var(--bg);border:1px solid var(--line);padding:5px 11px;border-radius:8px;}
-  .pcard .more{margin-top:18px;font-weight:600;font-size:14.5px;color:var(--blue);display:inline-flex;align-items:center;gap:6px;}
-  .pcard .more:hover{gap:9px;}
-  .pcard.feature{grid-column:1 / -1;border:1px solid #e6dcc4;background:linear-gradient(180deg,#fdfbf4,#fffdf7);}
-  .confirm{margin-top:22px;font-size:13.5px;color:var(--slate);font-style:italic;}
-
-  /* services */
-  .svc-grid{margin-top:38px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-  @media(max-width:820px){ .svc-grid{grid-template-columns:repeat(2,1fr);} }
-  @media(max-width:520px){ .svc-grid{grid-template-columns:1fr;} }
-  .svc{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:18px 18px;transition:background .2s,border-color .2s;}
-  .svc:hover{background:rgba(255,255,255,.08);border-color:rgba(224,168,58,.35);}
-  .svc .h{font-weight:600;color:#fff;font-size:16px;}
-  .svc .s{color:#c9b896;font-size:13.5px;margin-top:3px;}
-  .verticals{margin-top:30px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
-  .verticals .v{font-family:var(--mono);font-size:13px;color:#f0dcae;background:rgba(224,168,58,.1);border:1px solid rgba(224,168,58,.24);padding:7px 14px;border-radius:999px;}
-  .region{color:#c9b896;font-size:14px;margin-top:14px;}
-
-  /* product constellation — color logo tiles, native size, names below the art */
-  .constellation.big{margin-top:44px;display:grid;grid-template-columns:repeat(6,1fr);gap:20px;}
-  @media(max-width:920px){ .constellation.big{grid-template-columns:repeat(3,1fr);gap:18px;} }
-  @media(max-width:520px){ .constellation.big{grid-template-columns:repeat(2,1fr);} }
-  .pmark{display:flex;flex-direction:column;align-items:center;gap:11px;text-align:center;animation:floaty 6s ease-in-out infinite;}
-  .pmark:nth-child(2){animation-delay:.6s;} .pmark:nth-child(3){animation-delay:1.2s;} .pmark:nth-child(4){animation-delay:1.8s;}
-  .pmark:nth-child(5){animation-delay:2.4s;} .pmark:nth-child(6){animation-delay:3s;}
-  .pmark .pimg{display:block;width:100%;max-width:148px;aspect-ratio:1;border-radius:20px;overflow:hidden;border:1px solid var(--line);box-shadow:0 12px 26px rgba(60,40,20,.16);transition:transform .2s,box-shadow .2s,border-color .2s;}
-  .pmark .pimg img{width:100%;height:100%;display:block;}
-  .pmark:hover .pimg{transform:translateY(-4px);border-color:var(--blue);box-shadow:0 20px 40px rgba(60,40,20,.24);}
-  .pmark .pname{font-weight:700;font-size:14px;color:var(--navy);letter-spacing:.01em;}
-  .pmark.live .pname::before{content:"● ";color:var(--good);font-size:9px;vertical-align:2px;}
-  @keyframes floaty{50%{transform:translateY(-6px);}}
-  @media(prefers-reduced-motion:reduce){ .pmark{animation:none;} }
-
-  /* the 30-second spot */
-  .spot{margin:34px auto 44px;max-width:920px;}
-  .spot video{width:100%;display:block;border-radius:var(--radius);box-shadow:var(--shadow-lg);border:1px solid rgba(224,168,58,.35);background:#14100a;}
-  .spot .spot-cap{margin-top:12px;text-align:center;font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#c9b98f;}
-
-  /* white-label hub showcase (the sellable AEHub section) */
-  .hub-showcase .hubgrid{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
-  @media(max-width:900px){ .hub-showcase .hubgrid{grid-template-columns:1fr 1fr;} }
-  @media(max-width:600px){ .hub-showcase .hubgrid{grid-template-columns:1fr;} }
-  .hubtile{display:flex;flex-direction:column;gap:5px;background:linear-gradient(165deg,rgba(224,168,58,.08),rgba(20,41,79,.42));border:1px solid rgba(224,168,58,.2);border-radius:18px;padding:22px 22px 18px;transition:transform .16s,border-color .2s,box-shadow .2s;}
-  .hubtile:hover{transform:translateY(-4px);border-color:var(--acc);box-shadow:0 26px 60px rgba(0,0,0,.42);}
-  .hubtile:focus-visible{outline:3px solid var(--acc);outline-offset:3px;}
-  .ht-ic{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--acc) 20%,transparent);border:1px solid color-mix(in srgb,var(--acc) 44%,transparent);color:var(--acc);margin-bottom:6px;}
-  .ht-ic svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;}
-  .ht-ind{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#c9b896;}
-  .ht-name{font-weight:800;font-size:21px;color:#fff;letter-spacing:-.01em;}
-  .ht-tag{color:#e8dcc0;font-size:13.5px;line-height:1.42;flex:1;margin-top:2px;}
-  .ht-foot{display:flex;align-items:center;justify-content:space-between;margin-top:13px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1);}
-  .ht-foot b{color:var(--acc);font-weight:800;font-size:15px;}
-  .ht-foot i{color:#c9b896;font-size:13px;font-style:normal;font-weight:600;}
-  .hub-showcase .hub-note{margin-top:24px;color:#c9b896;font-size:14px;max-width:78ch;}
-
-  /* founder / honest */
-  .honest .wrap{max-width:820px;}
-  .pledge{margin-top:18px;font-size:clamp(18px,2.3vw,23px);font-weight:500;line-height:1.5;color:var(--navy);}
-  .pledge a{color:var(--blue);font-weight:600;}
-  .founder{margin-top:26px;color:var(--slate);font-size:15.5px;font-family:Fraunces,Georgia,serif;font-style:italic;}
-  .founder .disc{width:46px;height:46px;border-radius:50%;overflow:hidden;border:1px solid var(--line);flex:0 0 auto;background:#fff;}
-  .founder .disc img{height:100%;width:100%;object-fit:cover;}
-
-  /* footer */
-  footer{background:#fff;border-top:1px solid var(--line);}
-  footer .wrap{padding:40px 24px;display:flex;flex-wrap:wrap;gap:20px 28px;align-items:center;justify-content:space-between;}
-  footer .left{display:flex;align-items:center;gap:14px;}
-  footer .left img{height:38px;width:auto;}
-  footer .meta{color:var(--slate);font-size:13.5px;}
-  footer nav{display:flex;flex-wrap:wrap;gap:18px;}
-  footer nav a{color:var(--slate);font-size:14px;}
-  footer nav a:hover{color:var(--blue);}
-
-  /* reveal */
-  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease;}
-  .reveal.in{opacity:1;transform:none;}
-  @media(prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} .reveal{opacity:1;transform:none;transition:none;} .btn:hover,.tcard:hover,.pcard:hover{transform:none;} }
-
-.explore{position:relative;}
-.explore-btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-weight:700;font-size:13.5px;color:var(--navy);background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;}
-.explore-btn:hover{border-color:var(--blue-deep);}
-.explore-menu{position:absolute;top:calc(100% + 10px);right:0;width:280px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);padding:10px;display:none;z-index:70;}
-.explore-menu.open{display:block;}
-.explore-menu .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);padding:8px 10px 4px;}
-.explore-menu a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;border-radius:9px;font-size:14px;font-weight:600;color:var(--navy);text-decoration:none;}
-.explore-menu a:hover{background:var(--bg);}
-.explore-menu a span.tag{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--slate);white-space:nowrap;}
-.explore-menu a.here{background:rgba(224,168,58,.16);}
-.explore-menu hr{border:none;border-top:1px solid var(--line);margin:6px 0;}
-.brian-fab{position:fixed;right:22px;bottom:22px;z-index:200;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--blue-deep));border:none;cursor:pointer;box-shadow:0 12px 30px rgba(20,15,8,.35);display:flex;align-items:center;justify-content:center;padding:8px;transition:transform .15s;}.brian-fab img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
-.brian-fab:hover{transform:translateY(-2px) scale(1.04);}
-.brian-fab .dot{position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:50%;background:var(--blue-bright);border:2px solid var(--bg);}
-.brian-panel{position:fixed;right:22px;bottom:92px;z-index:200;width:360px;max-width:calc(100vw - 32px);height:480px;max-height:calc(100vh - 140px);background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;font-family:var(--sans);}
-.brian-panel.open{display:flex;}
-.brian-head{background:linear-gradient(120deg,var(--navy),var(--navy-2));color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;}
-.brian-head .av{width:34px;height:34px;border-radius:50%;background:var(--blue-bright);overflow:hidden;flex:none;}.brian-head .av img{width:100%;height:100%;object-fit:cover;}
-.brian-head b{display:block;font-size:14.5px;font-weight:800;}
-.brian-head span{display:block;font-size:11px;color:#e8dcc0;}
-.brian-head .x{margin-left:auto;background:none;border:none;color:#fff;opacity:.7;cursor:pointer;font-size:18px;line-height:1;padding:4px;}
-.brian-head .x:hover{opacity:1;}
-.brian-body{flex:1;overflow-y:auto;padding:14px 14px 6px;display:flex;flex-direction:column;gap:10px;background:var(--bg);}
-.brian-msg{max-width:86%;font-size:13.5px;line-height:1.5;padding:10px 12px;border-radius:12px;}
-.brian-msg.bot{align-self:flex-start;background:#fff;border:1px solid var(--line);color:var(--navy);border-bottom-left-radius:4px;}
-.brian-msg.user{align-self:flex-end;background:var(--navy);color:#fff;border-bottom-right-radius:4px;}
-.brian-chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 10px;}
-.brian-chip{font-family:var(--mono);font-size:11px;font-weight:600;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--blue-deep);cursor:pointer;}
-.brian-chip:hover{border-color:var(--blue-deep);}
-.brian-inputrow{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);background:#fff;}
-.brian-inputrow input{flex:1;border:1px solid var(--line);border-radius:999px;padding:9px 14px;font-family:var(--sans);font-size:13.5px;background:var(--bg);color:var(--navy);}
-.brian-inputrow input:focus{outline:none;border-color:var(--blue-deep);}
-.brian-inputrow button{background:var(--navy);color:#fff;border:none;border-radius:999px;padding:9px 16px;font-weight:700;font-size:13px;cursor:pointer;}
-.brian-inputrow button:disabled{opacity:.5;cursor:default;}
-.brian-typing{align-self:flex-start;font-size:12px;color:var(--slate);padding:0 4px;}
-@media(max-width:480px){.brian-panel{right:16px;bottom:84px;width:calc(100vw - 32px);}.brian-fab{right:16px;bottom:16px;}}
-
-.shop-promo{background:linear-gradient(90deg,var(--blue-deep),var(--blue));color:#fff;}
-.shop-promo-in{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;padding:11px 24px;text-align:center;}
-.shop-promo-tag{font-family:var(--mono);font-size:10.5px;font-weight:800;letter-spacing:.08em;background:rgba(255,255,255,.22);padding:3px 9px;border-radius:999px;white-space:nowrap;}
-.shop-promo-tx{font-size:13.5px;font-weight:500;}
-.shop-promo-tx b{font-weight:800;}
-.shop-promo-btn{font-family:var(--sans);font-weight:800;font-size:13px;background:#fff;color:var(--navy);padding:6px 14px;border-radius:999px;white-space:nowrap;transition:transform .12s;}
-.shop-promo-btn:hover{transform:translateY(-1px);}
-@media(max-width:680px){.shop-promo-in{padding:10px 16px;}.shop-promo-tx{font-size:12.5px;}}
-
-  .about .wrap{display:grid;grid-template-columns:1.08fr .92fr;gap:48px;align-items:center;}
-  @media(max-width:900px){ .about .wrap{grid-template-columns:1fr;gap:30px;} }
-  .about-copy h2{margin-top:12px;} .about-copy p.lede{margin-top:14px;color:var(--slate);font-size:17px;}
-  .about-copy p{margin-top:16px;font-size:16px;line-height:1.7;color:var(--navy);}
-  .about-photo{justify-self:center;max-width:380px;width:100%;}
-  .about-photo img{width:100%;display:block;border-radius:var(--radius);border:1px solid var(--line);box-shadow:var(--shadow-lg);transform:rotate(-1.6deg);}
-  .about-photo .cap{text-align:center;margin-top:14px;color:var(--slate);font-size:13.5px;font-style:italic;}
-  @media(max-width:900px){ .about-photo{max-width:320px;margin:0 auto;} }
-
-.bletter{font-family:Fraunces,Georgia,serif;font-weight:600;font-style:italic;font-size:26px;color:#2a1810;
- background:radial-gradient(circle at 35% 30%,#F0CE82,#DCA43E);width:100%;height:100%;border-radius:50%;
- display:flex;align-items:center;justify-content:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
-.bletter-av{font-family:Fraunces,Georgia,serif;font-weight:600;font-style:italic;color:#2a1810;
- background:radial-gradient(circle at 35% 30%,#F0CE82,#DCA43E);display:flex;align-items:center;justify-content:center;font-size:17px}
+:root{--bg:#101214;--bg2:#16191c;--bg3:#1c2024;--ink:#f5f6f7;--ink2:#a3abb3;--ink3:#6f7780;--line:rgba(255,255,255,.10);--acc:#3d8bff;--acc2:#6aa6ff;--gold:#e0a83a;--green:#2e8b57;--wrap:1160px;--ease:cubic-bezier(.22,1,.36,1)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 28px}
+.mono{font-family:'JetBrains Mono',monospace}
+.kick{font:600 11px/1 'JetBrains Mono',monospace;letter-spacing:.22em;text-transform:uppercase;color:var(--acc2)}
+h1,h2,h3{letter-spacing:-.025em;line-height:1.05}
+.serif{font-family:'Fraunces',Georgia,serif;font-weight:600}
+/* nav */
+.nav{position:sticky;top:0;z-index:50;background:rgba(11,13,15,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:14px;height:66px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:15px}
+.brand img{width:34px;height:34px;border-radius:50%}
+.brand small{font-weight:400;color:var(--ink2);font-size:11px;margin-left:2px}
+.nav nav{margin-left:auto;display:flex;gap:22px;font-size:14px;font-weight:500;color:var(--ink2)}
+.nav nav a:hover,.nav nav a.on{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14px;padding:11px 18px;border-radius:999px;background:var(--acc);color:#fff;transition:.18s var(--ease);box-shadow:0 8px 24px rgba(61,139,255,.25)}
+.btn:hover{background:var(--acc2);transform:translateY(-1px)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);box-shadow:none}
+.btn.ghost:hover{border-color:var(--acc);color:var(--acc2)}
+.menu-btn{display:none;margin-left:auto;background:none;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:8px 10px;font-size:18px;line-height:1}
+/* grid overlay */
+.gridov{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(70% 60% at 50% 0%,#000 30%,transparent 100%);-webkit-mask-image:radial-gradient(70% 60% at 50% 0%,#000 30%,transparent 100%)}
+.glow{position:absolute;pointer-events:none;border-radius:50%;filter:blur(80px);opacity:.55}
+/* sections */
+section{position:relative;padding:88px 0}
+.sec-h{max-width:720px;margin-bottom:40px}
+.sec-h h2{font-size:clamp(30px,4.4vw,46px);font-weight:800;margin:12px 0 14px}
+.sec-h p{font-size:18px;color:var(--ink2)}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:26px;transition:.2s var(--ease)}
+.card:hover{border-color:rgba(61,139,255,.45);transform:translateY(-2px)}
+.card h3{font-size:19px;font-weight:700;margin-bottom:6px}
+.card p{font-size:14.5px;color:var(--ink2)}
+.rule{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent)}
+/* footer */
+footer{border-top:1px solid var(--line);background:#0b0d0f;padding:54px 0 34px}
+footer .cols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px}
+footer h4{font:600 11px/1 'JetBrains Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px}
+footer li{list-style:none;margin:8px 0;font-size:14px;color:var(--ink2)}footer li a:hover{color:var(--ink)}
+footer .fine{margin-top:36px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font:500 11px/1.5 'JetBrains Mono',monospace;letter-spacing:.06em;color:var(--ink3)}
+@media(max-width:860px){.nav nav{display:none}.nav .btn{display:none}.menu-btn{display:block}.nav.open nav{display:flex;position:absolute;left:0;right:0;top:66px;flex-direction:column;background:#0b0d0f;border-bottom:1px solid var(--line);padding:16px 28px 22px;gap:14px}footer .cols{grid-template-columns:1fr 1fr}section{padding:64px 0}}
 </style>
 <style>
-.shotbook{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;padding:26px 6vw 34px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.shotbook::-webkit-scrollbar{display:none}
-.shot-pg{flex:0 0 min(78vw,420px);scroll-snap-align:center;border-radius:20px;overflow:hidden;position:relative;text-decoration:none;
- border:1px solid rgba(244,238,222,.25);background:linear-gradient(160deg,rgba(255,250,238,.10),rgba(255,250,238,.03));
- backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 22px 54px -28px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.15)}
-.shot-pg img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;display:block;opacity:.92}
-.shot-pg figcaption{padding:12px 16px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#e8dcc0}
-
-.bletter{font-family:Fraunces,Georgia,serif;font-weight:600;font-style:italic;font-size:26px;color:#2a1810;
- background:radial-gradient(circle at 35% 30%,#F0CE82,#DCA43E);width:100%;height:100%;border-radius:50%;
- display:flex;align-items:center;justify-content:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
-.bletter-av{font-family:Fraunces,Georgia,serif;font-weight:600;font-style:italic;color:#2a1810;
- background:radial-gradient(circle at 35% 30%,#F0CE82,#DCA43E);display:flex;align-items:center;justify-content:center;font-size:17px}
+.hero{position:relative;overflow:hidden;padding:84px 0 64px}
+.hero .glow.a{width:700px;height:700px;background:#3d8bff;top:-360px;left:-160px;opacity:.26}
+.hero .glow.b{width:420px;height:420px;background:#e0a83a;bottom:-240px;right:-100px;opacity:.14}
+.hero h1{font-size:clamp(40px,6.4vw,80px);font-weight:900;margin:16px 0 20px;max-width:900px}
+.hero h1 em{font-style:normal;color:var(--acc2)}
+.hero .lede{font-size:19px;color:var(--ink2);max-width:640px}
+.hero .cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+.serv{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.serv .card{min-height:170px;display:flex;flex-direction:column}
+.serv .ic{width:40px;height:40px;border-radius:12px;background:rgba(61,139,255,.14);border:1px solid rgba(61,139,255,.35);display:flex;align-items:center;justify-content:center;font:600 16px 'JetBrains Mono',monospace;color:var(--acc2);margin-bottom:16px}
+.serv .card p{margin-top:auto}
+.how{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.how p{font-size:17px;color:var(--ink2);margin-bottom:18px}
+.how p b{color:var(--ink)}
+.steps{display:flex;flex-direction:column;gap:12px}
+.step{display:flex;gap:16px;background:var(--bg2);border:1px solid var(--line);border-radius:18px;padding:20px}
+.step .n{font:700 13px 'JetBrains Mono',monospace;color:var(--acc2);min-width:28px;padding-top:3px}
+.step h3{font-size:17px;margin-bottom:4px}.step p{font-size:14.5px;color:var(--ink2);margin:0}
+.pull{font-family:'Fraunces',Georgia,serif;font-size:30px;line-height:1.25;color:var(--ink);border-left:3px solid var(--acc);padding-left:22px;margin:8px 0 26px}
+.proof{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.proof .card b{display:block;font-size:34px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px}
+.contact{background:linear-gradient(135deg,rgba(61,139,255,.18),rgba(224,168,58,.10));border:1px solid rgba(61,139,255,.35);border-radius:28px;padding:48px;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center}
+.contact h2{font-size:clamp(28px,4vw,40px);font-weight:800}.contact p{color:var(--ink2);font-size:17px;margin-top:10px}
+.contact .side{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+@media(max-width:900px){.serv,.proof{grid-template-columns:1fr}.how,.contact{grid-template-columns:1fr}.contact{padding:30px}}
 </style>
-</head>
-<body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"Accelerated Experiences LLC — Studio","url":"https://www.aexperiences.com/studio.html","email":"anthonye@aexperiences.studio","areaServed":"Worldwide","address":{"@type":"PostalAddress","addressLocality":"Post Falls","addressRegion":"ID","addressCountry":"US"},"makesOffer":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Websites"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Custom apps and operating systems"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Brand and marketing"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Video and YouTube"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Copy and proposals"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Market research"}}]}</script>
+</head><body>
+<header class="nav" id="top"><div class="wrap">
+  <a class="brand" href="/" aria-label="Accelerated Experiences LLC — home"><img src="/ae-disc.png" alt="">Accelerated Experiences<small>LLC</small></a>
+  <button class="menu-btn" aria-label="Menu" onclick="this.closest('.nav').classList.toggle('open')">☰</button>
+  <nav><a href="/">Home</a><a href="/shop.html">The Store</a><a href="/blog/">B~Log</a><a href="/studio.html" class="on">Studio</a><a href="/about.html">About</a><a href="https://aexperiences.studio/">AE Hub</a></nav>
+  <a class="btn" href="/shop.html">Enter the store</a>
+</div></header>
+<main>
+<section class="hero"><div class="gridov"></div><div class="glow a"></div><div class="glow b"></div>
+<div class="wrap">
+ <span class="kick">The Studio · done-for-you digital work</span>
+ <h1>We build our own operating systems. <em>We'll build yours.</em></h1>
+ <p class="lede">The same care that goes into the fourteen operating systems and thirty-plus apps on our shelf goes into client work — built from scratch for you, never handed off to an outside shop. Post Falls, Idaho. Clients worldwide.</p>
+ <div class="cta"><a class="btn" href="mailto:anthonye@aexperiences.studio?subject=Project%20inquiry">Start a project</a><a class="btn ghost" href="#" onclick="window.AEConcierge&&window.AEConcierge.open();return false;">Ask Brian what we can do</a></div>
+</div></section>
 
-<div class="shop-promo"><div class="wrap shop-promo-in"><span class="shop-promo-tag">NEW</span><span class="shop-promo-tx"><b>The AE App Shop is open.</b> Every OS, every app, real pricing — walk in and try them live.</span><a class="shop-promo-btn" href="/shop.html">Enter the shop →</a></div></div>
-<header class="bar">
-  <div class="wrap">
-    <a class="logo" href="#top" aria-label="Accelerated Experiences — home">
-<img src="ae-disc.png" alt="Accelerated Experiences LLC"><span class="logo-text">Accelerated Experiences<b>LLC</b></span>
-    </a>
-    <nav>
-      <a class="navlink" href="#work">How we work</a>
-      <a class="navlink" href="#aehub">AEHub</a>
-      <a class="navlink" href="#products">Products</a>
-      <a class="navlink" href="/blog/" aria-label="B~Log — the Accelerated Experiences blog">B~Log</a>
-      <a class="navlink" href="https://espomusic.com" target="_blank" rel="noopener">ESPO Music</a>
-      <a class="navlink" href="/gallery.html">Gallery</a>
-      <a class="navlink" href="https://espogenius.com" target="_blank" rel="noopener">ESPO Genius</a>
-      <a class="navlink" href="#services">Services</a>
-      <a class="navlink" href="#about">About</a>
-      <a class="navlink" href="/shop.html">AE App Shop</a>
-      <div class="explore">
-        <button class="explore-btn" id="exploreBtn">Explore ▾</button>
-        <div class="explore-menu" id="exploreMenu">
-          <div class="lbl">The whole AE family</div>
-          <a href="https://aexperiences.com/" class="here">Accelerated Experiences <span class="tag">Studio</span></a>
-          <a href="https://espomusic.com/">ESPO Music <span class="tag">Instrument coaching</span></a>
-          <a href="https://espolearning.com/handwriting">ESPO Learning <span class="tag">Early skills</span></a>
-          <a href="https://espogenius.com/espo-iep-genius-app">ESPO Genius <span class="tag">Navigate the system</span></a>
-          <a href="https://espodrama.com/">ESPO Drama <span class="tag">Act &amp; create</span></a>
-          <a href="https://espoedu.com/">ESPO Curriculum <span class="tag">Homeschool K-12</span></a>
-          <a href="https://marketnarc.com/thenarc-app">The Narc <span class="tag">See through it</span></a>
-          <a href="https://neurodivulge.com/">Neuro Divulge <span class="tag">Regulation tools</span></a>
-          <hr>
-          <a href="https://aexperiences.studio/">AE OS <span class="tag">Operations</span></a>
-        </div>
-      </div>
-      <a class="btn btn-primary" href="mailto:anthonye@aexperiences.studio?subject=Project%20inquiry">Start a project</a>
-    </nav>
+<div class="rule"></div>
+
+<section><div class="wrap">
+ <div class="sec-h"><span class="kick">What we build</span><h2>Six things, done properly.</h2><p>Every one of these is something we do for ourselves every week. The store is the proof.</p></div>
+ <div class="serv">
+  <div class="card"><div class="ic">01</div><h3>Websites</h3><p>Design and build. Fast, accessible, and yours — no page builder, no monthly ransom.</p></div>
+  <div class="card"><div class="ic">02</div><h3>Custom apps &amp; operating systems</h3><p>A tool for one job, or a whole operating system for a trade that isn't on our shelf yet. Flat monthly, never per-seat.</p></div>
+  <div class="card"><div class="ic">03</div><h3>Brand &amp; marketing</h3><p>Identity, story, launch. The mark, the words, and the plan to put them in front of people.</p></div>
+  <div class="card"><div class="ic">04</div><h3>Video &amp; YouTube</h3><p>Production and thumbnails. We make every one of our own commercials in-house, voice and music included.</p></div>
+  <div class="card"><div class="ic">05</div><h3>Copy &amp; proposals</h3><p>Words that convert. Proposals, pitches, bids, product pages, the letter that gets the meeting.</p></div>
+  <div class="card"><div class="ic">06</div><h3>Market research</h3><p>Audience and market sizing by a market research analyst with twenty-one years in the trade. Numbers you can defend.</p></div>
+ </div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+ <div class="sec-h"><span class="kick">How it goes</span><h2>We build first. Then we talk.</h2></div>
+ <div class="how">
+  <div>
+   <div class="pull">Rather than describe how we'd approach it, we build a working draft first — and walk you through it.</div>
+   <p>That is how we answer a request for a website, a system, or a campaign: not with a deck about what we might do, but with a draft you can click, and a recorded walkthrough of the findings behind it. You judge the work, not the pitch.</p>
+   <p><b>Why we can do that.</b> Anthony spent twenty-one years inside businesses whose operating systems changed under him, on the pilot side every time. He process-maps a business fast, so the software fits the work instead of the other way around. The fourteen operating systems on our shelf were built that way. Yours would be too.</p>
   </div>
-</header>
-
-<a id="top"></a>
-<section class="navy hero">
-  <div class="wrap reveal">
-    <div class="hero-brand"><img src="ae-disc.png" alt="Accelerated Experiences LLC"><span class="word"><span class="name">accelerated experiences</span><span class="llc">LLC</span></span></div>
-    <div class="eyebrow on-navy">Studio &amp; product company · Post Falls, Idaho</div>
-    <h1 style="margin-top:18px;">Custom software, apps &amp; brands — <span class="grad-text">built from scratch, made to last.</span></h1>
-    <p class="lede">Two sides to what we do: products we build and own, and custom work for businesses — websites, apps, and brands. Every project is built from the ground up for the client. Never templated.</p>
-    <div class="cta">
-      <a class="btn btn-light" href="mailto:anthonye@aexperiences.studio?subject=Project%20inquiry">Start a project</a>
-      <a class="btn btn-ghost on-navy" href="#products">See what we build ↓</a>
-    </div>
-    <div class="stats">
-      <div class="stat"><div class="n">5</div><div class="k">ESPO product lines</div></div>
-      <div class="stat"><div class="n">100%</div><div class="k">custom — never templated</div></div>
-      <div class="stat"><div class="n">Family</div><div class="k">where every product started</div></div>
-    </div>
+  <div class="steps">
+   <div class="step"><span class="n">01</span><div><h3>Tell us the job</h3><p>An email. What the business is, what's broken or missing, and when you need it. No form.</p></div></div>
+   <div class="step"><span class="n">02</span><div><h3>We build a working draft</h3><p>A real, clickable first cut — with a walkthrough of what we found and why we built it that way.</p></div></div>
+   <div class="step"><span class="n">03</span><div><h3>You judge the work</h3><p>Change it, cut it, push it further. Quotes are per project, from Anthony, in writing.</p></div></div>
+   <div class="step"><span class="n">04</span><div><h3>It goes live, and keeps getting better</h3><p>Nothing here ships finished. It ships better than yesterday, then ships again.</p></div></div>
   </div>
-</section>
+ </div>
+</div></section>
 
-<section id="work">
-  <div class="wrap">
-    <div class="shead reveal">
-      <div class="eyebrow">How we work</div>
-      <h2>Craft first. Claims last.</h2>
-      <p class="lede">Everything we make is built from the ground up and held to one standard: it has to be good enough that we'd use it ourselves.</p>
-    </div>
-    <div class="vals">
-      <div class="tcard reveal"><div class="ic">✦</div><h3>Custom, never templated</h3><p>Every site, app, and brand is designed and built from scratch for you — no themes, no reused templates, no shortcuts you'll feel later.</p></div>
-      <div class="tcard reveal"><div class="ic">✓</div><h3>Honest by default</h3><p>We say plainly what's done and what isn't. No overselling, and no claims we haven't earned — credibility is the asset we protect.</p></div>
-      <div class="tcard reveal"><div class="ic">♡</div><h3>Built from real need</h3><p>Our products start as things I make for myself and my family first, then refine into something others can rely on.</p></div>
-    </div>
-  </div>
-</section>
+<div class="rule"></div>
 
-<section id="aehub" class="navy hub-showcase">
-  <div class="wrap">
-    <div class="shead reveal">
-      <div class="eyebrow on-navy">White-label business OS · now taking clients</div>
-      <h2>Your whole business, one branded OS.</h2>
-      <p class="lede">Each OS replaces a stack of software — and, for ticketed venues, kills the per-ticket fees that bleed five figures a year. Native, fully custom, on your brand and domain. Pick your industry:</p>
-    </div>
-    <div class="spot reveal">
-      <video src="/ae-commercial-2026.mp4" poster="/ae-commercial-poster.jpg" controls preload="metadata" playsinline></video>
-      <div class="spot-cap">The 30-second spot — real screens, real businesses</div>
-    </div>
-    <div class="hubgrid reveal">
-      <a class="hubtile" href="https://ae-abode-showroom.vercel.app" target="_blank" rel="noopener" style="--acc:#c8794f">
-        <span class="ht-ic"><img src="/Abode_OS.png" alt="" loading="lazy"></span>
-        <span class="ht-ind">Real Estate</span>
-        <span class="ht-name">Abode OS</span>
-        <span class="ht-tag">Every listing, client &amp; closing in one branded place.</span>
-        <span class="ht-foot"><b>from $450/mo</b><i>Enter the showroom →</i></span>
-      </a>
-      <a class="hubtile" href="https://ae-buttress-showroom.vercel.app" target="_blank" rel="noopener" style="--acc:#5c8a5f">
-        <span class="ht-ic"><img src="/Buttress_OS.png" alt="" loading="lazy"></span>
-        <span class="ht-ind">Architecture</span>
-        <span class="ht-name">Buttress OS</span>
-        <span class="ht-tag">Every commission, phase, RFI &amp; drawing in one studio OS.</span>
-        <span class="ht-foot"><b>from $550/mo</b><i>Enter the showroom →</i></span>
-      </a>
-      <a class="hubtile" href="https://ae-truss-showroom.vercel.app" target="_blank" rel="noopener" style="--acc:#18b0ba">
-        <span class="ht-ic"><img src="/Truss_OS.png" alt="" loading="lazy"></span>
-        <span class="ht-ind">Engineering</span>
-        <span class="ht-name">Truss OS</span>
-        <span class="ht-tag">Every project, calc, submittal &amp; inspection in one place.</span>
-        <span class="ht-foot"><b>from $650/mo</b><i>Enter the showroom →</i></span>
-      </a>
-      <a class="hubtile" href="https://ae-musical-showroom.vercel.app" target="_blank" rel="noopener" style="--acc:#e0b24a">
-        <span class="ht-ic"><img src="/Musical_OS.png" alt="" loading="lazy"></span>
-        <span class="ht-ind">Live Theater</span>
-        <span class="ht-name">Musical OS</span>
-        <span class="ht-tag">Sell the house · run the season · know your patrons.</span>
-        <span class="ht-foot"><b>from $650/mo</b><i>Enter the showroom →</i></span>
-      </a>
-      <a class="hubtile" href="https://ae-8mm-showroom.vercel.app" target="_blank" rel="noopener" style="--acc:#e6b13a">
-        <span class="ht-ic"><img src="/8mm_OS.png" alt="" loading="lazy"></span>
-        <span class="ht-ind">Movie Cinema</span>
-        <span class="ht-name">8mm OS</span>
-        <span class="ht-tag">Six screens · every seat online · no per-ticket fee.</span>
-        <span class="ht-foot"><b>from $500/mo</b><i>Enter the showroom →</i></span>
-      </a>
-      <a class="hubtile" href="https://ae-concert-hub.vercel.app" target="_blank" rel="noopener" style="--acc:#bd57e0">
-        <span class="ht-ic"><img src="/Amphitheater_OS.png" alt="" loading="lazy"></span>
-        <span class="ht-ind">Concerts &amp; Comedy</span>
-        <span class="ht-name">Amphitheater OS</span>
-        <span class="ht-tag">Reserved, GA, or cabaret — sold in one place.</span>
-        <span class="ht-foot"><b>from $600/mo</b><i>Explore →</i></span>
-      </a>
-      <a class="hubtile" href="https://ae-lilninja-showroom.vercel.app" target="_blank" rel="noopener" style="--acc:#f2743a">
-        <span class="ht-ic"><img src="/LilNinja_OS.png" alt="" loading="lazy"></span>
-        <span class="ht-ind">Kids Activity Gym</span>
-        <span class="ht-name">LilNinja OS</span>
-        <span class="ht-tag">Classes, enrollment, tuition &amp; families — plus your own site.</span>
-        <span class="ht-foot"><b>from $400/mo</b><i>Enter the showroom →</i></span>
-      </a>
-      <a class="hubtile" href="https://ae-showroom-hub.vercel.app" target="_blank" rel="noopener" style="--acc:#1c5568">
-        <span class="ht-ic"><img src="/4barrel_OS.png" alt="" loading="lazy"></span>
-        <span class="ht-ind">Used-Car Dealers</span>
-        <span class="ht-name">4barrel OS</span>
-        <span class="ht-tag">Every unit, every deal, every lead in one branded lot.</span>
-        <span class="ht-foot"><b>from $450/mo</b><i>Explore →</i></span>
-      </a>
-      <a class="hubtile" href="https://ae-targeted-showroom.vercel.app" target="_blank" rel="noopener" style="--acc:#d97a2e">
-        <span class="ht-ic"><img src="/Targeted_OS.png" alt="" loading="lazy"></span>
-        <span class="ht-ind">Marketing Agencies</span>
-        <span class="ht-name">Targeted OS</span>
-        <span class="ht-tag">Every client, campaign &amp; dollar in one branded OS.</span>
-        <span class="ht-foot"><b>from $450/mo</b><i>Enter the showroom →</i></span>
-      </a>
-    </div>
-    <div class="hub-note reveal">One-time build + a flat monthly. No per-ticket, per-deal, or per-seat fee — you keep 100% of your revenue. Non-profit, founder &amp; annual programs available. Also runs the studio’s own operations (AEHub).</div>
-  </div>
+<section><div class="wrap">
+ <div class="sec-h"><span class="kick">The proof</span><h2>The store is the portfolio.</h2><p>Everything we would build for you, we already built for ourselves — and it's open right now.</p></div>
+ <div class="proof">
+  <div class="card"><b>14</b><h3>Business operating systems</h3><p>Real estate to dental to used cars. Each one runs a whole company. All live in the store.</p></div>
+  <div class="card"><b>30+</b><h3>Apps for people</h3><p>Learning, family, money, mind, journals, games. Most free. None with ads.</p></div>
+  <div class="card"><b>100%</b><h3>Made in-house</h3><p>The sites, the systems, the commercials, the voices, the music under them. We build our own tools.</p></div>
+ </div>
+ <p style="margin-top:22px"><a class="btn ghost" href="/shop.html">Walk through the store →</a> <a class="btn ghost" href="/blog/" style="margin-left:8px">Read how it gets built →</a></p>
+</div></section>
 
-    <div class="spot-cap" style="margin-top:26px">Or swipe the real screens — every OS below is live to walk through.</div>
-    <div class="shotbook reveal">
-      <a class="shot-pg" href="https://ae-abode-showroom.vercel.app" target="_blank" rel="noopener"><img src="/shots/shot-realestate.jpg" alt="" loading="lazy"><figcaption>Abode OS · Real Estate</figcaption></a>
-      <a class="shot-pg" href="https://ae-buttress-showroom.vercel.app" target="_blank" rel="noopener"><img src="/shots/shot-architecture.jpg" alt="" loading="lazy"><figcaption>Buttress OS · Architecture</figcaption></a>
-      <a class="shot-pg" href="https://ae-truss-showroom.vercel.app" target="_blank" rel="noopener"><img src="/shots/shot-engineering.jpg" alt="" loading="lazy"><figcaption>Truss OS · Engineering</figcaption></a>
-      <a class="shot-pg" href="https://ae-musical-showroom.vercel.app" target="_blank" rel="noopener"><img src="/shots/shot-theater.jpg" alt="" loading="lazy"><figcaption>Musical OS · Theater</figcaption></a>
-      <a class="shot-pg" href="https://ae-8mm-showroom.vercel.app" target="_blank" rel="noopener"><img src="/shots/shot-cinema.jpg" alt="" loading="lazy"><figcaption>8mm OS · Cinema</figcaption></a>
-      <a class="shot-pg" href="https://ae-concert-hub.vercel.app" target="_blank" rel="noopener"><img src="/shots/shot-concerts.jpg" alt="" loading="lazy"><figcaption>Amphitheater OS · Concerts</figcaption></a>
-      <a class="shot-pg" href="https://ae-lilninja-showroom.vercel.app" target="_blank" rel="noopener"><img src="/shots/shot-gym.jpg" alt="" loading="lazy"><figcaption>LilNinja OS · Kids Gyms</figcaption></a>
-    </div>
-    <p style="text-align:center;margin:6px 0 0"><a class="btn btn-primary" href="/shop.html">Every one of these is open in the AE App Shop — walk in →</a></p>
-  </section>
-
-<section id="products">
-  <div class="wrap">
-    <div class="shead reveal">
-      <div class="eyebrow">What we make</div>
-      <h2>The ESPO family.</h2>
-      <p class="lede">Apps my wife and I build and own. Every one started as something we needed for ourselves or our kids — then grew into something others could use too.</p>
-      <p style="margin-top:18px;"><a href="/shop.html" class="btn btn-primary">Browse the full AE App Shop →</a> <a href="/gallery.html" class="btn btn-ghost on-navy" style="margin-left:10px">Open the Gallery — the art of the family →</a></p>
-    </div>
-    <div class="constellation big reveal">
-      <a class="pmark live" href="https://espomusic.com" target="_blank" rel="noopener"><span class="pimg"><img src="brand/logo-music.png" alt="ESPO Music" loading="lazy"></span><span class="pname">ESPO Music</span></a>
-      <a class="pmark live" href="https://espodrama.com" target="_blank" rel="noopener"><span class="pimg"><img src="brand/logo-drama.png" alt="ESPO Drama" loading="lazy"></span><span class="pname">ESPO Drama</span></a>
-      <a class="pmark live" href="https://marketnarc.com/thenarc-app" target="_blank" rel="noopener"><span class="pimg"><img src="brand/logo-narcs.png" alt="The Narc" loading="lazy"></span><span class="pname">The Narc</span></a>
-      <a class="pmark live" href="https://neurodivulge.com" target="_blank" rel="noopener"><span class="pimg"><img src="brand/logo-nd.png" alt="Neuro Divulge" loading="lazy"></span><span class="pname">Neuro Divulge</span></a>
-      <a class="pmark" href="https://espolearning.com/handwriting" target="_blank" rel="noopener"><span class="pimg"><img src="/marks/espolearning-icon.png" alt="ESPO Learning" loading="lazy"></span><span class="pname">ESPO Learning</span></a>
-      <a class="pmark" href="https://espogenius.com/espo-iep-genius-app" target="_blank" rel="noopener"><span class="pimg"><img src="brand/logo-genius.png" alt="ESPO Genius" loading="lazy"></span><span class="pname">ESPO Genius</span></a>
-    </div>
-  </div>
-</section>
-
-
-<section id="services" class="navy">
-  <div class="wrap">
-    <div class="shead reveal">
-      <div class="eyebrow on-navy">For businesses</div>
-      <h2>Done-for-you digital work.</h2>
-      <p class="lede">The same care that goes into our own products goes into client work — built from scratch for each client, and never handed off to an outside shop.</p>
-    </div>
-    <div class="svc-grid">
-      <div class="svc reveal"><div class="h">Websites</div><div class="s">Design and build</div></div>
-      <div class="svc reveal"><div class="h">Brand &amp; marketing</div><div class="s">Identity, story, launch</div></div>
-      <div class="svc reveal"><div class="h">Video &amp; YouTube</div><div class="s">Production and thumbnails</div></div>
-      <div class="svc reveal"><div class="h">Podcast</div><div class="s">Production and art</div></div>
-      <div class="svc reveal"><div class="h">Copy &amp; proposals</div><div class="s">Words that convert</div></div>
-      <div class="svc reveal"><div class="h">Market research</div><div class="s">Audience &amp; market sizing</div></div>
-    </div>
-    <div class="region reveal">Working with clients worldwide.</div>
-    <div class="cta reveal" style="margin-top:26px;"><a class="btn btn-light" href="mailto:anthonye@aexperiences.studio?subject=Project%20inquiry">Start a conversation</a></div>
-  </div>
-</section>
-
-
-<section id="about" class="about">
-  <div class="wrap reveal">
-    <div class="about-copy">
-      <div class="eyebrow">Who we are</div>
-      <h2>A father, a nurse, and four kids who keep us honest.</h2>
-      <p class="lede">Accelerated Experiences is a real family business, not a brand exercise — here's who's actually behind it.</p>
-      <p><b>Anthony Esposito</b> spent two decades in data-driven marketing before he built any software — starting as a marketing analyst at a New York Times Media Group newspaper, then founding an analytics department from scratch across three papers, then leading marketing and operations for over a decade in senior living and hospice care, including running a full retirement community as General Manager: P&amp;L, census, referral networks, real operational command. That instinct — read the audience, target the message, own the numbers — is what now drives every platform, brand, and campaign this studio builds. Today he designs and builds complete digital businesses end to end: software platforms, branded websites and apps, marketing systems, and the pricing and sales infrastructure behind them.</p>
-      <p><b>Jessica Esposito, RN, BSN</b>, is Accelerated Experiences' co-founder — and first, a mom. She homeschools their kids and protects family time fiercely, then spends her days out in the community as a registered nurse caring for geriatric and disabled patients who count on her showing up. More than a decade of nursing — Labor &amp; Delivery through home health, hospice, and a Director of Nursing seat — runs through how this studio treats every client: real care, calm judgment, and the details right when it matters.</p>
-      <p class="lede">Anthony and Jessica live in Post Falls, Idaho, with their four children — ranging from eight months to twelve years old — who keep both of them honest about building things worth doing well.</p>
-    </div>
-    <div class="about-photo">
-      <img src="family-esposito.jpg" alt="The Esposito family" loading="lazy">
-      <div class="cap">Anthony &amp; Jessica, with their four kids.</div>
-    </div>
-  </div>
-</section>
-
-<section id="founder" class="honest">
-  <div class="wrap reveal">
-    <div class="eyebrow">The honest part</div>
-    <p class="pledge">We'll always say plainly what's live and what isn't, and we don't claim outcomes we haven't earned. There's a real person behind this work — <a href="mailto:anthonye@aexperiences.studio">reach out any time</a>.</p>
-    <div class="founder">
-      
-      <span>Founder-led by <b>Anthony Esposito</b> · Accelerated Experiences LLC · Post Falls, Idaho</span>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <div class="left">
-<img src="ae-disc.png" alt="Accelerated Experiences LLC" style="height:38px;width:38px;">
-              <span class="meta">Accelerated Experiences LLC · © 2026 · Post Falls, Idaho</span>
-    </div>
-    <nav>
-      <a href="#aehub">AEHub</a>
-      <a href="#products">Products</a>
-      <a href="https://espomusic.com" target="_blank" rel="noopener">ESPO Music</a>
-      <a href="https://espodrama.com" target="_blank" rel="noopener">ESPO Drama</a>
-      <a href="https://espogenius.com" target="_blank" rel="noopener">ESPO Genius</a>
-      <a href="#services">Services</a>
-      <a href="mailto:anthonye@aexperiences.studio">Contact</a>
-    </nav>
-  </div>
-</footer>
-
-<script>
-  (function(){
-    var els=[].slice.call(document.querySelectorAll('.reveal'));
-    function showAll(){ els.forEach(function(e){ e.classList.add('in'); }); }
-    if(!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches){ showAll(); return; }
-    var io=new IntersectionObserver(function(entries){
-      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
-    },{threshold:.08, rootMargin:'0px 0px -5% 0px'});
-    els.forEach(function(e){ io.observe(e); });
-    setTimeout(showAll, 1500);   /* safety net: content is never left hidden if the observer misses */
-  })();
-</script>
-
-<button class="brian-fab" id="brianFab" aria-label="Chat with Brian"><span class="bletter">B</span><span class="dot"></span></button>
-<div class="brian-panel" id="brianPanel">
-  <div class="brian-head">
-    <div class="av bletter-av">B</div>
-    <div><b>Brian</b><span>AE concierge · ask me anything</span></div>
-    <button class="x" id="brianClose" aria-label="Close">×</button>
-  </div>
-  <div class="brian-body" id="brianBody">
-    <div class="brian-msg bot">Hey — I'm Brian. I know our pricing, our OS products, and everything in the AE family. Tell me what you're trying to build and I'll point you at the right fit — or get you straight to Anthony or Barry if it's not something I can quote.</div>
-  </div>
-  <div class="brian-chips" id="brianChips">
-    <button class="brian-chip" data-q="What OS is right for a real estate brokerage?">Which OS fits my business?</button>
-    <button class="brian-chip" data-q="What does ESPO Music do and cost?">ESPO Music</button>
-    <button class="brian-chip" data-q="I'd like to talk to Anthony or Barry about a project.">Talk to a human</button>
-  </div>
-  <div class="brian-inputrow">
-    <input id="brianInput" type="text" placeholder="Ask Brian anything…" maxlength="500">
-    <button id="brianSend">Send</button>
-  </div>
-</div>
-<script>
-(function(){
-  var eBtn=document.getElementById('exploreBtn'), eMenu=document.getElementById('exploreMenu');
-  if(eBtn){ eBtn.addEventListener('click', function(ev){ ev.stopPropagation(); eMenu.classList.toggle('open'); });
-  document.addEventListener('click', function(){ eMenu.classList.remove('open'); });
-  eMenu.addEventListener('click', function(ev){ ev.stopPropagation(); }); }
-})();
-(function(){
-  var fab=document.getElementById('brianFab'), panel=document.getElementById('brianPanel'),
-      closeBtn=document.getElementById('brianClose'), body=document.getElementById('brianBody'),
-      input=document.getElementById('brianInput'), send=document.getElementById('brianSend'),
-      chips=document.getElementById('brianChips');
-  var history=[];
-  function open(){panel.classList.add('open'); input.focus();}
-  function close(){panel.classList.remove('open');}
-  fab.addEventListener('click', function(){panel.classList.contains('open')?close():open();});
-  closeBtn.addEventListener('click', close);
-  function addMsg(text, who){
-    var d=document.createElement('div');
-    d.className='brian-msg '+who;
-    d.textContent=text;
-    body.appendChild(d);
-    body.scrollTop=body.scrollHeight;
-    return d;
-  }
-  function ask(q){
-    if(!q) return;
-    addMsg(q,'user');
-    history.push({role:'user', content:q});
-    input.value='';
-    send.disabled=true;
-    var typing=document.createElement('div');
-    typing.className='brian-typing';
-    typing.textContent='Brian is typing…';
-    body.appendChild(typing);
-    body.scrollTop=body.scrollHeight;
-    fetch('/api/brian',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q, history:history})})
-      .then(function(r){return r.json();})
-      .then(function(j){
-        typing.remove();
-        var reply = (j && j.reply) ? j.reply : "I'm having trouble connecting right now — email anthonye@aexperiences.studio and Anthony will get right back to you.";
-        addMsg(reply,'bot');
-        history.push({role:'assistant', content:reply});
-      })
-      .catch(function(){
-        typing.remove();
-        addMsg("I'm having trouble connecting right now — email anthonye@aexperiences.studio and Anthony will get right back to you.",'bot');
-      })
-      .finally(function(){ send.disabled=false; });
-  }
-  send.addEventListener('click', function(){ ask(input.value.trim()); });
-  input.addEventListener('keydown', function(e){ if(e.key==='Enter'){ ask(input.value.trim()); } });
-  chips.addEventListener('click', function(e){
-    var q = e.target.getAttribute('data-q');
-    if(q) ask(q);
-  });
-})();
-</script>
-</body>
-</html>
+<section style="padding-top:0"><div class="wrap">
+ <div class="contact">
+  <div><span class="kick">Start a project</span><h2>Say what you need. We'll build the first draft.</h2><p>Websites, systems, brand, film, research — or something that doesn't have a name yet. Email is the door.</p></div>
+  <div class="side"><a class="btn" href="mailto:anthonye@aexperiences.studio?subject=Project%20inquiry">anthonye@aexperiences.studio</a><a class="btn ghost" href="/about.html">Who you'd be working with</a><span class="mono" style="font-size:11px;color:var(--ink3);letter-spacing:.08em">DIGITAL &amp; CREATIVE ENGINEER/FOUNDER · ANTHONY ESPOSITO</span></div>
+ </div>
+</div></section>
+</main>
+<footer><div class="wrap">
+ <div class="cols">
+  <div><a class="brand" href="/"><img src="/ae-disc.png" alt="">Accelerated Experiences<small>LLC</small></a>
+   <p style="color:var(--ink2);font-size:14px;margin-top:14px;max-width:340px">A small family software business in Post Falls, Idaho. Everything we make is live. No demos, ever.</p></div>
+  <div><h4>Go</h4><ul><li><a href="/">Home</a></li><li><a href="/shop.html">The Store</a></li><li><a href="/blog/">B~Log — our build log</a></li><li><a href="/studio.html">Studio — work with us</a></li><li><a href="/about.html">About</a></li></ul></div>
+  <div><h4>Systems</h4><ul><li><a href="https://aexperiences.studio/">AE Hub</a></li><li><a href="/shop.html#business">Business operating systems</a></li><li><a href="/shop.html#personal">Apps for people</a></li><li><a href="https://www.youtube.com/@aexperiences">YouTube — every OS being driven</a></li></ul></div>
+  <div><h4>Reach us</h4><ul><li><a href="mailto:anthonye@aexperiences.studio">anthonye@aexperiences.studio</a></li><li>Post Falls, Idaho</li><li><a href="#" onclick="window.AEConcierge&&window.AEConcierge.open();return false;">Talk to Brian</a></li></ul></div>
+ </div>
+ <div class="fine"><span>© 2026 Accelerated Experiences LLC · Craft first. Claims last.</span><span>Digital &amp; Creative Engineer/Founder: Anthony Esposito</span></div>
+</div></footer>
+<script src="/ae-concierge.js" data-persona="brian" defer></script>
+</body></html>

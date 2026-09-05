@@ -1,0 +1,181 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About — Accelerated Experiences LLC</title>
+<meta name="description" content="A father, a nurse, and four kids who keep us honest. Accelerated Experiences LLC is a small family software business in Post Falls, Idaho. Fourteen business operating systems and more than thirty apps, all live. No demos, ever.">
+<link rel="canonical" href="https://www.aexperiences.com/about.html">
+<meta property="og:type" content="website"><meta property="og:title" content="About — Accelerated Experiences LLC"><meta property="og:description" content="A father, a nurse, and four kids who keep us honest. Accelerated Experiences LLC is a small family software business in Post Falls, Idaho. Fourteen business operating systems and more than thirty apps, all live. No demos, ever."><meta property="og:url" content="https://www.aexperiences.com/about.html"><meta property="og:image" content="https://www.aexperiences.com/about-card.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://www.aexperiences.com/about-card.jpg">
+<link rel="icon" href="/ae-disc.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#101214;--bg2:#16191c;--bg3:#1c2024;--ink:#f5f6f7;--ink2:#a3abb3;--ink3:#6f7780;--line:rgba(255,255,255,.10);--acc:#3d8bff;--acc2:#6aa6ff;--gold:#e0a83a;--green:#2e8b57;--wrap:1160px;--ease:cubic-bezier(.22,1,.36,1)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 28px}
+.mono{font-family:'JetBrains Mono',monospace}
+.kick{font:600 11px/1 'JetBrains Mono',monospace;letter-spacing:.22em;text-transform:uppercase;color:var(--acc2)}
+h1,h2,h3{letter-spacing:-.025em;line-height:1.05}
+.serif{font-family:'Fraunces',Georgia,serif;font-weight:600}
+/* nav */
+.nav{position:sticky;top:0;z-index:50;background:rgba(11,13,15,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:14px;height:66px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:15px}
+.brand img{width:34px;height:34px;border-radius:50%}
+.brand small{font-weight:400;color:var(--ink2);font-size:11px;margin-left:2px}
+.nav nav{margin-left:auto;display:flex;gap:22px;font-size:14px;font-weight:500;color:var(--ink2)}
+.nav nav a:hover,.nav nav a.on{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14px;padding:11px 18px;border-radius:999px;background:var(--acc);color:#fff;transition:.18s var(--ease);box-shadow:0 8px 24px rgba(61,139,255,.25)}
+.btn:hover{background:var(--acc2);transform:translateY(-1px)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);box-shadow:none}
+.btn.ghost:hover{border-color:var(--acc);color:var(--acc2)}
+.menu-btn{display:none;margin-left:auto;background:none;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:8px 10px;font-size:18px;line-height:1}
+/* grid overlay */
+.gridov{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(70% 60% at 50% 0%,#000 30%,transparent 100%);-webkit-mask-image:radial-gradient(70% 60% at 50% 0%,#000 30%,transparent 100%)}
+.glow{position:absolute;pointer-events:none;border-radius:50%;filter:blur(80px);opacity:.55}
+/* sections */
+section{position:relative;padding:88px 0}
+.sec-h{max-width:720px;margin-bottom:40px}
+.sec-h h2{font-size:clamp(30px,4.4vw,46px);font-weight:800;margin:12px 0 14px}
+.sec-h p{font-size:18px;color:var(--ink2)}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:26px;transition:.2s var(--ease)}
+.card:hover{border-color:rgba(61,139,255,.45);transform:translateY(-2px)}
+.card h3{font-size:19px;font-weight:700;margin-bottom:6px}
+.card p{font-size:14.5px;color:var(--ink2)}
+.rule{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent)}
+/* footer */
+footer{border-top:1px solid var(--line);background:#0b0d0f;padding:54px 0 34px}
+footer .cols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px}
+footer h4{font:600 11px/1 'JetBrains Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px}
+footer li{list-style:none;margin:8px 0;font-size:14px;color:var(--ink2)}footer li a:hover{color:var(--ink)}
+footer .fine{margin-top:36px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font:500 11px/1.5 'JetBrains Mono',monospace;letter-spacing:.06em;color:var(--ink3)}
+@media(max-width:860px){.nav nav{display:none}.nav .btn{display:none}.menu-btn{display:block}.nav.open nav{display:flex;position:absolute;left:0;right:0;top:66px;flex-direction:column;background:#0b0d0f;border-bottom:1px solid var(--line);padding:16px 28px 22px;gap:14px}footer .cols{grid-template-columns:1fr 1fr}section{padding:64px 0}}
+</style>
+<style>
+.hero{position:relative;overflow:hidden;padding:76px 0 60px}
+.hero .glow.a{width:640px;height:640px;background:#3d8bff;top:-300px;right:-120px;opacity:.28}
+.hero .glow.b{width:420px;height:420px;background:#e0a83a;bottom:-260px;left:-140px;opacity:.16}
+.hero-grid{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}
+.hero h1{font-size:clamp(40px,6vw,74px);font-weight:900;margin:16px 0 20px}
+.hero h1 em{font-style:normal;color:var(--acc2)}
+.hero .lede{font-size:19px;color:var(--ink2);max-width:560px}
+.hero .cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+.photo{position:relative;border-radius:26px;overflow:hidden;border:1px solid var(--line);box-shadow:0 40px 90px rgba(0,0,0,.55),0 0 0 1px rgba(61,139,255,.15)}
+.photo img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/3}
+.photo .tag{position:absolute;left:16px;bottom:16px;background:rgba(11,13,15,.72);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:13px}
+.photo .tag b{display:block;font-size:14px}
+.photo .tag span{color:var(--ink2)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:48px;position:relative}
+.stat{background:var(--bg2);border:1px solid var(--line);border-radius:18px;padding:22px}
+.stat b{display:block;font-size:34px;font-weight:800;letter-spacing:-.03em;color:var(--ink)}
+.stat span{font-size:13px;color:var(--ink2)}
+.story{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.story p{font-size:17px;color:var(--ink2);margin-bottom:18px}
+.story p b{color:var(--ink)}
+.pull{font-family:'Fraunces',Georgia,serif;font-size:30px;line-height:1.25;color:var(--ink);border-left:3px solid var(--acc);padding-left:22px;margin:8px 0 26px}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.rules .card{position:relative}
+.rules .n{font:600 11px 'JetBrains Mono',monospace;color:var(--acc2);letter-spacing:.2em;margin-bottom:12px}
+.team{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.team .card{display:flex;flex-direction:column;gap:14px}
+.av{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 italic 28px 'Fraunces',serif;color:#2a1810;background:radial-gradient(circle at 35% 30%,#F0CE82,#DCA43E)}
+.av.roz{background:radial-gradient(circle at 35% 30%,#ffb6c9,#e0557e);color:#2a0f18}
+.av.ant{background:transparent;padding:0;overflow:hidden;border:2px solid var(--gold)}
+.av.ant img{width:100%;height:100%;object-fit:cover;object-position:18% 22%}
+.role{font:600 11px 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--acc2)}
+.talk{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:13px;color:var(--acc2);margin-top:auto;cursor:pointer}
+.contact{background:linear-gradient(135deg,rgba(61,139,255,.18),rgba(224,168,58,.10));border:1px solid rgba(61,139,255,.35);border-radius:28px;padding:48px;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center;position:relative;overflow:hidden}
+.contact h2{font-size:clamp(28px,4vw,40px);font-weight:800}
+.contact p{color:var(--ink2);font-size:17px;margin-top:10px}
+.contact .side{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+@media(max-width:900px){.hero-grid,.story,.contact{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.rules,.team{grid-template-columns:1fr}.contact{padding:30px}}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"AboutPage","name":"About — Accelerated Experiences LLC","url":"https://www.aexperiences.com/about.html","mainEntity":{"@type":"Organization","name":"Accelerated Experiences LLC","url":"https://www.aexperiences.com/","logo":"https://www.aexperiences.com/ae-disc.png","email":"anthonye@aexperiences.studio","address":{"@type":"PostalAddress","addressLocality":"Post Falls","addressRegion":"ID","addressCountry":"US"},"founder":{"@type":"Person","name":"Anthony Esposito","jobTitle":"Digital & Creative Engineer/Founder"}}}</script>
+</head><body>
+<header class="nav" id="top"><div class="wrap">
+  <a class="brand" href="/" aria-label="Accelerated Experiences LLC — home"><img src="/ae-disc.png" alt="">Accelerated Experiences<small>LLC</small></a>
+  <button class="menu-btn" aria-label="Menu" onclick="this.closest('.nav').classList.toggle('open')">☰</button>
+  <nav><a href="/">Home</a><a href="/shop.html">The Store</a><a href="/blog/">B~Log</a><a href="/studio.html">Studio</a><a href="/about.html" class="on">About</a><a href="https://aexperiences.studio/">AE Hub</a></nav>
+  <a class="btn" href="/shop.html">Enter the store</a>
+</div></header>
+<main>
+<section class="hero"><div class="gridov"></div><div class="glow a"></div><div class="glow b"></div>
+<div class="wrap">
+ <div class="hero-grid">
+  <div>
+   <span class="kick">Accelerated Experiences LLC · Post Falls, Idaho</span>
+   <h1>A father, a nurse, and four kids who <em>keep us honest.</em></h1>
+   <p class="lede">We are a small family software business. We build operating systems that run whole companies, and apps for the people in them. Everything we make is live — you walk in and use it. No demos, ever.</p>
+   <div class="cta"><a class="btn" href="/shop.html">Walk into the store</a><a class="btn ghost" href="#" onclick="window.AEConcierge&&window.AEConcierge.open();return false;">Talk to Brian</a></div>
+  </div>
+  <div class="photo"><img src="/family-1600.jpg" alt="The Esposito family — Anthony, his wife, and their four children on the couch, the newest one asleep in the middle." fetchpriority="high"><div class="tag"><b>The Espositos</b><span>The whole company, on one couch.</span></div></div>
+ </div>
+ <div class="stats">
+  <div class="stat"><b>14</b><span>business operating systems, all live</span></div>
+  <div class="stat"><b>30+</b><span>apps and games for people, most free</span></div>
+  <div class="stat"><b>0</b><span>demos, sales calls, or per-seat fees</span></div>
+  <div class="stat"><b>21</b><span>years running businesses before writing a line of code</span></div>
+ </div>
+</div></section>
+
+<div class="rule"></div>
+
+<section><div class="wrap">
+ <div class="sec-h"><span class="kick">The story</span><h2>Twenty-one years on the floor. Then it became software.</h2></div>
+ <div class="story">
+  <div>
+   <p>Anthony Esposito spent twenty-one years — 2003 to 2024 — running businesses from the inside: a newspaper's direct-mail operation, senior-care communities, a national placement service. He is a market research analyst by training and came up through creative agencies. At four of those jobs the company switched the operating system the whole business ran on while he was sitting in it, and he was on the pilot side every time.</p>
+   <p><b>That is the through-line.</b> He knows what it feels like when the system a business runs on changes underneath the people doing the work — and he knows how to map a business so the software fits the work instead of the other way around.</p>
+   <p>In May of 2026 he wrote his first real software. Fourteen business operating systems and more than thirty apps later, the shelf is what you see in the store.</p>
+  </div>
+  <div>
+   <div class="pull">Every product here started as somebody's problem. Not an idea — a person we know who needed the thing.</div>
+   <p>Xpense OS came from a sister-in-law who needed her expenses to write themselves down. AE Cut &amp; Effect came from the kids wanting to make a movie out of a pile of phone clips. ESPOhystory came from a kitchen table where reading was a fight. The Neuro Divulge tools came from a house with four neurodivergent kids in it.</p>
+   <p>The family is the company. Anthony builds. His wife — a nurse — is co-founder and the second real user of everything. The kids are the test bench, and the reason so much of what we make is free, safe, and quiet.</p>
+  </div>
+ </div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+ <div class="sec-h"><span class="kick">How we work</span><h2>The rules we don't bend.</h2></div>
+ <div class="rules">
+  <div class="card"><div class="n">01</div><h3>No demos. Ever.</h3><p>There is no sandbox, no sales call, no waitlist. Every product is open at its own address. Walk in and use it.</p></div>
+  <div class="card"><div class="n">02</div><h3>No per-seat fees.</h3><p>You are never charged for adding people to your own business. Flat monthly, licensed, nothing down. That will never change.</p></div>
+  <div class="card"><div class="n">03</div><h3>The store is the product.</h3><p>What you see on the shelf is the whole company. Nothing behind a curtain, nothing "coming soon" without a price printed.</p></div>
+  <div class="card"><div class="n">04</div><h3>Ship in waves.</h3><p>Nothing ships finished. It ships better than yesterday, then ships again. "Free while being tested" means exactly that.</p></div>
+  <div class="card"><div class="n">05</div><h3>Safety by absence.</h3><p>For kids and for neurodivergent families the safest feature is the one that isn't there: no ads, no tracking, nothing collected.</p></div>
+  <div class="card"><div class="n">06</div><h3>Made in-house.</h3><p>The commercials, the voices, the beats under the videos — all made here, with software we wrote. We build our own tools.</p></div>
+ </div>
+</div></section>
+
+<div class="rule"></div>
+
+<section><div class="wrap">
+ <div class="sec-h"><span class="kick">The people you'll meet</span><h2>Three of us do the talking.</h2><p>Anthony builds everything. Brian Shirley and Roz Feely run the room — on this site, inside the products, and in the commercials.</p></div>
+ <div class="team">
+  <div class="card"><div class="av ant"><img src="/family-1600.jpg" alt=""></div><div><div class="role">Founder</div><h3>Anthony Esposito</h3><p>Digital &amp; Creative Engineer/Founder. Final say on everything. Twenty-one years running businesses; builds every system on the shelf.</p></div><a class="talk" href="mailto:anthonye@aexperiences.studio">anthonye@aexperiences.studio →</a></div>
+  <div class="card"><div class="av ant" style="border-color:var(--acc)"><img src="/brian-shirley.jpg" alt="Brian Shirley" style="object-position:50% 40%"></div><div><div class="role">COO / Trainer / Coach</div><h3>Brian Shirley</h3><p>Coach and trainer. Knows every operating system, every app, every price, and what we can and can't do. He's the voice in Xpense OS, and he's the one in the panel on the right.</p></div><a class="talk" href="#" onclick="window.AEConcierge&&window.AEConcierge.open();return false;">Talk to Brian →</a></div>
+  <div class="card"><div class="av ant" style="border-color:#e0557e"><img src="/roz-feely.jpg" alt="Rosalyn P. Feely" style="object-position:50% 35%"></div><div><div class="role">Director of Operations / Teacher &amp; Trainer</div><h3>Rosalyn P. Feely</h3><p>Coach and trainer. Runs the apps for people — the family ones, the kids' ones, the journals and the games. She reads every story in ESPOhystory and helps you cut in AE Cut &amp; Effect.</p></div><a class="talk" href="/shop.html#personal">See her shelf →</a></div>
+ </div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+ <div class="contact">
+  <div><span class="kick">Reach us</span><h2>Email is the door. Anthony answers it.</h2><p>Want a system for a trade that isn't on the shelf, a website, a brand, a film, a market study? Say what you need. No form, no funnel.</p></div>
+  <div class="side"><a class="btn" href="mailto:anthonye@aexperiences.studio?subject=Project%20inquiry">anthonye@aexperiences.studio</a><a class="btn ghost" href="/studio.html">See what we build for clients</a><span class="mono" style="font-size:11px;color:var(--ink3);letter-spacing:.08em">POST FALLS, IDAHO · WORKING WITH CLIENTS WORLDWIDE</span></div>
+ </div>
+</div></section>
+</main>
+<footer><div class="wrap">
+ <div class="cols">
+  <div><a class="brand" href="/"><img src="/ae-disc.png" alt="">Accelerated Experiences<small>LLC</small></a>
+   <p style="color:var(--ink2);font-size:14px;margin-top:14px;max-width:340px">A small family software business in Post Falls, Idaho. Everything we make is live. No demos, ever.</p></div>
+  <div><h4>Go</h4><ul><li><a href="/">Home</a></li><li><a href="/shop.html">The Store</a></li><li><a href="/blog/">B~Log — our build log</a></li><li><a href="/studio.html">Studio — work with us</a></li><li><a href="/about.html">About</a></li></ul></div>
+  <div><h4>Systems</h4><ul><li><a href="https://aexperiences.studio/">AE Hub</a></li><li><a href="/shop.html#business">Business operating systems</a></li><li><a href="/shop.html#personal">Apps for people</a></li><li><a href="https://www.youtube.com/@aexperiences">YouTube — every OS being driven</a></li></ul></div>
+  <div><h4>Reach us</h4><ul><li><a href="mailto:anthonye@aexperiences.studio">anthonye@aexperiences.studio</a></li><li>Post Falls, Idaho</li><li><a href="#" onclick="window.AEConcierge&&window.AEConcierge.open();return false;">Talk to Brian</a></li></ul></div>
+ </div>
+ <div class="fine"><span>© 2026 Accelerated Experiences LLC · Craft first. Claims last.</span><span>Digital &amp; Creative Engineer/Founder: Anthony Esposito</span></div>
+</div></footer>
+<script src="/ae-concierge.js" data-persona="brian" defer></script>
+</body></html>
