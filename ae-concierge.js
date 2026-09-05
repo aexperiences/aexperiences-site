@@ -9,6 +9,7 @@
   if (window.__AEConcierge) return; window.__AEConcierge = true;
   var me = document.currentScript || {};
   var PERSONA = (me.dataset && me.dataset.persona === 'roz') ? 'roz' : 'brian';
+  var THEME = (me.dataset && me.dataset.theme) || (function(){ try { var v=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim().toLowerCase(); return (v==='#101214'||v==='#16191c') ? 'electric' : 'house'; } catch(e){ return 'house'; } })();
   var PEOPLE = {
     brian: { name:'Brian Shirley', first:'Brian', title:'COO / Trainer / Coach', letter:'B', img:'/brian-shirley.jpg', tag:'The guy you talk to',
       intro:"Hey — I'm Brian Shirley, Chief Operating Officer here at Accelerated Experiences, and I'm the guy you talk to. I know every operating system we make, every app in the store, every price, and exactly what we can and can't do. Tell me what you're trying to run and I'll point you at the right one and get you in the door. No demo, no sales call. It's all live.",
@@ -50,6 +51,10 @@
   '.aec-foot{font:500 10.5px/1.4 "JetBrains Mono",monospace;letter-spacing:.06em;color:var(--aec-ink2);padding:0 16px 10px;text-align:center}'+
   '@media(max-width:720px){.aec-panel{width:100vw}.aec-tab{display:none}.aec-fab{display:flex}}';
 
+  if (THEME === 'house') css += ':root{--aec-bg:#2a1810;--aec-bg2:#33201a;--aec-ink:#f4eede;--aec-ink2:rgba(244,238,222,.72);--aec-line:rgba(244,238,222,.14);--aec-acc:#e0a83a;--aec-acc2:#f0c060}'+
+    '.aec-tab{background:#1c3d22;border-color:rgba(224,168,58,.45)} .aec-tab .d{background:#e0a83a;animation:none;box-shadow:0 0 0 3px rgba(224,168,58,.25)}'+
+    '.aec-msg.user{background:#e0a83a;color:#2a1810} .aec-row button{background:#e0a83a;color:#2a1810} .aec-head{background:linear-gradient(120deg,#2a1810,#1c3d22)}'+
+    '.aec-head .aec-av{box-shadow:0 0 0 2px #e0a83a,0 0 18px rgba(224,168,58,.3)} .aec-live{color:#f0c060} .aec-live i{background:#e0a83a} .aec-chip:hover{border-color:#e0a83a;color:#f0c060} .aec-row input:focus{border-color:#e0a83a}';
   var st=document.createElement('style'); st.textContent=css; document.head.appendChild(st);
 
   var tab=document.createElement('button'); tab.className='aec-tab'; tab.innerHTML='<span class="d"></span>Talk to '+P.first;
