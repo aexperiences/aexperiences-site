@@ -190,6 +190,15 @@
       blurb:'Fast, loud, punchy video editing that runs entirely in your browser — captions that pop, zoom punches, freeze frames, slow-mo and fast-forward, and a synthesized sound-effect palette. Drop your clips in, cut, export to your downloads. Takes its music straight from ESPOfunkmaster.',
       price:'Free right now', priceNote:'No account, no upload — your footage never leaves your machine' },
 
+    { id:'cut-and-effect', name:'Cut & Effect', tag:'Drop in your takes, Roz makes the movie', genre:'arts', state:'live',
+      family:'AE Cre8', aisles:['personal','business'], partOf:'ae-cre8',
+      acc:'#e0a83a', mark:'/os-icons/Cut_and_Effect.png', img:'/os-icons/Cut_and_Effect.png', phase:'Testing',
+      url:'/apps/cut-and-effect/',
+      shots:['/shots/cut-and-effect-start.png','/shots/cut-and-effect-roz.png'],
+      blurb:'ESPOfunkmaster and ESPO Cutlabs as one app, with Roz doing the cutting. Drop in every take from every phone — the kids\' movie, the birthday, the trip, a folder of photos — and Roz puts them in order, trims the dead ends, cross-fades, lays an AE beat under it, ducks it under the talking, lands a boom on the hits, adds a title and an end card, and tells you what she did. Then talk to her: "make it faster", "add a boom here", "black and white", "make her eyes green", "call it Beach Day" — she changes it and reads it back. Eight templates or free style. FunkMaster is inside for your own beat. Saves an MP4 to the camera roll. Works with no Internet after the first visit; nothing is uploaded.',
+      price:'Free while in testing',
+      priceNote:'Testing phase — free, no account, no card. Paid plan comes after testing — payments not switched on yet' },
+
     { id:'aevoice', name:'AE Voice Machine', tag:'Your voice, on tap', genre:'arts', state:'dev',
       family:'AE Cre8', aisles:['personal','business'], partOf:'ae-cre8',
       acc:'#c8965a', mark:'/marks/aevoice.png', img:'/marks/aevoice.png',
