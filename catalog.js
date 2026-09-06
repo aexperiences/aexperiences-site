@@ -474,7 +474,7 @@
                  long:'/media/abode/long.mp4', longPoster:'/media/abode/long-poster.jpg', longLen:'9:23' },
     buttress:    { preview:'/media/buttress/preview.mp4', poster:'/media/buttress/poster.jpg', len:'2:16',
                  shots:['/media/buttress/s1.jpg', '/media/buttress/s2.jpg', '/media/buttress/s3.jpg', '/media/buttress/s4.jpg', '/media/buttress/s5.jpg', '/media/buttress/s6.jpg', '/media/buttress/s7.jpg', '/media/buttress/s8.jpg'],
-                 long:'/media/buttress/long.mp4', longPoster:'/media/buttress/long-poster.jpg', longLen:'10:30' },
+                 long:'/media/buttress/long.mp4', longPoster:'/media/buttress/long-poster.jpg', longLen:'10:56' },
     /* Truss walkthrough pulled Aug 17 2026: media/truss/long.mp4 on this repo is a
        truncated upload (2,621,488 bytes, no moov atom) and will not play in any
        browser. Per the honesty rule above, the store shows no walkthrough rather
