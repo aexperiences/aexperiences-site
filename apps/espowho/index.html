@@ -96,6 +96,34 @@ h1.logo .a{color:var(--gold)}
   font-size:1.05rem;font-weight:700;margin-bottom:9px;line-height:1.3}
 .qbtn:active{background:rgba(255,255,255,.22)}
 .qbtn.used{opacity:.38}
+
+/* the child's own questions, and what they were told back */
+.qa{margin-bottom:10px}
+.qa .q{background:rgba(255,255,255,.13);border-radius:16px 16px 16px 5px;padding:12px 15px;font-size:1.02rem;
+  font-weight:700;line-height:1.3;display:inline-block;max-width:92%}
+.qa .a{display:inline-block;margin:6px 0 0 auto;border-radius:16px 16px 5px 16px;padding:9px 16px;
+  font-size:1.02rem;font-weight:800;float:right;clear:both}
+.qa .a.y{background:#2f7d55;color:#eafff2}
+.qa .a.n{background:#8e3b32;color:#ffecea}
+.qa .a.o{background:rgba(255,255,255,.2);color:var(--cream)}
+.qa:after{content:'';display:block;clear:both}
+.qa w{display:inline-block;padding:0 .06em;border-radius:6px}
+.qa w.lit{background:var(--gold);color:var(--ink)}
+.qhint{opacity:.62;font-size:.95rem;font-weight:600;line-height:1.4;padding:10px 4px;text-wrap:balance}
+
+.askrow{flex:0 0 auto;padding-top:2px}
+.askbig{display:flex;align-items:center;gap:13px;width:100%;text-align:left;background:var(--gold);color:var(--ink);
+  border-radius:20px;padding:16px 18px;font-size:1.18rem;font-weight:800;line-height:1.15;box-shadow:0 6px 0 rgba(0,0,0,.22)}
+.askbig .ic{font-size:1.7rem;line-height:1}
+.askbig .sub{display:block;font-size:.82rem;font-weight:700;opacity:.72;margin-top:3px}
+.askbig:active{transform:translateY(3px);box-shadow:0 3px 0 rgba(0,0,0,.22)}
+.askbig.hot{background:#e2543f;color:#fff;animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+.fld.ask{margin:9px 0 0;font-size:1rem}
+.askmini{display:flex;gap:8px;margin-top:9px}
+.mini{flex:1;background:rgba(255,255,255,.14);border-radius:14px;padding:11px 8px;font-size:.92rem;font-weight:800}
+.mini.gold{background:rgba(224,168,58,.24);color:var(--gold)}
+.mini:active{opacity:.75}
 .verdict{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(46,17,8,.9);z-index:40;font-size:clamp(3rem,18vw,6rem);font-weight:800;letter-spacing:-.02em}
 .verdict.on{display:flex}
 .verdict.y{color:#7ee2ab}.verdict.n{color:#ff9c90}
@@ -155,12 +183,15 @@ h1.logo .a{color:var(--gold)}
 <section class="screen on" id="s-home">
   <div class="mark" id="homemark"></div>
   <h1 class="logo">ESPO<span class="a">who</span></h1>
-  <p class="tag">Think of somebody. I will guess it.</p>
+  <p class="tag">Tap a button. Then just talk to me.</p>
   <div style="height:26px"></div>
-  <button class="big gold" data-go="mode-guess"><span class="ic">🔮</span><span>I will guess<span class="sub">You think of someone. I ask the questions.</span></span></button>
-  <button class="big clay" data-go="mode-ask"><span class="ic">🙋</span><span>You guess<span class="sub">I think of someone. You ask the questions.</span></span></button>
+  <button class="big gold" data-go="mode-guess"><span class="ic">🔮</span><span>You think, I ask<span class="sub">Think of somebody and I will guess who it is.</span></span></button>
+  <button class="big clay" data-go="mode-ask"><span class="ic">🙋</span><span>I think, you ask<span class="sub">Ask me anything out loud. I say yes or no.</span></span></button>
   <button class="big" id="door-friend" data-go="friend" style="display:none;background:#3fa66f;color:#fff"><span class="ic">🎟️</span><span>Play with a friend<span class="sub">They get a code. You take turns, any time you like.</span></span></button>
-  <button class="big" data-go="how"><span class="ic">📖</span><span>How do I play?<span class="sub">Read out loud, one step at a time.</span></span></button>
+  <div class="askmini" style="margin-top:10px">
+    <button class="mini" data-go="how">📖 How do I play?</button>
+    <button class="mini" data-go="settings">⚙️ Change the game</button>
+  </div>
   <p class="foot">Accelerated Experiences LLC · playing on your own never leaves this device</p>
 </section>
 
@@ -217,9 +248,16 @@ h1.logo .a{color:var(--gold)}
   <div class="topbar"><button class="back" data-go="home">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker" id="spk6">🔊</button></div>
   <div class="meta" id="acount">You have asked no questions yet</div>
   <div class="bar"><i id="abar"></i></div>
-  <div style="height:12px"></div>
+  <div style="height:10px"></div>
   <div class="qlist" id="qlist"></div>
-  <button class="big gold" id="iknow"><span class="ic">💡</span><span>I know who it is!</span></button>
+  <div class="askrow">
+    <button class="askbig" id="askbtn"><span class="ic">🎤</span><span class="t" id="asklabel">Ask me anything<span class="sub">Tap, then say your question out loud</span></span></button>
+    <input class="fld ask" id="asktype" maxlength="70" placeholder="…or type a question here" autocomplete="off">
+    <div class="askmini">
+      <button class="mini" id="askidea">💡 Give me an idea</button>
+      <button class="mini gold" id="iknow">🏁 I know who it is!</button>
+    </div>
+  </div>
 </section>
 
 <!-- ============ KID PICKS ============ -->
@@ -1546,10 +1584,10 @@ const Listen = {
                       : 'Talking is off. Tap the buttons instead.', null);
   },
 
-  /* mode: 'yesno' | 'name'   cb(result) */
+  /* mode: 'yesno' | 'name' | 'free'   cb(result) */
   ask(mode, cb){
     if(!this.ok || !this.on) return;
-    this.want = mode; this.cb = cb;
+    this.want = mode; this.cb = cb; this.nudges = 0;
     this.start();
   },
 
@@ -1574,7 +1612,18 @@ const Listen = {
       r.start();
       /* never sit with the microphone open — a child walks away */
       clearTimeout(this.guard);
-      this.guard = setTimeout(()=>this.stop(), 9000);
+      this.guard = setTimeout(()=>{
+        const mode = this.want;
+        this.stop();
+        if(!this.cb) return;
+        /* a quiet room must never end the game — she asks again, twice,
+           then leaves the buttons sitting there and waits */
+        this.nudges = (this.nudges||0) + 1;
+        if(this.nudges > 2){ this.nudges=0; if(window.setAskLabel) setAskLabel(false); return; }
+        this.again(mode==='free' ? 'I am still here. Ask me anything you want.'
+                 : mode==='name' ? 'Say the name when you are ready, or tap the picture.'
+                 : 'Still there? Say yes, or no, or I do not know.');
+      }, this.want==='free' ? 15000 : 11000);
     }catch(e){ this.live = false; this.paint(); }
   },
   stop(){
@@ -1596,6 +1645,14 @@ const Listen = {
       const hit = this.readName(list);
       if(hit){ this.stop(); this.cb = null; cb(hit); }
       else this.again('I did not catch that name. Say it again, or tap the picture.');
+      return;
+    }
+    /* the child's own question — hand the sentence over whole and let
+       understand() decide what it means. Nothing is filtered here. */
+    if(this.want === 'free'){
+      const best = (list.find(t=>t && t.split(' ').length>1) || list[0] || '').trim();
+      if(best){ this.stop(); this.cb = null; cb(best); }
+      else this.again('I did not hear that. Say your question again.');
     }
   },
   again(msg){
@@ -1606,6 +1663,11 @@ const Listen = {
 
   /* the words a child actually says */
   readYesNo(list){
+    const AGAIN = ['again','say it again','repeat','repeat that','what','what did you say','huh','say that again','one more time','i did not hear'];
+    for(const raw of list){
+      const t = raw.replace(/[^a-z ]/g,' ').replace(/\s+/g,' ').trim();
+      if(AGAIN.some(w => t === w || t === w+' please')) return 'r';
+    }
     const YES = ['yes','yeah','yep','yup','ya','yah','uh huh','mhm','mm hmm','correct','right','true','sure','it does','he does','she does','it is','yes it is','of course','definitely'];
     const NO  = ['no','nope','nah','naw','no way','wrong','false','it does not','it doesnt','he doesnt','she doesnt','it is not','isnt','not really','never'];
     const MAY = ['maybe','i dont know','dont know','not sure','i am not sure','kind of','sort of','sometimes','dunno','i guess','no idea'];
@@ -1653,6 +1715,203 @@ function dist(a, b){
   }
   return prev[n];
 }
+/* ============================================================
+   UNDERSTANDING A CHILD'S OWN QUESTION
+   ------------------------------------------------------------
+   The old ask screen handed the child a list of questions to tap.
+   That is not the game. In the real game you ask whatever you want
+   and the other player says yes or no. So: the child says anything,
+   and this turns it into one of three things —
+     a NAME     ("is it Mario?")        -> yes or no, and yes wins
+     a TRAIT    ("does it have fur?")   -> yes or no from the tags
+     nothing we can answer               -> say so kindly and move on
+   Every phrase here maps to a tag that already exists in the data,
+   so the answers can never disagree with the questions the app asks.
+   ============================================================ */
+
+/* tag -> the ways a six year old actually says it.
+   Longer phrases are tried first, so "video game" beats "game". */
+const LEX = {
+ person:['a person','a human','a human being','a real person','somebody real','a people','a guy','a lady','a man or a woman'],
+ animal:['an animal','a animal','animal'],
+ creature:['a monster','a creature','a made up creature','a beast','a mythical creature'],
+ robot:['a robot','a machine','a droid','made of metal','run on batteries','have batteries','an engine'],
+ object:['a thing','an object','not alive','a object'],
+ plant:['a plant','plants','a flower','flowers','a tree','trees','grow in the ground','grow from the ground'],
+ real:['real','real life','really exist','actually exist','not pretend','not made up'],
+ boy:['a boy','a man','a he','a guy','a dude','a dad','a brother','a son','a king','a prince'],
+ girl:['a girl','a woman','a she','a lady','a mom','a sister','a daughter','a queen','a princess'],
+
+ flies:['fly','flies','flying','go up in the air','take off','soar','in the air'],
+ swims:['swim','swims','swimming','live in the water','live underwater','in the ocean','in the sea','under the water','a fish'],
+ fur:['fur','furry','fuzzy','hairy','hair all over','soft to pet','fluffy'],
+ feathers:['feather','feathers','feathery','a bird','birds'],
+ scales:['scale','scales','scaly','slimy','slippery','a lizard','a snake'],
+ tail:['a tail','tails','wag a tail'],
+ fourlegs:['four legs','on all fours','walk on four','four feet','four paws'],
+ wings:['a wing','wings','winged'],
+ horns:['a horn','horns','antlers'],
+ sharpteeth:['sharp teeth','pointy teeth','bite you','big teeth','fangs','a fang'],
+ big:['big','huge','giant','enormous','tall','large','bigger than a car','massive'],
+ small:['small','little','tiny','hold it in your hands','pocket sized','short'],
+
+ red:['red'], blue:['blue'], green:['green'], yellow:['yellow'], orange:['orange'],
+ pink:['pink'], purple:['purple'], black:['black'], white:['white'], brown:['brown'],
+ grey:['grey','gray'],
+
+ hat:['a hat','a cap','a helmet','a crown','hat on its head','wear a hat'],
+ mustache:['a mustache','a moustache','a beard','hair above its lip'],
+ mask:['a mask','face covered','cover its face','wear a mask'],
+ cape:['a cape','a cloak'],
+ powers:['superpower','super power','superpowers','super powers','special powers','magic powers','powers'],
+ magic:['magic','magical','cast spells','a spell','a wizard','a witch','a fairy'],
+
+ game:['a video game','video games','a game','nintendo','playstation','xbox','a video game character'],
+ pokemon:['a pokemon','pokemon','pokeball','a poke mon'],
+ toon:['a cartoon','cartoons','a movie','movies','on tv','on television','a show','a tv show','a cartoon character','disney'],
+ hero:['a superhero','a super hero','a comic book','marvel','a hero','fight bad guys','save the day'],
+ sport:['a sport','sports','an athlete','play basketball','play football','play soccer','play baseball','a player'],
+ dino:['a dinosaur','dinosaurs','a dino','a t rex','trex','tyrannosaurus','before there were people'],
+ space:['in space','outer space','a planet','a star','the moon','the sun','an astronaut','past the sky'],
+ sky:['in the sky','up in the sky','look up to see it'],
+ food:['eat it','food','edible','taste good','a snack','yummy','delicious'],
+ vehicle:['a vehicle','have wheels','wheels','a car','a truck','take people places','travel in it','drive it'],
+
+ villain:['a bad guy','the villain','a villain','evil','mean','a baddie','bad'],
+ good:['a good guy','the good guy','a good person','one of the heroes','nice','kind','friendly'],
+ funny:['funny','silly','make you laugh','goofy','a joke'],
+ scary:['scary','frightening','creepy','give you the creeps','terrifying','spooky'],
+ old:['from a long time ago','a long time ago','ancient','really old','older than','from the past','old fashioned'],
+ ride:['ride it','ride on it','climb on top','carry you','ride on its back'],
+ wild:['in the wild','in the jungle','in the forest','a wild animal','out in the wild','in the woods'],
+ pet:['a pet','keep it as a pet','live in a house','somebody’s pet','somebodys pet','live with a family'],
+ strong:['strong','super strong','lift something heavy','muscles','powerful'],
+ fast:['fast','quick','speedy','beat you in a race','run fast','the fastest'],
+ round:['round','shaped like a ball','a circle','a ball']
+};
+
+/* every phrase, longest first, so the most specific reading wins */
+const LEXLIST = (()=>{
+  const out = [];
+  for(const tag in LEX) for(const ph of LEX[tag]) out.push({tag, ph:' '+ph+' ', len:ph.length});
+  return out.sort((a,b)=>b.len-a.len);
+})();
+
+/* things nobody can answer with yes or no */
+const OPEN_Q = /^(what|whats|who|whos|where|wheres|when|why|which|how|hows|name|tell me)/;
+
+/* "doesn't it have fur" is a child asking the plain question, not the opposite
+   one, so contractions open back up to their positive form. Only a standing
+   "not" or "never" counts as a negation. */
+const CONTRA = {dont:'do',doesnt:'does',didnt:'did',isnt:'is',arent:'are',wasnt:'was',
+  werent:'were',cant:'can',cannot:'can',wont:'will',aint:'is',havent:'have',hasnt:'has',
+  hadnt:'had',couldnt:'could',wouldnt:'would',shouldnt:'should',thats:'that is',its:'it is'};
+
+function normQ(s){
+  let t = (' '+(''+s).toLowerCase()+' ')
+    .replace(/[’']/g,'')                  /* NEVER expand a bare "nt" — that
+                                             turned "plant" into "pla not" */
+    .replace(/[^a-z0-9 ]/g,' ')
+    .replace(/\s+/g,' ');
+  t = ' ' + t.trim() + ' ';
+  return t.replace(/ ([a-z]+) /g, (m,w)=> CONTRA[w] ? ' '+CONTRA[w]+' ' : m);
+}
+
+/* Does the child's sentence name somebody on the board?
+   Deliberately strict — "is it a boy" must never be read as a name. */
+function bareQ(text){
+  return normQ(text).replace(/^ (is|its|is it|is that|are you thinking of|is he|is she|do you mean|is the answer|am i right is it) /,' ');
+}
+/* words that are traits, never names — "is it green" is a color question even
+   though somebody on the board might be called Green something */
+const TRAITWORDS = new Set(
+  LEXLIST.map(x=>x.ph.trim()).filter(p=>p.indexOf(' ')<0)
+);
+
+/* a name said outright — the whole name, or a distinctive first word of it,
+   so "is it spongebob" finds SpongeBob SquarePants */
+function nameKeys(e){
+  const full = normQ(e.name).trim().replace(/^(a|an|the) /,'');
+  const keys = full.length >= 3 ? [{k:full, rank:0}] : [];
+  const first = full.split(' ')[0];
+  if(first !== full && first.length >= 5 && !TRAITWORDS.has(first)) keys.push({k:first, rank:1});
+  return keys;
+}
+let NAMEIDX = null;
+function nameIndex(cands){
+  if(NAMEIDX && NAMEIDX.n === cands.length) return NAMEIDX.rows;
+  const rows = [];
+  cands.forEach(e => nameKeys(e).forEach(o => rows.push({e, k:' '+o.k+' ', rank:o.rank})));
+  /* longest first, and a whole name always beats somebody else's first name —
+     "is it a tiger" must not be answered as Tiger Woods */
+  rows.sort((a,b)=> (b.k.length-a.k.length) || (a.rank-b.rank));
+  NAMEIDX = {n:cands.length, rows};
+  return rows;
+}
+function nameExact(text, cands, secret){
+  const bare = bareQ(text);
+  let hit = null;
+  for(const row of nameIndex(cands)) if(bare.includes(row.k)){ hit = row; break; }
+  if(!hit) return null;
+  /* two characters can share a name once the "A"/"The" is dropped
+     (A Penguin, The Penguin). If the child said the secret's name, it counts. */
+  if(hit.e !== secret && secret){
+    for(const row of nameIndex(cands))
+      if(row.e === secret && row.k === hit.k) return secret;
+  }
+  return hit.e;
+}
+/* a whole short sentence that is just a slightly misheard name.
+   This runs LAST, after traits, or "is it red" gets read as "A Tree". */
+function nameFuzzy(text, cands){
+  const only = bareQ(text).trim().replace(/^(is it|is that|its|it is) /,'').trim();
+  if(!only || only.split(' ').length > 3) return null;
+  const flat = only.replace(/ /g,'');
+  if(flat.length < 4) return null;
+  let hit=null, hd=3;
+  for(const e of cands){
+    const n = normQ(e.name).trim().replace(/^(a|an|the) /,'').replace(/ /g,'');
+    if(n.length < 4) continue;
+    const d = dist(n, flat);
+    if(d < hd){ hd = d; hit = e; }
+  }
+  return hit;
+}
+
+/* the answer to one spoken question.
+   -> {kind:'name', entry, yes}
+      {kind:'trait', tag, yes, phrase}
+      {kind:'open'}      a what/who/where question
+      {kind:'lost'}      could not make sense of it            */
+function understand(text, secret, cands){
+  const t = normQ(text);
+  const stripped = t.trim().replace(/^(hey |ok |okay |um |uh )+/,'');
+
+  /* 1. a name said outright */
+  const who = nameExact(text, cands, secret);
+  if(who) return {kind:'name', entry:who, yes: who === secret};
+
+  /* 2. a trait, from the same tags the app's own questions use */
+  let found = null;
+  for(const item of LEXLIST){ if(t.includes(item.ph)){ found = item; break; } }
+  if(found){
+    /* "is it NOT a boy", "doesn't it have fur" — the word before decides */
+    const before = t.slice(0, t.indexOf(found.ph)) + ' ';
+    const neg = /(^| )(not|never|no)( |$)/.test(before);
+    const has = secret.tags.has(found.tag);
+    return {kind:'trait', tag:found.tag, phrase:found.ph.trim(), yes: neg ? !has : has};
+  }
+
+  /* 3. only now, a short sentence that might be a misheard name */
+  const maybe = nameFuzzy(text, cands);
+  if(maybe) return {kind:'name', entry:maybe, yes: maybe === secret};
+
+  if(OPEN_Q.test(stripped)) return {kind:'open'};
+  return {kind:'lost'};
+}
+
+const YES_SAY = ['Yes!','Yep!','That is right!','Uh huh, yes!','Yes it is!'];
+const NO_SAY  = ['Nope!','No.','Not this one.','Nuh uh.','No, it is not.'];
 
 /* ---------------- VOICE ----------------
    Baked AE Voice Engine clips when assets/voice/ is present,
@@ -1677,9 +1936,10 @@ const Voice = {
     if(window.speechSynthesis){ try{ const u=new SpeechSynthesisUtterance(' '); u.volume=0; speechSynthesis.speak(u); }catch(e){} }
   },
   stop(){
-    this.queue=[]; this.speaking=false; this.idle=null; clearTimeout(this.guard); this.tok=(this.tok||0)+1;
-    if(window.speechSynthesis) try{ speechSynthesis.cancel(); }catch(e){}
-    if(this.audio) try{ this.audio.pause(); }catch(e){}
+    this.queue=[]; this.speaking=false; this.idle=null;
+    clearTimeout(this.guard);
+    this.tok=(this.tok||0)+1;        /* invalidates every callback still in flight */
+    this.silence();
     this.clearLight();
   },
   clearLight(){ if(this.el) this.el.querySelectorAll('w').forEach(w=>w.classList.remove('lit')); },
@@ -1706,17 +1966,30 @@ const Voice = {
     this.speaking = true;
     this.paintWords(text, el);
     if(!this.on){ this.speaking=false; this.queue=[]; this.drain(); return; }
-    /* a silent or broken voice must never leave the rest of the words unsaid */
-    this.tok = (this.tok||0)+1;
-    const mine = this.tok;
+    /* Every line gets its own ticket. A finish only counts if it is holding
+       the current ticket — otherwise a late onended, a stray onerror and the
+       watchdog all "finish" the same line and the queue jumps forward more
+       than once, which is how two lines ended up talking over each other. */
+    const mine = this.tok = (this.tok||0)+1;
+    this.silence();
     clearTimeout(this.guard);
-    this.guard = setTimeout(()=>{ if(this.tok===mine) this.done(); },
-                            1600 + (''+text).length*95);
+    this.guard = setTimeout(()=>this.done(mine), 1600 + (''+text).length*95);
     const s = slug(text);
-    if(this.manifest && this.manifest.slugs.includes(s)) this.baked(s, text);
-    else this.browser(text);
+    if(this.manifest && this.manifest.slugs.includes(s)) this.baked(s, text, mine);
+    else this.browser(text, mine);
   },
-  done(){ clearTimeout(this.guard); this.tok=(this.tok||0)+1; this.clearLight(); this.speaking=false; this.run(); },
+  /* nothing may still be making noise when the next line starts */
+  silence(){
+    if(window.speechSynthesis) try{ speechSynthesis.cancel(); }catch(e){}
+    if(this.audio) try{ this.audio.pause(); this.audio.onended=null; }catch(e){}
+  },
+  done(mine){
+    if(mine !== undefined && mine !== this.tok) return;   /* a stale finish */
+    clearTimeout(this.guard);
+    this.tok = (this.tok||0)+1;
+    this.silence();
+    this.clearLight(); this.speaking=false; this.run();
+  },
   paintWords(text, el){
     if(!el){ this.el=null; return; }
     const words=(''+text).split(/\s+/).filter(Boolean);
@@ -1727,34 +2000,46 @@ const Voice = {
     });
     this.el=el;
   },
-  baked(s, text){
+  baked(s, text, mine){
     const times=(this.manifest.timings&&this.manifest.timings[s])||null;
     const a=this.audio||(this.audio=new Audio());
+    a.onended=null;
     a.src='assets/voice/'+s+'.wav';
     let idx=-1;
     const tick=()=>{
-      if(a.paused||a.ended) return;
+      if(this.tok!==mine || a.paused || a.ended) return;
       if(times){ let k=-1; for(let i=0;i<times.length;i++) if(a.currentTime>=times[i]) k=i;
                  if(k!==idx){ idx=k; this.light(k); } }
       requestAnimationFrame(tick);
     };
-    a.onended=()=>this.done();
-    a.play().then(()=>{ if(times) requestAnimationFrame(tick); }).catch(()=>this.browser(text));
+    a.onended=()=>this.done(mine);
+    a.play().then(()=>{ if(times) requestAnimationFrame(tick); })
+            .catch(()=>{ if(this.tok===mine) this.browser(text, mine); });
   },
-  browser(text){
-    if(!window.speechSynthesis){ this.done(); return; }
+  browser(text, mine){
+    if(!window.speechSynthesis){ this.done(mine); return; }
     const u=new SpeechSynthesisUtterance(text);
     u.rate=.95; u.pitch=1.05; u.lang='en-US';
-    const vs=speechSynthesis.getVoices()||[];
-    const v=vs.find(x=>/samantha|karen|moira|zira|google us english/i.test(x.name))||vs.find(x=>x.lang&&x.lang.indexOf('en')===0);
+    const v=this.pickVoice();
     if(v) u.voice=v;
     u.onboundary=e=>{
+      if(this.tok!==mine) return;
       if(e.name && e.name!=='word') return;
       this.light((text.slice(0,e.charIndex).match(/\S+/g)||[]).length);
     };
-    u.onend=()=>this.done();
-    u.onerror=()=>this.done();
-    try{ speechSynthesis.speak(u); }catch(e){}
+    u.onend=()=>this.done(mine);
+    u.onerror=()=>this.done(mine);
+    try{ speechSynthesis.speak(u); }catch(e){ this.done(mine); }
+  },
+  /* one browser voice, chosen once and kept — the voice list arrives late in
+     some browsers, so picking per line made the app change voice mid-game */
+  pickVoice(){
+    if(this._v !== undefined) return this._v;
+    const vs=speechSynthesis.getVoices()||[];
+    if(!vs.length) return null;                 /* not ready yet, try again next line */
+    this._v = vs.find(x=>/samantha|karen|moira|zira|google us english/i.test(x.name))
+           || vs.find(x=>x.lang&&x.lang.indexOf('en')===0) || null;
+    return this._v;
   }
 };
 
@@ -1771,8 +2056,8 @@ function readScreen(id){
   if(id==='home'){
     lines.push(['ESPO who. The twenty questions game.',null]);
     lines.push(['Think of somebody, and I will guess it.',null]);
-    lines.push(['Tap the gold button if you want me to guess.',null]);
-    lines.push(['Tap the orange button if you want to guess.',null]);
+    lines.push(['Tap the gold button and think of somebody, and I will guess who it is.',null]);
+    lines.push(['Tap the orange button and I will think of somebody, and you can ask me anything.',null]);
     if(Net.live) lines.push(['Tap the green button to play with a friend using a code.',null]);
     lines.push(['Tap the white button and I will tell you how to play.',null]);
   } else if(id==='rail'){
@@ -1785,7 +2070,10 @@ function readScreen(id){
     $$('#catgrid .chip').forEach(c=>lines.push([c.dataset.say,null]));
   } else if(id==='ask'){
     lines.push(['I am thinking of somebody.',null]);
-    lines.push(['Tap any question and I will read it and answer it.',null]);
+    lines.push(['Ask me anything you want, and I will say yes or no.',null]);
+    lines.push([Listen.ok && Listen.on
+      ? 'Just talk. I am listening.'
+      : 'Type your question in the box and press go.', null]);
   } else if(id==='pick'){
     lines.push(['Tap who you think it is.',null]);
     lines.push(['I will say the name out loud before you decide.',null]);
@@ -1855,6 +2143,10 @@ function nextQuestion(){
 
 function answer(a){
   Listen.stop();
+  if(a==='r'){                      /* "say it again" */
+    Voice.say(G.q.text, $('#qtext'));
+    return Voice.after(()=> Listen.ask('yesno', b => { if($('#s-play').classList.contains('on')) answer(b); }));
+  }
   if(a!=='m'){
     const yes = a==='y';
     G.cands.forEach(c=>{
@@ -1920,51 +2212,128 @@ function giveUp(){
   $('#r-home').onclick  = ()=>{ Voice.unlock(); show('home'); };
 }
 
-/* ---------------- KID ASKS ---------------- */
+/* ---------------- KID ASKS ----------------
+   The child asks whatever they want, out loud or typed, and gets
+   yes or no back. No menu of questions — that was never the game. */
 function startAsk(){
   const p = pool();
   G.secret = pick(p);
-  G.aN = 0;
-  const opts = BANK.filter(q=>q.tier<=G.rail && !q.id.startsWith('y:'));
-  const seen = new Set(); G.aQs = [];
-  for(const q of shuffle(opts)){ if(seen.has(q.key)) continue; seen.add(q.key); G.aQs.push(q); if(G.aQs.length>=30) break; }
+  G.aN = 0; G.aLog = [];
   paintAsk();
   show('ask');
   readScreen('ask');
+  Voice.after(()=>armAsk());
 }
-function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+/* the microphone opens on its own after she finishes talking, so a
+   six year old never has to find a button to start a turn */
+function armAsk(){
+  if(!$('#s-ask').classList.contains('on')) return;
+  if(!Listen.ok || !Listen.on){ setAskLabel(false); return; }
+  setAskLabel(true);
+  Listen.ask('free', said => { if($('#s-ask').classList.contains('on')) heardQuestion(said); });
+}
+function setAskLabel(hot){
+  const b=$('#askbtn'); if(!b) return;
+  b.classList.toggle('hot', !!hot);
+  $('#asklabel').innerHTML = hot
+    ? 'I am listening…<span class="sub">Ask me anything about who I picked</span>'
+    : 'Ask me anything<span class="sub">Tap, then say your question out loud</span>';
+}
 
 function paintAsk(){
   $('#acount').textContent = G.aN===0 ? 'You have asked no questions yet'
                                       : 'You have asked ' + numWord(G.aN) + ' of twenty';
   $('#abar').style.width = (G.aN/20*100)+'%';
-  const list = $('#qlist'); list.innerHTML='';
-  G.aQs.forEach((q,i)=>{
-    const b=document.createElement('button');
-    b.className='qbtn'+(q.used?' used':''); b.textContent=q.text;
-    b.onclick=()=>{ Voice.unlock(); if(q.used) return; askOne(q, b); };
-    list.appendChild(b);
+  const list = $('#qlist');
+  if(!G.aLog.length){
+    list.innerHTML = '<p class="qhint">I picked somebody. Ask me anything you like — '
+      + '“Is it an animal?” · “Can it fly?” · “Is it Mario?” — and I will say yes or no.</p>';
+    return;
+  }
+  list.innerHTML='';
+  G.aLog.forEach(row=>{
+    const d=document.createElement('div'); d.className='qa';
+    d.innerHTML='<div class="q">'+esc(row.q)+'</div><div class="a '+row.cls+'">'+esc(row.a)+'</div>';
+    list.appendChild(d);
+  });
+  list.scrollTop = list.scrollHeight;
+}
+function esc(t){ return (''+t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+/* what the child said, turned into an answer */
+function heardQuestion(said){
+  Listen.stop(); setAskLabel(false);
+  said = (''+said).trim();
+  if(!said) return armAsk();
+
+  if(/^(again|repeat|what|huh|say that again|one more time)\b/.test(said.toLowerCase())){
+    const last = G.aLog[G.aLog.length-1];
+    Voice.say(last ? ('You asked, ' + last.q + ' And I said ' + last.a) : 'You have not asked me anything yet.', null);
+    return Voice.after(()=>armAsk());
+  }
+  const r = understand(said, G.secret, pool());
+  const shown = said.charAt(0).toUpperCase() + said.slice(1) + (/[?.!]$/.test(said) ? '' : '?');
+
+  /* a straight guess at the name ends the game the moment it is right */
+  if(r.kind==='name' && r.yes){
+    logAsk(shown, 'YES!', 'y');
+    Voice.say('Yes! It is ' + spoken(G.secret.name) + '. You got it!', null);
+    return Voice.after(()=>judge(G.secret));
+  }
+  if(r.kind==='open'){
+    logAsk(shown, 'hmm', 'o');
+    Voice.say('That one I cannot answer with yes or no. Ask me something I can answer yes or no to.', null);
+    return Voice.after(()=>armAsk());
+  }
+  if(r.kind==='lost'){
+    logAsk(shown, 'hmm', 'o');
+    Voice.say('Hmm, I do not know that one. Try asking it a different way.', null);
+    return Voice.after(()=>armAsk());
+  }
+
+  /* a real yes or no question — it counts */
+  G.aN++;
+  const yes = r.yes;
+  logAsk(shown, yes ? 'YES' : 'NO', yes ? 'y' : 'n');
+  flashVerdict(yes);
+  /* a wrong name guess gets named back, so the child hears what was ruled out */
+  Voice.say(r.kind==='name' ? ('Nope, it is not ' + spoken(r.entry.name) + '.')
+                            : pick(yes ? YES_SAY : NO_SAY), null);
+  Voice.after(()=>{
+    if(G.aN>=20){
+      Voice.say('That was all twenty questions. Time to say who you think it is.', null);
+      Voice.after(()=>openPick());
+    } else armAsk();
   });
 }
 
-function askOne(q, el){
-  q.used = true; G.aN++;
-  const yes = q.test(G.secret);
-  Voice.say([[q.text, el||null]]);
-  Voice.add(yes ? 'Yes!' : 'Nope!', null);
-  const v = $('#verdict');
-  setTimeout(()=>{
-    v.className = 'verdict on ' + (yes?'y':'n');
-    v.textContent = yes ? 'YES' : 'NO';
-    setTimeout(()=>{ v.className='verdict'; paintAsk(); if(G.aN>=20) openPick(); }, 1100);
-  }, 700);
+function logAsk(q, a, cls){ G.aLog.push({q,a,cls}); paintAsk(); }
+
+function flashVerdict(yes){
+  const v=$('#verdict');
+  v.className='verdict on '+(yes?'y':'n');
+  v.textContent = yes ? 'YES' : 'NO';
+  setTimeout(()=>{ v.className='verdict'; }, 850);
 }
 
+/* when they are stuck, she suggests one out loud — a nudge, not a menu */
+function askIdea(){
+  Listen.stop(); setAskLabel(false);
+  const T = pool();
+  const opts = BANK.filter(q=>q.tier<=railNow() && !q.id.startsWith('x:') && !q.id.startsWith('y:'));
+  const q = pick(opts.length?opts:BANK);
+  Voice.say('You could ask me this.', null);
+  Voice.add(q.text, null);
+  Voice.after(()=>armAsk());
+}
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
 function openPick(){
-  const p = pool();
-  let list = shuffle(p).slice(0,59);
-  if(!list.includes(G.secret)) list[0] = G.secret;
-  list = shuffle(list);
+  /* every single one, in alphabetical order — a shortened grid could leave
+     the actual answer off the board, which makes the game unwinnable */
+  const list = pool().slice().sort((a,b)=>a.name.localeCompare(b.name));
   const g = $('#pickgrid'); g.innerHTML='';
   list.forEach(e=>{
     const b=document.createElement('button');
@@ -2287,9 +2656,25 @@ $$('[data-go]').forEach(b=>b.onclick=()=>{
   else if(g==='ask'){ show('ask'); readScreen('ask'); }
   else if(g==='how'){ howI=0; show('how'); Voice.say(HOW[0], $('#howtext')); }
   else if(g==='friend'){ openFriend(); }
-  else if(g==='mode-guess'){ G.mode='guess'; show('rail'); readScreen('rail'); }
-  else if(g==='mode-ask'){ G.mode='ask'; show('rail'); readScreen('rail'); }
+  else if(g==='settings'){ G.mode = G.mode||'ask'; G.setup=true; show('rail'); readScreen('rail'); }
+  /* straight in. A six year old should not have to get through two menus
+     before anything happens — the settings live behind their own door. */
+  else if(g==='mode-guess'){ G.mode='guess'; goPlay(); }
+  else if(g==='mode-ask'){ G.mode='ask'; goPlay(); }
 });
+
+/* whatever was chosen last time, or sensible defaults */
+function prefs(){
+  let rail=2, cat='all';
+  try{ rail=+localStorage.getItem('espowho.rail')||2; cat=localStorage.getItem('espowho.cat')||'all'; }catch(e){}
+  return {rail, cat};
+}
+function goPlay(){
+  const p = prefs();
+  G.rail = p.rail; G.cat = p.cat;
+  setScene(G.cat);
+  G.mode==='ask' ? startAsk() : startGuess();
+}
 
 $('#how-next').onclick=()=>{
   howI++;
@@ -2299,6 +2684,7 @@ $('#how-next').onclick=()=>{
 
 $$('[data-rail]').forEach(b=>b.onclick=()=>{
   G.rail = +b.dataset.rail;
+  try{ localStorage.setItem('espowho.rail', G.rail); }catch(e){}
   const g=$('#catgrid'); g.innerHTML='';
   CATS.forEach(([k,label,ic])=>{
     const n = k==='all' ? DB.length : DB.filter(e=>e.cat===k).length;
@@ -2307,7 +2693,10 @@ $$('[data-rail]').forEach(b=>b.onclick=()=>{
     btn.className='chip';
     btn.dataset.say = 'Tap ' + label + '.';
     btn.innerHTML='<span class="art">'+Art.world(k)+'</span><span class="cap">'+label+'</span>';
-    btn.onclick=()=>{ G.cat=k; setScene(k); G.mode==='ask' ? startAsk() : startGuess(); };
+    btn.onclick=()=>{ G.cat=k; try{localStorage.setItem('espowho.cat',k);}catch(e){}
+                      setScene(k);
+                      if(G.setup){ G.setup=false; Voice.say('Saved. Tap a button to play.',null); show('home'); return; }
+                      G.mode==='ask' ? startAsk() : startGuess(); };
     g.appendChild(btn);
   });
   show('cat');
@@ -2315,7 +2704,21 @@ $$('[data-rail]').forEach(b=>b.onclick=()=>{
 });
 
 $$('[data-ans]').forEach(b=>b.onclick=()=>answer(b.dataset.ans));
-$('#iknow').onclick=()=>openPick();
+$('#iknow').onclick=()=>{ Voice.unlock(); Listen.stop(); openPick(); };
+$('#askidea').onclick=()=>{ Voice.unlock(); askIdea(); };
+$('#askbtn').onclick=()=>{
+  Voice.unlock();
+  if(Listen.live){ Listen.stop(); setAskLabel(false); }
+  else if(Listen.ok && Listen.on){ Voice.stop(); armAsk(); }
+  else { $('#asktype').focus(); }
+};
+$('#asktype').addEventListener('keydown', e=>{
+  if(e.key!=='Enter') return;
+  const v=e.target.value.trim(); if(!v) return;
+  e.target.value=''; e.target.blur(); Voice.unlock(); heardQuestion(v);
+});
+/* typing and listening must never run at once */
+$('#asktype').addEventListener('focus', ()=>{ Listen.stop(); setAskLabel(false); });
 $$('.speaker').forEach(b=>b.onclick=()=>Voice.toggle());
 $$('.mic').forEach(b=>b.onclick=()=>{ Voice.unlock(); Listen.toggle(); });
 
