@@ -2267,7 +2267,9 @@ function heardQuestion(said){
   said = (''+said).trim();
   if(!said) return armAsk();
 
-  if(/^(again|repeat|what|huh|say that again|one more time)\b/.test(said.toLowerCase())){
+  /* only a bare "what?" is a request to repeat — "what color is it" is a
+     question, and must not be swallowed by this */
+  if(/^(again|repeat|repeat that|huh|what|what|say it again|say that again|one more time)[?.!]?$/.test(said.toLowerCase().trim())){
     const last = G.aLog[G.aLog.length-1];
     Voice.say(last ? ('You asked, ' + last.q + ' And I said ' + last.a) : 'You have not asked me anything yet.', null);
     return Voice.after(()=>armAsk());
