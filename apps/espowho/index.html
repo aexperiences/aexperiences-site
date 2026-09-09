@@ -149,7 +149,14 @@ body[data-orb="talk"] .orbtag{color:var(--gold)}
 .askbig.hot .sub{opacity:.8}
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
-.fld.ask{margin:9px 0 0;font-size:1rem}
+.askform{display:flex;gap:8px;margin:9px 0 0}
+.fld.ask{margin:0;flex:1;min-width:0;font-size:1.05rem}
+.asksend{flex:0 0 auto;background:var(--gold);color:var(--ink);border-radius:14px;padding:0 18px;
+  font-size:1rem;font-weight:900;letter-spacing:.04em;box-shadow:0 4px 0 rgba(0,0,0,.24)}
+.asksend:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.24)}
+.asksend:disabled{opacity:.38;box-shadow:none;transform:none}
+.micnote{margin:9px 2px 0;font-size:.9rem;font-weight:700;line-height:1.35;color:#ffcf9a;text-wrap:balance}
+.micnote:empty{display:none}
 .askmini{display:flex;gap:8px;margin-top:9px}
 .mini{flex:1;background:rgba(255,255,255,.14);border-radius:14px;padding:11px 8px;font-size:.92rem;font-weight:800}
 .mini.gold{background:rgba(224,168,58,.24);color:var(--gold)}
@@ -286,7 +293,12 @@ body[data-orb="talk"] .orbtag{color:var(--gold)}
   <div class="qlist" id="qlist"></div>
   <div class="askrow">
     <button class="askbig" id="askbtn"><span class="ic">🎤</span><span class="t" id="asklabel">Ask me anything<span class="sub">Tap, then say your question out loud</span></span></button>
-    <input class="fld ask" id="asktype" maxlength="70" placeholder="…or type a question here" autocomplete="off">
+    <form class="askform" id="askform" autocomplete="off" action="#">
+      <input class="fld ask" id="asktype" maxlength="70" placeholder="…or type a question here"
+             autocomplete="off" autocorrect="off" enterkeyhint="send" inputmode="text">
+      <button class="asksend" id="asksend" type="submit" aria-label="Ask this question">ASK ▸</button>
+    </form>
+    <p class="micnote" id="micnote"></p>
     <div class="askmini">
       <button class="mini" id="askidea">💡 Give me an idea</button>
       <button class="mini gold" id="iknow">🏁 I know who it is!</button>
@@ -1629,8 +1641,22 @@ const Orb = {
 
   /* a real level meter. If the browser will not give us one we still
      animate, so the orb is never dead — it just stops being literal. */
+  /* The level meter is a nice-to-have. Speech recognition is the feature.
+     On Safari and iOS the two fight over the microphone, and on any browser
+     grabbing the input can knock the recognizer over — so the meter only
+     opens on engines where that is safe, and only once listening is
+     already up and running. */
+  safeMeter(){
+    const ua = navigator.userAgent;
+    const iOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+    const safari = /^((?!chrome|android|crios|fxios).)*safari/i.test(ua);
+    return !iOS && !safari && !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+  },
   async openMic(){
-    if(this.an) return;
+    if(this.an || this.noMeter) return;
+    if(!this.safeMeter()){ this.noMeter = true; return; }
+    await new Promise(r=>setTimeout(r,600));
+    if(this.state!=='listen' || this.noMeter) return;
     try{
       this.stream = await navigator.mediaDevices.getUserMedia({audio:true});
       const AC = window.AudioContext || window.webkitAudioContext;
@@ -1767,9 +1793,21 @@ const Listen = {
   ok: !!(window.SpeechRecognition || window.webkitSpeechRecognition),
   on: true, rec:null, live:false, want:null, cb:null, guard:null,
 
+  dead:false, why:'', started:false, fails:0,
+
   init(){
     try{ this.on = localStorage.getItem('espowho.mic') !== '0'; }catch(e){}
     this.paint();
+    if(!this.ok) this.why = 'This browser cannot listen.';
+  },
+  /* stop trying, tell the truth, keep the game playable */
+  die(msg){
+    this.dead = true; this.why = msg;
+    this.kill(); clearTimeout(this.guard); clearTimeout(this.wake);
+    this.cb = null; this.paint();
+    Orb.stopMic(); Orb.set('idle'); Orb.tag('');
+    if(window.micNote) micNote();
+    if(window.setAskLabel) setAskLabel(false);
   },
   paint(){
     $$('.mic').forEach(b=>{
@@ -1781,6 +1819,7 @@ const Listen = {
   },
   toggle(){
     this.on = !this.on;
+    if(this.on){ this.dead=false; this.why=''; this.fails=0; Orb.noMeter=false; }
     try{ localStorage.setItem('espowho.mic', this.on ? '1':'0'); }catch(e){}
     if(!this.on) this.stop();
     this.paint();
@@ -1790,7 +1829,7 @@ const Listen = {
 
   /* mode: 'yesno' | 'name' | 'free'   cb(result) */
   ask(mode, cb){
-    if(!this.ok || !this.on) return;
+    if(!this.ok || !this.on || this.dead) return;
     this.want = mode; this.cb = cb; this.nudges = 0;
     this.start();
   },
@@ -1809,10 +1848,27 @@ const Listen = {
       r.interimResults = false;
       r.maxAlternatives = 4;
       r.continuous = false;
-      r.onstart = () => { this.live = true; this.paint();
+      r.onstart = () => { this.live = true; this.started = true; this.fails = 0; this.paint();
                           Orb.set('listen');
                           Orb.tag(this.want==='free' ? 'Ask me anything' : 'I am listening'); };
-      r.onerror = () => { this.live = false; this.paint(); Orb.set('idle'); Orb.tag(''); };
+      r.onerror = ev => {
+        this.live = false; this.paint(); Orb.set('idle'); Orb.tag('');
+        const kind = ev && ev.error || '';
+        /* A denied or missing microphone is permanent for this visit. Say so
+           once and hand the child the typing path instead of pretending. */
+        if(kind==='not-allowed' || kind==='service-not-allowed'){
+          this.die('The microphone is blocked for this page. Type your question and press ASK, or allow the microphone in your browser settings.');
+        } else if(kind==='audio-capture'){
+          /* something else has the microphone — most often our own level
+             meter. Let go of it and give the recognizer one clean try. */
+          Orb.stopMic(); Orb.noMeter = true;
+          if((this.fails=(this.fails||0)+1) > 1)
+            this.die('I could not get to the microphone. Type your question and press ASK.');
+        } else if(kind!=='no-speech' && kind!=='aborted'){
+          if((this.fails=(this.fails||0)+1) > 2)
+            this.die('The microphone is not working here. Type your question and press ASK.');
+        }
+      };
       r.onend   = () => { this.live = false; this.paint();
                           if(Orb.state==='listen'){ Orb.set('idle'); Orb.tag(''); } };
       r.onresult = e => {
@@ -1823,6 +1879,13 @@ const Listen = {
       this.rec = r;
       try{ r.start(); }
       catch(e){ this.kill(); this.paint(); return; }   /* already-started etc. */
+      /* Some browsers only allow this straight off a tap. If nothing ever
+         started, stop guessing and point at the button and the type box. */
+      clearTimeout(this.wake);
+      this.wake = setTimeout(()=>{
+        if(!this.started && !this.dead)
+          this.die('Tap the green button to talk, or type your question and press ASK.');
+      }, 2500);
       /* never sit with the microphone open — a child walks away */
       clearTimeout(this.guard);
       this.guard = setTimeout(()=>{
@@ -2454,16 +2517,31 @@ function startAsk(){
    six year old never has to find a button to start a turn */
 function armAsk(){
   if(!$('#s-ask').classList.contains('on')) return;
-  if(!Listen.ok || !Listen.on){ setAskLabel(false); return; }
+  if(!Listen.ok || !Listen.on || Listen.dead){ setAskLabel(false); return; }
   setAskLabel(true);
   Listen.ask('free', said => { if($('#s-ask').classList.contains('on')) heardQuestion(said); });
 }
 function setAskLabel(hot){
   const b=$('#askbtn'); if(!b) return;
   b.classList.toggle('hot', !!hot);
+  const can = Listen.ok && Listen.on && !Listen.dead;
   $('#asklabel').innerHTML = hot
     ? 'I am listening…<span class="sub">Ask me anything about who I picked</span>'
-    : 'Ask me anything<span class="sub">Tap, then say your question out loud</span>';
+    : can ? 'Ask me anything<span class="sub">Tap, then say your question out loud</span>'
+          : 'Type your question<span class="sub">Then press the gold ASK button</span>';
+  /* the icon must not promise a microphone that is not there */
+  const ic = b.querySelector('.ic'); if(ic) ic.textContent = can ? '🎤' : '⌨️';
+  const box = $('#asktype');
+  if(box) box.placeholder = can ? '…or type a question here' : 'Type your question here';
+  micNote();
+}
+/* never leave a child staring at a button that will not work */
+function micNote(){
+  const n = $('#micnote'); if(!n) return;
+  if(!Listen.ok)        n.textContent = 'This browser cannot listen. Type your question and press ASK — everything else works the same.';
+  else if(!Listen.on)   n.textContent = 'Talking is turned off. Tap the microphone at the top to turn it back on.';
+  else if(Listen.dead)  n.textContent = Listen.why || 'I could not turn the microphone on. Type your question and press ASK.';
+  else                  n.textContent = '';
 }
 
 function paintAsk(){
@@ -2938,19 +3016,32 @@ $('#iknow').onclick=()=>{ Voice.unlock(); Listen.stop(); openPick(); };
 $('#askidea').onclick=()=>{ Voice.unlock(); askIdea(); };
 $('#askbtn').onclick=()=>{
   Voice.unlock();
-  if(Listen.live){ Listen.stop(); setAskLabel(false); }
-  else if(Listen.ok && Listen.on){ Voice.stop(); armAsk(); }
-  else { $('#asktype').focus(); }
+  if(Listen.live){ Listen.stop(); setAskLabel(false); return; }
+  if(Listen.ok && Listen.on){ Voice.stop(); Listen.gesture = true; armAsk(); }
+  else $('#asktype').focus();
 };
-$('#asktype').addEventListener('keydown', e=>{
-  if(e.key!=='Enter') return;
-  const v=e.target.value.trim(); if(!v) return;
-  e.target.value=''; e.target.blur(); Voice.unlock(); heardQuestion(v);
-});
+
+/* SENDING A TYPED QUESTION.
+   A submit on a real form is the one path that works everywhere: the Ask
+   button, the phone keyboard's Go key, and a desktop Enter all fire it.
+   Relying on a keydown listener alone left the child with a sentence they
+   could not send — no button, and a soft keyboard that may never report
+   Enter at all. */
+function sendTyped(){
+  const box = $('#asktype');
+  const v = (box.value||'').trim();
+  if(!v) return;
+  box.value=''; box.blur();
+  Voice.unlock(); Listen.stop();
+  heardQuestion(v);
+}
+$('#askform').addEventListener('submit', e=>{ e.preventDefault(); sendTyped(); });
+$('#asksend').addEventListener('click', e=>{ e.preventDefault(); sendTyped(); });
+$('#asktype').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); sendTyped(); } });
 /* typing and listening must never run at once */
 $('#asktype').addEventListener('focus', ()=>{ Listen.stop(); setAskLabel(false); });
 $$('.speaker').forEach(b=>b.onclick=()=>Voice.toggle());
-$$('.mic').forEach(b=>b.onclick=()=>{ Voice.unlock(); Listen.toggle(); });
+$$('.mic').forEach(b=>b.onclick=()=>{ Voice.unlock(); Listen.toggle(); micNote(); setAskLabel(Listen.live); });
 
 /* tap any spoken line to hear it again */
 ['#qtext','#rname','#howtext'].forEach(sel=>{
