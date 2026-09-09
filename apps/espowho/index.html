@@ -42,7 +42,7 @@ button{font-family:inherit;border:0;cursor:pointer;color:inherit}
 .mic.off{opacity:.4}
 .mic.hot{background:var(--yes);box-shadow:0 0 0 0 rgba(63,166,111,.7);animation:pulse 1.3s infinite}
 @keyframes pulse{70%{box-shadow:0 0 0 16px rgba(63,166,111,0)}100%{box-shadow:0 0 0 0 rgba(63,166,111,0)}}
-body.hearing .q::after{content:" 🎤";font-size:.5em;opacity:.65}
+/* the orb says she is listening — no stray emoji in the middle of a question */
 
 h1.logo{font-size:clamp(2.4rem,10vw,3.4rem);font-weight:800;letter-spacing:-.03em;margin:0;text-align:center}
 h1.logo .a{color:var(--gold)}
@@ -90,6 +90,32 @@ h1.logo .a{color:var(--gold)}
 .name w{display:inline-block;padding:0 .06em;border-radius:8px}
 .name w.lit{background:var(--gold);color:var(--ink)}
 
+
+/* ---------- THE ORB — she talks, and she hears you ---------- */
+.orbwrap{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  margin:2px 0 10px;flex:0 0 auto;position:relative}
+.orbwrap canvas{display:block;filter:drop-shadow(0 10px 26px rgba(0,0,0,.42))}
+.orbtag{font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;font-weight:800;
+  color:rgba(255,255,255,.55);margin-top:2px;min-height:1em;transition:color .25s}
+body[data-orb="listen"] .orbtag{color:#7ee2ab}
+body[data-orb="talk"] .orbtag{color:var(--gold)}
+@media (max-height:700px){ .orbwrap{margin:0 0 4px} .orbwrap canvas{max-height:140px;max-width:140px} }
+@media (min-height:820px){ .orbwrap{margin:10px 0 16px} }
+
+/* the question gets to be the star */
+.q{text-wrap:balance}
+.q w.lit{background:var(--gold);color:var(--ink);box-shadow:0 0 22px rgba(224,168,58,.55)}
+.name w.lit{box-shadow:0 0 26px rgba(224,168,58,.6)}
+
+/* chunkier answer buttons */
+.ans{transition:transform .08s}
+.ans:active{transform:translateY(3px) scale(.99)}
+
+/* the verdict lands instead of just appearing */
+.verdict{backdrop-filter:blur(6px)}
+.verdict.on{animation:stamp .34s cubic-bezier(.2,1.5,.4,1)}
+@keyframes stamp{0%{transform:scale(2.1);opacity:0}60%{transform:scale(.94);opacity:1}100%{transform:scale(1)}}
+
 /* ---------- kid-asks mode ---------- */
 .qlist{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;margin:4px -4px 12px;padding:0 4px}
 .qbtn{display:block;width:100%;text-align:left;background:rgba(255,255,255,.12);border-radius:16px;padding:15px 17px;
@@ -109,7 +135,8 @@ h1.logo .a{color:var(--gold)}
 .qa:after{content:'';display:block;clear:both}
 .qa w{display:inline-block;padding:0 .06em;border-radius:6px}
 .qa w.lit{background:var(--gold);color:var(--ink)}
-.qhint{opacity:.62;font-size:.95rem;font-weight:600;line-height:1.4;padding:10px 4px;text-wrap:balance}
+.qhint{opacity:.72;font-size:1.02rem;font-weight:700;line-height:1.45;padding:4px 10px;text-wrap:balance;text-align:center}
+#qlist:has(.qhint){display:flex;align-items:flex-start;justify-content:center}
 
 .askrow{flex:0 0 auto;padding-top:2px}
 .askbig{display:flex;align-items:center;gap:13px;width:100%;text-align:left;background:var(--gold);color:var(--ink);
@@ -117,7 +144,10 @@ h1.logo .a{color:var(--gold)}
 .askbig .ic{font-size:1.7rem;line-height:1}
 .askbig .sub{display:block;font-size:.82rem;font-weight:700;opacity:.72;margin-top:3px}
 .askbig:active{transform:translateY(3px);box-shadow:0 3px 0 rgba(0,0,0,.22)}
-.askbig.hot{background:#e2543f;color:#fff;animation:pulse 1s ease-in-out infinite}
+.askbig.hot{background:linear-gradient(135deg,#7ee2ab,#3fa66f);color:#0d2c1c;
+  box-shadow:0 6px 0 rgba(0,0,0,.22),0 0 34px rgba(63,166,111,.5);animation:breathe 1.6s ease-in-out infinite}
+.askbig.hot .sub{opacity:.8}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
 .fld.ask{margin:9px 0 0;font-size:1rem}
 .askmini{display:flex;gap:8px;margin-top:9px}
@@ -147,8 +177,11 @@ h1.logo .a{color:var(--gold)}
 .waiting .dots{font-size:3rem;letter-spacing:.2em}
 
 /* ---------- the art layer ---------- */
-.bgart{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.30;transition:opacity .5s ease;
-  filter:blur(3px) saturate(.85);transform:scale(1.12)}
+.bgart{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.13;transition:opacity .5s ease;
+  filter:blur(16px) saturate(.6);transform:scale(1.25)}
+/* a soft vignette so nothing behind competes with the orb */
+.bgart::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(65% 45% at 50% 34%,rgba(46,17,8,.55) 0%,rgba(46,17,8,0) 70%)}
 .bgart svg{width:100%;height:100%;display:block}
 /* the words always win over the scene behind them */
 .q,.name,.bigcode{text-shadow:0 3px 18px rgba(20,7,2,.75),0 1px 3px rgba(20,7,2,.9)}
@@ -224,6 +257,7 @@ h1.logo .a{color:var(--gold)}
   <div class="topbar"><button class="back" data-go="home">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker" id="spk4">🔊</button></div>
   <div class="meta" id="qcount">Question one of twenty</div>
   <div class="bar"><i id="qbar"></i></div>
+  <div class="orbwrap"><canvas class="orbc"></canvas><div class="orbtag"></div></div>
   <div class="qwrap"><div class="q" id="qtext"></div></div>
   <div class="acts">
     <button class="ans y" data-ans="y">✓ YES</button>
@@ -248,7 +282,7 @@ h1.logo .a{color:var(--gold)}
   <div class="topbar"><button class="back" data-go="home">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker" id="spk6">🔊</button></div>
   <div class="meta" id="acount">You have asked no questions yet</div>
   <div class="bar"><i id="abar"></i></div>
-  <div style="height:10px"></div>
+  <div class="orbwrap"><canvas class="orbc"></canvas><div class="orbtag"></div></div>
   <div class="qlist" id="qlist"></div>
   <div class="askrow">
     <button class="askbig" id="askbtn"><span class="ic">🎤</span><span class="t" id="asklabel">Ask me anything<span class="sub">Tap, then say your question out loud</span></span></button>
@@ -1554,6 +1588,176 @@ const Art = {
   }
 };
 /* ============================================================
+   THE ORB — ESPOwho's face.
+   A child needs to SEE that the app is talking and, more
+   importantly, see that it is hearing them. So the orb pulses
+   in gold while she speaks and turns green and moves with the
+   child's actual voice while she listens, driven by a real
+   microphone level, not a fake animation.
+   ============================================================ */
+const Orb = {
+  pads:[], raf:null, state:'idle', t:0, level:0, target:0,
+  stream:null, an:null, buf:null, ring:[], d:220,
+
+  /* one orb, drawn onto every screen that shows one */
+  mount(){
+    this.pads = [...document.querySelectorAll('canvas.orbc')].map(c=>({c, g:c.getContext('2d')}));
+    if(!this.pads.length) return;
+    this.size();
+    addEventListener('resize', ()=>this.size());
+    this.loop();
+  },
+  size(){
+    const r = Math.min(devicePixelRatio||1, 2);
+    let d = 220;
+    this.pads.forEach(p=>{ const w = p.c.parentNode.clientWidth; if(w) d = Math.min(d, w); });
+    d = Math.max(150, Math.min(d, 230));
+    this.pads.forEach(p=>{
+      p.c.width = d*r; p.c.height = d*r;
+      p.c.style.width = d+'px'; p.c.style.height = d+'px';
+      p.g.setTransform(r,0,0,r,0,0);
+    });
+    this.d = d;
+  },
+  tag(t){ document.querySelectorAll('.orbtag').forEach(e=>e.textContent=t||''); },
+  set(s){
+    if(this.state===s) return;
+    this.state = s;
+    document.body.dataset.orb = s;
+    if(s==='listen') this.openMic(); else this.target = 0;
+  },
+
+  /* a real level meter. If the browser will not give us one we still
+     animate, so the orb is never dead — it just stops being literal. */
+  async openMic(){
+    if(this.an) return;
+    try{
+      this.stream = await navigator.mediaDevices.getUserMedia({audio:true});
+      const AC = window.AudioContext || window.webkitAudioContext;
+      this.actx = this.actx || new AC();
+      const src = this.actx.createMediaStreamSource(this.stream);
+      this.an = this.actx.createAnalyser();
+      this.an.fftSize = 512; this.an.smoothingTimeConstant = .75;
+      src.connect(this.an);
+      this.buf = new Uint8Array(this.an.frequencyBinCount);
+    }catch(e){ this.an = null; }
+  },
+  read(){
+    if(this.state==='listen'){
+      if(this.an){
+        this.an.getByteFrequencyData(this.buf);
+        let s=0; for(let i=2;i<40;i++) s += this.buf[i];
+        this.target = Math.min(1, (s/38)/95);
+      } else {
+        this.target = .30 + Math.sin(this.t/9)*.16;      /* still alive */
+      }
+    } else if(this.state==='talk'){
+      /* a speech-like envelope: syllables, not a sine wave */
+      const a = Math.sin(this.t/3.1), b = Math.sin(this.t/1.7+1.2), c = Math.sin(this.t/6.3);
+      this.target = .34 + Math.abs(a*.34 + b*.22 + c*.14);
+    } else {
+      this.target = .10 + Math.sin(this.t/22)*.05;        /* breathing */
+    }
+    this.level += (this.target - this.level) * .28;
+  },
+
+  colors(){
+    if(this.state==='listen') return ['#7ee2ab','#3fa66f','rgba(63,166,111,'];
+    if(this.state==='talk')   return ['#ffd489','#e0a83a','rgba(224,168,58,'];
+    return ['#f0c98a','#c8794f','rgba(200,121,79,'];
+  },
+
+  loop(){
+    this.raf = requestAnimationFrame(()=>this.loop());
+    if(!this.pads.length) return;
+    this.t++; this.read();
+    this.step();
+    this.pads.forEach(p=>{ if(p.c.offsetParent) this.paint(p.g); });
+  },
+  step(){
+    const base = this.d*0.26, L = this.level;
+    if(this.t % Math.max(6, 22 - Math.round(L*16)) === 0) this.ring.push({r:base, a:.5});
+    this.ring = this.ring.filter(o=>{ o.r += 1.5 + L*2.6; o.a -= .012; return o.a > 0 && o.r < this.d/2; });
+  },
+  paint(g){
+    const x = this.d/2, y = this.d/2, base = this.d*0.26, L = this.level;
+    const [hi, mid, soft] = this.colors();
+    g.clearRect(0,0,this.d,this.d);
+
+    /* outward rings */
+    this.ring.forEach(o=>{
+      g.beginPath(); g.arc(x,y,o.r,0,6.2832);
+      g.strokeStyle = soft + o.a.toFixed(3) + ')'; g.lineWidth = 2; g.stroke();
+    });
+
+    /* the glow */
+    const gr = g.createRadialGradient(x,y,base*.25,x,y,base*(1.5+L*.6));
+    gr.addColorStop(0, hi); gr.addColorStop(.55, mid); gr.addColorStop(1, soft+'0)');
+    g.globalAlpha = .30 + L*.30;
+    g.beginPath(); g.arc(x,y,base*(1.5+L*.6),0,6.2832); g.fillStyle = gr; g.fill();
+    g.globalAlpha = 1;
+
+    /* the body — a wobbling blob, louder means livelier */
+    g.beginPath();
+    for(let i=0;i<=64;i++){
+      const a = i/64*6.2832;
+      const w = 1 + Math.sin(a*3 + this.t/7)*0.028*(0.3+L)
+                  + Math.sin(a*5 - this.t/11)*0.018*(0.3+L);
+      const r = base * (0.86 + L*0.30) * w;
+      const px = x + Math.cos(a)*r, py = y + Math.sin(a)*r;
+      i ? g.lineTo(px,py) : g.moveTo(px,py);
+    }
+    g.closePath();
+    const bg = g.createLinearGradient(x-base,y-base,x+base,y+base);
+    bg.addColorStop(0, hi); bg.addColorStop(1, mid);
+    g.fillStyle = bg; g.fill();
+
+    /* the bars inside — this is what reads as "it hears me" */
+    const n = 5;
+    for(let i=0;i<n;i++){
+      const off = (i-(n-1)/2);
+      const h = base * (0.16 + Math.abs(Math.sin(this.t/(5+i*1.7) + i))*L*0.9);
+      const bx = x + off*(base*0.24);
+      g.beginPath();
+      const rr = base*0.055;
+      g.roundRect ? g.roundRect(bx-rr, y-h/2, rr*2, h, rr) : g.rect(bx-rr, y-h/2, rr*2, h);
+      g.fillStyle = 'rgba(42,24,16,.55)'; g.fill();
+    }
+  },
+
+  stopMic(){
+    if(this.stream){ this.stream.getTracks().forEach(t=>t.stop()); this.stream=null; }
+    this.an = null;
+  }
+};
+
+/* ---------------- LITTLE SOUNDS ----------------
+   No files to download — three short tones made on the spot. */
+const Blip = {
+  ctx:null,
+  go(kind){
+    try{
+      const AC = window.AudioContext || window.webkitAudioContext;
+      this.ctx = this.ctx || new AC();
+      const c = this.ctx, now = c.currentTime;
+      const notes = kind==='y' ? [[660,0],[990,.09]]
+                  : kind==='n' ? [[300,0],[200,.10]]
+                  : kind==='win' ? [[523,0],[659,.09],[784,.18],[1046,.27]]
+                  : [[440,0]];
+      notes.forEach(([f,at])=>{
+        const o = c.createOscillator(), g = c.createGain();
+        o.type = kind==='n' ? 'triangle' : 'sine';
+        o.frequency.value = f;
+        g.gain.setValueAtTime(0, now+at);
+        g.gain.linearRampToValueAtTime(.16, now+at+.015);
+        g.gain.exponentialRampToValueAtTime(.0008, now+at+.20);
+        o.connect(g); g.connect(c.destination);
+        o.start(now+at); o.stop(now+at+.22);
+      });
+    }catch(e){}
+  }
+};
+/* ============================================================
    LISTENING — a child answers out loud instead of reading.
    The buttons never go away; this is an extra door, not a
    replacement, because a phone in a loud kitchen will mishear
@@ -1592,7 +1796,12 @@ const Listen = {
   },
 
   start(){
-    if(!this.ok || !this.on || this.live) return;
+    if(!this.ok || !this.on) return;
+    /* Never early-return because we THINK we are already live. A recognizer
+       that was aborted reports onend asynchronously, so "live" can still be
+       true when the next game starts — and the microphone would then never
+       open again for the rest of the session. Tear the old one down first. */
+    this.kill();
     const R = window.SpeechRecognition || window.webkitSpeechRecognition;
     try{
       const r = new R();
@@ -1600,16 +1809,20 @@ const Listen = {
       r.interimResults = false;
       r.maxAlternatives = 4;
       r.continuous = false;
-      r.onstart = () => { this.live = true; this.paint(); };
-      r.onerror = () => { this.live = false; this.paint(); };
-      r.onend   = () => { this.live = false; this.paint(); };
+      r.onstart = () => { this.live = true; this.paint();
+                          Orb.set('listen');
+                          Orb.tag(this.want==='free' ? 'Ask me anything' : 'I am listening'); };
+      r.onerror = () => { this.live = false; this.paint(); Orb.set('idle'); Orb.tag(''); };
+      r.onend   = () => { this.live = false; this.paint();
+                          if(Orb.state==='listen'){ Orb.set('idle'); Orb.tag(''); } };
       r.onresult = e => {
         const heard = [];
         for(const res of e.results) for(const alt of res) heard.push((alt.transcript||'').toLowerCase().trim());
         this.heard(heard);
       };
       this.rec = r;
-      r.start();
+      try{ r.start(); }
+      catch(e){ this.kill(); this.paint(); return; }   /* already-started etc. */
       /* never sit with the microphone open — a child walks away */
       clearTimeout(this.guard);
       this.guard = setTimeout(()=>{
@@ -1626,10 +1839,16 @@ const Listen = {
       }, this.want==='free' ? 15000 : 11000);
     }catch(e){ this.live = false; this.paint(); }
   },
+  /* let go of a recognizer completely — its callbacks must not touch us again */
+  kill(){
+    const r = this.rec;
+    if(r){ r.onstart=r.onerror=r.onend=r.onresult=null; try{ r.abort(); }catch(e){} }
+    this.rec = null; this.live = false;
+  },
   stop(){
     clearTimeout(this.guard);
-    if(this.rec){ try{ this.rec.abort(); }catch(e){} }
-    this.live = false; this.paint();
+    this.kill(); this.paint();
+    if(Orb.state==='listen'){ Orb.set('idle'); Orb.tag(''); }
   },
 
   heard(list){
@@ -1937,6 +2156,7 @@ const Voice = {
   },
   stop(){
     this.queue=[]; this.speaking=false; this.idle=null;
+    if(Orb.state==='talk'){ Orb.set('idle'); Orb.tag(''); }
     clearTimeout(this.guard);
     this.tok=(this.tok||0)+1;        /* invalidates every callback still in flight */
     this.silence();
@@ -1959,7 +2179,8 @@ const Voice = {
   /* run this once the talking actually stops — the microphone must never
      be open while the app is speaking, or it hears itself and answers itself */
   after(fn){ this.idle = fn; if(!this.speaking) this.drain(); },
-  drain(){ const f=this.idle; this.idle=null; if(f) try{ f(); }catch(e){} },
+  drain(){ const f=this.idle; this.idle=null;
+           if(f) try{ f(); }catch(e){ console.error('[espowho] after-speech step failed:', e); } },
   run(){
     if(!this.queue || !this.queue.length){ this.speaking=false; this.drain(); return; }
     const [text, el] = this.queue.shift();
@@ -1972,6 +2193,7 @@ const Voice = {
        than once, which is how two lines ended up talking over each other. */
     const mine = this.tok = (this.tok||0)+1;
     this.silence();
+    Orb.set('talk'); Orb.tag('Listen…');
     clearTimeout(this.guard);
     this.guard = setTimeout(()=>this.done(mine), 1600 + (''+text).length*95);
     const s = slug(text);
@@ -1986,6 +2208,7 @@ const Voice = {
   done(mine){
     if(mine !== undefined && mine !== this.tok) return;   /* a stale finish */
     clearTimeout(this.guard);
+    if(!this.queue || !this.queue.length){ Orb.set('idle'); Orb.tag(''); }
     this.tok = (this.tok||0)+1;
     this.silence();
     this.clearLight(); this.speaking=false; this.run();
@@ -2188,6 +2411,7 @@ function win(){
   show('reveal');
   $('#rbadge').className='badge'; $('#rbadge').innerHTML = Art.plate(G.guess.e.cat, G.guess.e.emoji, 2);
   $('#risit').textContent = 'I got it!';
+  Blip.go('win');
   Voice.say('I got it! It was ' + spoken(G.guess.e.name) + '. Want to play again?', $('#rname'));
   Voice.add('Tap the green button to play again, or the grey one to go back to the start.', null);
   confetti();
@@ -2202,6 +2426,7 @@ function giveUp(){
   show('reveal');
   $('#rbadge').className='badge emo'; $('#rbadge').innerHTML = '🏆';
   $('#risit').textContent = 'You win!';
+  Blip.go('win');
   Voice.say('You beat me! I could not figure it out. Want to play again?', $('#rname'));
   Voice.add('Tap the green button to play again, or the grey one to go back to the start.', null);
   confetti();
@@ -2279,7 +2504,7 @@ function heardQuestion(said){
 
   /* a straight guess at the name ends the game the moment it is right */
   if(r.kind==='name' && r.yes){
-    logAsk(shown, 'YES!', 'y');
+    logAsk(shown, 'YES!', 'y'); Blip.go('win');
     Voice.say('Yes! It is ' + spoken(G.secret.name) + '. You got it!', null);
     return Voice.after(()=>judge(G.secret));
   }
@@ -2313,6 +2538,7 @@ function heardQuestion(said){
 function logAsk(q, a, cls){ G.aLog.push({q,a,cls}); paintAsk(); }
 
 function flashVerdict(yes){
+  Blip.go(yes?'y':'n');
   const v=$('#verdict');
   v.className='verdict on '+(yes?'y':'n');
   v.textContent = yes ? 'YES' : 'NO';
@@ -2376,7 +2602,7 @@ function judge(e){
   Voice.say(right ? ('You got it! It was ' + spoken(G.secret.name) + '. Nice one!')
                   : ('It was ' + spoken(G.secret.name) + '. Good try!'), $('#rname'));
   Voice.add('Tap the green button to play again, or the grey one to go back to the start.', null);
-  if(right) confetti();
+  if(right){ Blip.go('win'); confetti(); }
   $('#ractions').innerHTML =
     '<button class="ans y" id="r-again">▶ Play again</button>' +
     '<button class="ans m" id="r-home">Back to the start</button>';
@@ -2649,6 +2875,8 @@ const MAX_ASK = 20;
 function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
 /* ---------------- WIRING ---------------- */
+Orb.mount();
+
 document.addEventListener('click', e=>{ Voice.unlock(); }, {capture:true});
 
 $$('[data-go]').forEach(b=>b.onclick=()=>{
