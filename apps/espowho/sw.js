@@ -2,12 +2,14 @@
    HTML network-first so a deploy actually shows up.
    Voice manifest network-first so newly baked lines are picked up.
    Clip files are content-slug names, so they cache forever. */
-const CACHE = 'espowho-v1';
+const CACHE = 'espowho-v2';
 const SHELL = ['./','./index.html','./manifest.webmanifest',
                './assets/espowho-icon-192.png','./assets/espowho-icon-512.png'];
+/* One page that will not install must never sink the whole worker */
+async function fill(c){ for(const u of SHELL){ try{ await c.add(u); }catch(e){} } }
 
 self.addEventListener('install', e=>{
-  e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()));
+  e.waitUntil(caches.open(CACHE).then(fill).then(()=>self.skipWaiting()));
 });
 self.addEventListener('activate', e=>{
   e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));

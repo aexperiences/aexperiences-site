@@ -8,7 +8,10 @@
 <meta name="theme-color" content="#2e1108">
 <link rel="icon" href="assets/espowho-icon-512.png">
 <link rel="apple-touch-icon" href="assets/espowho-icon-512.png">
+<link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ESPOwho">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <style>
 :root{
@@ -2954,6 +2957,17 @@ function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;'
 
 /* ---------------- WIRING ---------------- */
 Orb.mount();
+
+/* PUT IT ON THE HOME SCREEN AND IT KEEPS WORKING.
+   The worker is network-first for pages, so an installed app always gets the
+   newest version the moment it can reach the internet — nobody ever has to
+   delete it and add it again. The cache is only there for the car, the
+   waiting room, and anywhere else the signal drops. */
+if('serviceWorker' in navigator){
+  addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
 
 document.addEventListener('click', e=>{ Voice.unlock(); }, {capture:true});
 
