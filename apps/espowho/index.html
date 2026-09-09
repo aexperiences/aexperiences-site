@@ -1,0 +1,2358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ESPOwho — the twenty questions game</title>
+<meta name="description" content="ESPOwho is a talking twenty questions game for kids. It reads every word out loud and lights up each word as it says it. No accounts, no ads, nothing leaves the device.">
+<meta name="theme-color" content="#2e1108">
+<link rel="icon" href="assets/espowho-icon-512.png">
+<link rel="apple-touch-icon" href="assets/espowho-icon-512.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+:root{
+  --espresso:#2a1810; --forest:#1c3d22; --gold:#e0a83a; --cream:#f4eede; --clay:#c8794f;
+  --amber-1:#e08a3a; --amber-2:#7a3416; --amber-3:#2e1108;
+  --ink:#2a1810; --paper:#f8f2e6;
+  --yes:#3fa66f; --yes-d:#2c7a51; --no:#d1584a; --no-d:#9c3c31;
+  --r:22px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;font-family:var(--font);color:var(--cream);
+  background:radial-gradient(130% 90% at 50% 8%,var(--amber-1) 0%,var(--amber-2) 50%,var(--amber-3) 100%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;overscroll-behavior:none;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);}
+button{font-family:inherit;border:0;cursor:pointer;color:inherit}
+.app{max-width:640px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;padding:18px 18px 26px}
+.screen{display:none;flex:1;flex-direction:column}
+.screen.on{display:flex}
+
+/* ---------- shared ---------- */
+.topbar{display:flex;align-items:center;gap:12px;min-height:46px;margin-bottom:6px}
+.back{background:rgba(255,255,255,.14);border-radius:999px;padding:10px 16px;font-weight:800;font-size:.95rem}
+.spacer{flex:1}
+.speaker{background:rgba(255,255,255,.14);border-radius:999px;width:46px;height:46px;font-size:1.25rem;display:flex;align-items:center;justify-content:center}
+.speaker.off{opacity:.4}
+.mic{background:rgba(255,255,255,.14);border-radius:999px;width:46px;height:46px;font-size:1.15rem;
+  display:flex;align-items:center;justify-content:center;position:relative}
+.mic.off{opacity:.4}
+.mic.hot{background:var(--yes);box-shadow:0 0 0 0 rgba(63,166,111,.7);animation:pulse 1.3s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 16px rgba(63,166,111,0)}100%{box-shadow:0 0 0 0 rgba(63,166,111,0)}}
+body.hearing .q::after{content:" 🎤";font-size:.5em;opacity:.65}
+
+h1.logo{font-size:clamp(2.4rem,10vw,3.4rem);font-weight:800;letter-spacing:-.03em;margin:0;text-align:center}
+h1.logo .a{color:var(--gold)}
+.tag{text-align:center;color:rgba(255,255,255,.72);font-size:1.02rem;margin:8px 0 0}
+
+
+.big{display:block;width:100%;background:var(--cream);color:var(--ink);border-radius:var(--r);
+  padding:20px 22px;font-size:1.22rem;font-weight:800;text-align:left;margin-bottom:14px;
+  box-shadow:0 6px 0 rgba(0,0,0,.28);display:flex;align-items:center;gap:14px;line-height:1.25}
+.big .ic{font-size:1.9rem;flex:none}
+.big .sub{display:block;font-weight:600;font-size:.92rem;color:#6b5648;margin-top:3px}
+.big:active{transform:translateY(3px);box-shadow:0 3px 0 rgba(0,0,0,.28)}
+.big.gold{background:var(--gold)}
+.big.clay{background:var(--clay);color:#fff}
+.big.clay .sub{color:rgba(255,255,255,.85)}
+.big.sel{outline:4px solid var(--gold);outline-offset:3px}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.chip{background:rgba(255,255,255,.13);border-radius:18px;text-align:center;font-weight:800;font-size:1rem;line-height:1.3}
+.chip:active{transform:scale(.96)}
+
+/* ---------- play ---------- */
+.meta{font-size:.78rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:10px 0 8px}
+.bar{height:12px;border-radius:99px;background:rgba(0,0,0,.28);overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--gold),#ffd07a);transition:width .35s ease}
+.qwrap{flex:1;display:flex;align-items:center;justify-content:center;padding:26px 0 18px}
+.q{font-size:clamp(1.7rem,7vw,2.5rem);font-weight:800;line-height:1.22;letter-spacing:-.02em;text-align:center;text-wrap:balance}
+.q w{display:inline-block;padding:0 .06em;border-radius:8px;transition:background .08s linear,color .08s linear}
+.q w.lit{background:var(--gold);color:var(--ink)}
+.acts{display:flex;flex-direction:column;gap:13px}
+.ans{border-radius:var(--r);padding:22px;font-size:1.45rem;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;gap:12px}
+.ans:active{transform:translateY(4px)}
+.ans.y{background:var(--yes);box-shadow:0 7px 0 var(--yes-d)}
+.ans.y:active{box-shadow:0 3px 0 var(--yes-d)}
+.ans.n{background:var(--no);box-shadow:0 7px 0 var(--no-d)}
+.ans.n:active{box-shadow:0 3px 0 var(--no-d)}
+.ans.m{background:rgba(255,255,255,.15);font-size:1.1rem;padding:15px;box-shadow:none}
+
+/* ---------- reveal ---------- */
+.reveal{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px}
+.badge{width:150px;height:150px;border-radius:38px;background:linear-gradient(160deg,var(--gold),var(--clay));
+  display:flex;align-items:center;justify-content:center;font-size:80px;box-shadow:0 16px 40px rgba(0,0,0,.45);margin-bottom:14px}
+.isit{font-size:.82rem;letter-spacing:.18em;text-transform:uppercase;font-weight:800;color:rgba(255,255,255,.7)}
+.name{font-size:clamp(2rem,9vw,3rem);font-weight:800;letter-spacing:-.02em;margin:4px 0 10px;text-wrap:balance}
+.name w{display:inline-block;padding:0 .06em;border-radius:8px}
+.name w.lit{background:var(--gold);color:var(--ink)}
+
+/* ---------- kid-asks mode ---------- */
+.qlist{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;margin:4px -4px 12px;padding:0 4px}
+.qbtn{display:block;width:100%;text-align:left;background:rgba(255,255,255,.12);border-radius:16px;padding:15px 17px;
+  font-size:1.05rem;font-weight:700;margin-bottom:9px;line-height:1.3}
+.qbtn:active{background:rgba(255,255,255,.22)}
+.qbtn.used{opacity:.38}
+.verdict{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(46,17,8,.9);z-index:40;font-size:clamp(3rem,18vw,6rem);font-weight:800;letter-spacing:-.02em}
+.verdict.on{display:flex}
+.verdict.y{color:#7ee2ab}.verdict.n{color:#ff9c90}
+.pickgrid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px;align-content:start;padding-bottom:10px}
+
+
+.lbl{display:block;font-size:.78rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:14px 0 8px}
+.fld{width:100%;border:0;border-radius:18px;padding:17px 18px;font-size:1.15rem;font-weight:700;
+  background:var(--cream);color:var(--ink);margin-bottom:14px;font-family:inherit}
+.fld.code{text-align:center;font-size:2.2rem;letter-spacing:.5em;text-indent:.5em;font-weight:800}
+.bigcode{font-size:clamp(3.4rem,20vw,6rem);font-weight:800;letter-spacing:.16em;color:var(--gold);
+  text-shadow:0 6px 20px rgba(0,0,0,.4);margin:6px 0 4px}
+.roles{display:flex;gap:10px;margin:12px 0}
+.role{flex:1;background:rgba(255,255,255,.12);border-radius:14px;padding:11px;text-align:center;font-size:.86rem;font-weight:700}
+.role b{display:block;font-size:1.05rem;margin-top:2px}
+.asked{flex:1;overflow-y:auto;margin:6px -4px 10px;padding:0 4px;min-height:0}
+.arow{background:rgba(0,0,0,.2);border-radius:14px;padding:12px 15px;margin-bottom:8px;font-size:.98rem;line-height:1.35}
+.arow em{font-style:normal;font-weight:800;float:right;margin-left:10px}
+.arow em.y{color:#7ee2ab}.arow em.n{color:#ff9c90}.arow em.m{color:#e0d3bd}
+.waiting{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;color:rgba(255,255,255,.8)}
+.waiting .dots{font-size:3rem;letter-spacing:.2em}
+
+/* ---------- the art layer ---------- */
+.bgart{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.30;transition:opacity .5s ease;
+  filter:blur(3px) saturate(.85);transform:scale(1.12)}
+.bgart svg{width:100%;height:100%;display:block}
+/* the words always win over the scene behind them */
+.q,.name,.bigcode{text-shadow:0 3px 18px rgba(20,7,2,.75),0 1px 3px rgba(20,7,2,.9)}
+.mark{width:min(52vw,214px);aspect-ratio:1;margin:10px auto 4px;display:block;border-radius:30px;
+  overflow:hidden;box-shadow:0 20px 48px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.10) inset}
+.mark svg{display:block;width:100%;height:100%}
+.chip{position:relative;overflow:hidden;padding:0;background:none}
+.chip .art{display:block;width:100%;aspect-ratio:1.25;overflow:hidden}
+.chip .art svg{display:block;width:100%;height:100%}
+.chip .cap{display:block;padding:11px 8px 13px;background:rgba(0,0,0,.34);font-weight:800;font-size:.98rem}
+.chip.sel{outline:4px solid var(--gold);outline-offset:-4px;background:none}
+.chip.sel .cap{background:var(--gold);color:var(--ink)}
+.pick{position:relative;overflow:hidden;padding:0;background:none;border-radius:18px}
+.pick .plate{display:block;width:100%;aspect-ratio:1}
+.pick .cap{display:block;padding:8px 6px 10px;background:rgba(0,0,0,.42);font-size:.8rem;font-weight:700;line-height:1.2}
+.pick:active{transform:scale(.95)}
+.badge{width:172px;height:172px;border-radius:40px;overflow:hidden;padding:0;background:none;
+  box-shadow:0 18px 44px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.12) inset}
+.badge .plate{width:100%;height:100%;display:block}
+.badge.emo{display:flex;align-items:center;justify-content:center;font-size:80px;
+  background:linear-gradient(160deg,var(--gold),var(--clay))}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:60}
+.foot{text-align:center;color:rgba(255,255,255,.42);font-size:.76rem;margin-top:16px}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div class="bgart" id="bgart"></div>
+<div class="app">
+
+<!-- ============ HOME ============ -->
+<section class="screen on" id="s-home">
+  <div class="mark" id="homemark"></div>
+  <h1 class="logo">ESPO<span class="a">who</span></h1>
+  <p class="tag">Think of somebody. I will guess it.</p>
+  <div style="height:26px"></div>
+  <button class="big gold" data-go="mode-guess"><span class="ic">🔮</span><span>I will guess<span class="sub">You think of someone. I ask the questions.</span></span></button>
+  <button class="big clay" data-go="mode-ask"><span class="ic">🙋</span><span>You guess<span class="sub">I think of someone. You ask the questions.</span></span></button>
+  <button class="big" id="door-friend" data-go="friend" style="display:none;background:#3fa66f;color:#fff"><span class="ic">🎟️</span><span>Play with a friend<span class="sub">They get a code. You take turns, any time you like.</span></span></button>
+  <button class="big" data-go="how"><span class="ic">📖</span><span>How do I play?<span class="sub">Read out loud, one step at a time.</span></span></button>
+  <p class="foot">Accelerated Experiences LLC · nothing you tap ever leaves this device</p>
+</section>
+
+<!-- ============ HOW ============ -->
+<section class="screen" id="s-how">
+  <div class="topbar"><button class="back" data-go="home">← Back</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker" id="spk3">🔊</button></div>
+  <div class="qwrap"><div class="q" id="howtext"></div></div>
+  <button class="big gold" id="how-next"><span class="ic">▶</span><span>Next</span></button>
+</section>
+
+<!-- ============ AGE / RAIL ============ -->
+<section class="screen" id="s-rail">
+  <div class="topbar"><button class="back" data-go="home">← Back</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker" id="spk1">🔊</button></div>
+  <div class="meta">How big a brain today?</div>
+  <button class="big" data-rail="1"><span class="ic">🐣</span><span>Little<span class="sub">Easy picture questions. Good for six.</span></span></button>
+  <button class="big" data-rail="2"><span class="ic">🐤</span><span>Middle<span class="sub">A few trickier ones. Good for nine.</span></span></button>
+  <button class="big" data-rail="3"><span class="ic">🦅</span><span>Big Brain<span class="sub">Everything I know. Good for twelve.</span></span></button>
+</section>
+
+<!-- ============ CATEGORY ============ -->
+<section class="screen" id="s-cat">
+  <div class="topbar"><button class="back" data-go="rail">← Back</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker" id="spk2">🔊</button></div>
+  <div class="meta">Pick a world</div>
+  <div class="grid2" id="catgrid"></div>
+  <div style="height:14px"></div>
+</section>
+
+<!-- ============ PLAY (app guesses) ============ -->
+<section class="screen" id="s-play">
+  <div class="topbar"><button class="back" data-go="home">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker" id="spk4">🔊</button></div>
+  <div class="meta" id="qcount">Question one of twenty</div>
+  <div class="bar"><i id="qbar"></i></div>
+  <div class="qwrap"><div class="q" id="qtext"></div></div>
+  <div class="acts">
+    <button class="ans y" data-ans="y">✓ YES</button>
+    <button class="ans n" data-ans="n">✕ NO</button>
+    <button class="ans m" data-ans="m">Maybe · I don't know</button>
+  </div>
+</section>
+
+<!-- ============ REVEAL ============ -->
+<section class="screen" id="s-reveal">
+  <div class="topbar"><button class="back" data-go="home">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker" id="spk5">🔊</button></div>
+  <div class="reveal">
+    <div class="badge" id="rbadge"></div>
+    <div class="isit" id="risit">Is it…</div>
+    <div class="name" id="rname"></div>
+  </div>
+  <div class="acts" id="ractions"></div>
+</section>
+
+<!-- ============ KID ASKS ============ -->
+<section class="screen" id="s-ask">
+  <div class="topbar"><button class="back" data-go="home">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker" id="spk6">🔊</button></div>
+  <div class="meta" id="acount">You have asked no questions yet</div>
+  <div class="bar"><i id="abar"></i></div>
+  <div style="height:12px"></div>
+  <div class="qlist" id="qlist"></div>
+  <button class="big gold" id="iknow"><span class="ic">💡</span><span>I know who it is!</span></button>
+</section>
+
+<!-- ============ KID PICKS ============ -->
+<section class="screen" id="s-pick">
+  <div class="topbar"><button class="back" data-go="ask">← Keep asking</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker" id="spk7">🔊</button></div>
+  <div class="meta">Tap who you think it is</div>
+  <div class="pickgrid" id="pickgrid"></div>
+</section>
+
+
+<!-- ============ FRIEND: NAME + START/JOIN ============ -->
+<section class="screen" id="s-friend">
+  <div class="topbar"><button class="back" data-go="home">← Back</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker">🔊</button></div>
+  <div class="meta">Playing with a friend</div>
+  <label class="lbl" for="myname">What should I call you?</label>
+  <input class="fld" id="myname" maxlength="16" placeholder="Your name" autocomplete="off">
+  <div style="height:6px"></div>
+  <button class="big gold" id="mk-new"><span class="ic">🎟️</span><span>Start a game<span class="sub">You get a code. Read it to your friend.</span></span></button>
+  <div style="height:4px"></div>
+  <label class="lbl" for="joincode">Got a code already?</label>
+  <input class="fld code" id="joincode" maxlength="4" placeholder="ABCD" autocomplete="off" autocapitalize="characters">
+  <button class="big clay" id="mk-join"><span class="ic">🚪</span><span>Join that game</span></button>
+  <p class="foot" id="netnote"></p>
+</section>
+
+<!-- ============ FRIEND: THE CODE ============ -->
+<section class="screen" id="s-code">
+  <div class="topbar"><button class="back" data-go="home">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker">🔊</button></div>
+  <div class="reveal">
+    <div class="isit">Your code is</div>
+    <div class="bigcode" id="thecode">····</div>
+    <p class="tag" id="codehint">Read it to your friend. I will start as soon as they join.</p>
+  </div>
+  <button class="big" id="code-again"><span class="ic">🔊</span><span>Say it again</span></button>
+</section>
+
+<!-- ============ FRIEND: PICK YOUR SECRET ============ -->
+<section class="screen" id="s-secret">
+  <div class="topbar"><button class="back" data-go="home">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker">🔊</button></div>
+  <div class="meta">Pick somebody. Do not show them.</div>
+  <div class="pickgrid" id="secretgrid"></div>
+</section>
+
+<!-- ============ FRIEND: THE GAME ============ -->
+<section class="screen" id="s-net">
+  <div class="topbar"><button class="back" data-go="home">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker">🔊</button></div>
+  <div class="meta" id="netrole">·</div>
+  <div class="bar"><i id="netbar"></i></div>
+  <div id="netbody" style="flex:1;display:flex;flex-direction:column;min-height:0"></div>
+</section>
+
+</div>
+<div class="verdict" id="verdict"></div>
+<script>
+/* ESPOguess — the roster. Accelerated Experiences LLC.
+   Each entry: [name, emoji, tags]  — tags are space separated. */
+const ROSTER = [
+/* ---------- VIDEO GAME HEROES ---------- */
+["Mario","🎮","person boy game hat mustache red blue small good"],
+["Luigi","🎮","person boy game hat mustache green blue small good"],
+["Princess Peach","👑","person girl game pink hat good"],
+["Bowser","🐢","creature game villain big orange green sharpteeth tail horns scary"],
+["Yoshi","🥚","creature game green tail small good ride"],
+["Toad","🍄","creature game small hat white red good"],
+["Donkey Kong","🦍","creature game big brown fur strong good"],
+["Wario","🎮","person boy game hat mustache yellow purple villain funny"],
+["Waluigi","🎮","person boy game hat mustache purple black villain funny"],
+["Link","🗡️","person boy game hat green good powers"],
+["Princess Zelda","👑","person girl game pink blonde good powers"],
+["Ganondorf","🗡️","person boy game villain big scary powers"],
+["Kirby","🎮","creature game pink small round funny good powers"],
+["Sonic the Hedgehog","💨","creature game blue small fast good"],
+["Tails","🦊","creature game orange small tail flies good"],
+["Knuckles","👊","creature game red small strong good"],
+["Doctor Eggman","🥚","person boy game villain mustache red big funny"],
+["Steve from Minecraft","⛏️","person boy game blue small good"],
+["A Creeper","💥","creature game green scary villain small"],
+["An Enderman","🌑","creature game black scary villain big"],
+["Crash Bandicoot","🎮","animal creature game orange small funny good"],
+["Spyro","🐉","creature game purple flies wings tail small good"],
+["Pac-Man","🟡","creature game yellow round small funny good"],
+["Mega Man","🤖","robot game blue small good powers"],
+["Samus Aran","🚀","person girl game mask powers space good"],
+["Master Chief","🪖","person boy game green mask powers good"],
+["Shy Guy","🎭","creature game red mask small funny"],
+["King Boo","👻","creature game white villain flies scary small"],
+["Diddy Kong","🐒","animal creature game brown fur tail hat small funny"],
+["Rosalina","👑","person girl game blue space good powers"],
+["Princess Daisy","👑","person girl game orange good"],
+
+/* ---------- POKEMON ---------- */
+["Pikachu","⚡","creature pokemon yellow small tail powers funny good"],
+["Charizard","🔥","creature pokemon orange big flies wings tail powers sharpteeth"],
+["Charmander","🔥","creature pokemon orange small tail powers"],
+["Bulbasaur","🌱","creature pokemon green small fourlegs plant powers"],
+["Squirtle","💧","creature pokemon blue small swims tail powers"],
+["Eevee","🐾","creature pokemon brown small fur fourlegs tail powers"],
+["Snorlax","😴","creature pokemon big blue funny powers"],
+["Mewtwo","🔮","creature pokemon purple big powers scary villain tail"],
+["Mew","🔮","creature pokemon pink small flies powers tail"],
+["Jigglypuff","🎤","creature pokemon pink small funny powers"],
+["Gengar","👻","creature pokemon purple scary funny powers small"],
+["Lucario","🥋","creature pokemon blue powers fourlegs tail"],
+["Greninja","🥷","creature pokemon blue powers swims mask"],
+["Meowth","🐱","creature pokemon animal yellow small fur tail funny powers"],
+["Psyduck","🦆","creature pokemon yellow small funny powers"],
+["Magikarp","🐟","creature pokemon orange small swims funny powers"],
+["Gyarados","🌊","creature pokemon blue big swims scary sharpteeth powers"],
+["Dragonite","🐲","creature pokemon orange big flies wings tail powers good"],
+["Rayquaza","🐉","creature pokemon green big flies space powers scary"],
+["Ditto","🟪","creature pokemon purple small funny powers"],
+["Sylveon","🎀","creature pokemon pink small fur fourlegs tail powers"],
+["Umbreon","🌙","creature pokemon black small fur fourlegs tail powers"],
+["Onix","🪨","creature pokemon big grey scary powers"],
+["Machamp","💪","creature pokemon grey big strong powers"],
+
+/* ---------- CARTOON AND MOVIE ---------- */
+["SpongeBob SquarePants","🧽","creature toon yellow small swims funny good"],
+["Patrick Star","⭐","creature toon pink swims funny small"],
+["Squidward","🦑","creature toon blue swims funny"],
+["Mister Krabs","🦀","creature toon animal red swims funny"],
+["Sandy Cheeks","🐿️","animal toon brown fur tail small funny good"],
+["Plankton","🦠","creature toon green small villain funny"],
+["Bluey","🐕","animal toon blue fourlegs tail small funny good"],
+["Peppa Pig","🐷","animal toon pink small funny good"],
+["Mickey Mouse","🐭","animal toon black small tail funny good"],
+["Minnie Mouse","🎀","animal toon black pink small tail funny good"],
+["Donald Duck","🦆","animal toon white blue funny wings good"],
+["Goofy","🐶","animal toon black hat funny good tail"],
+["Elsa","❄️","person girl toon blue powers magic good"],
+["Anna","🧣","person girl toon good"],
+["Olaf","☃️","creature toon white small funny good"],
+["Simba","🦁","animal toon orange fur fourlegs tail big good"],
+["Scar","🦁","animal toon brown fur fourlegs tail big villain scary"],
+["Woody","🤠","person boy toon hat brown funny good"],
+["Buzz Lightyear","🚀","person boy toon space green white funny good"],
+["Nemo","🐠","animal toon orange small swims good"],
+["Dory","🐟","animal toon blue small swims funny good"],
+["Shrek","🟩","creature toon green big funny good"],
+["Donkey from Shrek","🫏","animal toon grey fourlegs tail funny good ride"],
+["Puss in Boots","🐱","animal toon orange fur fourlegs tail hat funny good"],
+["Lightning McQueen","🏎️","robot vehicle toon red fast funny good ride"],
+["Mater","🛻","robot vehicle toon brown funny good ride"],
+["Sulley","👹","creature toon blue big fur funny good horns"],
+["Mike Wazowski","👁️","creature toon green small funny good"],
+["Grogu","👽","creature toon green small powers magic good"],
+["Stitch","👽","creature toon blue small funny good"],
+["Moana","🌊","person girl toon swims good"],
+["Maui","🪝","person boy toon big powers magic funny good"],
+["Ariel","🧜","person girl toon red swims good"],
+["Genie","🧞","creature toon blue big magic powers funny good"],
+["Bugs Bunny","🐰","animal toon grey small fur tail funny good"],
+["Daffy Duck","🦆","animal toon black wings funny"],
+["Tom the Cat","🐈","animal toon grey fur fourlegs tail funny"],
+["Jerry the Mouse","🐭","animal toon brown small fur tail funny good"],
+["Scooby-Doo","🐕","animal toon brown fourlegs tail fur big funny good"],
+["Shaggy","🥪","person boy toon green funny good"],
+["Homer Simpson","🍩","person boy toon yellow funny"],
+["Bart Simpson","🛹","person boy toon yellow small funny"],
+["Goku","🥋","person boy toon orange powers magic good strong"],
+["Vegeta","🥋","person boy toon blue powers magic villain strong"],
+["Monkey D. Luffy","🏴‍☠️","person boy toon red hat powers funny good"],
+["Naruto","🍥","person boy toon orange powers magic good"],
+["Finn the Human","⚔️","person boy toon blue hat good funny"],
+["Jake the Dog","🐕","animal toon yellow magic powers funny good tail"],
+
+/* ---------- SUPERHEROES ---------- */
+["Spider-Man","🕷️","person boy hero red blue mask powers good"],
+["Iron Man","🤖","person boy hero red yellow mask powers flies good"],
+["Captain America","🛡️","person boy hero blue red mask powers good"],
+["The Hulk","💚","person hero green big strong powers scary good"],
+["Thor","🔨","person boy hero cape powers magic flies good"],
+["Black Panther","🐆","person boy hero black mask powers good"],
+["Batman","🦇","person boy hero black mask cape good"],
+["Superman","🦸","person boy hero blue red cape powers flies good"],
+["Wonder Woman","⚔️","person girl hero red blue powers good"],
+["The Flash","⚡","person boy hero red mask powers good"],
+["Aquaman","🔱","person boy hero green swims powers good"],
+["The Joker","🃏","person boy hero purple green villain scary funny"],
+["Venom","🖤","creature hero black big villain scary sharpteeth powers"],
+["Deadpool","❤️","person boy hero red black mask powers funny"],
+["Doctor Strange","🌀","person boy hero cape magic powers good"],
+["Groot","🌳","creature hero plant brown big powers good funny"],
+["Rocket Raccoon","🦝","animal hero creature brown fur tail small funny good"],
+["Thanos","💜","person boy hero purple big villain scary powers"],
+["Wolverine","🐺","person boy hero yellow mask powers sharpteeth good"],
+["Robin","🐦","person boy hero red green mask cape good"],
+["Catwoman","🐈","person girl hero black mask villain"],
+["Mister Incredible","💪","person boy hero red mask big strong powers good"],
+["Frozone","🧊","person boy hero blue mask powers good"],
+
+/* ---------- SPORTS LEGENDS ---------- */
+["Michael Jordan","🏀","person boy real sport"],
+["LeBron James","🏀","person boy real sport big"],
+["Stephen Curry","🏀","person boy real sport"],
+["Kobe Bryant","🏀","person boy real sport"],
+["Shaquille O'Neal","🏀","person boy real sport big funny"],
+["Serena Williams","🎾","person girl real sport"],
+["Simone Biles","🤸","person girl real sport small"],
+["Lionel Messi","⚽","person boy real sport"],
+["Cristiano Ronaldo","⚽","person boy real sport"],
+["Tom Brady","🏈","person boy real sport"],
+["Patrick Mahomes","🏈","person boy real sport"],
+["Babe Ruth","⚾","person boy real sport old hat"],
+["Muhammad Ali","🥊","person boy real sport old"],
+["Tiger Woods","⛳","person boy real sport hat"],
+["Usain Bolt","🏃","person boy real sport"],
+["Wayne Gretzky","🏒","person boy real sport old"],
+["Shohei Ohtani","⚾","person boy real sport hat"],
+["Caitlin Clark","🏀","person girl real sport"],
+
+/* ---------- ANIMALS ---------- */
+["A Lion","🦁","animal real wild fur fourlegs tail big sharpteeth orange scary"],
+["A Tiger","🐅","animal real wild fur fourlegs tail big sharpteeth orange black scary"],
+["An Elephant","🐘","animal real wild fourlegs tail big grey ride"],
+["A Giraffe","🦒","animal real wild fourlegs tail big orange"],
+["A Zebra","🦓","animal real wild fourlegs tail big black white"],
+["A Monkey","🐒","animal real wild fur fourlegs tail brown funny"],
+["A Gorilla","🦍","animal real wild fur big black strong"],
+["A Panda","🐼","animal real wild fur fourlegs big black white"],
+["A Polar Bear","🐻‍❄️","animal real wild fur fourlegs big white sharpteeth scary"],
+["A Kangaroo","🦘","animal real wild fur tail brown big"],
+["A Koala","🐨","animal real wild fur grey small"],
+["A Penguin","🐧","animal real wild swims black white wings"],
+["A Dolphin","🐬","animal real wild swims grey big good"],
+["A Whale","🐋","animal real wild swims blue big"],
+["A Shark","🦈","animal real wild swims grey big sharpteeth scary"],
+["An Octopus","🐙","animal real wild swims purple"],
+["A Jellyfish","🪼","animal real wild swims small"],
+["An Eagle","🦅","animal real wild flies wings feathers brown big sharpteeth"],
+["An Owl","🦉","animal real wild flies wings feathers brown"],
+["A Parrot","🦜","animal real wild flies wings feathers green red small"],
+["A Snake","🐍","animal real wild green scales scary sharpteeth"],
+["A Crocodile","🐊","animal real wild swims green fourlegs tail big sharpteeth scary"],
+["A Turtle","🐢","animal real wild swims green fourlegs small"],
+["A Frog","🐸","animal real wild swims green small"],
+["A Butterfly","🦋","animal real wild flies wings small orange"],
+["A Bee","🐝","animal real wild flies wings small yellow black"],
+["A Spider","🕷️","animal real wild black small scary"],
+["A Horse","🐴","animal real fourlegs tail big brown ride"],
+["A Cow","🐄","animal real fourlegs tail big black white"],
+["A Pig","🐖","animal real fourlegs tail pink"],
+["A Chicken","🐔","animal real wings feathers small white"],
+["A Dog","🐕","animal real pet fur fourlegs tail brown good"],
+["A Cat","🐈","animal real pet fur fourlegs tail small"],
+["A Rabbit","🐇","animal real pet fur fourlegs tail small white"],
+["A Fox","🦊","animal real wild fur fourlegs tail orange small"],
+["A Wolf","🐺","animal real wild fur fourlegs tail grey sharpteeth scary"],
+["A Bat","🦇","animal real wild flies wings fur black small scary"],
+["A Sloth","🦥","animal real wild fur fourlegs tail brown funny"],
+["A Hippo","🦛","animal real wild fourlegs tail big grey swims"],
+["A Rhino","🦏","animal real wild fourlegs tail big grey horns"],
+["A Camel","🐫","animal real fourlegs tail big brown ride"],
+["A Squirrel","🐿️","animal real wild fur fourlegs tail brown small"],
+["A Deer","🦌","animal real wild fur fourlegs tail brown horns"],
+["A Seal","🦭","animal real wild swims grey"],
+["A Crab","🦀","animal real wild swims red small"],
+
+/* ---------- DINOSAURS ---------- */
+["Tyrannosaurus Rex","🦖","animal dino old big sharpteeth scary green"],
+["Triceratops","🦕","animal dino old big fourlegs horns green"],
+["Stegosaurus","🦕","animal dino old big fourlegs green tail"],
+["A Velociraptor","🦖","animal dino old sharpteeth scary tail"],
+["Brachiosaurus","🦕","animal dino old big fourlegs green tail"],
+["A Pterodactyl","🦅","animal dino old flies wings scary"],
+["Spinosaurus","🦖","animal dino old big sharpteeth scary swims"],
+["A Woolly Mammoth","🦣","animal old big fur fourlegs brown tail"],
+["A Saber-toothed Tiger","🐅","animal old big fur fourlegs sharpteeth scary tail"],
+
+/* ---------- SPACE AND NATURE ---------- */
+["The Sun","☀️","object space big yellow orange real"],
+["The Moon","🌙","object space big white grey real"],
+["The Earth","🌍","object space big blue green real"],
+["Mars","🔴","object space big red real"],
+["Jupiter","🪐","object space big orange real"],
+["Saturn","🪐","object space big yellow real"],
+["A Star","⭐","object space big yellow real"],
+["A Comet","☄️","object space flies white real"],
+["A Rainbow","🌈","object real sky big"],
+["A Volcano","🌋","object real big orange red scary"],
+["A Tornado","🌪️","object real big grey scary"],
+["Lightning","⚡","object real sky yellow scary"],
+["A Snowflake","❄️","object real small white"],
+["A Cloud","☁️","object real sky big white"],
+["A Rose","🌹","plant object real small red"],
+["A Cactus","🌵","plant object real green"],
+["A Tree","🌳","plant object real big green brown"],
+["A Mountain","⛰️","object real big grey"],
+
+/* ---------- EVERYDAY THINGS ---------- */
+["A Pizza","🍕","object food real round red"],
+["Ice Cream","🍦","object food real small white"],
+["A Hamburger","🍔","object food real brown"],
+["A Taco","🌮","object food real yellow"],
+["A Banana","🍌","object food plant real yellow small"],
+["An Apple","🍎","object food plant real red small round"],
+["A Cookie","🍪","object food real brown small round"],
+["A Birthday Cake","🎂","object food real big white pink round"],
+["A Toothbrush","🪥","object real small blue"],
+["A Backpack","🎒","object real small blue"],
+["A Skateboard","🛹","object real small brown ride fast"],
+["A Bicycle","🚲","object vehicle real ride"],
+["A Fire Truck","🚒","object vehicle real big red ride"],
+["An Airplane","✈️","object vehicle real big flies wings white ride"],
+["A Rocket Ship","🚀","object vehicle real big flies space white ride"],
+["A School Bus","🚌","object vehicle real big yellow ride"],
+["A Guitar","🎸","object real brown big"],
+["A Drum","🥁","object real brown round big"],
+["A Soccer Ball","⚽","object real small round black white sport"],
+["A Basketball","🏀","object real small round orange sport"],
+["A Television","📺","object robot real black big"],
+["A Computer","💻","object robot real grey small"],
+["A Phone","📱","object robot real small black"],
+["An Umbrella","☂️","object real black big sky"],
+["A Balloon","🎈","object real small red flies"],
+["A Teddy Bear","🧸","object real small brown fur"],
+["A Clock","🕐","object real round white small"],
+["A Pencil","✏️","object real small yellow"]
+];
+/* ESPOwho — the second roster. Accelerated Experiences LLC, Sep 9 2026.
+   Same shape as the first: [name, glyph, tags]. */
+const ROSTER2 = [
+/* ---------- VIDEO GAME HEROES ---------- */
+["Bowser Junior","🐢","creature game villain orange green sharpteeth tail horns funny small"],
+["A Goomba","🍄","creature game brown small funny villain"],
+["A Koopa Troopa","🐢","creature game green small villain fourlegs"],
+["Captain Toad","⛏️","person boy game hat small good funny"],
+["Shadow the Hedgehog","💨","creature game black small fast villain"],
+["Amy Rose","💗","creature game pink small good"],
+["Meta Knight","🗡️","creature game blue mask small powers"],
+["King Dedede","🔨","creature game blue big funny villain hat"],
+["Waddle Dee","🟠","creature game orange small funny good"],
+["Ryu","🥋","person boy game white strong good powers"],
+["Chun-Li","🥋","person girl game blue strong good fast"],
+["Fox McCloud","🦊","animal creature game orange fur tail game good flies"],
+["Captain Falcon","🏎️","person boy game blue mask fast good"],
+["Isabelle","🐕","animal creature game yellow small fur tail good funny"],
+["Tom Nook","🦝","animal creature game brown fur tail funny villain"],
+["An Inkling","🦑","creature game orange small funny swims"],
+["Alex from Minecraft","⛏️","person girl game orange small good"],
+["A Minecraft Zombie","🧟","creature game green scary villain"],
+["A Minecraft Skeleton","💀","creature game white scary villain"],
+["An Axolotl","🩷","animal creature game pink small swims good funny"],
+["A Crewmate","🚀","creature game red small space funny"],
+["An Impostor","🔪","creature game red small space scary villain"],
+["Red the Angry Bird","🐦","animal creature game red small wings funny flies"],
+["Cuphead","☕","creature game red white small funny good"],
+["Rayman","👊","person creature game blue small funny good"],
+["Sackboy","🧵","creature game brown small funny good"],
+["Freddy Fazbear","🐻","robot creature game brown big scary villain hat"],
+["Lara Croft","🏹","person girl game brown strong good"],
+["A Tetris Block","🟦","object game blue small"],
+["Bomberman","💣","person creature game white small funny good"],
+["Olimar","🌱","person boy game small good funny"],
+["A Pikmin","🌸","creature game red small plant funny good"],
+["Ness","⚡","person boy game hat red small powers good"],
+["Villager","🏡","person boy game small good funny"],
+["K K Slider","🎸","animal creature game white fur tail good funny"],
+["Sans","💀","creature game white small funny powers"],
+["Steve Minecraft Creeper Cousin","🟩","creature game green small scary"],
+
+/* ---------- POKEMON ---------- */
+["Pichu","⚡","creature pokemon yellow small tail powers funny"],
+["Raichu","⚡","creature pokemon orange tail powers"],
+["Venusaur","🌱","creature pokemon green big fourlegs plant powers"],
+["Blastoise","💧","creature pokemon blue big swims powers strong"],
+["Caterpie","🐛","creature pokemon green small powers"],
+["Butterfree","🦋","creature pokemon white small flies wings powers"],
+["Pidgey","🐦","creature pokemon brown small flies wings feathers powers"],
+["Zubat","🦇","creature pokemon purple small flies wings powers scary"],
+["Vulpix","🦊","creature pokemon orange small fur fourlegs tail powers"],
+["Ninetales","🦊","creature pokemon yellow fur fourlegs tail powers magic"],
+["Abra","🔮","creature pokemon yellow small powers magic tail"],
+["Alakazam","🥄","creature pokemon yellow powers magic"],
+["Geodude","🪨","creature pokemon grey small strong powers"],
+["Slowpoke","🐷","creature pokemon pink fourlegs tail funny powers"],
+["Haunter","👻","creature pokemon purple scary funny powers flies"],
+["Chansey","🥚","creature pokemon pink good powers"],
+["Scyther","🗡️","creature pokemon green sharpteeth wings powers scary"],
+["Lapras","🌊","creature pokemon blue big swims good powers ride"],
+["Vaporeon","💧","creature pokemon blue swims fourlegs tail powers"],
+["Jolteon","⚡","creature pokemon yellow fur fourlegs tail powers fast"],
+["Flareon","🔥","creature pokemon orange fur fourlegs tail powers"],
+["Espeon","🌸","creature pokemon purple fur fourlegs tail powers magic"],
+["Leafeon","🍃","creature pokemon green fur fourlegs tail powers plant"],
+["Glaceon","❄️","creature pokemon blue fur fourlegs tail powers"],
+["Aerodactyl","🦅","creature pokemon grey big flies wings sharpteeth scary old powers"],
+["Articuno","🧊","creature pokemon blue big flies wings powers"],
+["Zapdos","⚡","creature pokemon yellow big flies wings powers"],
+["Moltres","🔥","creature pokemon orange big flies wings powers"],
+["Dratini","🐍","creature pokemon blue small powers swims"],
+["Chikorita","🌿","creature pokemon green small fourlegs plant powers"],
+["Cyndaquil","🔥","creature pokemon blue small fourlegs powers"],
+["Totodile","🐊","creature pokemon blue small sharpteeth powers swims"],
+["Togepi","🥚","creature pokemon white small good funny powers"],
+["Lugia","🌊","creature pokemon white big flies wings swims powers"],
+["Ho-Oh","🔥","creature pokemon orange big flies wings feathers powers"],
+["Celebi","🌱","creature pokemon green small flies powers magic plant"],
+["Treecko","🦎","creature pokemon green small tail powers"],
+["Torchic","🐤","creature pokemon orange small feathers powers"],
+["Mudkip","💧","creature pokemon blue small swims powers funny"],
+["Piplup","🐧","creature pokemon blue small swims powers funny"],
+["Turtwig","🐢","creature pokemon green small fourlegs plant powers"],
+["Chimchar","🐒","creature pokemon orange small fur tail powers"],
+["Garchomp","🦈","creature pokemon blue big sharpteeth flies powers scary"],
+["Froakie","🐸","creature pokemon blue small swims powers"],
+["Fennekin","🦊","creature pokemon orange small fur fourlegs tail powers"],
+["Rowlet","🦉","creature pokemon brown small flies wings feathers powers funny"],
+["Litten","🐱","creature pokemon red small fur fourlegs tail powers"],
+["Popplio","🦭","creature pokemon blue small swims powers funny"],
+["Grookey","🐒","creature pokemon green small fur tail powers funny"],
+["Scorbunny","🐰","creature pokemon white small fur tail powers fast"],
+["Sobble","💧","creature pokemon blue small swims powers funny"],
+["Wobbuffet","🔵","creature pokemon blue funny powers"],
+["Sudowoodo","🌳","creature pokemon brown plant funny powers"],
+["Cubone","💀","creature pokemon brown small powers scary"],
+["Gastly","👻","creature pokemon purple small flies scary powers funny"],
+["Machop","💪","creature pokemon grey small strong powers"],
+["Golem","🪨","creature pokemon brown big strong powers fourlegs"],
+["Voltorb","🔴","creature pokemon red small round powers funny"],
+["Exeggutor","🌴","creature pokemon green big plant powers funny"],
+["Krabby","🦀","creature pokemon red small swims powers"],
+["Mister Mime","🤡","creature pokemon pink funny powers scary"],
+
+/* ---------- CARTOONS AND MOVIES ---------- */
+["Gary the Snail","🐌","animal toon pink small funny good"],
+["George Pig","🐷","animal toon pink small funny good"],
+["Mufasa","🦁","animal toon orange fur fourlegs tail big good strong"],
+["Timon","🦫","animal toon brown small fur tail funny good"],
+["Pumbaa","🐗","animal toon brown fur fourlegs tail funny good"],
+["Jessie from Toy Story","🤠","person girl toon hat red funny good"],
+["Rex the Dinosaur","🦖","creature toon green big funny good sharpteeth"],
+["Slinky Dog","🐕","creature toon brown fourlegs tail funny good"],
+["Mister Potato Head","🥔","creature toon brown funny"],
+["Forky","🍴","creature toon white small funny good"],
+["Crush the Turtle","🐢","animal toon green swims fourlegs funny good big"],
+["Bruce the Shark","🦈","animal toon grey big swims sharpteeth scary funny"],
+["Boo from Monsters Inc","👧","person girl toon small funny good"],
+["Elastigirl","💪","person girl hero mask powers good strong toon"],
+["Dash","⚡","person boy hero mask powers good fast toon small"],
+["Violet","🟣","person girl hero mask powers good toon"],
+["Jack Jack","👶","person boy hero powers good toon small funny"],
+["Edna Mode","👓","person girl toon glasses small funny"],
+["Dug the Dog","🐕","animal toon brown fourlegs tail fur funny good pet"],
+["Russell","🎒","person boy toon small good funny"],
+["Joy from Inside Out","😊","creature toon yellow good funny"],
+["Sadness","💧","creature toon blue funny good"],
+["Anger","😠","creature toon red funny"],
+["Miguel from Coco","🎸","person boy toon good"],
+["Mirabel","🌺","person girl toon good"],
+["Bruno Madrigal","🔮","person boy toon magic powers good"],
+["Sven the Reindeer","🦌","animal toon brown fourlegs tail fur horns good ride"],
+["Kristoff","🪓","person boy toon good strong"],
+["Judy Hopps","🐇","animal toon grey small fur tail good fast"],
+["Nick Wilde","🦊","animal toon orange fur tail funny good"],
+["Baymax","🤖","robot toon white big good funny"],
+["WALL E","🤖","robot toon brown small good funny"],
+["EVE the Robot","🥚","robot toon white flies good"],
+["Remy the Rat","🐀","animal toon grey small fur tail good funny"],
+["Gru","🥼","person boy toon villain funny good"],
+["A Minion","🟡","creature toon yellow small funny good glasses"],
+["Princess Fiona","👑","person girl toon green good"],
+["Lord Farquaad","👑","person boy toon villain small funny"],
+["The Gingerbread Man","🍪","creature toon brown small funny good food"],
+["Toothless","🐉","creature toon black big flies wings tail sharpteeth good ride"],
+["Hiccup","🛡️","person boy toon good"],
+["Po the Panda","🥋","animal toon black white big fur funny good strong"],
+["Alex the Lion","🦁","animal toon orange fur fourlegs tail big good funny"],
+["Marty the Zebra","🦓","animal toon black white fourlegs tail big funny good"],
+["King Julien","👑","animal toon grey small fur tail funny hat"],
+["Sid the Sloth","🦥","animal toon brown fur funny good"],
+["Manny the Mammoth","🦣","animal toon brown big fur fourlegs tail good strong old"],
+["Scrat","🐿️","animal toon brown small fur tail funny"],
+["Diego the Tiger","🐅","animal toon orange fur fourlegs tail big sharpteeth good"],
+["Tweety","🐤","animal toon yellow small wings feathers funny good"],
+["Sylvester","🐈","animal toon black white fur fourlegs tail funny"],
+["Porky Pig","🐷","animal toon pink funny good"],
+["The Road Runner","🐦","animal toon blue fast wings feathers funny good"],
+["Wile E Coyote","🐺","animal toon brown fourlegs tail fur funny villain"],
+["Taz the Tasmanian Devil","🌪️","animal toon brown fur tail funny scary fast"],
+["Velma","🔍","person girl toon orange glasses good"],
+["Fred from Scooby Doo","🧣","person boy toon blue good"],
+["Daphne","💜","person girl toon purple good"],
+["Lisa Simpson","🎷","person girl toon yellow small good"],
+["Marge Simpson","💙","person girl toon yellow blue good"],
+["Maggie Simpson","🍼","person girl toon yellow small funny good"],
+["Princess Bubblegum","👑","person girl toon pink magic powers good"],
+["BMO","🎮","robot toon green small funny good"],
+["The Ice King","👑","person boy toon blue magic powers funny villain"],
+["Gumball Watterson","🐈","animal toon blue fur tail small funny good"],
+["Darwin the Fish","🐠","animal toon orange small swims funny good"],
+["Blossom","🎀","person girl toon pink powers flies good small"],
+["Bubbles","💙","person girl toon blue powers flies good small"],
+["Buttercup","💚","person girl toon green powers flies good small strong"],
+["Phineas","📐","person boy toon orange good funny"],
+["Ferb","🔧","person boy toon green good funny"],
+["Perry the Platypus","🦫","animal toon blue small hat funny good swims"],
+["Dipper Pines","🧢","person boy toon hat brown good"],
+["Mabel Pines","🌈","person girl toon pink funny good"],
+["Steven Universe","⭐","person boy toon pink powers magic good"],
+["Totoro","🌰","creature toon grey big fur funny good magic"],
+["Ash Ketchum","🧢","person boy toon hat red good"],
+["Sailor Moon","🌙","person girl toon yellow powers magic good"],
+["Doraemon","🔵","robot toon blue funny good magic"],
+["Hello Kitty","🎀","animal creature toon white small pink good funny"],
+["Zoro","⚔️","person boy toon green strong good"],
+["Sasuke","🍥","person boy toon black powers magic"],
+["Chase from Paw Patrol","🚓","animal toon brown fourlegs tail fur hat good pet"],
+["Marshall from Paw Patrol","🚒","animal toon white red fourlegs tail fur hat good funny pet"],
+["Skye from Paw Patrol","🚁","animal toon pink small fourlegs tail fur flies good pet"],
+["Elmo","🔴","creature toon red small fur funny good"],
+["Big Bird","🐤","creature toon yellow big feathers wings funny good"],
+["Cookie Monster","🍪","creature toon blue fur funny good"],
+["Oscar the Grouch","🗑️","creature toon green fur funny"],
+["Bert","🟡","creature toon yellow funny"],
+["Ernie","🟠","creature toon orange funny good"],
+["Kermit the Frog","🐸","creature toon green funny good"],
+["Miss Piggy","🐷","creature toon pink funny"],
+["Fozzie Bear","🐻","creature toon brown fur hat funny good"],
+["Thomas the Tank Engine","🚂","robot vehicle toon blue big funny good ride"],
+["Curious George","🐒","animal toon brown small fur tail funny good"],
+["The Cat in the Hat","🎩","creature toon black white hat funny good"],
+["The Grinch","💚","creature toon green fur funny villain scary"],
+["The Lorax","🧡","creature toon orange small fur mustache funny good"],
+["Horton the Elephant","🐘","animal toon blue big fourlegs tail good funny"],
+["Winnie the Pooh","🍯","animal toon yellow fur good funny"],
+["Tigger","🐯","animal toon orange black fur tail funny good fast"],
+["Piglet","🐷","animal toon pink small funny good"],
+["Eeyore","🫏","animal toon grey fourlegs tail fur funny"],
+["Dumbo","🐘","animal toon grey big fourlegs tail wings flies good"],
+["Bambi","🦌","animal toon brown small fur fourlegs tail good"],
+["Pinocchio","🪵","person boy toon hat funny good magic"],
+["Peter Pan","🧚","person boy toon green flies hat good magic"],
+["Tinker Bell","✨","person girl toon green small flies wings magic good"],
+["Captain Hook","🪝","person boy toon red hat mustache villain scary"],
+["Snow White","🍎","person girl toon black good"],
+["Rapunzel","💛","person girl toon yellow good magic"],
+["Mulan","⚔️","person girl toon good strong"],
+["Princess Jasmine","🧞","person girl toon blue good"],
+["Tiana","🐸","person girl toon green good"],
+["Poppy the Troll","🌈","person girl toon pink small funny good"],
+["Papa Smurf","🔵","creature toon blue small hat mustache good magic"],
+["Smurfette","💙","creature toon blue small yellow good"],
+["Alvin the Chipmunk","🐿️","animal toon brown small fur tail red funny good"],
+["Garfield","🐈","animal toon orange fur fourlegs tail funny food"],
+["Odie","🐕","animal toon yellow fourlegs tail fur funny good pet"],
+["Snoopy","🐕","animal toon white black fourlegs tail fur funny good pet"],
+["Charlie Brown","⚾","person boy toon yellow good funny"],
+["Woodstock","🐤","animal toon yellow small wings feathers funny good"],
+["No Face","🎭","creature toon black mask scary magic"],
+
+/* ---------- SUPERHEROES ---------- */
+["Black Widow","🕸️","person girl hero black powers good"],
+["Green Lantern","💚","person boy hero green mask powers flies good magic"],
+["Ant-Man","🐜","person boy hero red mask powers small good"],
+["Hawkeye","🏹","person boy hero purple good"],
+["Loki","🐍","person boy hero green cape magic powers villain funny"],
+["Scarlet Witch","🔴","person girl hero red cape magic powers"],
+["Vision","💎","robot hero red cape powers flies good"],
+["The Falcon","🦅","person boy hero wings flies powers good"],
+["Star-Lord","🎧","person boy hero red mask space good funny"],
+["Gamora","🗡️","person girl hero green space powers good strong"],
+["Drax","💪","person boy hero grey space strong funny good"],
+["Nebula","💙","person girl hero blue space robot powers"],
+["Captain Marvel","⭐","person girl hero red blue powers flies good strong"],
+["Miles Morales","🕷️","person boy hero black red mask powers good"],
+["Spider-Gwen","🕸️","person girl hero white pink mask powers good"],
+["The Green Goblin","🎃","person boy hero green mask villain scary flies"],
+["Doctor Octopus","🐙","person boy hero brown glasses villain scary"],
+["Lex Luthor","🧑‍🦲","person boy hero villain"],
+["The Riddler","❓","person boy hero green hat villain funny"],
+["The Penguin","🐧","person boy hero black hat villain funny"],
+["Two-Face","🎭","person boy hero villain scary"],
+["Bane","💪","person boy hero mask villain scary strong big"],
+["Harley Quinn","🃏","person girl hero red black villain funny"],
+["Batgirl","🦇","person girl hero black mask cape good"],
+["Supergirl","💫","person girl hero blue red cape powers flies good"],
+["Cyborg","🤖","person boy hero robot silver powers good strong"],
+["Beast Boy","🟢","person boy hero green powers funny good"],
+["Raven","🖤","person girl hero purple cape magic powers"],
+["Starfire","🔥","person girl hero orange powers flies good"],
+["Magneto","🧲","person boy hero red cape powers villain"],
+["Professor X","🧠","person boy hero powers good"],
+["Cyclops","👁️","person boy hero blue red mask powers good"],
+["Storm","⛈️","person girl hero white cape powers flies good magic"],
+["The Silver Surfer","🏄","person boy hero silver space flies powers good"],
+["The Thing","🪨","person boy hero orange big strong powers good"],
+["The Human Torch","🔥","person boy hero orange flies powers good"],
+["The Invisible Woman","👻","person girl hero blue powers good"],
+
+/* ---------- SPORTS LEGENDS ---------- */
+["Magic Johnson","🏀","person boy real sport big old"],
+["Larry Bird","🏀","person boy real sport old"],
+["Kareem Abdul-Jabbar","🏀","person boy real sport big old"],
+["Giannis Antetokounmpo","🏀","person boy real sport big"],
+["Kevin Durant","🏀","person boy real sport big"],
+["Luka Doncic","🏀","person boy real sport big"],
+["Peyton Manning","🏈","person boy real sport"],
+["Aaron Rodgers","🏈","person boy real sport"],
+["Jerry Rice","🏈","person boy real sport old"],
+["Joe Montana","🏈","person boy real sport old"],
+["Derek Jeter","⚾","person boy real sport hat old"],
+["Ken Griffey Junior","⚾","person boy real sport hat old"],
+["Hank Aaron","⚾","person boy real sport hat old"],
+["Jackie Robinson","⚾","person boy real sport hat old"],
+["Mike Trout","⚾","person boy real sport hat"],
+["Aaron Judge","⚾","person boy real sport hat big"],
+["Neymar","⚽","person boy real sport"],
+["Kylian Mbappe","⚽","person boy real sport fast"],
+["Pele","⚽","person boy real sport old"],
+["Diego Maradona","⚽","person boy real sport old"],
+["Alex Morgan","⚽","person girl real sport"],
+["Mia Hamm","⚽","person girl real sport old"],
+["Sidney Crosby","🏒","person boy real sport"],
+["Connor McDavid","🏒","person boy real sport fast"],
+["Michael Phelps","🏊","person boy real sport swims"],
+["Katie Ledecky","🏊","person girl real sport swims"],
+["Roger Federer","🎾","person boy real sport"],
+["Rafael Nadal","🎾","person boy real sport strong"],
+["Naomi Osaka","🎾","person girl real sport"],
+["Tony Hawk","🛹","person boy real sport old"],
+["Shaun White","🏂","person boy real sport orange"],
+["Lindsey Vonn","⛷️","person girl real sport fast"],
+
+/* ---------- ANIMALS ---------- */
+["An Otter","🦦","animal real wild fur swims brown small funny"],
+["A Raccoon","🦝","animal real wild fur fourlegs tail grey small funny"],
+["A Skunk","🦨","animal real wild fur fourlegs tail black white small"],
+["A Badger","🦡","animal real wild fur fourlegs black white small"],
+["A Porcupine","🦔","animal real wild fourlegs brown small sharpteeth"],
+["A Hedgehog","🦔","animal real wild fourlegs brown small pet"],
+["A Chipmunk","🐿️","animal real wild fur fourlegs tail brown small"],
+["A Hamster","🐹","animal real pet fur fourlegs brown small"],
+["A Guinea Pig","🐹","animal real pet fur fourlegs brown small"],
+["A Ferret","🦡","animal real pet fur fourlegs tail brown small"],
+["A Goat","🐐","animal real fourlegs tail horns white funny"],
+["A Donkey","🫏","animal real fourlegs tail grey ride"],
+["A Llama","🦙","animal real fur fourlegs tail white funny ride"],
+["An Alpaca","🦙","animal real fur fourlegs brown funny"],
+["A Bison","🦬","animal real wild fur fourlegs tail brown big horns"],
+["A Gazelle","🦌","animal real wild fourlegs tail brown horns fast"],
+["A Cheetah","🐆","animal real wild fur fourlegs tail orange black sharpteeth fast"],
+["A Leopard","🐆","animal real wild fur fourlegs tail orange black sharpteeth scary"],
+["A Jaguar","🐆","animal real wild fur fourlegs tail orange sharpteeth scary big"],
+["A Cougar","🐆","animal real wild fur fourlegs tail brown sharpteeth scary big"],
+["A Hyena","🐕","animal real wild fur fourlegs tail brown sharpteeth scary funny"],
+["A Meerkat","🦫","animal real wild fur tail brown small funny"],
+["An Armadillo","🦔","animal real wild fourlegs tail grey small scales"],
+["An Anteater","🐜","animal real wild fur fourlegs tail brown"],
+["A Platypus","🦫","animal real wild swims fur brown small funny"],
+["An Ostrich","🦤","animal real wild feathers wings big fast black white"],
+["An Emu","🦤","animal real wild feathers wings big brown fast"],
+["A Flamingo","🦩","animal real wild feathers wings pink swims"],
+["A Peacock","🦚","animal real wild feathers wings blue green"],
+["A Swan","🦢","animal real wild feathers wings white swims"],
+["A Goose","🪿","animal real wild feathers wings white swims funny"],
+["A Turkey","🦃","animal real feathers wings brown funny food"],
+["A Pelican","🦤","animal real wild feathers wings white swims flies funny"],
+["A Seagull","🕊️","animal real wild feathers wings white flies swims funny"],
+["A Woodpecker","🐦","animal real wild feathers wings small flies red black"],
+["A Hummingbird","🐦","animal real wild feathers wings green small flies fast"],
+["A Crow","🐦‍⬛","animal real wild feathers wings black flies"],
+["A Vulture","🦅","animal real wild feathers wings brown flies scary sharpteeth"],
+["A Toucan","🦜","animal real wild feathers wings black orange flies small"],
+["A Puffin","🐧","animal real wild feathers wings black white small swims funny"],
+["A Seahorse","🌊","animal real wild swims yellow small"],
+["A Starfish","⭐","animal real wild swims orange small"],
+["A Swordfish","🐟","animal real wild swims blue big sharpteeth fast"],
+["A Stingray","🐟","animal real wild swims grey big"],
+["A Manatee","🦭","animal real wild swims grey big good"],
+["A Walrus","🦭","animal real wild swims brown big sharpteeth"],
+["A Narwhal","🐋","animal real wild swims grey big horns"],
+["An Orca","🐋","animal real wild swims black white big sharpteeth scary"],
+["A Lobster","🦞","animal real wild swims red small food"],
+["A Shrimp","🦐","animal real wild swims pink small food"],
+["A Squid","🦑","animal real wild swims pink"],
+["An Eel","🐍","animal real wild swims grey scary"],
+["A Pufferfish","🐡","animal real wild swims yellow small funny scary"],
+["A Ladybug","🐞","animal real wild flies wings red black small"],
+["A Grasshopper","🦗","animal real wild green small flies"],
+["A Dragonfly","🪰","animal real wild flies wings blue small fast"],
+["A Caterpillar","🐛","animal real wild green small"],
+["A Beetle","🪲","animal real wild flies wings black small"],
+["A Moth","🦋","animal real wild flies wings brown small"],
+["A Cricket","🦗","animal real wild black small"],
+["A Scorpion","🦂","animal real wild black small tail scary"],
+["A Snail","🐌","animal real wild brown small"],
+["A Firefly","✨","animal real wild flies wings yellow small"],
+["A Chameleon","🦎","animal real wild green small tail fourlegs scales"],
+["A Gecko","🦎","animal real wild green small tail fourlegs scales pet"],
+["An Iguana","🦎","animal real wild green tail fourlegs scales pet"],
+["A Komodo Dragon","🦎","animal real wild green big tail fourlegs scales sharpteeth scary"],
+["A Tortoise","🐢","animal real wild green fourlegs old"],
+["A Cobra","🐍","animal real wild green scales scary sharpteeth"],
+["A Python","🐍","animal real wild brown scales scary big"],
+["A Rattlesnake","🐍","animal real wild brown scales tail scary sharpteeth"],
+["A Chimpanzee","🐒","animal real wild fur brown funny strong"],
+["An Orangutan","🦧","animal real wild fur orange big strong"],
+["A Baboon","🐒","animal real wild fur fourlegs tail brown scary"],
+["A Lemur","🦝","animal real wild fur fourlegs tail black white small funny"],
+
+/* ---------- DINOSAURS ---------- */
+["Diplodocus","🦕","animal dino old big fourlegs tail green"],
+["Allosaurus","🦖","animal dino old big sharpteeth scary brown"],
+["Apatosaurus","🦕","animal dino old big fourlegs tail grey"],
+["Parasaurolophus","🦕","animal dino old big fourlegs tail green horns"],
+["Iguanodon","🦕","animal dino old big fourlegs tail green"],
+["Pachycephalosaurus","🦕","animal dino old big tail brown"],
+["Archaeopteryx","🦅","animal dino old flies wings feathers small"],
+["Dimetrodon","🦎","animal dino old fourlegs tail sharpteeth scary"],
+["A Plesiosaur","🌊","animal dino old big swims scary"],
+["Mosasaurus","🌊","animal dino old big swims sharpteeth scary"],
+["A Megalodon","🦈","animal dino old big swims sharpteeth scary grey"],
+["A Dodo","🦤","animal old wings feathers funny grey"],
+["Carnotaurus","🦖","animal dino old big sharpteeth horns scary red"],
+["Giganotosaurus","🦖","animal dino old big sharpteeth scary"],
+["Utahraptor","🦖","animal dino old sharpteeth scary tail fast"],
+
+/* ---------- SPACE AND NATURE ---------- */
+["Venus","🪐","object space big yellow real"],
+["Mercury","🪐","object space grey real"],
+["Neptune","🔵","object space big blue real"],
+["Uranus","🔵","object space big blue real"],
+["Pluto the Planet","🪐","object space small grey real"],
+["A Galaxy","🌌","object space big purple real"],
+["A Black Hole","⚫","object space big black real scary"],
+["A Meteor","☄️","object space flies real fast"],
+["An Asteroid","🪨","object space grey real"],
+["The Milky Way","🌌","object space big white real"],
+["A Shooting Star","💫","object space sky flies white real fast"],
+["A Space Station","🛰️","object space vehicle real big"],
+["A Satellite","🛰️","object space vehicle real flies"],
+["An Astronaut","👩‍🚀","person real space white hat"],
+["A Waterfall","💦","object real big blue swims"],
+["A River","🏞️","object real big blue swims"],
+["A Lake","🏞️","object real big blue swims"],
+["An Island","🏝️","object real big green"],
+["A Desert","🏜️","object real big yellow"],
+["A Rainforest","🌴","object plant real big green"],
+["A Glacier","🧊","object real big white"],
+["An Iceberg","🧊","object real big white swims"],
+["A Canyon","🏜️","object real big brown"],
+["A Cave","🕳️","object real big black scary"],
+["A Beach","🏖️","object real big yellow"],
+["A Coral Reef","🪸","object real big orange swims"],
+["A Sunflower","🌻","plant object real yellow"],
+["A Tulip","🌷","plant object real pink small"],
+["A Daisy","🌼","plant object real white small"],
+["An Oak Tree","🌳","plant object real big green brown"],
+["A Palm Tree","🌴","plant object real big green"],
+["A Mushroom","🍄","plant object real small red white food"],
+["A Four-leaf Clover","🍀","plant object real small green"],
+["An Acorn","🌰","plant object real small brown"],
+["A Pinecone","🌲","plant object real small brown"],
+["A Seashell","🐚","object real small white swims"],
+["A Hurricane","🌀","object real big grey scary sky"],
+["An Earthquake","🌋","object real big brown scary"],
+
+/* ---------- EVERYDAY THINGS ---------- */
+["A Hot Dog","🌭","object food real brown"],
+["Spaghetti","🍝","object food real red"],
+["Sushi","🍣","object food real small"],
+["Popcorn","🍿","object food real white small"],
+["A Pretzel","🥨","object food real brown"],
+["A Donut","🍩","object food real brown round small"],
+["Pancakes","🥞","object food real brown round"],
+["A Waffle","🧇","object food real brown"],
+["A Sandwich","🥪","object food real brown"],
+["Macaroni and Cheese","🧀","object food real yellow"],
+["Chicken Nuggets","🍗","object food real brown small"],
+["An Orange","🍊","object food plant real orange small round"],
+["Grapes","🍇","object food plant real purple small"],
+["A Strawberry","🍓","object food plant real red small"],
+["A Watermelon","🍉","object food plant real green red big"],
+["A Pineapple","🍍","object food plant real yellow"],
+["A Carrot","🥕","object food plant real orange small"],
+["Broccoli","🥦","object food plant real green small"],
+["Corn on the Cob","🌽","object food plant real yellow"],
+["Milk","🥛","object food real white"],
+["Lemonade","🍋","object food real yellow"],
+["A Cupcake","🧁","object food real pink small"],
+["A Lollipop","🍭","object food real red small round"],
+["A Chocolate Bar","🍫","object food real brown small"],
+["Bubble Gum","🫧","object food real pink small"],
+["A Marshmallow","🍡","object food real white small"],
+["A Pillow","🛏️","object real white small"],
+["A Blanket","🧣","object real blue big"],
+["A Lamp","💡","object real yellow small"],
+["A Chair","🪑","object real brown big"],
+["A Door","🚪","object real brown big"],
+["A Key","🔑","object real yellow small"],
+["A Book","📕","object real red small"],
+["A Crayon","🖍️","object real red small"],
+["A Marker","🖊️","object real black small"],
+["Scissors","✂️","object real grey small"],
+["A Paintbrush","🖌️","object real brown small"],
+["A Ruler","📏","object real yellow small"],
+["A Calculator","🧮","object robot real grey small"],
+["A Camera","📷","object robot real black small"],
+["Headphones","🎧","object robot real black small"],
+["A Video Game Controller","🎮","object robot real black small game"],
+["A Flashlight","🔦","object real black small"],
+["A Magnet","🧲","object real red small"],
+["A Magnifying Glass","🔍","object real small round grey"],
+["A Kite","🪁","object real red flies sky"],
+["A Jump Rope","🪢","object real small red"],
+["A Yo-Yo","🪀","object real small round"],
+["A Puzzle","🧩","object real small blue"],
+["A Deck of Cards","🃏","object real small white"],
+["Dice","🎲","object real white small round"],
+["A Trampoline","🤸","object real big black round"],
+["A Swing","🛝","object real brown big ride"],
+["A Slide","🛝","object real big ride"],
+["A Sandcastle","🏰","object real yellow big"],
+["A Snowman","☃️","object real white big funny"],
+["A Kayak","🛶","object vehicle real swims ride"],
+["A Motorcycle","🏍️","object vehicle real black fast ride"],
+["A Train","🚂","object vehicle real big black ride fast"],
+["A Helicopter","🚁","object vehicle real big flies ride"],
+["A Submarine","🤿","object vehicle real big swims ride"],
+["A Hot Air Balloon","🎈","object vehicle real big flies sky ride red"],
+["A Tractor","🚜","object vehicle real big green ride"],
+["A Police Car","🚓","object vehicle real black white ride fast"],
+["An Ambulance","🚑","object vehicle real big white ride fast"],
+["A Garbage Truck","🚛","object vehicle real big green ride"],
+["A Sailboat","⛵","object vehicle real white swims ride"],
+["A Scooter","🛴","object vehicle real small ride"],
+["Roller Skates","🛼","object real small ride"],
+["A Football","🏈","object real brown small sport"],
+["A Baseball","⚾","object real white small round sport"],
+["A Tennis Racket","🎾","object real small sport"],
+["A Hockey Stick","🏒","object real brown sport"],
+["A Baseball Bat","🥎","object real brown sport"],
+["A Frisbee","🥏","object real orange small round"],
+["A Piano","🎹","object real black white big"],
+["A Violin","🎻","object real brown small"],
+["A Trumpet","🎺","object real yellow small"],
+["A Flute","🪈","object real silver small"],
+["A Microphone","🎤","object real black small"]
+];
+/* ESPOwho — the third roster: the ones Anthony called for by name.
+   Sonic · Frozen · Bluey · Back to the Future · the original Zelda · Mickey Mouse.
+   Accelerated Experiences LLC, Sep 9 2026. */
+const ROSTER3 = [
+/* ---------- SONIC ---------- */
+["Big the Cat","🐱","creature game purple big fur tail funny good swims"],
+["Cream the Rabbit","🐰","creature game orange small fur tail good flies"],
+["Rouge the Bat","🦇","creature game white fur wings flies villain"],
+["Silver the Hedgehog","💨","creature game white small powers magic good"],
+["Metal Sonic","🤖","robot creature game blue small fast villain scary"],
+["Espio the Chameleon","🦎","creature game purple small tail fast good"],
+["Vector the Crocodile","🐊","creature game green big sharpteeth tail funny good"],
+["Charmy Bee","🐝","creature game yellow small flies wings funny good"],
+["Blaze the Cat","🔥","creature game purple fur tail powers magic good"],
+["Jet the Hawk","🦅","creature game green wings flies fast villain"],
+["A Chao","💧","creature game blue small good funny flies"],
+["A Gold Ring","💍","object game yellow small round"],
+["A Chaos Emerald","💎","object game green small magic powers"],
+
+/* ---------- FROZEN ---------- */
+["Marshmallow the Snow Monster","☃️","creature toon white big scary strong magic"],
+["Hans","🤴","person boy toon villain"],
+["The Duke of Weselton","🎩","person boy toon small funny villain glasses"],
+["Bruni the Salamander","🦎","creature toon blue small magic good funny tail fourlegs"],
+["The Nokk","🐴","creature toon blue big magic swims fourlegs tail ride"],
+["Oaken","🧖","person boy toon big funny good"],
+
+/* ---------- BLUEY ---------- */
+["Bandit","🐕","animal toon blue fourlegs tail fur funny good"],
+["Chilli","🐕","animal toon orange fourlegs tail fur good"],
+["Muffin","🐕","animal toon grey small fourlegs tail fur funny"],
+["Socks","🐕","animal toon grey small fourlegs tail fur funny"],
+["Lucky the Dog","🐕","animal toon brown small fourlegs tail fur good"],
+["Judo","🐕","animal toon brown small fourlegs tail fur good"],
+["Coco the Poodle","🐩","animal toon pink small fourlegs tail fur funny"],
+["Snickers the Dachshund","🌭","animal toon brown small fourlegs tail fur funny"],
+["Honey the Dalmatian","🐕","animal toon white small fourlegs tail fur good"],
+["Chloe","🐕","animal toon brown small fourlegs tail fur good"],
+["Uncle Stripe","🐕","animal toon blue fourlegs tail fur funny"],
+["Aunt Trixie","🐕","animal toon blue fourlegs tail fur good"],
+
+/* ---------- BACK TO THE FUTURE ---------- */
+["Marty McFly","🛹","person boy red good ride toon"],
+["Doc Brown","⚡","person boy white funny good old toon"],
+["The DeLorean","🚗","object vehicle silver flies fast ride magic toon"],
+["Biff Tannen","👊","person boy villain big funny toon"],
+["Einstein the Dog","🐕","animal toon white fourlegs tail fur good pet"],
+["A Hoverboard","🛹","object pink small flies ride toon"],
+["The Flux Capacitor","🔌","object silver small magic powers toon"],
+
+/* ---------- THE ORIGINAL ZELDA ---------- */
+["Ganon","🐗","creature game brown big villain scary sharpteeth horns strong magic"],
+["Impa","🛡️","person girl game white good old"],
+["Epona","🐴","animal game brown big fourlegs tail fur ride good fast"],
+["The Master Sword","⚔️","object game blue silver magic powers"],
+["The Triforce","🔺","object game yellow magic powers small"],
+["A Moblin","🐗","creature game brown villain scary sharpteeth"],
+["An Octorok","🐙","creature game red small villain funny"],
+["A Keese","🦇","creature game black small flies wings villain"],
+["The Great Deku Tree","🌳","plant creature game brown green big good old magic"],
+["Navi","🧚","creature game blue small flies wings magic good"],
+["Midna","🌑","creature game orange small magic powers good funny"],
+["Skull Kid","🎭","creature game brown small mask magic scary villain"],
+["A Korok","🍃","creature game green small mask funny good plant"],
+["A Bokoblin","👹","creature game red small villain scary sharpteeth horns"],
+["A Guardian","🕷️","robot game orange big scary villain powers"],
+["Tingle","🎈","person boy game green small funny hat"],
+
+/* ---------- MICKEY MOUSE ---------- */
+["Pluto the Dog","🐕","animal toon orange fourlegs tail fur funny good pet"],
+["Daisy Duck","🦆","animal toon white pink wings feathers good"],
+["Chip","🐿️","animal toon brown small fur tail funny good"],
+["Dale","🐿️","animal toon brown small fur tail funny good"],
+["Scrooge McDuck","💰","animal toon white wings feathers hat glasses funny old"],
+["Huey Dewey and Louie","🦆","animal toon white wings feathers small funny good"],
+["Pete","😾","animal toon black big fur tail villain scary funny"]
+];
+/* ============================================================
+   ESPOwho — Accelerated Experiences LLC
+   The question bank is GENERATED, not authored: every tag is a
+   probe, every probe has many wordings, and noun+trait pairs make
+   compound questions. Wordings used are remembered between games
+   so the same sentence does not come back.
+   ============================================================ */
+
+const slug = t => (''+t).trim().toLowerCase().replace(/[^a-z0-9]/g,'');
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const pick = a => a[Math.floor(Math.random()*a.length)];
+
+/* ---------------- PROBES ----------------
+   tag : { w:[wordings], t:tier, noun:"an animal", pred:"lives in the water" }
+   noun -> can be the subject of a compound question
+   pred -> can be the trait half of a compound question              */
+const P = {
+ person:{t:1,noun:'a person',w:['Is it a person?','Is it a real live person, like you and me?','Is it a human being?','Is it somebody, not something?']},
+ animal:{t:1,noun:'an animal',w:['Is it an animal?','Is it a creature you might see at a zoo?','Is it an animal of some kind?']},
+ creature:{t:2,noun:'a made up creature',w:['Is it a made up creature or a monster?','Is it a monster?','Is it a creature somebody invented?']},
+ robot:{t:2,noun:'a machine',w:['Is it a machine or a robot?','Is it a robot?','Does it run on batteries or an engine?']},
+ object:{t:1,noun:'a thing',w:['Is it a thing, not something alive?','Is it an object?','Is it something that is not alive?']},
+ plant:{t:2,noun:'a plant',w:['Is it a plant?','Does it grow in the ground?','Is it something green that grows?']},
+ real:{t:1,w:['Is it real? Could you see it in real life?','Is it real, not pretend?','Could you find it in the real world?','Is it something that actually exists?']},
+ boy:{t:1,noun:'a boy',w:['Is it a boy or a man?','Is it a he?','Is it a boy?']},
+ girl:{t:1,noun:'a girl',w:['Is it a girl or a woman?','Is it a she?','Is it a girl?']},
+
+ flies:{t:1,pred:'can fly',w:['Can it fly?','Does it go up in the air?','Can it take off and fly away?','Does it fly?']},
+ swims:{t:1,pred:'lives in the water',w:['Does it live in the water?','Can it swim?','Is it found in the ocean?','Does it live underwater?']},
+ fur:{t:1,pred:'has fur',w:['Does it have fur?','Is it fuzzy?','Would it be soft to pet?','Does it have hair all over it?']},
+ feathers:{t:2,pred:'has feathers',w:['Does it have feathers?','Is it covered in feathers?']},
+ scales:{t:3,pred:'has scales',w:['Does it have scales?','Is its skin scaly?']},
+ tail:{t:1,pred:'has a tail',w:['Does it have a tail?','Is there a tail on the back of it?','Does it wag a tail?']},
+ fourlegs:{t:1,pred:'walks on four legs',w:['Does it walk on four legs?','Does it have four legs?','Does it go around on all fours?']},
+ wings:{t:1,pred:'has wings',w:['Does it have wings?','Are there wings on it?']},
+ horns:{t:2,pred:'has horns',w:['Does it have horns?','Are there horns on its head?']},
+ sharpteeth:{t:1,pred:'has sharp teeth',w:['Does it have sharp teeth?','Could it bite you?','Are its teeth pointy?']},
+ big:{t:1,pred:'is bigger than a car',w:['Is it bigger than a car?','Is it really big?','Would it fill up a whole room?','Is it huge?']},
+ small:{t:1,pred:'is smaller than a cat',w:['Is it smaller than a cat?','Is it little?','Could you hold it in your hands?','Is it tiny?']},
+
+ red:{t:1,pred:'is red',w:['Is it mostly red?','Is red its main color?','Is it red?']},
+ blue:{t:1,pred:'is blue',w:['Is it mostly blue?','Is blue its main color?','Is it blue?']},
+ green:{t:1,pred:'is green',w:['Is it mostly green?','Is green its main color?','Is it green?']},
+ yellow:{t:1,pred:'is yellow',w:['Is it mostly yellow?','Is yellow its main color?','Is it yellow?']},
+ orange:{t:2,pred:'is orange',w:['Is it mostly orange?','Is it orange?']},
+ pink:{t:1,pred:'is pink',w:['Is it mostly pink?','Is it pink?']},
+ purple:{t:2,pred:'is purple',w:['Is it mostly purple?','Is it purple?']},
+ black:{t:1,pred:'is black',w:['Is it mostly black?','Is it black?']},
+ white:{t:1,pred:'is white',w:['Is it mostly white?','Is it white?']},
+ brown:{t:2,pred:'is brown',w:['Is it mostly brown?','Is it brown?']},
+ grey:{t:2,pred:'is grey',w:['Is it mostly grey?','Is it grey?']},
+
+ hat:{t:1,pred:'wears a hat',w:['Does it wear a hat?','Is there a hat on its head?','Does it have a hat?']},
+ mustache:{t:1,pred:'has a mustache',w:['Does it have a mustache?','Is there hair above its lip?']},
+ mask:{t:2,pred:'wears a mask',w:['Does it wear a mask?','Is its face covered up?']},
+ cape:{t:2,pred:'wears a cape',w:['Does it wear a cape?','Is there a cape flapping behind it?']},
+ powers:{t:1,pred:'has superpowers',w:['Does it have superpowers?','Can it do something no normal person can do?','Does it have special powers?']},
+ magic:{t:2,pred:'can do magic',w:['Can it do magic?','Is it magical?','Does it cast spells?']},
+
+ game:{t:1,noun:'somebody from a video game',pred:'is from a video game',w:['Is it from a video game?','Would you find it inside a video game?','Is it a video game character?']},
+ pokemon:{t:1,noun:'a Pokemon',pred:'is a Pokemon',w:['Is it a Pokemon?','Would you catch it in a Pokeball?','Is it one of the Pokemon?']},
+ toon:{t:1,noun:'a cartoon character',pred:'is from a cartoon or a movie',w:['Is it from a cartoon or a movie?','Would you see it on TV?','Is it a cartoon character?','Is it in a movie?']},
+ hero:{t:1,noun:'a superhero',pred:'is a superhero',w:['Is it a superhero?','Is it from a comic book?','Does it fight bad guys for a living?']},
+ sport:{t:1,pred:'plays a sport',w:['Does it play a sport?','Is it famous for a game they play?','Is it an athlete?']},
+ dino:{t:1,noun:'a dinosaur',pred:'is a dinosaur',w:['Is it a dinosaur?','Did it live before there were people?','Is it a dino?']},
+ space:{t:2,pred:'is up in space',w:['Is it up in space?','Would an astronaut go see it?','Is it out past the sky?']},
+ sky:{t:2,pred:'is up in the sky',w:['Is it up in the sky?','Do you look up to see it?']},
+ food:{t:1,pred:'is something you can eat',w:['Can you eat it?','Is it food?','Would it taste good?']},
+ vehicle:{t:2,pred:'takes people places',w:['Does it take people places?','Does it have wheels or an engine?','Is it something you travel in?']},
+
+ villain:{t:1,pred:'is a bad guy',w:['Is it a bad guy?','Is it the villain?','Is it mean?']},
+ good:{t:1,pred:'is a good guy',w:['Is it a good guy?','Is it one of the heroes?','Is it nice?']},
+ funny:{t:2,pred:'is funny',w:['Is it funny?','Does it make you laugh?','Is it silly?']},
+ scary:{t:1,pred:'is scary',w:['Is it scary?','Would it give you the creeps?','Is it frightening?']},
+ old:{t:2,pred:'is from a really long time ago',w:['Is it from a really long time ago?','Is it ancient?','Is it older than your grandma?']},
+ ride:{t:2,pred:'is something you could ride',w:['Could you ride on it?','Could you climb on top and go somewhere?','Would it carry you?']},
+ wild:{t:2,pred:'lives out in the wild',w:['Does it live out in the wild?','Would you find it in the jungle or the forest?','Is it a wild animal?']},
+ pet:{t:1,pred:'could be a pet',w:['Could it be somebody’s pet?','Would it live in a house with a family?','Could you keep it as a pet?']},
+ strong:{t:2,pred:'is super strong',w:['Is it super strong?','Could it lift something enormous?']},
+ fast:{t:2,pred:'is really fast',w:['Is it really fast?','Could it beat you in a race?']},
+ round:{t:2,pred:'is round',w:['Is it round?','Is it shaped like a ball?']}
+};
+const TAGS = Object.keys(P);
+
+/* ---------------- CATEGORIES ---------------- */
+const CATS = [
+ ['all','Everything','🌈'],['game','Video games','🎮'],['pokemon','Pokemon','⚡'],
+ ['toon','Cartoons & movies','🎬'],['hero','Superheroes','🦸'],['sport','Sports legends','🏆'],
+ ['animal','Animals','🦁'],['dino','Dinosaurs','🦖'],['space','Space & nature','🌟'],
+ ['thing','Everyday things','🍕']
+];
+const NATURE = ['A Rainbow','A Volcano','A Tornado','Lightning','A Snowflake','A Cloud','A Mountain',
+ 'A Rose','A Cactus','A Tree','A Waterfall','A River','A Lake','An Island','A Desert','A Rainforest',
+ 'A Glacier','An Iceberg','A Canyon','A Cave','A Beach','A Coral Reef','A Sunflower','A Tulip','A Daisy',
+ 'An Oak Tree','A Palm Tree','A Mushroom','A Four-leaf Clover','An Acorn','A Pinecone','A Seashell',
+ 'A Hurricane','An Earthquake'];
+const ANCIENT = ['A Woolly Mammoth','A Saber-toothed Tiger','A Dodo'];
+function catOf(n,t){
+  if(NATURE.includes(n)) return 'space';
+  if(ANCIENT.includes(n)) return 'dino';
+  if(t.has('pokemon')) return 'pokemon';
+  if(t.has('game')) return 'game';
+  if(t.has('toon')) return 'toon';
+  if(t.has('hero')) return 'hero';
+  if(t.has('sport') && t.has('person')) return 'sport';
+  if(t.has('dino')) return 'dino';
+  if(t.has('space')) return 'space';
+  if(t.has('animal')) return 'animal';
+  return 'thing';
+}
+const ALL = ROSTER.concat(typeof ROSTER2!=='undefined'?ROSTER2:[], typeof ROSTER3!=='undefined'?ROSTER3:[]);
+const DB = ALL.map(r=>{
+  const tags = new Set(r[2].split(/\s+/).filter(Boolean));
+  return {name:r[0], emoji:r[1], tags, cat:catOf(r[0],tags)};
+});
+
+/* ---------------- THE QUESTION BANK, BUILT FROM THE DATA ---------------- */
+const NOUNS = TAGS.filter(t=>P[t].noun);
+const PREDS = TAGS.filter(t=>P[t].pred);
+
+/* A question is {id, text, tier, test(entry)} */
+function buildBank(){
+  const bank = [];
+  /* single probes — one entry per wording, so wordings rotate */
+  TAGS.forEach(tag=>{
+    P[tag].w.forEach((text,i)=>{
+      bank.push({id:tag+'#'+i, key:tag, text, tier:P[tag].t, test:e=>e.tags.has(tag)});
+    });
+  });
+  /* compound probes — every noun crossed with every trait */
+  NOUNS.forEach(n=>{
+    PREDS.forEach(p=>{
+      if(n===p) return;
+      const cnt = DB.filter(e=>e.tags.has(n)&&e.tags.has(p)).length;
+      if(cnt < 2 || cnt > DB.length*0.5) return;   /* never ask about an empty set */
+      bank.push({
+        id:'x:'+n+'+'+p, key:n+'+'+p,
+        text:'Is it ' + P[n].noun + ' that ' + P[p].pred + '?',
+        tier:Math.max(P[n].t,P[p].t),
+        test:e=>e.tags.has(n)&&e.tags.has(p)
+      });
+    });
+  });
+  /* trait pairs — "Is it something that flies and has fur?" */
+  for(let i=0;i<PREDS.length;i++){
+    for(let j=i+1;j<PREDS.length;j++){
+      const a=PREDS[i], b=PREDS[j];
+      const cnt = DB.filter(e=>e.tags.has(a)&&e.tags.has(b)).length;
+      if(cnt < 2 || cnt > DB.length*0.4) continue;
+      bank.push({
+        id:'y:'+a+'+'+b, key:a+'+'+b,
+        text:'Is it something that ' + P[a].pred + ' and ' + P[b].pred + '?',
+        tier:Math.max(P[a].t,P[b].t),
+        test:e=>e.tags.has(a)&&e.tags.has(b)
+      });
+    }
+  }
+  return bank;
+}
+const BANK = buildBank();
+
+/* wordings already used, remembered across games */
+const Used = {
+  set:new Set(),
+  load(){ try{ (JSON.parse(localStorage.getItem('espowho.used')||'[]')).forEach(x=>this.set.add(x)); }catch(e){} },
+  add(id){ this.set.add(id); try{ localStorage.setItem('espowho.used', JSON.stringify([...this.set].slice(-500))); }catch(e){} },
+  has(id){ return this.set.has(id); },
+  reset(){ this.set.clear(); try{ localStorage.removeItem('espowho.used'); }catch(e){} }
+};
+Used.load();
+
+/* ============================================================
+   THE ART — every mark drawn here, none of it borrowed.
+   House rule from the ESPO shelf: one real object, its own
+   color world, a horizon, a small token on the ground.
+   ============================================================ */
+const Art = {
+  n:0,
+  uid(){ return 'a' + (++this.n); },
+
+  /* a lit stage: sky, glow, floor, cast shadow — the shell every scene sits in */
+  stage(c, o){
+    const u = this.uid();
+    o = o || {};
+    return {
+      u,
+      defs:
+       '<radialGradient id="sky'+u+'" cx="50%" cy="'+(o.cy||38)+'%" r="76%">'+
+         '<stop offset="0%" stop-color="'+c[0]+'"/><stop offset="52%" stop-color="'+c[1]+'"/>'+
+         '<stop offset="100%" stop-color="'+c[2]+'"/></radialGradient>'+
+       '<linearGradient id="flr'+u+'" x1="0" y1="0" x2="0" y2="1">'+
+         '<stop offset="0%" stop-color="'+c[2]+'"/><stop offset="100%" stop-color="#0d0603"/></linearGradient>'+
+       '<radialGradient id="glo'+u+'" cx="50%" cy="50%" r="50%">'+
+         '<stop offset="0%" stop-color="'+(o.glow||'#ffd07a')+'" stop-opacity=".8"/>'+
+         '<stop offset="100%" stop-color="'+(o.glow||'#ffd07a')+'" stop-opacity="0"/></radialGradient>'+
+       '<radialGradient id="vig'+u+'" cx="50%" cy="46%" r="72%">'+
+         '<stop offset="60%" stop-color="#000" stop-opacity="0"/>'+
+         '<stop offset="100%" stop-color="#000" stop-opacity=".45"/></radialGradient>',
+      back:
+       '<rect width="512" height="512" fill="url(#sky'+u+')"/>'+
+       '<ellipse cx="256" cy="'+(o.gy||170)+'" rx="200" ry="165" fill="url(#glo'+u+')" opacity=".55"/>'+
+       '<path d="M0 '+(o.h||336)+' C140 '+((o.h||336)-20)+' 320 '+((o.h||336)-16)+' 512 '+((o.h||336)-6)+' L512 512 L0 512 Z" fill="url(#flr'+u+')"/>'+
+       '<line x1="0" y1="'+((o.h||336)-2)+'" x2="512" y2="'+((o.h||336)-8)+'" stroke="'+(o.glow||'#ffbe63')+'" stroke-opacity=".38" stroke-width="1.6"/>'+
+       '<ellipse cx="256" cy="'+((o.h||336)+10)+'" rx="'+(o.sw||120)+'" ry="17" fill="#000" opacity=".42"/>',
+      front: '<rect width="512" height="512" fill="url(#vig'+u+')"/>' +
+             '<g opacity=".5">'+
+               [[92,120,2.2],[418,96,1.6],[150,206,1.3],[372,190,2],[64,262,1.5],[452,240,1.2]]
+                 .map(p=>'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+p[2]+'" fill="#fff" opacity=".5"/>').join('')+
+             '</g>'
+    };
+  },
+
+  wrap(inner){ return '<svg viewBox="0 0 512 512" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" aria-hidden="true">'+inner+'</svg>'; },
+
+  /* ---------- THE MARK — the guess box, properly built ---------- */
+  /* the shipped master, byte for byte — never a second drawing of the same mark */
+  icon(){
+    return '<svg viewBox="0 0 1024 1024" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" aria-hidden="true">'
+      + ' <defs> <linearGradient id="gEW" x1="0" y1="0" x2="0.65" y2="1"> <stop offset="0%" stop-color="#e89a45"/><stop offset="55%" stop-color="#8a3d18"/><stop offset="100%" stop-color="#2b0f07"/></linearGradient> <radialGradient id="glEW" cx="32%" cy="6%" r="80%"> <stop offset="0%" stop-color="#ffffff" stop-opacity=".26"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></radialGradient> <linearGradient id="pap" x1="0" y1="0" x2="1" y2="1"> <stop offset="0%" stop-color="#fffaf0"/><stop offset="46%" stop-color="#f2e7d2"/><stop offset="100%" stop-color="#cdbb9d"/></linearGradient> <linearGradient id="lid" x1="0" y1="0" x2="0" y2="1"> <stop offset="0%" stop-color="#fffdf7"/><stop offset="100%" stop-color="#e2d5ba"/></linearGradient> <linearGradient id="rib" x1="0" y1="0" x2="1" y2="0"> <stop offset="0%" stop-color="#a95c36"/><stop offset="38%" stop-color="#d98a5c"/><stop offset="62%" stop-color="#c8794f"/><stop offset="100%" stop-color="#9c5330"/></linearGradient> <linearGradient id="key" x1="0" y1="0" x2="1" y2="1"> <stop offset="0%" stop-color="#ffdc8a"/><stop offset="100%" stop-color="#c98d22"/></linearGradient> <linearGradient id="shn" x1="0" y1="0" x2="1" y2="1"> <stop offset="0%" stop-color="#fff" stop-opacity=".55"/><stop offset="55%" stop-color="#fff" stop-opacity="0"/></linearGradient> </defs> <rect x="0" y="0" width="1024" height="1024" fill="url(#gEW)"/> <g id="art" transform="translate(36.38,47.53) scale(1.8579)">  <circle cx="256" cy="250" r="142" fill="#fff" opacity=".11"/> <line x1="256.0" y1="100.0" x2="256.0" y2="60.0" stroke="#e0a83a" stroke-width="10" stroke-linecap="round" opacity="0.55"/><line x1="178.0" y1="114.9" x2="167.0" y2="95.8" stroke="#e0a83a" stroke-width="10" stroke-linecap="round" opacity="0.55"/><line x1="126.1" y1="175.0" x2="91.5" y2="155.0" stroke="#e0a83a" stroke-width="10" stroke-linecap="round" opacity="0.55"/><line x1="100.0" y1="250.0" x2="78.0" y2="250.0" stroke="#e0a83a" stroke-width="10" stroke-linecap="round" opacity="0.55"/><line x1="126.1" y1="325.0" x2="91.5" y2="345.0" stroke="#e0a83a" stroke-width="10" stroke-linecap="round" opacity="0.55"/><line x1="178.0" y1="385.1" x2="167.0" y2="404.2" stroke="#e0a83a" stroke-width="10" stroke-linecap="round" opacity="0.55"/><line x1="256.0" y1="400.0" x2="256.0" y2="440.0" stroke="#e0a83a" stroke-width="10" stroke-linecap="round" opacity="0.55"/><line x1="334.0" y1="385.1" x2="345.0" y2="404.2" stroke="#e0a83a" stroke-width="10" stroke-linecap="round" opacity="0.55"/><line x1="385.9" y1="325.0" x2="420.5" y2="345.0" stroke="#e0a83a" stroke-width="10" stroke-linecap="round" opacity="0.55"/><line x1="412.0" y1="250.0" x2="434.0" y2="250.0" stroke="#e0a83a" stroke-width="10" stroke-linecap="round" opacity="0.55"/><line x1="385.9" y1="175.0" x2="420.5" y2="155.0" stroke="#e0a83a" stroke-width="10" stroke-linecap="round" opacity="0.55"/><line x1="334.0" y1="114.9" x2="345.0" y2="95.8" stroke="#e0a83a" stroke-width="10" stroke-linecap="round" opacity="0.55"/>  <!-- body --> <rect x="146" y="196" width="220" height="150" rx="9" fill="url(#pap)"/> <path d="M146 196 h34 v150 h-34 z" fill="#000" opacity=".10"/> <path d="M332 196 h34 v150 h-34 z" fill="#000" opacity=".16"/>  <!-- lid --> <path d="M132 184 L256 146 L380 184 L256 222 Z" fill="url(#lid)"/> <path d="M132 184 L256 222 L256 146 Z" fill="#000" opacity=".05"/> <rect x="136" y="184" width="240" height="30" rx="9" fill="url(#lid)"/> <rect x="136" y="206" width="240" height="9" fill="#000" opacity=".12"/>  <!-- ribbon --> <rect x="236" y="184" width="40" height="162" fill="url(#rib)"/> <rect x="136" y="192" width="240" height="17" rx="4" fill="url(#rib)"/> <rect x="236" y="184" width="9" height="162" fill="#fff" opacity=".16"/>  <!-- bow --> <path d="M256 176 C232 148 196 150 200 172 C203 188 236 186 256 180 Z" fill="url(#rib)"/> <path d="M256 176 C280 148 316 150 312 172 C309 188 276 186 256 180 Z" fill="url(#rib)"/> <circle cx="256" cy="179" r="13" fill="#d98a5c"/> <circle cx="252" cy="175" r="5" fill="#fff" opacity=".35"/>  <!-- the question, cut into the paper --> <text x="258" y="318" font-family="Georgia,\'Times New Roman\',serif" font-size="118" font-weight="700"       fill="#3a2314" opacity=".20" text-anchor="middle">?</text> <text x="255" y="316" font-family="Georgia,\'Times New Roman\',serif" font-size="118" font-weight="700"       fill="#2a1810" opacity=".95" text-anchor="middle">?</text>  <!-- light falling across the front --> <path d="M146 196 h220 v150 h-220 z" fill="url(#shn)" opacity=".5"/>  <!-- the key on the ground --> <g transform="translate(336,362) rotate(-8)">   <circle cx="13" cy="13" r="13" fill="url(#key)"/>   <circle cx="13" cy="13" r="5.5" fill="#2b0f07"/>   <rect x="24" y="9" width="42" height="8" rx="3" fill="url(#key)"/>   <rect x="52" y="9" width="7" height="16" rx="2.5" fill="url(#key)"/>   <rect x="62" y="9" width="6" height="12" rx="2.5" fill="url(#key)"/> </g>  </g> <rect x="0" y="0" width="1024" height="1024" fill="url(#glEW)"/> ' + '</svg>';
+  },
+
+  /* ---------- ONE SCENE PER WORLD ---------- */
+  world(key){
+    const P = {
+      all:     ['#e2a24a','#7c4a18','#2a1408','#ffd07a'],
+      game:    ['#5b7fe0','#25316f','#0d1130','#9fb8ff'],
+      pokemon: ['#e8b93a','#7d5a0d','#2b1e02','#ffe27a'],
+      toon:    ['#d95fa0','#6d1f4d','#260a1a','#ffa2d0'],
+      hero:    ['#d1584a','#6d1a17','#250706','#ff9c90'],
+      sport:   ['#3fa66f','#14512f','#04160c','#7ee2ab'],
+      animal:  ['#c8894f','#5f3418','#1d0d05','#ffc78f'],
+      dino:    ['#7a9c3f','#33471a','#0e1506','#c6e089'],
+      space:   ['#6b6fd6','#2c2470','#0d0a2a','#b3a8ff'],
+      thing:   ['#d98a5c','#6d3418','#210e05','#ffbe8f']
+    }[key] || P_all();
+    function P_all(){ return ['#e2a24a','#7c4a18','#2a1408','#ffd07a']; }
+    const s = this.stage([P[0],P[1],P[2]], {glow:P[3], h:352, sw:96, gy:176});
+    const u = s.u;
+    const g = '#e0a83a';
+    const O = {
+      /* a prism throwing a band of light — everything */
+      all:'<g transform="translate(256,232)">'+
+          '<path d="M0 -66 L62 44 L-62 44 Z" fill="#fff" opacity=".16"/>'+
+          '<path d="M0 -66 L62 44 L-62 44 Z" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="4"/>'+
+          '<path d="M-120 6 L-8 6" stroke="#fff" stroke-width="5" opacity=".85"/>'+
+          ['#e0563a','#e0a83a','#8fc45a','#4fa8d8','#7f6fd6'].map((c,i)=>
+            '<path d="M26 14 L124 '+(-14+i*17)+'" stroke="'+c+'" stroke-width="6" opacity=".95"/>').join('')+
+          '</g>',
+      /* an arcade stick — video games */
+      game:'<g transform="translate(256,238)">'+
+          '<ellipse cx="0" cy="62" rx="76" ry="20" fill="#1b2350"/>'+
+          '<rect x="-76" y="18" width="152" height="46" rx="12" fill="#2c3a7d"/>'+
+          '<rect x="-76" y="18" width="152" height="12" rx="6" fill="#43539e"/>'+
+          '<rect x="-7" y="-44" width="14" height="66" rx="7" fill="#c9d2f5"/>'+
+          '<circle cx="0" cy="-52" r="26" fill="#d1584a"/>'+
+          '<circle cx="-8" cy="-60" r="8" fill="#fff" opacity=".4"/>'+
+          '<circle cx="-44" cy="40" r="10" fill="'+g+'"/><circle cx="-16" cy="40" r="10" fill="#8fc45a"/>'+
+          '<circle cx="14" cy="40" r="10" fill="#4fa8d8"/><circle cx="44" cy="40" r="10" fill="#d95fa0"/>'+
+          '</g>',
+      /* a bolt sealed in a jar — the catching worlds */
+      pokemon:'<g transform="translate(256,226)">'+
+          '<rect x="-52" y="-40" width="104" height="118" rx="26" fill="#fff" opacity=".16"/>'+
+          '<rect x="-52" y="-40" width="104" height="118" rx="26" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"/>'+
+          '<rect x="-34" y="-58" width="68" height="22" rx="8" fill="#b4892a"/>'+
+          '<rect x="-34" y="-58" width="68" height="8" rx="4" fill="#e5c25f"/>'+
+          '<ellipse cx="0" cy="18" rx="46" ry="52" fill="#ffe27a" opacity=".30"/>'+
+          '<path d="M14 -26 L-24 22 L0 22 L-12 66 L30 8 L6 8 Z" fill="#fff5cf"/>'+
+          '<path d="M14 -26 L-24 22 L0 22 L-12 66 L30 8 L6 8 Z" fill="none" stroke="'+g+'" stroke-width="6" stroke-linejoin="round"/>'+
+          '<path d="M14 -26 L-24 22 L0 22 Z" fill="'+g+'" opacity=".45"/>'+
+          '</g>',
+      /* a clapper — cartoons and movies */
+      toon:'<g transform="translate(256,240) rotate(-6)">'+
+          '<rect x="-82" y="-6" width="164" height="86" rx="9" fill="#2a1830"/>'+
+          '<rect x="-82" y="-6" width="164" height="12" rx="5" fill="#3d2445"/>'+
+          '<g transform="rotate(-13 -82 -6)">'+
+            '<rect x="-82" y="-40" width="164" height="30" rx="7" fill="#f4eede"/>'+
+            [0,1,2,3,4].map(i=>'<path d="M'+(-74+i*33)+' -40 l16 30 h16 l-16 -30 z" fill="#2a1830"/>').join('')+
+          '</g>'+
+          '<circle cx="-40" cy="42" r="9" fill="#d95fa0"/><circle cx="-8" cy="42" r="9" fill="'+g+'"/>'+
+          '<circle cx="24" cy="42" r="9" fill="#8fc45a"/>'+
+          '</g>',
+      /* a mask and a cape — superheroes */
+      hero:'<g transform="translate(256,216)">'+
+          /* the cape first, so the mask sits on top of it */
+          /* a cape hanging from a collar, with a pointed hem so it never reads as a chin */
+          '<path d="M-30 18 L-84 96 L-56 88 L-46 104 L-28 92 L0 108 L28 92 L46 104 L56 88 L84 96 L30 18 Z" fill="#b8382c"/>'+
+          '<path d="M-30 18 L-84 96 L-56 88 L-46 104 L-28 92 L0 108 Z" fill="#000" opacity=".20"/>'+
+          '<path d="M-30 18 C-14 34 14 34 30 18" fill="none" stroke="#8f2a20" stroke-width="7"/>'+
+          /* the mask */
+          '<path d="M-78 -20 C-52 -56 52 -56 78 -20 C74 12 44 26 16 14 L0 2 L-16 14 C-44 26 -74 12 -78 -20 Z" fill="#1d0a09"/>'+
+          '<path d="M-78 -20 C-52 -56 52 -56 78 -20 C74 12 44 26 16 14 L0 2 L-16 14 C-44 26 -74 12 -78 -20 Z" fill="none" stroke="'+g+'" stroke-width="5"/>'+
+          '<ellipse cx="-36" cy="-16" rx="21" ry="15" fill="#f7f1e2" transform="rotate(-9 -36 -16)"/>'+
+          '<ellipse cx="36" cy="-16" rx="21" ry="15" fill="#f7f1e2" transform="rotate(9 36 -16)"/>'+
+          '<path d="M-78 -20 C-52 -56 52 -56 78 -20" fill="none" stroke="#fff" stroke-opacity=".2" stroke-width="6"/>'+
+          '</g>',
+      /* a cup — sports */
+      sport:'<g transform="translate(256,232)">'+
+          '<path d="M-40 -50 h80 v30 a40 46 0 0 1 -80 0 z" fill="'+g+'"/>'+
+          '<path d="M-40 -50 h26 v30 a40 46 0 0 0 8 30 a40 46 0 0 1 -34 -60 z" fill="#fff" opacity=".26"/>'+
+          '<path d="M40 -44 c26 0 30 34 -2 40" fill="none" stroke="'+g+'" stroke-width="8"/>'+
+          '<path d="M-40 -44 c-26 0 -30 34 2 40" fill="none" stroke="'+g+'" stroke-width="8"/>'+
+          '<rect x="-9" y="8" width="18" height="30" fill="#c48b1f"/>'+
+          '<rect x="-34" y="38" width="68" height="16" rx="5" fill="#c48b1f"/>'+
+          '<rect x="-44" y="54" width="88" height="14" rx="5" fill="#a8741a"/>'+
+          '</g>',
+      /* a paw — animals */
+      animal:'<g transform="translate(256,236)">'+
+          '<ellipse cx="0" cy="26" rx="52" ry="42" fill="#f0d6b6"/>'+
+          '<ellipse cx="0" cy="26" rx="52" ry="42" fill="#000" opacity=".07"/>'+
+          '<ellipse cx="-44" cy="-22" rx="19" ry="24" fill="#f0d6b6" transform="rotate(-18 -44 -22)"/>'+
+          '<ellipse cx="-15" cy="-42" rx="19" ry="25" fill="#f0d6b6"/>'+
+          '<ellipse cx="17" cy="-42" rx="19" ry="25" fill="#f0d6b6"/>'+
+          '<ellipse cx="46" cy="-22" rx="19" ry="24" fill="#f0d6b6" transform="rotate(18 46 -22)"/>'+
+          '</g>',
+      /* a footprint in stone — dinosaurs */
+      dino:'<g transform="translate(256,240)">'+
+          '<ellipse cx="0" cy="30" rx="86" ry="50" fill="#000" opacity=".22"/>'+
+          '<path d="M0 44 C-40 44 -56 20 -50 -4 C-46 -22 -28 -28 -18 -12 C-14 -34 -6 -46 0 -46 C6 -46 14 -34 18 -12 C28 -28 46 -22 50 -4 C56 20 40 44 0 44 Z" fill="#3d4d1c"/>'+
+          '<path d="M-40 -18 l-12 -24 M0 -40 l0 -30 M40 -18 l12 -24" stroke="#3d4d1c" stroke-width="11" stroke-linecap="round"/>'+
+          '<path d="M0 44 C-40 44 -56 20 -50 -4 C-46 -22 -28 -28 -18 -12 C-14 -34 -6 -46 0 -46 Z" fill="#000" opacity=".14"/>'+
+          '</g>',
+      /* a ringed world — space and nature */
+      space:'<g transform="translate(256,228)">'+
+          '<circle cx="0" cy="0" r="56" fill="#8b7ee8"/>'+
+          '<path d="M-56 0 a56 56 0 0 0 112 0 z" fill="#000" opacity=".16"/>'+
+          '<circle cx="-20" cy="-20" r="13" fill="#fff" opacity=".2"/>'+
+          '<ellipse cx="0" cy="8" rx="94" ry="26" fill="none" stroke="'+g+'" stroke-width="9" opacity=".9"/>'+
+          '<ellipse cx="0" cy="8" rx="94" ry="26" fill="none" stroke="#fff" stroke-width="3" opacity=".35"/>'+
+          '<path d="M96 -58 l5 14 l14 5 l-14 5 l-5 14 l-5 -14 l-14 -5 l14 -5 z" fill="#fff"/>'+
+          '</g>',
+      /* a lamp on a table — everyday things */
+      thing:'<g transform="translate(256,236)">'+
+          '<path d="M-56 -6 L-34 -58 h68 L56 -6 Z" fill="#e9dcc2"/>'+
+          '<path d="M-56 -6 L-34 -58 h20 L-20 -6 Z" fill="#fff" opacity=".3"/>'+
+          '<rect x="-5" y="-6" width="10" height="52" fill="#8a6a44"/>'+
+          '<ellipse cx="0" cy="52" rx="42" ry="12" fill="#8a6a44"/>'+
+          '<ellipse cx="0" cy="48" rx="42" ry="12" fill="#a9834f"/>'+
+          '<ellipse cx="0" cy="-6" rx="56" ry="12" fill="#fff3d4" opacity=".55"/>'+
+          '</g>'
+    };
+    return this.wrap('<defs>'+s.defs+'</defs>'+s.back+(O[key]||O.all)+s.front);
+  },
+
+  /* ---------- A LIT PLATE BEHIND EVERY CHARACTER ---------- */
+  plate(cat, glyph, size){
+    const P = {
+      all:['#e2a24a','#7c4a18','#2a1408','#ffd07a'],
+      game:['#5b7fe0','#25316f','#0d1130','#9fb8ff'],
+      pokemon:['#e8b93a','#7d5a0d','#2b1e02','#ffe27a'],
+      toon:['#d95fa0','#6d1f4d','#260a1a','#ffa2d0'],
+      hero:['#d1584a','#6d1a17','#250706','#ff9c90'],
+      sport:['#3fa66f','#14512f','#04160c','#7ee2ab'],
+      animal:['#c8894f','#5f3418','#1d0d05','#ffc78f'],
+      dino:['#7a9c3f','#33471a','#0e1506','#c6e089'],
+      space:['#6b6fd6','#2c2470','#0d0a2a','#b3a8ff'],
+      thing:['#d98a5c','#6d3418','#210e05','#ffbe8f']
+    }[cat] || ['#e2a24a','#7c4a18','#2a1408','#ffd07a'];
+    const u = this.uid();
+    return '<svg viewBox="0 0 200 200" class="plate" aria-hidden="true">'+
+      '<defs>'+
+        '<radialGradient id="ps'+u+'" cx="50%" cy="36%" r="76%">'+
+          '<stop offset="0%" stop-color="'+P[0]+'"/><stop offset="55%" stop-color="'+P[1]+'"/>'+
+          '<stop offset="100%" stop-color="'+P[2]+'"/></radialGradient>'+
+        '<radialGradient id="pg'+u+'" cx="50%" cy="50%" r="50%">'+
+          '<stop offset="0%" stop-color="'+P[3]+'" stop-opacity=".75"/>'+
+          '<stop offset="100%" stop-color="'+P[3]+'" stop-opacity="0"/></radialGradient>'+
+      '</defs>'+
+      '<rect width="200" height="200" rx="30" fill="url(#ps'+u+')"/>'+
+      '<ellipse cx="100" cy="74" rx="82" ry="66" fill="url(#pg'+u+')" opacity=".6"/>'+
+      '<path d="M0 142 C56 132 140 134 200 140 L200 200 L0 200 Z" fill="'+P[2]+'" opacity=".85"/>'+
+      '<line x1="0" y1="141" x2="200" y2="139" stroke="'+P[3]+'" stroke-opacity=".4" stroke-width="1.4"/>'+
+      '<ellipse cx="100" cy="146" rx="46" ry="9" fill="#000" opacity=".38"/>'+
+      '<text x="100" y="'+(size===2?126:124)+'" text-anchor="middle" font-size="'+(size===2?96:88)+'">'+glyph+'</text>'+
+      '<rect width="200" height="200" rx="30" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width="2"/>'+
+    '</svg>';
+  }
+};
+/* ============================================================
+   LISTENING — a child answers out loud instead of reading.
+   The buttons never go away; this is an extra door, not a
+   replacement, because a phone in a loud kitchen will mishear
+   and a six-year-old should never be stuck because of it.
+   ============================================================ */
+const Listen = {
+  ok: !!(window.SpeechRecognition || window.webkitSpeechRecognition),
+  on: true, rec:null, live:false, want:null, cb:null, guard:null,
+
+  init(){
+    try{ this.on = localStorage.getItem('espowho.mic') !== '0'; }catch(e){}
+    this.paint();
+  },
+  paint(){
+    $$('.mic').forEach(b=>{
+      b.style.display = this.ok ? '' : 'none';
+      b.classList.toggle('off', !this.on);
+      b.classList.toggle('hot', this.live);
+    });
+    document.body.classList.toggle('hearing', this.live);
+  },
+  toggle(){
+    this.on = !this.on;
+    try{ localStorage.setItem('espowho.mic', this.on ? '1':'0'); }catch(e){}
+    if(!this.on) this.stop();
+    this.paint();
+    Voice.say(this.on ? 'Talking is on. You can just say your answer.'
+                      : 'Talking is off. Tap the buttons instead.', null);
+  },
+
+  /* mode: 'yesno' | 'name'   cb(result) */
+  ask(mode, cb){
+    if(!this.ok || !this.on) return;
+    this.want = mode; this.cb = cb;
+    this.start();
+  },
+
+  start(){
+    if(!this.ok || !this.on || this.live) return;
+    const R = window.SpeechRecognition || window.webkitSpeechRecognition;
+    try{
+      const r = new R();
+      r.lang = 'en-US';
+      r.interimResults = false;
+      r.maxAlternatives = 4;
+      r.continuous = false;
+      r.onstart = () => { this.live = true; this.paint(); };
+      r.onerror = () => { this.live = false; this.paint(); };
+      r.onend   = () => { this.live = false; this.paint(); };
+      r.onresult = e => {
+        const heard = [];
+        for(const res of e.results) for(const alt of res) heard.push((alt.transcript||'').toLowerCase().trim());
+        this.heard(heard);
+      };
+      this.rec = r;
+      r.start();
+      /* never sit with the microphone open — a child walks away */
+      clearTimeout(this.guard);
+      this.guard = setTimeout(()=>this.stop(), 9000);
+    }catch(e){ this.live = false; this.paint(); }
+  },
+  stop(){
+    clearTimeout(this.guard);
+    if(this.rec){ try{ this.rec.abort(); }catch(e){} }
+    this.live = false; this.paint();
+  },
+
+  heard(list){
+    const cb = this.cb;
+    if(!cb) return;
+    if(this.want === 'yesno'){
+      const a = this.readYesNo(list);
+      if(a){ this.stop(); this.cb = null; cb(a); }
+      else this.again('I did not catch that. Say yes, or no, or I do not know.');
+      return;
+    }
+    if(this.want === 'name'){
+      const hit = this.readName(list);
+      if(hit){ this.stop(); this.cb = null; cb(hit); }
+      else this.again('I did not catch that name. Say it again, or tap the picture.');
+    }
+  },
+  again(msg){
+    this.stop();
+    Voice.add(msg, null);
+    Voice.after(()=>{ if(this.cb) this.start(); });
+  },
+
+  /* the words a child actually says */
+  readYesNo(list){
+    const YES = ['yes','yeah','yep','yup','ya','yah','uh huh','mhm','mm hmm','correct','right','true','sure','it does','he does','she does','it is','yes it is','of course','definitely'];
+    const NO  = ['no','nope','nah','naw','no way','wrong','false','it does not','it doesnt','he doesnt','she doesnt','it is not','isnt','not really','never'];
+    const MAY = ['maybe','i dont know','dont know','not sure','i am not sure','kind of','sort of','sometimes','dunno','i guess','no idea'];
+    for(const raw of list){
+      const t = raw.replace(/[^a-z ]/g,' ').replace(/\s+/g,' ').trim();
+      /* "I don't know" contains "no" — the maybes have to be read first */
+      if(MAY.some(w => t === w || t.startsWith(w+' ') || t.endsWith(' '+w) || t.includes(' '+w+' '))) return 'm';
+      if(YES.some(w => t === w || t.startsWith(w+' ') || t.endsWith(' '+w))) return 'y';
+      if(NO.some(w  => t === w || t.startsWith(w+' ') || t.endsWith(' '+w))) return 'n';
+    }
+    return null;
+  },
+  readName(list){
+    const norm = s => s.toLowerCase().replace(/^(a|an|the) /,'').replace(/[^a-z0-9]/g,'');
+    const cands = pool();
+    for(const raw of list){
+      const t = norm(raw);
+      if(!t) continue;
+      let hit = cands.find(e => norm(e.name) === t);
+      if(hit) return hit;
+      hit = cands.find(e => { const n = norm(e.name); return n.length > 3 && (t.includes(n) || n.includes(t)); });
+      if(hit) return hit;
+      /* one letter wrong is still the name a six-year-old meant */
+      let best = null, bestD = 3;
+      for(const e of cands){
+        const d = dist(norm(e.name), t);
+        if(d < bestD){ bestD = d; best = e; }
+      }
+      if(best) return best;
+    }
+    return null;
+  }
+};
+
+/* edit distance, capped — we only care whether it is within a letter or two */
+function dist(a, b){
+  if(Math.abs(a.length - b.length) > 3) return 99;
+  const m = a.length, n = b.length;
+  let prev = Array.from({length:n+1}, (_,j)=>j), cur = new Array(n+1);
+  for(let i=1;i<=m;i++){
+    cur[0] = i;
+    for(let j=1;j<=n;j++)
+      cur[j] = Math.min(prev[j]+1, cur[j-1]+1, prev[j-1] + (a[i-1]===b[j-1]?0:1));
+    [prev, cur] = [cur, prev];
+  }
+  return prev[n];
+}
+
+/* ---------------- VOICE ----------------
+   Baked AE Voice Engine clips when assets/voice/ is present,
+   the browser's own voice until then. Same slug on both sides. */
+const Voice = {
+  manifest:null, on:true, el:null, audio:null, unlocked:false,
+  async init(){
+    try{
+      const r = await fetch('assets/voice/manifest.json',{cache:'no-store'});
+      if(r.ok){ const m = await r.json(); if(m && m.slugs && m.slugs.length) this.manifest = m; }
+    }catch(e){}
+    try{ this.on = localStorage.getItem('espowho.voice') !== '0'; }catch(e){}
+    this.paint();
+  },
+  paint(){ $$('.speaker').forEach(b=>b.classList.toggle('off', !this.on)); },
+  toggle(){ this.on=!this.on; try{localStorage.setItem('espowho.voice',this.on?'1':'0');}catch(e){} this.paint(); if(!this.on) this.stop(); },
+  unlock(){
+    if(this.unlocked) return; this.unlocked=true;
+    this.audio = new Audio();
+    this.audio.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+    this.audio.play().catch(()=>{});
+    if(window.speechSynthesis){ try{ const u=new SpeechSynthesisUtterance(' '); u.volume=0; speechSynthesis.speak(u); }catch(e){} }
+  },
+  stop(){
+    this.queue=[]; this.speaking=false; this.idle=null; clearTimeout(this.guard); this.tok=(this.tok||0)+1;
+    if(window.speechSynthesis) try{ speechSynthesis.cancel(); }catch(e){}
+    if(this.audio) try{ this.audio.pause(); }catch(e){}
+    this.clearLight();
+  },
+  clearLight(){ if(this.el) this.el.querySelectorAll('w').forEach(w=>w.classList.remove('lit')); },
+  light(i){ if(this.el) this.el.querySelectorAll('w').forEach(w=>w.classList.toggle('lit', +w.dataset.i===i)); },
+  /* say('one line', el)  or  say([['line',el],['line',null]]) — plays in order */
+  say(a, el){
+    this.stop();
+    this.queue = Array.isArray(a) ? a.slice() : [[a, el||null]];
+    this.run();
+  },
+  /* add to the end without cutting off what is already talking */
+  add(a, el){
+    const items = Array.isArray(a) ? a.slice() : [[a, el||null]];
+    this.queue = (this.queue||[]).concat(items);
+    if(!this.speaking) this.run();
+  },
+  /* run this once the talking actually stops — the microphone must never
+     be open while the app is speaking, or it hears itself and answers itself */
+  after(fn){ this.idle = fn; if(!this.speaking) this.drain(); },
+  drain(){ const f=this.idle; this.idle=null; if(f) try{ f(); }catch(e){} },
+  run(){
+    if(!this.queue || !this.queue.length){ this.speaking=false; this.drain(); return; }
+    const [text, el] = this.queue.shift();
+    this.speaking = true;
+    this.paintWords(text, el);
+    if(!this.on){ this.speaking=false; this.queue=[]; this.drain(); return; }
+    /* a silent or broken voice must never leave the rest of the words unsaid */
+    this.tok = (this.tok||0)+1;
+    const mine = this.tok;
+    clearTimeout(this.guard);
+    this.guard = setTimeout(()=>{ if(this.tok===mine) this.done(); },
+                            1600 + (''+text).length*95);
+    const s = slug(text);
+    if(this.manifest && this.manifest.slugs.includes(s)) this.baked(s, text);
+    else this.browser(text);
+  },
+  done(){ clearTimeout(this.guard); this.tok=(this.tok||0)+1; this.clearLight(); this.speaking=false; this.run(); },
+  paintWords(text, el){
+    if(!el){ this.el=null; return; }
+    const words=(''+text).split(/\s+/).filter(Boolean);
+    el.innerHTML='';
+    words.forEach((wd,i)=>{
+      const s=document.createElement('w'); s.textContent=wd; s.dataset.i=i; el.appendChild(s);
+      if(i<words.length-1) el.appendChild(document.createTextNode(' '));
+    });
+    this.el=el;
+  },
+  baked(s, text){
+    const times=(this.manifest.timings&&this.manifest.timings[s])||null;
+    const a=this.audio||(this.audio=new Audio());
+    a.src='assets/voice/'+s+'.wav';
+    let idx=-1;
+    const tick=()=>{
+      if(a.paused||a.ended) return;
+      if(times){ let k=-1; for(let i=0;i<times.length;i++) if(a.currentTime>=times[i]) k=i;
+                 if(k!==idx){ idx=k; this.light(k); } }
+      requestAnimationFrame(tick);
+    };
+    a.onended=()=>this.done();
+    a.play().then(()=>{ if(times) requestAnimationFrame(tick); }).catch(()=>this.browser(text));
+  },
+  browser(text){
+    if(!window.speechSynthesis){ this.done(); return; }
+    const u=new SpeechSynthesisUtterance(text);
+    u.rate=.95; u.pitch=1.05; u.lang='en-US';
+    const vs=speechSynthesis.getVoices()||[];
+    const v=vs.find(x=>/samantha|karen|moira|zira|google us english/i.test(x.name))||vs.find(x=>x.lang&&x.lang.indexOf('en')===0);
+    if(v) u.voice=v;
+    u.onboundary=e=>{
+      if(e.name && e.name!=='word') return;
+      this.light((text.slice(0,e.charIndex).match(/\S+/g)||[]).length);
+    };
+    u.onend=()=>this.done();
+    u.onerror=()=>this.done();
+    try{ speechSynthesis.speak(u); }catch(e){}
+  }
+};
+
+/* ---------------- SCREENS ---------------- */
+function show(id){
+  if(window.Listen) Listen.stop();
+  $$('.screen').forEach(s=>s.classList.remove('on')); $('#s-'+id).classList.add('on');
+}
+
+/* Everything on a screen gets read out loud, in order, so a child who
+   cannot read yet can still play the whole game on their own. */
+function readScreen(id){
+  const lines = [];
+  if(id==='home'){
+    lines.push(['ESPO who. The twenty questions game.',null]);
+    lines.push(['Think of somebody, and I will guess it.',null]);
+    lines.push(['Tap the gold button if you want me to guess.',null]);
+    lines.push(['Tap the orange button if you want to guess.',null]);
+    if(Net.live) lines.push(['Tap the green button to play with a friend using a code.',null]);
+    lines.push(['Tap the white button and I will tell you how to play.',null]);
+  } else if(id==='rail'){
+    lines.push(['How big a brain today?',null]);
+    lines.push(['Tap Little for easy questions.',null]);
+    lines.push(['Tap Middle for trickier ones.',null]);
+    lines.push(['Tap Big Brain for everything I know.',null]);
+  } else if(id==='cat'){
+    lines.push(['Pick a world.',null]);
+    $$('#catgrid .chip').forEach(c=>lines.push([c.dataset.say,null]));
+  } else if(id==='ask'){
+    lines.push(['I am thinking of somebody.',null]);
+    lines.push(['Tap any question and I will read it and answer it.',null]);
+  } else if(id==='pick'){
+    lines.push(['Tap who you think it is.',null]);
+    lines.push(['I will say the name out loud before you decide.',null]);
+  }
+  if(lines.length) Voice.say(lines);
+}
+
+/* ---------------- GAME STATE ---------------- */
+let G = {};
+function pool(){
+  /* in a friend game the world and the rail come from the game itself,
+     because the person who joined never walked through those screens */
+  const cat  = (Net.g && Net.g.cat)  || G.cat  || 'all';
+  return (!cat || cat==='all') ? DB.slice() : DB.filter(e=>e.cat===cat);
+}
+function railNow(){ return (Net.g && Net.g.rail) || G.rail || 2; }
+
+function startGuess(){
+  const p = pool();
+  G.cands = p.map(e=>({e, w:1}));
+  G.askedKeys = new Set();
+  G.n = 0; G.wrong = [];
+  show('play'); nextQuestion();
+}
+
+function total(){ return G.cands.reduce((s,c)=>s+c.w,0); }
+function leader(){ return G.cands.slice().sort((a,b)=>b.w-a.w)[0]; }
+
+function chooseQuestion(){
+  const T = total();
+  let best = [], bestScore = 9;
+  for(const q of BANK){
+    if(q.tier > G.rail) continue;
+    if(G.askedKeys.has(q.key)) continue;
+    let hit = 0;
+    for(const c of G.cands) if(c.w>0 && q.test(c.e)) hit += c.w;
+    const p = hit / T;
+    if(p<=0.02 || p>=0.98) continue;
+    const score = Math.abs(p-0.5);
+    if(score < bestScore-0.001){ bestScore = score; best = [q]; }
+    else if(Math.abs(score-bestScore) <= 0.05) best.push(q);
+  }
+  if(!best.length) return null;
+  const fresh = best.filter(q=>!Used.has(q.id));
+  const from = fresh.length ? fresh : best;
+  return pick(from);
+}
+
+function nextQuestion(){
+  const alive = G.cands.filter(c=>c.w>0.0001);
+  const T = total();
+  const top = leader();
+  const conf = T>0 ? top.w/T : 0;
+  if(alive.length<=1 || (G.n>=5 && conf>0.62) || G.n>=20) return doGuess();
+  const q = chooseQuestion();
+  if(!q) return doGuess();
+  G.q = q; G.n++;
+  G.askedKeys.add(q.key); Used.add(q.id);
+  $('#qcount').textContent = 'Question ' + numWord(G.n) + ' of twenty';
+  $('#qbar').style.width = (G.n/20*100)+'%';
+  Voice.say(q.text, $('#qtext'));
+  if(G.n===1) Voice.add(Listen.ok && Listen.on
+      ? 'Say yes, or no, or I do not know. Or tap a button if you would rather.'
+      : 'Tap the green button for yes, the red button for no, or the grey one if you do not know.', null);
+  Voice.after(()=> Listen.ask('yesno', a => { if($('#s-play').classList.contains('on')) answer(a); }));
+}
+
+function answer(a){
+  Listen.stop();
+  if(a!=='m'){
+    const yes = a==='y';
+    G.cands.forEach(c=>{
+      const has = G.q.test(c.e);
+      c.w *= (has===yes) ? 0.93 : 0.10;
+    });
+    const T = total();
+    if(T<=0) G.cands.forEach(c=>c.w=1);
+    else G.cands.forEach(c=>c.w/=T);
+  }
+  nextQuestion();
+}
+
+/* ---------------- REVEAL ---------------- */
+function doGuess(){
+  const top = leader();
+  if(!top || top.w<=0) return giveUp();
+  G.guess = top;
+  show('reveal');
+  $('#rbadge').className='badge'; $('#rbadge').innerHTML = Art.plate(top.e.cat, top.e.emoji, 2);
+  $('#risit').textContent = 'Is it…';
+  const line = 'Is it ' + spoken(top.e.name) + '?';
+  Voice.say(line, $('#rname'));
+  Voice.add('Was I right? Say yes or no.', null);
+  Voice.after(()=> Listen.ask('yesno', a => {
+    if(!$('#s-reveal').classList.contains('on')) return;
+    if(a==='y') $('#r-yes').click(); else if(a==='n') $('#r-no').click();
+  }));
+  $('#ractions').innerHTML =
+    '<button class="ans y" id="r-yes">✓ YES! That is it</button>' +
+    '<button class="ans n" id="r-no">✕ NO, keep going</button>';
+  $('#r-yes').onclick = ()=>{ Voice.unlock(); win(); };
+  $('#r-no').onclick  = ()=>{ Voice.unlock(); G.guess.w = 0; G.wrong.push(G.guess.e.name);
+                              if(G.n>=20 || G.cands.filter(c=>c.w>0.0001).length===0) giveUp();
+                              else { show('play'); nextQuestion(); } };
+}
+
+function win(){
+  show('reveal');
+  $('#rbadge').className='badge'; $('#rbadge').innerHTML = Art.plate(G.guess.e.cat, G.guess.e.emoji, 2);
+  $('#risit').textContent = 'I got it!';
+  Voice.say('I got it! It was ' + spoken(G.guess.e.name) + '. Want to play again?', $('#rname'));
+  Voice.add('Tap the green button to play again, or the grey one to go back to the start.', null);
+  confetti();
+  $('#ractions').innerHTML =
+    '<button class="ans y" id="r-again">▶ Play again</button>' +
+    '<button class="ans m" id="r-home">Back to the start</button>';
+  $('#r-again').onclick = ()=>{ Voice.unlock(); startGuess(); };
+  $('#r-home').onclick  = ()=>{ Voice.unlock(); show('home'); };
+}
+
+function giveUp(){
+  show('reveal');
+  $('#rbadge').className='badge emo'; $('#rbadge').innerHTML = '🏆';
+  $('#risit').textContent = 'You win!';
+  Voice.say('You beat me! I could not figure it out. Want to play again?', $('#rname'));
+  Voice.add('Tap the green button to play again, or the grey one to go back to the start.', null);
+  confetti();
+  $('#ractions').innerHTML =
+    '<button class="ans y" id="r-again">▶ Play again</button>' +
+    '<button class="ans m" id="r-home">Back to the start</button>';
+  $('#r-again').onclick = ()=>{ Voice.unlock(); startGuess(); };
+  $('#r-home').onclick  = ()=>{ Voice.unlock(); show('home'); };
+}
+
+/* ---------------- KID ASKS ---------------- */
+function startAsk(){
+  const p = pool();
+  G.secret = pick(p);
+  G.aN = 0;
+  const opts = BANK.filter(q=>q.tier<=G.rail && !q.id.startsWith('y:'));
+  const seen = new Set(); G.aQs = [];
+  for(const q of shuffle(opts)){ if(seen.has(q.key)) continue; seen.add(q.key); G.aQs.push(q); if(G.aQs.length>=30) break; }
+  paintAsk();
+  show('ask');
+  readScreen('ask');
+}
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+function paintAsk(){
+  $('#acount').textContent = G.aN===0 ? 'You have asked no questions yet'
+                                      : 'You have asked ' + numWord(G.aN) + ' of twenty';
+  $('#abar').style.width = (G.aN/20*100)+'%';
+  const list = $('#qlist'); list.innerHTML='';
+  G.aQs.forEach((q,i)=>{
+    const b=document.createElement('button');
+    b.className='qbtn'+(q.used?' used':''); b.textContent=q.text;
+    b.onclick=()=>{ Voice.unlock(); if(q.used) return; askOne(q, b); };
+    list.appendChild(b);
+  });
+}
+
+function askOne(q, el){
+  q.used = true; G.aN++;
+  const yes = q.test(G.secret);
+  Voice.say([[q.text, el||null]]);
+  Voice.add(yes ? 'Yes!' : 'Nope!', null);
+  const v = $('#verdict');
+  setTimeout(()=>{
+    v.className = 'verdict on ' + (yes?'y':'n');
+    v.textContent = yes ? 'YES' : 'NO';
+    setTimeout(()=>{ v.className='verdict'; paintAsk(); if(G.aN>=20) openPick(); }, 1100);
+  }, 700);
+}
+
+function openPick(){
+  const p = pool();
+  let list = shuffle(p).slice(0,59);
+  if(!list.includes(G.secret)) list[0] = G.secret;
+  list = shuffle(list);
+  const g = $('#pickgrid'); g.innerHTML='';
+  list.forEach(e=>{
+    const b=document.createElement('button');
+    b.className='pick';
+    b.innerHTML=Art.plate(e.cat, e.emoji)+'<span class="cap">'+e.name+'</span>';
+    b.onclick=()=>{ Voice.unlock(); confirmPick(e); };
+    g.appendChild(b);
+  });
+  show('pick');
+  readScreen('pick');
+  /* they can just say the name instead of hunting the grid */
+  Voice.after(()=> Listen.ask('name', hit => { if($('#s-pick').classList.contains('on')) confirmPick(hit); }));
+}
+
+function confirmPick(e){
+  show('reveal');
+  $('#rbadge').className='badge'; $('#rbadge').innerHTML = Art.plate(e.cat, e.emoji, 2);
+  $('#risit').textContent = 'You picked…';
+  Voice.say([[spoken(e.name), $('#rname')],
+             ['Is that your answer? Tap the green button for yes, or the red one to go back.', null]]);
+  $('#ractions').innerHTML =
+    '<button class="ans y" id="p-yes">✓ YES, that is my answer</button>' +
+    '<button class="ans n" id="p-no">✕ NO, let me look again</button>';
+  Voice.after(()=> Listen.ask('yesno', a => {
+    if(!$('#s-reveal').classList.contains('on')) return;
+    if(a==='y') judge(e); else if(a==='n'){ show('pick'); readScreen('pick'); }
+  }));
+  $('#p-yes').onclick = ()=>{ Voice.unlock(); Listen.stop(); judge(e); };
+  $('#p-no').onclick  = ()=>{ Voice.unlock(); show('pick'); readScreen('pick'); };
+}
+
+function judge(e){
+  show('reveal');
+  const right = e === G.secret;
+  $('#rbadge').className = right ? 'badge' : 'badge emo';
+  $('#rbadge').innerHTML = right ? Art.plate(G.secret.cat, G.secret.emoji, 2) : '🤔';
+  $('#risit').textContent = right ? 'You got it!' : 'Not quite —';
+  Voice.say(right ? ('You got it! It was ' + spoken(G.secret.name) + '. Nice one!')
+                  : ('It was ' + spoken(G.secret.name) + '. Good try!'), $('#rname'));
+  Voice.add('Tap the green button to play again, or the grey one to go back to the start.', null);
+  if(right) confetti();
+  $('#ractions').innerHTML =
+    '<button class="ans y" id="r-again">▶ Play again</button>' +
+    '<button class="ans m" id="r-home">Back to the start</button>';
+  $('#r-again').onclick = ()=>{ Voice.unlock(); startAsk(); };
+  $('#r-home').onclick  = ()=>{ Voice.unlock(); show('home'); };
+}
+
+/* ---------------- HOW TO PLAY ---------------- */
+const HOW = [
+ 'ESPOwho is the game of twenty questions.',
+ 'One of us thinks of somebody. The other one has twenty questions to figure out who it is.',
+ 'Every question can only be answered yes or no.',
+ 'If you are not sure, tap Maybe. That is allowed.',
+ 'Every word lights up while I say it, so you can read along with me.',
+ 'That is the whole game. Tap Next to go back and play.'
+];
+let howI = 0;
+
+/* ---------------- HELPERS ---------------- */
+/* "A Shark" is written that way on the card but has to be SAID as "a shark" */
+function spoken(name){
+  return name.replace(/^(A|An|The) /, (m,a)=>a.toLowerCase()+' ');
+}
+
+const WORDS=['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty'];
+function numWord(n){ return WORDS[n] || n; }
+
+function confetti(){
+  const c=$('#confetti'), x=c.getContext('2d');
+  c.width=innerWidth; c.height=innerHeight;
+  const cols=['#e0a83a','#c8794f','#f4eede','#3fa66f','#ffd07a'];
+  const bits=[...Array(140)].map(()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,
+    r:5+Math.random()*7,vy:2.4+Math.random()*3.4,vx:-1.6+Math.random()*3.2,
+    a:Math.random()*6.28,va:-.16+Math.random()*.32,col:pick(cols)}));
+  let t=0;
+  (function loop(){
+    t++; x.clearRect(0,0,c.width,c.height);
+    bits.forEach(b=>{ b.x+=b.vx; b.y+=b.vy; b.a+=b.va;
+      x.save(); x.translate(b.x,b.y); x.rotate(b.a); x.fillStyle=b.col;
+      x.fillRect(-b.r/2,-b.r/2,b.r,b.r*.62); x.restore(); });
+    if(t<190) requestAnimationFrame(loop); else x.clearRect(0,0,c.width,c.height);
+  })();
+}
+
+
+/* ============================================================
+   PLAYING WITH A FRIEND — a four letter code, turn by turn.
+   Same shape as ESPOdraw: nobody has to be online at the same
+   moment. If the store is not connected this whole door stays
+   shut and playing against the computer is unaffected.
+   ============================================================ */
+const Net = {
+  live:false, id:null, code:null, poll:null, g:null,
+  pid: (()=>{ try{ let v=localStorage.getItem('espowho.pid');
+      if(!v){ v=Math.random().toString(36).slice(2)+Date.now().toString(36); localStorage.setItem('espowho.pid',v); }
+      return v; }catch(e){ return 'x'+Math.random().toString(36).slice(2); } })(),
+  name: (()=>{ try{ return localStorage.getItem('espowho.name')||''; }catch(e){ return ''; } })(),
+
+  async check(){
+    try{ const r=await fetch('/api/who',{cache:'no-store'});
+         if(r.ok){ const j=await r.json(); this.live = !!j.store; } }catch(e){ this.live=false; }
+    const btn=$('#door-friend'); if(btn) btn.style.display = this.live ? '' : 'none';
+    return this.live;
+  },
+  async call(payload){
+    const r = await fetch('/api/who', { method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify({ ...payload, pid:this.pid, name:this.name }) });
+    const j = await r.json().catch(()=>({ok:false,error:'No answer from the game.'}));
+    if(!r.ok || j.ok===false) throw new Error(j.error || 'That did not work.');
+    return j;
+  },
+  hold(g){ this.g=g; this.id=g.id; this.code=g.code; },
+  start(){ clearInterval(this.poll); this.poll=setInterval(()=>this.tick(), 4000); },
+  stop(){ clearInterval(this.poll); this.poll=null; },
+  async tick(){
+    if(!this.id) return;
+    try{
+      const j = await this.call({do:'game', id:this.id});
+      const g = j.game, was = this.g;
+      if(!was || g.rev === was.rev) return;
+      this.hold(g);
+      const moved = g.phase !== was.phase || g.players.length !== was.players.length;
+      const here  = (document.querySelector('.screen.on')||{}).id;
+      if(moved || here !== 's-net') routeNet(); else paintNet();
+    }catch(e){}
+  }
+};
+
+function netErr(msg){ const n=$('#netnote'); if(n) n.textContent = msg; Voice.say(msg, null); }
+
+/* ---- the friend door ---- */
+function openFriend(){
+  $('#myname').value = Net.name || '';
+  $('#netnote').textContent = '';
+  show('friend');
+  Voice.say([['Playing with a friend.',null],
+             ['Type your name, then tap the gold button to start a game and get a code.',null],
+             ['If a friend already gave you a code, type it in the box lower down.',null]]);
+}
+function takeName(){
+  const v = ($('#myname').value||'').trim().slice(0,16);
+  Net.name = v || 'Player';
+  try{ localStorage.setItem('espowho.name', Net.name); }catch(e){}
+}
+
+async function newFriendGame(){
+  takeName();
+  try{
+    const j = await Net.call({ do:'new', rail:G.rail||2, cat:G.cat||'all' });
+    Net.hold(j.game); Net.start();
+    $('#thecode').textContent = j.game.code;
+    show('code');
+    Voice.say([['Your code is.',null],
+               [j.game.code.split('').join(', '), null],
+               ['Read those four letters to your friend. I will start the moment they join.',null]]);
+  }catch(e){ netErr(e.message); }
+}
+async function joinFriendGame(){
+  takeName();
+  const code = ($('#joincode').value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(code.length<4) return netErr('A code is four letters. Have another look at it.');
+  try{
+    const j = await Net.call({ do:'join', code });
+    Net.hold(j.game); Net.start();
+    routeNet();
+  }catch(e){ netErr(e.message); }
+}
+
+/* ---- where a player should be right now ---- */
+function routeNet(){
+  const g = Net.g; if(!g) return;
+  if(g.players.length < 2 && g.youAreThinking && g.phase==='thinking'){
+    $('#thecode').textContent = g.code; show('code'); return;
+  }
+  if(g.youAreThinking && g.phase==='thinking'){ openSecret(); return; }
+  show('net'); paintNet();
+}
+
+function openSecret(){
+  const p = pool();
+  const grid = $('#secretgrid'); grid.innerHTML='';
+  shuffle(p).slice(0,60).forEach(e=>{
+    const b=document.createElement('button');
+    b.className='pick'; b.innerHTML=Art.plate(e.cat, e.emoji)+'<span class="cap">'+e.name+'</span>';
+    b.onclick=async()=>{ Voice.unlock();
+      try{ const j=await Net.call({do:'think', id:Net.id, secret:e.name});
+           Net.hold(j.game); show('net'); paintNet(); }catch(err){ Voice.say(err.message,null); } };
+    grid.appendChild(b);
+  });
+  show('secret');
+  Voice.say([['Pick somebody, and do not show them.',null],
+             ['I will say each name out loud only if you tap it.',null]]);
+}
+
+/* ---- the shared board ---- */
+function paintNet(){
+  const g = Net.g; if(!g) return;
+  const body = $('#netbody');
+  $('#netbar').style.width = ((MAX_ASK - g.left)/MAX_ASK*100)+'%';
+  $('#netrole').textContent = g.youAreThinking
+    ? 'You are thinking. They are guessing.'
+    : 'You are guessing. ' + (g.thinker||'They') + ' is thinking.';
+
+  const history = '<div class="asked">' + (g.asked.length
+      ? g.asked.map(a=>'<div class="arow"><em class="'+a.answer+'">'+
+          (a.answer==='y'?'YES':a.answer==='n'?'NO':'MAYBE')+'</em>'+esc(a.q)+'</div>').reverse().join('')
+      : '<div class="arow" style="opacity:.6">No questions yet.</div>') + '</div>';
+
+  if(g.phase === 'over'){
+    const got = g.outcome === 'got';
+    body.innerHTML = '<div class="waiting"><div class="badge emo">'+(got?'🏆':'🤔')+'</div>'+
+      '<div class="name" id="netmsg"></div></div>'+
+      '<button class="ans y" id="net-next">▶ Next round</button>';
+    const line = got ? ('Got it! It was ' + spoken(g.secret) + '.')
+                     : ('It was ' + spoken(g.secret) + '. Good try!');
+    Voice.say([[line, $('#netmsg')],['Tap the green button for the next round.',null]]);
+    if(got) confetti();
+    $('#net-next').onclick = async()=>{ Voice.unlock();
+      try{ const j=await Net.call({do:'next', id:Net.id}); Net.hold(j.game); routeNet(); }catch(e){} };
+    return;
+  }
+
+  if(g.youAreThinking){
+    if(g.pending){
+      body.innerHTML = history +
+        '<div class="q" id="netq" style="margin:10px 0 16px"></div>' +
+        '<div class="acts"><button class="ans y" data-na="y">✓ YES</button>' +
+        '<button class="ans n" data-na="n">✕ NO</button>' +
+        '<button class="ans m" data-na="m">Maybe · I don\'t know</button></div>';
+      Voice.say([[ (g.players[1-g.you]?g.players[1-g.you].name:'They') + ' asks.', null],
+                 [g.pending, $('#netq')],
+                 ['Tap the green button for yes, the red one for no, or the grey one for maybe.',null]]);
+      Voice.after(()=> Listen.ask('yesno', a => {
+        const btn = body.querySelector('[data-na="'+a+'"]'); if(btn) btn.click();
+      }));
+      body.querySelectorAll('[data-na]').forEach(b=>b.onclick=async()=>{ Voice.unlock(); Listen.stop();
+        try{ const j=await Net.call({do:'answer', id:Net.id, answer:b.dataset.na});
+             Net.hold(j.game); paintNet(); }catch(e){} });
+    } else {
+      body.innerHTML = history + '<div class="waiting"><div class="dots">· · ·</div>'+
+        '<div>Waiting for their question.</div>'+
+        '<div style="opacity:.7">You are thinking of '+esc(g.secret||'')+'.</div></div>';
+      Voice.say('Waiting for their question. You can put the tablet down.', null);
+    }
+    return;
+  }
+
+  /* you are the one asking */
+  if(g.pending){
+    body.innerHTML = history + '<div class="waiting"><div class="dots">· · ·</div>'+
+      '<div>You asked:</div><div class="q" id="netq" style="font-size:1.4rem"></div>'+
+      '<div style="opacity:.7">Waiting for '+esc(g.thinker||'them')+' to answer.</div></div>';
+    Voice.say([['You asked.',null],[g.pending, $('#netq')],['Now we wait for them to answer.',null]]);
+    return;
+  }
+  if(g.phase === 'thinking'){
+    body.innerHTML = '<div class="waiting"><div class="dots">· · ·</div>'+
+      '<div>'+esc(g.thinker||'They')+' is picking somebody.</div></div>';
+    Voice.say((g.thinker||'They') + ' is picking somebody. Hold on.', null);
+    return;
+  }
+
+  const opts = shuffle(BANK.filter(q=>q.tier<=railNow() && !q.id.startsWith('y:')))
+                 .filter((q,i,arr)=>arr.findIndex(x=>x.key===q.key)===i)
+                 .filter(q=>!g.asked.some(a=>a.q===q.text))
+                 .slice(0,26);
+  body.innerHTML = history +
+    '<div class="qlist" id="netlist"></div>' +
+    '<button class="big gold" id="net-know"><span class="ic">💡</span><span>I know who it is!</span></button>';
+  const list = $('#netlist');
+  opts.forEach(q=>{
+    const b=document.createElement('button'); b.className='qbtn'; b.textContent=q.text;
+    b.onclick=async()=>{ Voice.unlock(); Voice.say(q.text, b);
+      try{ const j=await Net.call({do:'ask', id:Net.id, q:q.text}); Net.hold(j.game); paintNet(); }
+      catch(e){ Voice.say(e.message,null); } };
+    list.appendChild(b);
+  });
+  $('#net-know').onclick = ()=>{ Voice.unlock(); openNetGuess(); };
+  Voice.say('Tap a question and I will send it over.', null);
+}
+
+function openNetGuess(){
+  /* the whole world, every time — the answer must always be on this screen,
+     and we cannot narrow it because we are the ones who do not know it */
+  const list = pool().slice().sort((a,b)=>a.name.localeCompare(b.name));
+  const grid = $('#pickgrid'); grid.innerHTML='';
+  list.forEach(e=>{
+    const b=document.createElement('button');
+    b.className='pick'; b.innerHTML=Art.plate(e.cat, e.emoji)+'<span class="cap">'+e.name+'</span>';
+    b.onclick=()=>{ Voice.unlock();
+      show('reveal');
+      $('#rbadge').className='badge'; $('#rbadge').innerHTML = Art.plate(e.cat, e.emoji, 2); $('#risit').textContent = 'You picked…';
+      Voice.say([[spoken(e.name), $('#rname')],
+                 ['Is that your answer? Tap the green button for yes, or the red one to go back.',null]]);
+      $('#ractions').innerHTML =
+        '<button class="ans y" id="g-yes">✓ YES, that is my answer</button>' +
+        '<button class="ans n" id="g-no">✕ NO, let me look again</button>';
+      $('#g-yes').onclick = async()=>{ Voice.unlock();
+        try{ const j=await Net.call({do:'guess', id:Net.id, guess:e.name});
+             Net.hold(j.game); show('net'); paintNet(); }catch(err){ Voice.say(err.message,null); } };
+      $('#g-no').onclick = ()=>{ Voice.unlock(); openNetGuess(); };
+    };
+    grid.appendChild(b);
+  });
+  show('pick');
+  Voice.say([['Tap who you think it is.',null],['I will say the name out loud before you decide.',null]]);
+}
+
+const MAX_ASK = 20;
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+/* ---------------- WIRING ---------------- */
+document.addEventListener('click', e=>{ Voice.unlock(); }, {capture:true});
+
+$$('[data-go]').forEach(b=>b.onclick=()=>{
+  const g=b.dataset.go;
+  if(g==='home'){ Voice.stop(); Net.stop(); Net.id=null; show('home'); readScreen('home'); }
+  else if(g==='rail'){ show('rail'); readScreen('rail'); }
+  else if(g==='ask'){ show('ask'); readScreen('ask'); }
+  else if(g==='how'){ howI=0; show('how'); Voice.say(HOW[0], $('#howtext')); }
+  else if(g==='friend'){ openFriend(); }
+  else if(g==='mode-guess'){ G.mode='guess'; show('rail'); readScreen('rail'); }
+  else if(g==='mode-ask'){ G.mode='ask'; show('rail'); readScreen('rail'); }
+});
+
+$('#how-next').onclick=()=>{
+  howI++;
+  if(howI>=HOW.length){ show('home'); return; }
+  Voice.say(HOW[howI], $('#howtext'));
+};
+
+$$('[data-rail]').forEach(b=>b.onclick=()=>{
+  G.rail = +b.dataset.rail;
+  const g=$('#catgrid'); g.innerHTML='';
+  CATS.forEach(([k,label,ic])=>{
+    const n = k==='all' ? DB.length : DB.filter(e=>e.cat===k).length;
+    if(n < 6 && k!=='all') return;
+    const btn=document.createElement('button');
+    btn.className='chip';
+    btn.dataset.say = 'Tap ' + label + '.';
+    btn.innerHTML='<span class="art">'+Art.world(k)+'</span><span class="cap">'+label+'</span>';
+    btn.onclick=()=>{ G.cat=k; setScene(k); G.mode==='ask' ? startAsk() : startGuess(); };
+    g.appendChild(btn);
+  });
+  show('cat');
+  readScreen('cat');
+});
+
+$$('[data-ans]').forEach(b=>b.onclick=()=>answer(b.dataset.ans));
+$('#iknow').onclick=()=>openPick();
+$$('.speaker').forEach(b=>b.onclick=()=>Voice.toggle());
+$$('.mic').forEach(b=>b.onclick=()=>{ Voice.unlock(); Listen.toggle(); });
+
+/* tap any spoken line to hear it again */
+['#qtext','#rname','#howtext'].forEach(sel=>{
+  const el=$(sel); if(!el) return;
+  el.style.cursor='pointer';
+  el.onclick=()=>{ Voice.unlock(); Voice.say(el.textContent, el); };
+});
+
+/* read the opening screen the first time a finger touches the glass,
+   because a browser will not let a page talk before it is tapped */
+let opened=false;
+document.addEventListener('pointerdown', ()=>{
+  if(opened) return; opened=true;
+  setTimeout(()=>{ if($('#s-home').classList.contains('on')) readScreen('home'); }, 60);
+}, {once:false});
+
+$('#mk-new').onclick   = ()=>{ Voice.unlock(); newFriendGame(); };
+$('#mk-join').onclick  = ()=>{ Voice.unlock(); joinFriendGame(); };
+$('#code-again').onclick = ()=>{ Voice.unlock();
+  const c=$('#thecode').textContent.trim(); Voice.say([[c.split('').join(', '), null],
+    ['Read those four letters to your friend.',null]]); };
+
+/* ---- paint the art ---- */
+$('#homemark').innerHTML = Art.icon();
+function setScene(cat){
+  const el = $('#bgart'); if(!el) return;
+  const key = cat || (Net.g && Net.g.cat) || G.cat || 'all';
+  if(el.dataset.k === key) return;
+  el.dataset.k = key; el.innerHTML = Art.world(key);
+}
+setScene('all');
+
+Voice.init();
+Listen.init();
+Net.check();
+</script>
+</body>
+</html>
