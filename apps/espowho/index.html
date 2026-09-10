@@ -119,6 +119,47 @@ body[data-orb="talk"] .orbtag{color:var(--gold)}
 .verdict.on{animation:stamp .34s cubic-bezier(.2,1.5,.4,1)}
 @keyframes stamp{0%{transform:scale(2.1);opacity:0}60%{transform:scale(.94);opacity:1}100%{transform:scale(1)}}
 
+
+/* ---------- FOR A SIX YEAR OLD ----------
+   Nielsen Norman: two-centimetre targets, pictures beside words, no small
+   close buttons, tap the character, instant feedback. Akinator: a back
+   button for the mis-tap, an expressive mascot, a reward at the end. */
+.pair{display:flex;gap:12px}
+.pair .ans{flex:1;flex-direction:column;gap:4px;padding:18px 10px;min-height:112px}
+.ans .pic{font-size:2.3rem;line-height:1}
+.ans.m{flex-direction:row;gap:10px;min-height:0}
+.ans.m .pic{font-size:1.5rem}
+.oops{background:transparent;color:rgba(255,255,255,.72);font-weight:800;font-size:1rem;padding:12px;border-radius:14px}
+.oops:active{background:rgba(255,255,255,.12)}
+.oops[hidden]{display:none}
+
+/* twenty dots a pre-reader can count */
+.dots{display:flex;gap:4px;justify-content:center;flex-wrap:nowrap;margin:6px 0 2px;overflow:hidden}
+.dots i{width:10px;height:10px;border-radius:50%;flex:0 0 auto;background:rgba(255,255,255,.18);display:block;transition:transform .2s,background .2s}
+.dots i.done{background:var(--gold)}
+.dots i.now{background:var(--cream);transform:scale(1.35);box-shadow:0 0 12px rgba(255,255,255,.6)}
+.dots i.extra{border:2px dashed rgba(255,255,255,.35);background:transparent}
+.dots i.extra.done{background:var(--clay);border-color:transparent}
+
+/* the stop door — a mis-tap on Stop must never end the game */
+.sheet{position:fixed;inset:0;z-index:55;display:flex;align-items:center;justify-content:center;
+  background:rgba(30,10,4,.82);backdrop-filter:blur(8px);padding:22px}
+.sheet[hidden]{display:none}
+.sheet .card{width:100%;max-width:420px;background:var(--amber-3);border-radius:28px;padding:26px 20px;text-align:center;
+  box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.sheet .big-emoji{font-size:3.2rem;line-height:1}
+.sheet .ttl{font-size:1.6rem;font-weight:800;margin:10px 0 18px}
+.back.stop{opacity:.8}
+
+/* the orb is a character — it should look like one, and it should be tappable */
+.orbwrap canvas{cursor:pointer}
+.orbwrap:active canvas{transform:scale(.96)}
+
+/* stars earned across games — the Aki Award idea, made simpler */
+.stars{display:flex;justify-content:center;gap:4px;margin:4px 0 0;font-size:1.25rem;min-height:1.5rem;letter-spacing:.05em}
+.stars .new{animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{transform:scale(0)}100%{transform:scale(1)}}
+
 /* ---------- kid-asks mode ---------- */
 .qlist{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;margin:4px -4px 12px;padding:0 4px}
 .qbtn{display:block;width:100%;text-align:left;background:rgba(255,255,255,.12);border-radius:16px;padding:15px 17px;
@@ -153,6 +194,7 @@ body[data-orb="talk"] .orbtag{color:var(--gold)}
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
 .askform{display:flex;gap:8px;margin:9px 0 0}
+.askform[hidden]{display:none}
 .fld.ask{margin:0;flex:1;min-width:0;font-size:1.05rem}
 .asksend{flex:0 0 auto;background:var(--gold);color:var(--ink);border-radius:14px;padding:0 18px;
   font-size:1rem;font-weight:900;letter-spacing:.04em;box-shadow:0 4px 0 rgba(0,0,0,.24)}
@@ -160,7 +202,8 @@ body[data-orb="talk"] .orbtag{color:var(--gold)}
 .asksend:disabled{opacity:.38;box-shadow:none;transform:none}
 .micnote{margin:9px 2px 0;font-size:.9rem;font-weight:700;line-height:1.35;color:#ffcf9a;text-wrap:balance}
 .micnote:empty{display:none}
-.askmini{display:flex;gap:8px;margin-top:9px}
+.askmini{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+.askmini .mini{min-width:44%}
 .mini{flex:1;background:rgba(255,255,255,.14);border-radius:14px;padding:11px 8px;font-size:.92rem;font-weight:800}
 .mini.gold{background:rgba(224,168,58,.24);color:var(--gold)}
 .mini:active{opacity:.75}
@@ -227,6 +270,7 @@ body[data-orb="talk"] .orbtag{color:var(--gold)}
   <div class="mark" id="homemark"></div>
   <h1 class="logo">ESPO<span class="a">who</span></h1>
   <p class="tag">Tap a button. Then just talk to me.</p>
+  <div class="stars"></div>
   <div style="height:26px"></div>
   <button class="big gold" data-go="mode-guess"><span class="ic">🔮</span><span>You think, I ask<span class="sub">Think of somebody and I will guess who it is.</span></span></button>
   <button class="big clay" data-go="mode-ask"><span class="ic">🙋</span><span>I think, you ask<span class="sub">Ask me anything out loud. I say yes or no.</span></span></button>
@@ -264,39 +308,43 @@ body[data-orb="talk"] .orbtag{color:var(--gold)}
 
 <!-- ============ PLAY (app guesses) ============ -->
 <section class="screen" id="s-play">
-  <div class="topbar"><button class="back" data-go="home">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker" id="spk4">🔊</button></div>
+  <div class="topbar"><button class="back stop" data-stop="1">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker" id="spk4">🔊</button></div>
   <div class="meta" id="qcount">Question one of twenty</div>
-  <div class="bar"><i id="qbar"></i></div>
+  <div class="dots" id="qdots" aria-hidden="true"></div>
   <div class="orbwrap"><canvas class="orbc"></canvas><div class="orbtag"></div></div>
   <div class="qwrap"><div class="q" id="qtext"></div></div>
   <div class="acts">
-    <button class="ans y" data-ans="y">✓ YES</button>
-    <button class="ans n" data-ans="n">✕ NO</button>
-    <button class="ans m" data-ans="m">Maybe · I don't know</button>
+    <div class="pair">
+      <button class="ans y" data-ans="y"><span class="pic">👍</span><span>YES</span></button>
+      <button class="ans n" data-ans="n"><span class="pic">👎</span><span>NO</span></button>
+    </div>
+    <button class="ans m" data-ans="m"><span class="pic">🤷</span><span>Not sure</span></button>
+    <button class="oops" id="oops" hidden>↩ Oops, go back</button>
   </div>
 </section>
 
 <!-- ============ REVEAL ============ -->
 <section class="screen" id="s-reveal">
-  <div class="topbar"><button class="back" data-go="home">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker" id="spk5">🔊</button></div>
+  <div class="topbar"><button class="back stop" data-stop="1">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker" id="spk5">🔊</button></div>
   <div class="reveal">
     <div class="badge" id="rbadge"></div>
     <div class="isit" id="risit">Is it…</div>
     <div class="name" id="rname"></div>
+    <div class="stars"></div>
   </div>
   <div class="acts" id="ractions"></div>
 </section>
 
 <!-- ============ KID ASKS ============ -->
 <section class="screen" id="s-ask">
-  <div class="topbar"><button class="back" data-go="home">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker" id="spk6">🔊</button></div>
+  <div class="topbar"><button class="back stop" data-stop="1">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker" id="spk6">🔊</button></div>
   <div class="meta" id="acount">You have asked no questions yet</div>
   <div class="bar"><i id="abar"></i></div>
   <div class="orbwrap"><canvas class="orbc"></canvas><div class="orbtag"></div></div>
   <div class="qlist" id="qlist"></div>
   <div class="askrow">
     <button class="askbig" id="askbtn"><span class="ic">🎤</span><span class="t" id="asklabel">Ask me anything<span class="sub">Tap, then say your question out loud</span></span></button>
-    <form class="askform" id="askform" autocomplete="off" action="#">
+    <form class="askform" id="askform" autocomplete="off" action="#" hidden>
       <input class="fld ask" id="asktype" maxlength="70" placeholder="…or type a question here"
              autocomplete="off" autocorrect="off" enterkeyhint="send" inputmode="text">
       <button class="asksend" id="asksend" type="submit" aria-label="Ask this question">ASK ▸</button>
@@ -304,6 +352,7 @@ body[data-orb="talk"] .orbtag{color:var(--gold)}
     <p class="micnote" id="micnote"></p>
     <div class="askmini">
       <button class="mini" id="askidea">💡 Give me an idea</button>
+      <button class="mini" id="askkeys">⌨️ Type instead</button>
       <button class="mini gold" id="iknow">🏁 I know who it is!</button>
     </div>
   </div>
@@ -334,7 +383,7 @@ body[data-orb="talk"] .orbtag{color:var(--gold)}
 
 <!-- ============ FRIEND: THE CODE ============ -->
 <section class="screen" id="s-code">
-  <div class="topbar"><button class="back" data-go="home">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker">🔊</button></div>
+  <div class="topbar"><button class="back stop" data-stop="1">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker">🔊</button></div>
   <div class="reveal">
     <div class="isit">Your code is</div>
     <div class="bigcode" id="thecode">····</div>
@@ -345,19 +394,29 @@ body[data-orb="talk"] .orbtag{color:var(--gold)}
 
 <!-- ============ FRIEND: PICK YOUR SECRET ============ -->
 <section class="screen" id="s-secret">
-  <div class="topbar"><button class="back" data-go="home">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker">🔊</button></div>
+  <div class="topbar"><button class="back stop" data-stop="1">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker">🔊</button></div>
   <div class="meta">Pick somebody. Do not show them.</div>
   <div class="pickgrid" id="secretgrid"></div>
 </section>
 
 <!-- ============ FRIEND: THE GAME ============ -->
 <section class="screen" id="s-net">
-  <div class="topbar"><button class="back" data-go="home">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker">🔊</button></div>
+  <div class="topbar"><button class="back stop" data-stop="1">✕ Stop</button><span class="spacer"></span><button class="mic">🎤</button><button class="speaker">🔊</button></div>
   <div class="meta" id="netrole">·</div>
   <div class="bar"><i id="netbar"></i></div>
   <div id="netbody" style="flex:1;display:flex;flex-direction:column;min-height:0"></div>
 </section>
 
+</div>
+<div class="sheet" id="stopsheet" hidden>
+  <div class="card">
+    <div class="big-emoji">🛑</div>
+    <div class="ttl">Stop playing?</div>
+    <div class="pair">
+      <button class="ans n" id="stop-yes"><span class="pic">👋</span><span>Yes, stop</span></button>
+      <button class="ans y" id="stop-no"><span class="pic">▶️</span><span>Keep playing</span></button>
+    </div>
+  </div>
 </div>
 <div class="verdict" id="verdict"></div>
 <script>
@@ -1741,17 +1800,60 @@ const Orb = {
     bg.addColorStop(0, hi); bg.addColorStop(1, mid);
     g.fillStyle = bg; g.fill();
 
-    /* the bars inside — this is what reads as "it hears me" */
-    const n = 5;
-    for(let i=0;i<n;i++){
-      const off = (i-(n-1)/2);
-      const h = base * (0.16 + Math.abs(Math.sin(this.t/(5+i*1.7) + i))*L*0.9);
-      const bx = x + off*(base*0.24);
-      g.beginPath();
-      const rr = base*0.055;
-      g.roundRect ? g.roundRect(bx-rr, y-h/2, rr*2, h, rr) : g.rect(bx-rr, y-h/2, rr*2, h);
-      g.fillStyle = 'rgba(42,24,16,.55)'; g.fill();
+    const ink = 'rgba(42,24,16,.62)';
+    if(this.state==='listen'){
+      /* the bars — this is what reads as "it hears me" */
+      const n = 5;
+      for(let i=0;i<n;i++){
+        const off = (i-(n-1)/2);
+        const h = base * (0.16 + Math.abs(Math.sin(this.t/(5+i*1.7) + i))*L*0.9);
+        const bx = x + off*(base*0.24);
+        g.beginPath();
+        const rr = base*0.055;
+        g.roundRect ? g.roundRect(bx-rr, y-h/2, rr*2, h, rr) : g.rect(bx-rr, y-h/2, rr*2, h);
+        g.fillStyle = ink; g.fill();
+      }
+      return;
     }
+    /* otherwise she has a face. A character you can tap beats a shape. */
+    const f = this.expr || 'ask';
+    const blink = (this.t % 170) < 6;
+    const ey = y - base*0.18, ex = base*0.28, er = base*0.075;
+    g.fillStyle = ink;
+    [-1,1].forEach(s=>{
+      g.beginPath();
+      if(blink || f==='happy' || f==='win'){          /* happy eyes are arcs */
+        g.lineWidth = er*0.9; g.strokeStyle = ink; g.lineCap='round';
+        g.arc(x+s*ex, ey+er*0.3, er*1.1, Math.PI*1.15, Math.PI*1.85); g.stroke();
+      } else if(f==='think' || f==='hmm'){             /* one eyebrow up */
+        g.ellipse(x+s*ex, ey, er, er*(s>0?0.75:1), 0, 0, 6.2832); g.fill();
+      } else {
+        g.arc(x+s*ex, ey, er, 0, 6.2832); g.fill();
+      }
+    });
+    /* the mouth */
+    const my = y + base*0.30, mw = base*0.36;
+    g.beginPath(); g.lineWidth = base*0.07; g.strokeStyle = ink; g.lineCap='round';
+    if(this.state==='talk'){
+      const open = base*(0.05 + L*0.22);
+      g.ellipse(x, my, mw*0.45, open, 0, 0, 6.2832); g.fillStyle = ink; g.fill();
+    } else if(f==='happy' || f==='win'){
+      g.arc(x, my - base*0.08, mw*0.55, 0.15*Math.PI, 0.85*Math.PI); g.stroke();
+    } else if(f==='hmm' || f==='lose'){
+      g.arc(x, my + base*0.16, mw*0.5, 1.2*Math.PI, 1.8*Math.PI); g.stroke();
+    } else if(f==='think'){
+      g.moveTo(x-mw*0.3, my); g.lineTo(x+mw*0.3, my-base*0.05); g.stroke();
+    } else if(f==='guess'){
+      g.ellipse(x, my, mw*0.22, base*0.10, 0, 0, 6.2832); g.stroke();
+    } else {
+      g.moveTo(x-mw*0.35, my); g.quadraticCurveTo(x, my+base*0.08, x+mw*0.35, my); g.stroke();
+    }
+  },
+  /* an expression for a moment, then back to her normal face */
+  face(kind, ms){
+    this.expr = kind;
+    clearTimeout(this._ft);
+    if(kind!=='ask') this._ft = setTimeout(()=>{ this.expr='ask'; }, ms || 2600);
   },
 
   stopMic(){
@@ -1770,6 +1872,7 @@ const Blip = {
       this.ctx = this.ctx || new AC();
       const c = this.ctx, now = c.currentTime;
       const notes = kind==='y' ? [[660,0],[990,.09]]
+                  : kind==='m' ? [[520,0],[520,.11]]
                   : kind==='n' ? [[300,0],[200,.10]]
                   : kind==='win' ? [[523,0],[659,.09],[784,.18],[1046,.27]]
                   : [[440,0]];
@@ -1784,6 +1887,25 @@ const Blip = {
         o.start(now+at); o.stop(now+at+.22);
       });
     }catch(e){}
+  }
+};
+
+
+/* ---------------- STARS ----------------
+   One star per game finished, kept on the device. Akinator hands out an
+   award; a six year old just wants to see the row get longer. */
+const Stars = {
+  n:0,
+  load(){ try{ this.n = +localStorage.getItem('espowho.stars')||0; }catch(e){} this.paint(); },
+  earn(){ this.n++; try{ localStorage.setItem('espowho.stars', this.n); }catch(e){} this.paint(true); },
+  paint(fresh){
+    document.querySelectorAll('.stars').forEach(el=>{
+      const show = Math.min(this.n, 12);
+      el.innerHTML = '';
+      for(let i=0;i<show;i++){ const s=document.createElement('span'); s.textContent='⭐';
+        if(fresh && i===show-1) s.className='new'; el.appendChild(s); }
+      if(this.n>12){ const m=document.createElement('span'); m.textContent=' ×'+this.n; m.style.fontSize='.9rem'; el.appendChild(m); }
+    });
   }
 };
 /* ============================================================
@@ -2308,7 +2430,7 @@ const Voice = {
   browser(text, mine){
     if(!window.speechSynthesis){ this.done(mine); return; }
     const u=new SpeechSynthesisUtterance(text);
-    u.rate=.95; u.pitch=1.05; u.lang='en-US';
+    u.rate=.9; u.pitch=1.05; u.lang='en-US';
     const v=this.pickVoice();
     if(v) u.voice=v;
     u.onboundary=e=>{
@@ -2380,12 +2502,40 @@ function pool(){
 }
 function railNow(){ return (Net.g && Net.g.rail) || G.rail || 2; }
 
+const MAXQ = 25;   /* twenty, then five more before giving up — the 20Q toy does this */
 function startGuess(){
   const p = pool();
   G.cands = p.map(e=>({e, w:1}));
   G.askedKeys = new Set();
-  G.n = 0; G.wrong = [];
+  G.n = 0; G.wrong = []; G.hist = [];
+  paintDots();
   show('play'); nextQuestion();
+}
+/* twenty dots a pre-reader can count, five dashed ones for overtime */
+function paintDots(){
+  const d = $('#qdots'); if(!d) return;
+  d.innerHTML = '';
+  for(let i=1;i<=MAXQ;i++){
+    const s = document.createElement('i');
+    if(i>20) s.className='extra';
+    if(i<G.n) s.classList.add('done');
+    if(i===G.n) s.classList.add('now');
+    d.appendChild(s);
+  }
+  const o = $('#oops'); if(o) o.hidden = !(G.hist && G.hist.length);
+}
+/* the mis-tap. Akinator has one; a six year old needs one more than anybody. */
+function undoAnswer(){
+  if(!G.hist || !G.hist.length) return;
+  Listen.stop();
+  const h = G.hist.pop();
+  G.cands = h.cands; G.askedKeys = h.askedKeys; G.q = h.q; G.n = h.n;
+  Orb.face('think');
+  $('#qcount').textContent = 'Question ' + numWord(G.n) + (G.n>20?'':' of twenty');
+  paintDots();
+  Voice.say('Okay, let us try that one again.', null);
+  Voice.add(G.q.text, $('#qtext'));
+  Voice.after(()=> Listen.ask('yesno', a => { if($('#s-play').classList.contains('on')) answer(a); }));
 }
 
 function total(){ return G.cands.reduce((s,c)=>s+c.w,0); }
@@ -2416,14 +2566,21 @@ function nextQuestion(){
   const T = total();
   const top = leader();
   const conf = T>0 ? top.w/T : 0;
-  if(alive.length<=1 || (G.n>=5 && conf>0.62) || G.n>=20) return doGuess();
+  if(alive.length<=1 || (G.n>=5 && conf>0.62) || G.n>=MAXQ) return doGuess();
+  if(G.n===20 && !G.overtime){
+    /* the toy asks for a few more instead of quitting — and kids like it when she wins */
+    G.overtime = true;
+    Voice.say('That was twenty. Can I have five more questions? I am so close.', null);
+  }
   const q = chooseQuestion();
   if(!q) return doGuess();
   G.q = q; G.n++;
   G.askedKeys.add(q.key); Used.add(q.id);
-  $('#qcount').textContent = 'Question ' + numWord(G.n) + ' of twenty';
-  $('#qbar').style.width = (G.n/20*100)+'%';
-  Voice.say(q.text, $('#qtext'));
+  $('#qcount').textContent = G.n<=20 ? 'Question ' + numWord(G.n) + ' of twenty'
+                                     : 'Extra question ' + numWord(G.n-20);
+  paintDots();
+  Orb.face('ask');
+  if(G.n===21 || G.n===1) Voice.say(q.text, $('#qtext')); else Voice.say(q.text, $('#qtext'));
   if(G.n===1) Voice.add(Listen.ok && Listen.on
       ? 'Say yes, or no, or I do not know. Or tap a button if you would rather.'
       : 'Tap the green button for yes, the red button for no, or the grey one if you do not know.', null);
@@ -2436,6 +2593,11 @@ function answer(a){
     Voice.say(G.q.text, $('#qtext'));
     return Voice.after(()=> Listen.ask('yesno', b => { if($('#s-play').classList.contains('on')) answer(b); }));
   }
+  /* remember where we were, so Oops can take it back */
+  G.hist.push({cands:G.cands.map(c=>({e:c.e, w:c.w})), askedKeys:new Set(G.askedKeys), q:G.q, n:G.n});
+  if(G.hist.length>3) G.hist.shift();
+  Orb.face(a==='y' ? 'happy' : a==='n' ? 'hmm' : 'think');
+  Blip.go(a==='y' ? 'y' : a==='n' ? 'n' : 'm');
   if(a!=='m'){
     const yes = a==='y';
     G.cands.forEach(c=>{
@@ -2454,6 +2616,7 @@ function doGuess(){
   const top = leader();
   if(!top || top.w<=0) return giveUp();
   G.guess = top;
+  Orb.face('guess');
   show('reveal');
   $('#rbadge').className='badge'; $('#rbadge').innerHTML = Art.plate(top.e.cat, top.e.emoji, 2);
   $('#risit').textContent = 'Is it…';
@@ -2465,8 +2628,8 @@ function doGuess(){
     if(a==='y') $('#r-yes').click(); else if(a==='n') $('#r-no').click();
   }));
   $('#ractions').innerHTML =
-    '<button class="ans y" id="r-yes">✓ YES! That is it</button>' +
-    '<button class="ans n" id="r-no">✕ NO, keep going</button>';
+    '<div class="pair"><button class="ans y" id="r-yes"><span class="pic">👍</span><span>YES! That is it</span></button>' +
+    '<button class="ans n" id="r-no"><span class="pic">👎</span><span>NO, keep going</span></button></div>';
   $('#r-yes').onclick = ()=>{ Voice.unlock(); win(); };
   $('#r-no').onclick  = ()=>{ Voice.unlock(); G.guess.w = 0; G.wrong.push(G.guess.e.name);
                               if(G.n>=20 || G.cands.filter(c=>c.w>0.0001).length===0) giveUp();
@@ -2474,6 +2637,7 @@ function doGuess(){
 }
 
 function win(){
+  Orb.face('win'); Stars.earn();
   show('reveal');
   $('#rbadge').className='badge'; $('#rbadge').innerHTML = Art.plate(G.guess.e.cat, G.guess.e.emoji, 2);
   $('#risit').textContent = 'I got it!';
@@ -2482,13 +2646,14 @@ function win(){
   Voice.add('Tap the green button to play again, or the grey one to go back to the start.', null);
   confetti();
   $('#ractions').innerHTML =
-    '<button class="ans y" id="r-again">▶ Play again</button>' +
-    '<button class="ans m" id="r-home">Back to the start</button>';
+    '<button class="ans y" id="r-again"><span class="pic">🔁</span><span>Play again</span></button>' +
+    '<button class="ans m" id="r-home"><span class="pic">🏠</span><span>Back to the start</span></button>';
   $('#r-again').onclick = ()=>{ Voice.unlock(); startGuess(); };
   $('#r-home').onclick  = ()=>{ Voice.unlock(); show('home'); };
 }
 
 function giveUp(){
+  Orb.face('lose'); Stars.earn();
   show('reveal');
   $('#rbadge').className='badge emo'; $('#rbadge').innerHTML = '🏆';
   $('#risit').textContent = 'You win!';
@@ -2497,8 +2662,8 @@ function giveUp(){
   Voice.add('Tap the green button to play again, or the grey one to go back to the start.', null);
   confetti();
   $('#ractions').innerHTML =
-    '<button class="ans y" id="r-again">▶ Play again</button>' +
-    '<button class="ans m" id="r-home">Back to the start</button>';
+    '<button class="ans y" id="r-again"><span class="pic">🔁</span><span>Play again</span></button>' +
+    '<button class="ans m" id="r-home"><span class="pic">🏠</span><span>Back to the start</span></button>';
   $('#r-again').onclick = ()=>{ Voice.unlock(); startGuess(); };
   $('#r-home').onclick  = ()=>{ Voice.unlock(); show('home'); };
 }
@@ -2534,6 +2699,7 @@ function setAskLabel(hot){
           : 'Type your question<span class="sub">Then press the gold ASK button</span>';
   /* the icon must not promise a microphone that is not there */
   const ic = b.querySelector('.ic'); if(ic) ic.textContent = can ? '🎤' : '⌨️';
+  if(!can){ const f=$('#askform'); if(f) f.hidden = false; }
   const box = $('#asktype');
   if(box) box.placeholder = can ? '…or type a question here' : 'Type your question here';
   micNote();
@@ -2604,6 +2770,7 @@ function heardQuestion(said){
   G.aN++;
   const yes = r.yes;
   logAsk(shown, yes ? 'YES' : 'NO', yes ? 'y' : 'n');
+  Orb.face(yes ? 'happy' : 'hmm');
   flashVerdict(yes);
   /* a wrong name guess gets named back, so the child hears what was ruled out */
   Voice.say(r.kind==='name' ? ('Nope, it is not ' + spoken(r.entry.name) + '.')
@@ -2664,8 +2831,8 @@ function confirmPick(e){
   Voice.say([[spoken(e.name), $('#rname')],
              ['Is that your answer? Tap the green button for yes, or the red one to go back.', null]]);
   $('#ractions').innerHTML =
-    '<button class="ans y" id="p-yes">✓ YES, that is my answer</button>' +
-    '<button class="ans n" id="p-no">✕ NO, let me look again</button>';
+    '<div class="pair"><button class="ans y" id="p-yes"><span class="pic">👍</span><span>YES, that is it</span></button>' +
+    '<button class="ans n" id="p-no"><span class="pic">👀</span><span>Let me look again</span></button></div>';
   Voice.after(()=> Listen.ask('yesno', a => {
     if(!$('#s-reveal').classList.contains('on')) return;
     if(a==='y') judge(e); else if(a==='n'){ show('pick'); readScreen('pick'); }
@@ -2677,6 +2844,7 @@ function confirmPick(e){
 function judge(e){
   show('reveal');
   const right = e === G.secret;
+  Orb.face(right ? 'win' : 'hmm'); if(right) Stars.earn();
   $('#rbadge').className = right ? 'badge' : 'badge emo';
   $('#rbadge').innerHTML = right ? Art.plate(G.secret.cat, G.secret.emoji, 2) : '🤔';
   $('#risit').textContent = right ? 'You got it!' : 'Not quite —';
@@ -2685,8 +2853,8 @@ function judge(e){
   Voice.add('Tap the green button to play again, or the grey one to go back to the start.', null);
   if(right){ Blip.go('win'); confetti(); }
   $('#ractions').innerHTML =
-    '<button class="ans y" id="r-again">▶ Play again</button>' +
-    '<button class="ans m" id="r-home">Back to the start</button>';
+    '<button class="ans y" id="r-again"><span class="pic">🔁</span><span>Play again</span></button>' +
+    '<button class="ans m" id="r-home"><span class="pic">🏠</span><span>Back to the start</span></button>';
   $('#r-again').onclick = ()=>{ Voice.unlock(); startAsk(); };
   $('#r-home').onclick  = ()=>{ Voice.unlock(); show('home'); };
 }
@@ -2956,7 +3124,7 @@ const MAX_ASK = 20;
 function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
 /* ---------------- WIRING ---------------- */
-Orb.mount();
+Orb.mount(); Stars.load();
 
 /* PUT IT ON THE HOME SCREEN AND IT KEEPS WORKING.
    The worker is network-first for pages, so an installed app always gets the
@@ -2970,6 +3138,32 @@ if('serviceWorker' in navigator){
 }
 
 document.addEventListener('click', e=>{ Voice.unlock(); }, {capture:true});
+
+/* STOP asks first. A six year old taps the top corner all the time. */
+$$('[data-stop]').forEach(b=>b.onclick=()=>{
+  Voice.unlock(); Listen.stop();
+  $('#stopsheet').hidden = false;
+  Voice.say('Do you want to stop playing? Tap the red one to stop, or the green one to keep going.', null);
+});
+$('#stop-no').onclick = ()=>{ $('#stopsheet').hidden = true; Voice.say('Okay! Keep going.', null);
+  Voice.after(()=>{ if($('#s-play').classList.contains('on')) Listen.ask('yesno', a=>answer(a));
+                    else if($('#s-ask').classList.contains('on')) armAsk(); }); };
+$('#stop-yes').onclick = ()=>{ $('#stopsheet').hidden = true; Voice.stop(); Net.stop(); Net.id=null; show('home'); readScreen('home'); };
+$('#oops').onclick = ()=>{ Voice.unlock(); undoAnswer(); };
+
+/* tap the character and she talks — kids expect characters to respond */
+$$('.orbwrap').forEach(w=>w.onclick=()=>{
+  Voice.unlock();
+  if($('#s-play').classList.contains('on') && G.q){ answer('r'); return; }
+  if($('#s-ask').classList.contains('on')){
+    if(Listen.live){ Listen.stop(); setAskLabel(false); Voice.say('Okay, I will wait.', null); }
+    else { Voice.say(pick(['I am ready! Ask me anything.','Go ahead, ask me a question.','What do you want to know?']), null);
+           Voice.after(()=>armAsk()); }
+  }
+});
+
+/* the type box is behind a door — a six year old talks, a twelve year old types */
+$('#askkeys').onclick = ()=>{ Voice.unlock(); const f=$('#askform'); f.hidden = !f.hidden; if(!f.hidden){ Listen.stop(); setAskLabel(false); $('#asktype').focus(); } };
 
 $$('[data-go]').forEach(b=>b.onclick=()=>{
   const g=b.dataset.go;
