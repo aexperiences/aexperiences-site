@@ -2335,11 +2335,24 @@ const Voice = {
   },
   paint(){ $$('.speaker').forEach(b=>b.classList.toggle('off', !this.on)); },
   toggle(){ this.on=!this.on; try{localStorage.setItem('espowho.voice',this.on?'1':'0');}catch(e){} this.paint(); if(!this.on) this.stop(); },
+  /* every audio element this app has ever played through — so a stop can
+     silence all of them, not only the one currently in hand */
+  players:new Set(),
+  player(){
+    if(!this.audio){ this.audio = new Audio(); this.players.add(this.audio); }
+    return this.audio;
+  },
   unlock(){
     if(this.unlocked) return; this.unlocked=true;
-    this.audio = new Audio();
-    this.audio.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
-    this.audio.play().catch(()=>{});
+    /* NEVER swap in a fresh player here. The first tap of a session is
+       usually a mode button, and if the home intro is still playing, a
+       replacement player orphans it — it keeps talking on its own while the
+       first question starts. That was the "two voices" he heard. */
+    const a = this.player();
+    if(a.paused || a.ended){
+      a.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+      a.play().catch(()=>{});
+    }
     if(window.speechSynthesis){ try{ const u=new SpeechSynthesisUtterance(' '); u.volume=0; speechSynthesis.speak(u); }catch(e){} }
   },
   stop(){
@@ -2391,7 +2404,7 @@ const Voice = {
   /* nothing may still be making noise when the next line starts */
   silence(){
     if(window.speechSynthesis) try{ speechSynthesis.cancel(); }catch(e){}
-    if(this.audio) try{ this.audio.pause(); this.audio.onended=null; }catch(e){}
+    this.players.forEach(a=>{ try{ a.pause(); a.onended=null; }catch(e){} });
   },
   done(mine){
     if(mine !== undefined && mine !== this.tok) return;   /* a stale finish */
@@ -2413,7 +2426,7 @@ const Voice = {
   },
   baked(s, text, mine){
     const times=(this.manifest.timings&&this.manifest.timings[s])||null;
-    const a=this.audio||(this.audio=new Audio());
+    const a=this.player();
     a.onended=null;
     a.src='assets/voice/'+s+'.wav';
     let idx=-1;
