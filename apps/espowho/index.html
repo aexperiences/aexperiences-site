@@ -76,6 +76,7 @@ h1.logo .a{color:var(--gold)}
 .q w{display:inline-block;padding:0 .06em;border-radius:8px;transition:background .08s linear,color .08s linear}
 .q w.lit{background:var(--gold);color:var(--ink)}
 .acts{display:flex;flex-direction:column;gap:13px}
+.acts[hidden]{display:none}
 .ans{border-radius:var(--r);padding:22px;font-size:1.45rem;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;gap:12px}
 .ans:active{transform:translateY(4px)}
 .ans.y{background:var(--yes);box-shadow:0 7px 0 var(--yes-d)}
@@ -159,6 +160,30 @@ body[data-orb="talk"] .orbtag{color:var(--gold)}
 .stars{display:flex;justify-content:center;gap:4px;margin:4px 0 0;font-size:1.25rem;min-height:1.5rem;letter-spacing:.05em}
 .stars .new{animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
 @keyframes pop{0%{transform:scale(0)}100%{transform:scale(1)}}
+
+
+/* ---------- JUST PLAY — the Alexa way ----------
+   One tap. Then she talks and the child answers. Nothing to read,
+   nothing to pick. Everything else lives behind the little gear. */
+.gear{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.10);border-radius:999px;width:42px;height:42px;
+  font-size:1.1rem;display:flex;align-items:center;justify-content:center;opacity:.55;z-index:5}
+#s-splash{position:relative}
+.splashwrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding-bottom:24px}
+.orbwrap.hero canvas{width:min(62vw,260px)!important;height:min(62vw,260px)!important}
+.tap.ready{margin:0 auto 10px;justify-content:center}
+.tap[hidden]{display:none}
+.tap{display:flex;align-items:center;gap:14px;background:var(--gold);color:var(--ink);border-radius:26px;padding:22px 34px;
+  font-size:1.6rem;font-weight:900;box-shadow:0 8px 0 rgba(0,0,0,.28);animation:breathe 1.8s ease-in-out infinite}
+.tap .ic{font-size:1.9rem}
+.tap:active{transform:translateY(4px);box-shadow:0 4px 0 rgba(0,0,0,.28)}
+
+/* in kid mode the play screen loses everything a six year old does not need */
+body.kid #s-play .meta, body.kid #s-play .dots, body.kid #s-play #oops,
+body.kid #s-play .mic, body.kid #s-play .speaker,
+body.kid #s-reveal .mic, body.kid #s-reveal .speaker { display:none !important }
+body.kid #s-play .orbwrap{margin:18px 0 16px}
+body.kid #s-play .q{font-size:clamp(1.7rem,7.6vw,2.5rem)}
+body.kid .ans.m{opacity:.85}
 
 /* ---------- kid-asks mode ---------- */
 .qlist{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;margin:4px -4px 12px;padding:0 4px}
@@ -266,13 +291,25 @@ body[data-orb="talk"] .orbtag{color:var(--gold)}
 <div class="app">
 
 <!-- ============ HOME ============ -->
-<section class="screen on" id="s-home">
+<!-- ============ JUST PLAY — the one-tap door (kid mode) ============ -->
+<section class="screen on" id="s-splash">
+  <button class="gear" data-go="home" aria-label="More">⚙️</button>
+  <div class="splashwrap">
+    <div class="orbwrap hero"><canvas class="orbc"></canvas><div class="orbtag"></div></div>
+    <h1 class="logo">ESPO<span class="a">who</span></h1>
+    <button class="tap" id="tapplay"><span class="ic">▶️</span><span>Tap to play</span></button>
+    <div class="stars"></div>
+  </div>
+</section>
+
+<section class="screen" id="s-home">
   <div class="mark" id="homemark"></div>
   <h1 class="logo">ESPO<span class="a">who</span></h1>
-  <p class="tag">Tap a button. Then just talk to me.</p>
+  <p class="tag">More ways to play</p>
   <div class="stars"></div>
-  <div style="height:26px"></div>
-  <button class="big gold" data-go="mode-guess"><span class="ic">🔮</span><span>You think, I ask<span class="sub">Think of somebody and I will guess who it is.</span></span></button>
+  <div style="height:14px"></div>
+  <button class="big gold" data-go="kid"><span class="ic">🗣️</span><span>Just play<span class="sub">Tap once. She talks, you answer. That is the whole game.</span></span></button>
+  <button class="big" data-go="mode-guess" style="background:var(--cream)"><span class="ic">🔮</span><span>You think, I ask<span class="sub">Think of somebody and I will guess who it is.</span></span></button>
   <button class="big clay" data-go="mode-ask"><span class="ic">🙋</span><span>I think, you ask<span class="sub">Ask me anything out loud. I say yes or no.</span></span></button>
   <button class="big" id="door-friend" data-go="friend" style="display:none;background:#3fa66f;color:#fff"><span class="ic">🎟️</span><span>Play with a friend<span class="sub">They get a code. You take turns, any time you like.</span></span></button>
   <div class="askmini" style="margin-top:10px">
@@ -321,6 +358,7 @@ body[data-orb="talk"] .orbtag{color:var(--gold)}
     <button class="ans m" data-ans="m"><span class="pic">🤷</span><span>Not sure</span></button>
     <button class="oops" id="oops" hidden>↩ Oops, go back</button>
   </div>
+  <button class="tap ready" id="readybtn" hidden><span class="ic">🙋</span><span>I'm ready!</span></button>
 </section>
 
 <!-- ============ REVEAL ============ -->
@@ -2023,6 +2061,7 @@ const Listen = {
         if(this.nudges > 2){ this.nudges=0; if(window.setAskLabel) setAskLabel(false); return; }
         this.again(mode==='free' ? 'I am still here. Ask me anything you want.'
                  : mode==='name' ? 'Say the name when you are ready, or tap the picture.'
+                 : mode==='ready' ? (window.Kid ? Kid.L.nudge : 'Say ready.')
                  : 'Still there? Say yes, or no, or I do not know.');
       }, this.want==='free' ? 15000 : 11000);
     }catch(e){ this.live = false; this.paint(); }
@@ -2046,6 +2085,13 @@ const Listen = {
       const a = this.readYesNo(list);
       if(a){ this.stop(); this.cb = null; cb(a); }
       else this.again('I did not catch that. Say yes, or no, or I do not know.');
+      return;
+    }
+    if(this.want === 'ready'){
+      const READY=['ready','okay','ok','yes','yeah','yep','go','got it','got one','i got one','i have one','done','im ready','i am ready','lets go','let us go','start'];
+      const hit = list.some(raw=>{ const t=raw.replace(/[^a-z ]/g,' ').replace(/\s+/g,' ').trim(); return READY.some(w=>t===w||t.endsWith(' '+w)||t.startsWith(w+' ')); });
+      if(hit){ this.stop(); this.cb=null; cb(true); }
+      else this.again(window.Kid ? Kid.L.notyet : 'Say ready when you are ready.');
       return;
     }
     if(this.want === 'name'){
@@ -2320,6 +2366,122 @@ function understand(text, secret, cands){
 const YES_SAY = ['Yes!','Yep!','That is right!','Uh huh, yes!','Yes it is!'];
 const NO_SAY  = ['Nope!','No.','Not this one.','Nuh uh.','No, it is not.'];
 
+/* ============================================================
+   JUST PLAY — the Alexa way.
+   ------------------------------------------------------------
+   Anthony, Sep 10 2026: "my son doesn't really understand. but he
+   does understand the one he plays on alexa." So: no menu, no modes,
+   no reading. One tap to wake the speaker, and from then on it is a
+   conversation — she talks, he answers, she guesses, she asks to go
+   again. Every line here is short and fixed so Roz can say all of it.
+   ============================================================ */
+const Kid = {
+  on:false, first:true,
+
+  /* the fixed lines — short, warm, and bakeable */
+  L:{
+    hi:      'Hi! I am Roz. Let us play.',
+    think:   'Think of somebody. A cartoon, an animal, a superhero, anybody at all.',
+    secret:  'Do not tell me who it is.',
+    ready:   'When you have got one, say ready.',
+    again:   'Think of somebody new. Say ready when you have got one.',
+    go:      'Okay! Here we go.',
+    ok:      ['Okay.','Got it.','Hmm.','Let me think.','Alright.','Okay, okay.'],
+    guess:   'I think I know.',
+    isit:    'Is it',
+    right:   'Was I right? Say yes or no.',
+    won:     ['Yes! I got it!','I knew it!','Got you!'],
+    fun:     'That was fun.',
+    playq:   'Want to play again? Say yes or no.',
+    lost:    'You got me! I do not know who it is.',
+    who:     'Who was it? Say the name.',
+    ooh:     'Ooh, good one!',
+    bye:     'Okay. Bye bye!',
+    notyet:  'Say ready when you have got somebody in your head.',
+    nudge:   'Still there? Say ready, or tap the big button.'
+  },
+
+  /* ---- entering kid mode ---- */
+  start(){
+    this.on = true; document.body.classList.add('kid');
+    G.mode = 'guess'; G.rail = 2; G.cat = 'all'; setScene('all');
+    Voice.unlock();
+    this.think();
+  },
+  leave(){ this.on = false; document.body.classList.remove('kid'); Listen.stop(); },
+
+  /* "Think of somebody… say ready" */
+  think(){
+    show('play');
+    $('#qtext').textContent = '';
+    $('#s-play .acts').hidden = true;
+    Orb.face('ask');
+    const L = this.L;
+    const lines = this.first ? [[L.hi,null],[L.think,$('#qtext')],[L.secret,null],[L.ready,null]]
+                             : [[L.again,$('#qtext')]];
+    this.first = false;
+    Voice.say(lines);
+    Voice.after(()=> this.waitReady());
+  },
+  waitReady(){
+    if(!this.on) return;
+    Orb.tag('Say ready');
+    $('#s-play .acts').hidden = true;
+    const rb=$('#readybtn'); rb.hidden = false; rb.onclick = ()=>{ Voice.unlock(); this.go(); };
+    this.readyMode = true;
+    Listen.ask('ready', ok => { if(this.on && this.readyMode) this.go(); });
+  },
+  go(){
+    if(!this.on) return;
+    this.readyMode = false; Listen.stop();
+    $('#readybtn').hidden = true;
+    Voice.say(this.L.go, null);
+    Voice.after(()=>{ if(this.on) startGuess(); });
+  },
+
+  /* a little word before each question, the way a person would */
+  connector(){ return pick(this.L.ok); },
+
+  /* ---- the ends ---- */
+  won(){
+    Orb.face('win'); Stars.earn(); Blip.go('win'); confetti();
+    show('reveal');
+    $('#rbadge').className='badge'; $('#rbadge').innerHTML = Art.plate(G.guess.e.cat, G.guess.e.emoji, 2);
+    $('#risit').textContent = 'I got it!';
+    $('#rname').textContent = G.guess.e.name;
+    Voice.say([[pick(this.L.won),null],[this.L.fun,null],[this.L.playq,null]]);
+    this.playAgainButtons();
+    Voice.after(()=> Listen.ask('yesno', a => { if(!this.on) return; if(a==='y') this.think(); else if(a==='n') this.bye(); }));
+  },
+  lost(){
+    Orb.face('lose'); Stars.earn(); Blip.go('win'); confetti();
+    show('reveal');
+    $('#rbadge').className='badge emo'; $('#rbadge').innerHTML='🏆';
+    $('#risit').textContent = 'You win!';
+    $('#rname').textContent = 'You got me!';
+    Voice.say([[this.L.lost,null],[this.L.who,null]]);
+    this.playAgainButtons();
+    Voice.after(()=> Listen.ask('name', hit => {
+      if(!this.on) return;
+      $('#rname').textContent = hit.name;
+      Voice.say([[this.L.ooh,null],[this.L.playq,null]]);
+      Voice.after(()=> Listen.ask('yesno', a => { if(!this.on) return; if(a==='y') this.think(); else if(a==='n') this.bye(); }));
+    }));
+  },
+  playAgainButtons(){
+    $('#ractions').innerHTML =
+      '<div class="pair"><button class="ans y" id="k-again"><span class="pic">🔁</span><span>Play again</span></button>' +
+      '<button class="ans n" id="k-bye"><span class="pic">👋</span><span>All done</span></button></div>';
+    $('#k-again').onclick = ()=>{ Voice.unlock(); Listen.stop(); this.think(); };
+    $('#k-bye').onclick   = ()=>{ Voice.unlock(); Listen.stop(); this.bye(); };
+  },
+  bye(){
+    Listen.stop();
+    Voice.say(this.L.bye, null);
+    Voice.after(()=>{ this.first = true; show('splash'); });
+  }
+};
+
 /* ---------------- VOICE ----------------
    Baked AE Voice Engine clips when assets/voice/ is present,
    the browser's own voice until then. Same slug on both sides. */
@@ -2559,6 +2721,9 @@ function chooseQuestion(){
   let best = [], bestScore = 9;
   for(const q of BANK){
     if(q.tier > G.rail) continue;
+    /* Just Play keeps to the plain one-idea questions — a six year old
+       follows them, and there are few enough that Roz can say every one */
+    if(Kid.on && (q.id.startsWith('x:') || q.id.startsWith('y:'))) continue;
     if(G.askedKeys.has(q.key)) continue;
     let hit = 0;
     for(const c of G.cands) if(c.w>0 && q.test(c.e)) hit += c.w;
@@ -2593,14 +2758,18 @@ function nextQuestion(){
                                      : 'Extra question ' + numWord(G.n-20);
   paintDots();
   Orb.face('ask');
-  if(G.n===21 || G.n===1) Voice.say(q.text, $('#qtext')); else Voice.say(q.text, $('#qtext'));
-  if(G.n===1) Voice.add(Listen.ok && Listen.on
+  $('#s-play .acts').hidden = false;
+  /* in Just Play she says a little word first, the way a person does */
+  if(Kid.on && G.n>1) Voice.say([[Kid.connector(),null],[q.text,$('#qtext')]]);
+  else Voice.say(q.text, $('#qtext'));
+  if(G.n===1 && !Kid.on) Voice.add(Listen.ok && Listen.on
       ? 'Say yes, or no, or I do not know. Or tap a button if you would rather.'
       : 'Tap the green button for yes, the red button for no, or the grey one if you do not know.', null);
   Voice.after(()=> Listen.ask('yesno', a => { if($('#s-play').classList.contains('on')) answer(a); }));
 }
 
 function answer(a){
+  if(Kid.on && Kid.readyMode){ Kid.go(); return; }
   Listen.stop();
   if(a==='r'){                      /* "say it again" */
     Voice.say(G.q.text, $('#qtext'));
@@ -2634,8 +2803,8 @@ function doGuess(){
   $('#rbadge').className='badge'; $('#rbadge').innerHTML = Art.plate(top.e.cat, top.e.emoji, 2);
   $('#risit').textContent = 'Is it…';
   const line = 'Is it ' + spoken(top.e.name) + '?';
-  Voice.say(line, $('#rname'));
-  Voice.add('Was I right? Say yes or no.', null);
+  if(Kid.on){ Voice.say(Kid.L.guess, null); Voice.add(line, $('#rname')); Voice.add(Kid.L.right, null); }
+  else { Voice.say(line, $('#rname')); Voice.add('Was I right? Say yes or no.', null); }
   Voice.after(()=> Listen.ask('yesno', a => {
     if(!$('#s-reveal').classList.contains('on')) return;
     if(a==='y') $('#r-yes').click(); else if(a==='n') $('#r-no').click();
@@ -2650,6 +2819,7 @@ function doGuess(){
 }
 
 function win(){
+  if(Kid.on) return Kid.won();
   Orb.face('win'); Stars.earn();
   show('reveal');
   $('#rbadge').className='badge'; $('#rbadge').innerHTML = Art.plate(G.guess.e.cat, G.guess.e.emoji, 2);
@@ -2666,6 +2836,7 @@ function win(){
 }
 
 function giveUp(){
+  if(Kid.on) return Kid.lost();
   Orb.face('lose'); Stars.earn();
   show('reveal');
   $('#rbadge').className='badge emo'; $('#rbadge').innerHTML = '🏆';
@@ -3161,7 +3332,8 @@ $$('[data-stop]').forEach(b=>b.onclick=()=>{
 $('#stop-no').onclick = ()=>{ $('#stopsheet').hidden = true; Voice.say('Okay! Keep going.', null);
   Voice.after(()=>{ if($('#s-play').classList.contains('on')) Listen.ask('yesno', a=>answer(a));
                     else if($('#s-ask').classList.contains('on')) armAsk(); }); };
-$('#stop-yes').onclick = ()=>{ $('#stopsheet').hidden = true; Voice.stop(); Net.stop(); Net.id=null; show('home'); readScreen('home'); };
+$('#stop-yes').onclick = ()=>{ $('#stopsheet').hidden = true; Voice.stop(); Net.stop(); Net.id=null;
+  if(Kid.on){ Kid.first=true; show('splash'); } else { show('home'); readScreen('home'); } };
 $('#oops').onclick = ()=>{ Voice.unlock(); undoAnswer(); };
 
 /* tap the character and she talks — kids expect characters to respond */
@@ -3178,9 +3350,11 @@ $$('.orbwrap').forEach(w=>w.onclick=()=>{
 /* the type box is behind a door — a six year old talks, a twelve year old types */
 $('#askkeys').onclick = ()=>{ Voice.unlock(); const f=$('#askform'); f.hidden = !f.hidden; if(!f.hidden){ Listen.stop(); setAskLabel(false); $('#asktype').focus(); } };
 
+$('#tapplay').onclick = ()=>{ Voice.unlock(); Kid.start(); };
 $$('[data-go]').forEach(b=>b.onclick=()=>{
   const g=b.dataset.go;
-  if(g==='home'){ Voice.stop(); Net.stop(); Net.id=null; show('home'); readScreen('home'); }
+  if(g==='kid'){ Voice.stop(); Kid.start(); return; }
+  if(g==='home'){ Kid.leave(); Voice.stop(); Net.stop(); Net.id=null; show('home'); readScreen('home'); }
   else if(g==='rail'){ show('rail'); readScreen('rail'); }
   else if(g==='ask'){ show('ask'); readScreen('ask'); }
   else if(g==='how'){ howI=0; show('how'); Voice.say(HOW[0], $('#howtext')); }
@@ -3188,8 +3362,8 @@ $$('[data-go]').forEach(b=>b.onclick=()=>{
   else if(g==='settings'){ G.mode = G.mode||'ask'; G.setup=true; show('rail'); readScreen('rail'); }
   /* straight in. A six year old should not have to get through two menus
      before anything happens — the settings live behind their own door. */
-  else if(g==='mode-guess'){ G.mode='guess'; goPlay(); }
-  else if(g==='mode-ask'){ G.mode='ask'; goPlay(); }
+  else if(g==='mode-guess'){ Kid.leave(); G.mode='guess'; goPlay(); }
+  else if(g==='mode-ask'){ Kid.leave(); G.mode='ask'; goPlay(); }
 });
 
 /* whatever was chosen last time, or sensible defaults */
@@ -3277,6 +3451,7 @@ let opened=false;
 document.addEventListener('pointerdown', ()=>{
   if(opened) return; opened=true;
   setTimeout(()=>{ if($('#s-home').classList.contains('on')) readScreen('home'); }, 60);
+  Orb.set('idle'); Orb.tag('');
 }, {once:false});
 
 $('#mk-new').onclick   = ()=>{ Voice.unlock(); newFriendGame(); };
