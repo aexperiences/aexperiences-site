@@ -19,7 +19,7 @@
       "source": "/hubs/motorcade.html",
       "destination": "/shop.html",
       "permanent": true
-    },
+    }, { "source": "/hubs/real-estate.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/architecture.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/engineering.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/theater.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/cinema.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/concerts.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/kids-gym.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/showroom.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/targeted.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/home-care.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/field-service.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/tattoo.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/dental.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/photo-video.html", "destination": "/shop.html", "permanent": true },
     {
       "source": "/ae-mark.png",
       "destination": "/marks/ae-mark.svg",
