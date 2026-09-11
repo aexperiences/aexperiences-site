@@ -1636,15 +1636,15 @@
   };
 
   var TIERS = {
-    office: { key:"office", name:"Office", rank:1, mo:550, build:4800,
+    office: { key:"office", name:"Core", rank:1, mo:550, build:0,
       desc:"One office, one book of business. The whole operating system, sized for an agency running a single territory.",
       base:"Single office · up to ~25 caregivers · the full spine",
       includes:["schedule","evv","care","recruit","creds","intake","family","sign","billing","payroll"] },
-    agency: { key:"agency", name:"Agency", rank:2, mo:1150, build:9500,
+    agency: { key:"agency", name:"Elite", rank:2, mo:1150, build:0,
       desc:"A growing agency. Adds the referral book, books & metrics and the AI department org on top of everything above.",
       base:"Multi-office · unlimited caregivers · referral CRM · agent org",
       includes:["schedule","evv","care","recruit","creds","referral","intake","family","sign","billing","payroll","books","org"] },
-    grandsuite: { key:"grandsuite", name:"Grandsuite", rank:3, mo:2600, build:16800,
+    grandsuite: { key:"grandsuite", name:"Mothership", rank:3, mo:2600, build:0,
       desc:"Nothing held back. Every department, multi-state, dedicated environment, data migration and your own branded caregiver app.",
       base:"Multi-state · unlimited · dedicated environment · migration · branded app",
       includes:["schedule","evv","care","recruit","creds","referral","intake","family","sign","billing","payroll","books","org"] }
