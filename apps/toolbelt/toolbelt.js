@@ -1788,15 +1788,15 @@
   }
 
   var TIERS = {
-    truck: { key:"truck", name:"Truck", ed:"LT", edname:"Lite", rank:1, mo:450, build:3900,
+    truck: { key:"truck", name:"Core", ed:"CO", edname:"Core", rank:1, mo:450, build:0,
       desc:"One to three trucks. The whole system, sized for an owner who is still turning wrenches.",
       base:"Up to 3 techs · the full spine",
       includes:["dispatch","field","work","licences","truck","estimate","portal","sign","docs","money","mail"] },
-    shop: { key:"shop", name:"Shop", ed:"ST", edname:"Standard", rank:2, mo:950, build:8200,
+    shop: { key:"shop", name:"Elite", ed:"EL", edname:"Elite", rank:2, mo:950, build:0,
       desc:"A real shop with a dispatcher. Adds the referral book, recruiting, books & metrics and the AI department org.",
       base:"Unlimited techs · dispatcher seat · referral CRM · agent org",
       includes:["dispatch","field","work","licences","truck","estimate","crm","portal","recruit","sign","docs","money","books","org","mail"] },
-    grandsuite: { key:"grandsuite", name:"Grandsuite", ed:"GS", edname:"Grandsuite", rank:3, mo:2200, build:13800,
+    grandsuite: { key:"grandsuite", name:"Mothership", ed:"MS", edname:"Mothership", rank:3, mo:2200, build:0,
       desc:"Nothing held back. Multi-location, multi-trade, dedicated environment, data migration and your own branded tech app.",
       base:"Multi-location · multi-trade · dedicated environment · migration · branded app",
       includes:["dispatch","field","work","licences","truck","estimate","crm","portal","recruit","sign","docs","money","books","org","phones","webbook","fleet","plans","mail"] }
