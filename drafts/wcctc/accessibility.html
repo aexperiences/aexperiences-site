@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Accessibility statement · West Contra Costa Transportation Commission</title><link rel="stylesheet" href="wc.css"></head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="draftstamp" aria-hidden="true">Draft · Sep 2026</div>
+<div class="util"><div class="wrap"><span>6333 Potrero Avenue, Suite 100, El Cerrito, CA 94530 · <a href="tel:+15102157200">(510) 215-7200</a></span><span><a href="#" lang="es">Español</a> · <a href="#" lang="zh">中文</a> · <a href="about.html#contact">Contact</a></span></div></div>
+<header class="mast"><div class="wrap">
+  <a href="index.html" class="logo" aria-label="WCCTC home"><span class="mark" aria-hidden="true">WCCTC</span><span class="name">West Contra Costa<br>Transportation<br>Commission</span></a>
+  <form role="search" action="plans.html"><label for="q" class="sr">Search the site</label><input id="q" name="q" type="search" placeholder="Search agendas, plans, programs…"><button class="btn" type="submit">Search</button></form>
+</div></header>
+<nav class="main" aria-label="Main"><div class="wrap"><a href="meetings.html">Meetings & Agendas</a><a href="plans.html">Plans & Studies</a><a href="programs.html">Programs</a><a href="opportunities.html">RFPs & Notices</a><a href="about.html">About WCCTC</a><a href="accessibility.html" aria-current=page>Accessibility</a></div></nav>
+<main id="main">
+
+<section><div class="wrap">
+  <h1>Accessibility statement</h1>
+  <p class="lead">Conformance target: WCAG 2.1 Level AA, the standard named in the Department of Justice's 2024 rule for state and local government websites (28 CFR 35.200). No overlay widget. The accessibility is in the markup, and it is tested by hand as well as by machine.</p>
+  <div class="cols">
+    <div>
+      <h2>The commitments</h2>
+      <table><caption class="sr">Accessibility commitments</caption><thead><tr><th scope="col">Commitment</th><th scope="col">How</th></tr></thead><tbody>
+      <tr><td>One heading structure per page</td><td>A single H1 that names the page; the logo is a link with a text alternative, not a heading</td></tr>
+      <tr><td>Skip link and visible focus</td><td>First element on every page; a 3-pixel amber outline on every control</td></tr>
+      <tr><td>Alternative text</td><td>Written for every image at migration; decorative images marked as such</td></tr>
+      <tr><td>Color and contrast</td><td>WCCTC blue on white 8.3:1; green used for bars and accents, never for text on white</td></tr>
+      <tr><td>Meeting materials</td><td>Agendas and staff reports in HTML as well as PDF; packets tagged before posting</td></tr>
+      <tr><td>Documents</td><td>A posting workflow that checks title, language, tags and reading order; archive material labeled with a request link</td></tr>
+      <tr><td>Forms</td><td>Every field labeled; errors described in words next to the field</td></tr>
+      <tr><td>Language</td><td>Spanish and Chinese as real pages for the most-used content; the switcher on every page</td></tr>
+      <tr><td>Testing</td><td>Automated (axe-core) plus keyboard-only and screen-reader passes on key templates before launch, and an annual re-check</td></tr>
+      </tbody></table>
+    </div>
+    <div>
+      <div class="finding">
+        <h2>Findings on the current site</h2>
+        <p>Read off westcontracostatc.gov on September 4, 2026:</p>
+        <ul>
+          <li>Two hidden <code>&lt;h1&gt;</code> elements on every page read <em>West Contra Costa Transportation Advisory Committee</em> — the wrong organization name, announced twice before the page's own title (WCAG 1.3.1, 2.4.6).</li>
+          <li>No skip link (2.4.1).</li>
+          <li>Homepage: six of nine images have no alternative text (1.1.1) — a known issue the RFP names.</li>
+          <li>Meeting pages carry a single PDF packet and no HTML agenda; the most-used content is the least accessible.</li>
+          <li>Keyboard focus relies on the browser default only (2.4.7).</li>
+        </ul>
+        <p>None of these is an opinion; each is fixed in this draft and can be checked in the markup.</p>
+      </div>
+      <h3 style="margin-top:22px">Report a barrier</h3>
+      <p>If any part of this site is hard to use, email <a href="mailto:JNemeth@WestContraCostaTC.gov">JNemeth@WestContraCostaTC.gov</a> or call (510) 215-7200. Barriers are logged and answered within five business days.</p>
+    </div>
+  </div>
+</div></section>
+
+</main>
+<footer><div class="wrap">
+  <div><h4>West Contra Costa Transportation Commission</h4><p>A joint powers authority of El Cerrito, Hercules, Pinole, Richmond, San Pablo and Contra Costa County, with AC Transit, BART and WestCAT.<br>6333 Potrero Avenue, Suite 100, El Cerrito, CA 94530 · (510) 215-7200</p></div>
+  <div><h4>Meetings</h4><a href="meetings.html">Board meetings</a><a href="meetings.html">Technical Advisory Committee</a><a href="meetings.html#past">Past agendas and minutes</a><a href="meetings.html#subscribe">Subscribe to a calendar</a></div>
+  <div><h4>Work</h4><a href="plans.html">Plans and studies</a><a href="programs.html">Programs</a><a href="opportunities.html">RFPs and public notices</a><a href="programs.html#stmp">STMP documents</a></div>
+  <div><h4>This site</h4><a href="accessibility.html">Accessibility statement</a><a href="about.html#records">Public records</a><a href="#">Privacy</a><a href="about.html#contact">Contact us</a></div>
+  <div class="fine">Built to WCAG 2.1 Level AA · no accessibility overlay · a draft for discussion, September 2026 · Accelerated Experiences, LLC</div>
+</div></footer>
+</body></html>

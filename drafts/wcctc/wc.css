@@ -1,0 +1,55 @@
+/* WCCTC draft — a lightly customized accessible theme in the Commission's own colors (read off westcontracostatc.gov Sep 4 2026) */
+@font-face{font-family:"Lora";src:url(fonts/lora-600-normal.woff2) format("woff2");font-weight:600}
+@font-face{font-family:"Lora";src:url(fonts/lora-500-normal.woff2) format("woff2");font-weight:500}
+@font-face{font-family:"Source Sans 3";src:url(fonts/source-sans-3-400-normal.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"Source Sans 3";src:url(fonts/source-sans-3-600-normal.woff2) format("woff2");font-weight:600}
+@font-face{font-family:"Source Sans 3";src:url(fonts/source-sans-3-700-normal.woff2) format("woff2");font-weight:700}
+:root{--blue:#005380;--sky:#0b7fc0;--green:#8fa83a;--pale:#eef2df;--ink:#242629;--mute:#5a5e63;--line:#d9ddd2;--paper:#ffffff;--wash:#f6f7f2}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.55 "Source Sans 3",system-ui,sans-serif}
+h1,h2,h3,h4{font-family:"Lora",Georgia,serif;font-weight:600;color:var(--blue);margin:0 0 .35em;line-height:1.15}
+h1{font-size:2.1rem}h2{font-size:1.5rem}h3{font-size:1.15rem}
+a{color:var(--blue);text-decoration:underline;text-underline-offset:3px}a:hover{color:var(--sky)}
+:focus-visible{outline:3px solid #ffbf00;outline-offset:3px;border-radius:2px}
+.wrap{max-width:1140px;margin:0 auto;padding:0 22px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--blue);color:#fff;padding:10px 16px;z-index:50;text-decoration:none}.skip:focus{left:12px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.draftstamp{position:fixed;right:14px;bottom:14px;border:2px solid var(--blue);color:var(--blue);background:rgba(255,255,255,.9);font:700 11px/1 "Source Sans 3",sans-serif;letter-spacing:.16em;text-transform:uppercase;padding:7px 10px;transform:rotate(-4deg);z-index:40}
+.util{background:var(--blue);color:#fff;font-size:.9rem}.util .wrap{display:flex;justify-content:space-between;gap:16px;padding:6px 22px;flex-wrap:wrap}.util a{color:#fff}
+.mast .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 22px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo .mark{font:800 34px/1 "Source Sans 3",sans-serif;color:var(--blue);letter-spacing:-.03em;font-style:italic}
+.logo .name{font:700 12px/1.15 "Source Sans 3",sans-serif;color:var(--green);text-transform:uppercase;letter-spacing:.04em;font-style:italic;border-left:3px solid var(--green);padding-left:10px}
+.mast form{display:flex;gap:6px}.mast input{font:inherit;padding:8px 12px;border:1.5px solid var(--line);border-radius:4px;min-width:220px}
+.btn{font:600 1rem "Source Sans 3",sans-serif;background:var(--blue);color:#fff;border:0;border-radius:4px;padding:9px 16px;text-decoration:none;cursor:pointer;display:inline-block}.btn.alt{background:var(--green);color:#1d2410}
+nav.main{background:var(--green)}nav.main .wrap{display:flex;flex-wrap:wrap;gap:0}
+nav.main a{color:#182008;font:700 .95rem "Source Sans 3",sans-serif;text-transform:uppercase;letter-spacing:.03em;text-decoration:none;padding:13px 16px;border-right:1px solid rgba(255,255,255,.55)}
+nav.main a[aria-current=page],nav.main a:hover{background:var(--blue);color:#fff}
+.hero{background:var(--wash);border-bottom:1px solid var(--line)}.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;padding:34px 22px}
+.hero p.lead{font-size:1.15rem;max-width:56ch}
+.next{background:#fff;border:1px solid var(--line);border-top:6px solid var(--blue);padding:18px 20px;border-radius:4px}
+.next .kicker{font:700 .78rem "Source Sans 3",sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.next h2{font-size:1.35rem;margin:.2em 0}.next time{display:block;font-weight:600;color:var(--ink)}.next .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+section{padding:30px 0}section.tint{background:var(--wash)}
+.sechead{display:flex;justify-content:space-between;align-items:baseline;gap:16px;border-bottom:2px solid var(--pale);margin-bottom:14px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:36px}
+.doors{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.doors a{display:block;border:1px solid var(--line);border-left:5px solid var(--green);padding:14px 16px;text-decoration:none;background:#fff;border-radius:3px}
+.doors a b{display:block;color:var(--blue);font-family:"Lora",serif;font-size:1.05rem}.doors a span{color:var(--mute);font-size:.95rem}
+.list article{display:grid;grid-template-columns:96px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.list time{font:700 .9rem "Source Sans 3",sans-serif;color:var(--blue);text-transform:uppercase;letter-spacing:.04em}
+.list h3{margin:0 0 .2em}.list p{margin:0;color:var(--mute)}
+table{border-collapse:collapse;width:100%;font-size:.98rem}th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}th{background:var(--pale);color:var(--ink);font:700 .85rem "Source Sans 3",sans-serif;text-transform:uppercase;letter-spacing:.05em}
+caption{text-align:left;font-weight:600;padding:6px 0;color:var(--mute)}
+.pill{display:inline-block;font:700 .72rem "Source Sans 3",sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--pale);color:#3c4a12}
+.pill.pdf{background:#fbe9c9;color:#6b4300}.pill.ok{background:#dff0d8;color:#1f4d1a}
+.finding{background:var(--pale);border-left:6px solid var(--green);padding:18px 22px;border-radius:3px}
+.finding code{background:#fff;padding:1px 5px;border-radius:3px;font-size:.92em}
+.agenda ol{padding-left:22px}.agenda li{margin:8px 0}.agenda li small{display:block;color:var(--mute)}
+.agenda .meta{display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;background:var(--wash);padding:14px 18px;border-radius:4px;margin:14px 0}
+.side{background:var(--wash);padding:18px;border-radius:4px}.side h3{margin-top:0}
+.side a.file{display:block;padding:8px 0;border-bottom:1px solid var(--line)}
+footer{background:var(--blue);color:#fff;margin-top:30px}footer .wrap{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:26px;padding:30px 22px}
+footer h4{color:#fff;font-family:"Source Sans 3",sans-serif;font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}footer a{display:block;color:#fff;margin:5px 0}footer p{margin:0;font-size:.95rem}
+footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.3);padding-top:12px;font-size:.82rem;color:#cfe0ea}
+@media(max-width:820px){.hero .wrap,.cols,.doors,footer .wrap,.agenda .meta{grid-template-columns:1fr}nav.main a{padding:11px 12px}.list article{grid-template-columns:76px 1fr}}
