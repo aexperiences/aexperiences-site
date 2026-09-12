@@ -176,6 +176,11 @@ body[data-orb="talk"] .orbtag{color:var(--gold)}
   font-size:1.6rem;font-weight:900;box-shadow:0 8px 0 rgba(0,0,0,.28);animation:breathe 1.8s ease-in-out infinite}
 .tap .ic{font-size:1.9rem}
 .tap:active{transform:translateY(4px);box-shadow:0 4px 0 rgba(0,0,0,.28)}
+.tap.talk{margin:6px auto 10px;justify-content:center;background:var(--good,#3ec46d);color:#08240f;
+  font-size:clamp(1.2rem,5vw,1.6rem);padding:26px 38px;animation:talkpulse 1.8s ease-in-out infinite}
+@keyframes talkpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@media (prefers-reduced-motion:reduce){.tap.talk{animation:none}}
+body.kid #s-play .acts[hidden]{display:none}
 
 /* in kid mode the play screen loses everything a six year old does not need */
 body.kid #s-play .meta, body.kid #s-play .dots, body.kid #s-play #oops,
@@ -359,6 +364,7 @@ body.kid .ans.m{opacity:.85}
     <button class="oops" id="oops" hidden>↩ Oops, go back</button>
   </div>
   <button class="tap ready" id="readybtn" hidden><span class="ic">🙋</span><span>I'm ready!</span></button>
+  <button class="tap talk" id="talkbtn" hidden><span class="ic">🎤</span><span class="lab">Tap, then talk</span></button>
 </section>
 
 <!-- ============ REVEAL ============ -->
@@ -1321,6 +1327,80 @@ const ROSTER3 = [
 ["Huey Dewey and Louie","🦆","animal toon white wings feathers small funny good"],
 ["Pete","😾","animal toon black big fur tail villain scary funny"]
 ];
+/* ESPOwho — THE LITTLE-KID LIST. Accelerated Experiences LLC.
+   Sep 11 2026, Anthony: the game guessed a badger and his five-year-old had no idea
+   what it was talking about. The full roster has eight hundred and five things in it,
+   including badgers, plesiosaurs and coral reefs. In Just Play she may only think of
+   something on this list: things a five-year-old can name out loud. */
+const KIDLIST = new Set([
+  "Mario", "Luigi", "Princess Peach", "Bowser", "Yoshi",
+  "Toad", "Donkey Kong", "Sonic the Hedgehog", "Tails", "Knuckles",
+  "Steve from Minecraft", "A Creeper", "Pac-Man", "Pikachu", "Charizard",
+  "Charmander", "Bulbasaur", "Squirtle", "Eevee", "Jigglypuff",
+  "Meowth", "Snorlax", "Mewtwo", "Psyduck", "SpongeBob SquarePants",
+  "Patrick Star", "Squidward", "Mister Krabs", "Sandy Cheeks", "Plankton",
+  "Bluey", "Peppa Pig", "George Pig", "Bandit", "Chilli",
+  "Muffin", "Mickey Mouse", "Minnie Mouse", "Donald Duck", "Goofy",
+  "Pluto the Dog", "Daisy Duck", "Elsa", "Anna", "Olaf",
+  "Sven the Reindeer", "Kristoff", "Simba", "Scar", "Mufasa",
+  "Timon", "Pumbaa", "Woody", "Buzz Lightyear", "Jessie from Toy Story",
+  "Rex the Dinosaur", "Slinky Dog", "Mister Potato Head", "Forky", "Nemo",
+  "Dory", "Crush the Turtle", "Shrek", "Donkey from Shrek", "Puss in Boots",
+  "Princess Fiona", "Lightning McQueen", "Mater", "Sulley", "Mike Wazowski",
+  "Boo from Monsters Inc", "Grogu", "Stitch", "Moana", "Maui",
+  "Ariel", "Genie", "Princess Jasmine", "Snow White", "Rapunzel",
+  "Tinker Bell", "Peter Pan", "Captain Hook", "Pinocchio", "Dumbo",
+  "Bambi", "Winnie the Pooh", "Tigger", "Piglet", "Eeyore",
+  "Bugs Bunny", "Daffy Duck", "Tweety", "Porky Pig", "Tom the Cat",
+  "Jerry the Mouse", "Scooby-Doo", "Shaggy", "Velma", "Garfield",
+  "Odie", "Snoopy", "Charlie Brown", "Spider-Man", "Iron Man",
+  "Captain America", "The Hulk", "Thor", "Black Panther", "Batman",
+  "Superman", "Wonder Woman", "The Flash", "Groot", "Rocket Raccoon",
+  "Robin", "Mister Incredible", "Elastigirl", "Dash", "Gru",
+  "A Minion", "Toothless", "Hiccup", "Po the Panda", "Alex the Lion",
+  "Marty the Zebra", "Sid the Sloth", "Manny the Mammoth", "Scrat", "Judy Hopps",
+  "Nick Wilde", "Baymax", "WALL E", "Remy the Rat", "Joy from Inside Out",
+  "Sadness", "Anger", "Chase from Paw Patrol", "Marshall from Paw Patrol", "Skye from Paw Patrol",
+  "Elmo", "Big Bird", "Cookie Monster", "Oscar the Grouch", "Bert",
+  "Ernie", "Kermit the Frog", "Miss Piggy", "Thomas the Tank Engine", "Curious George",
+  "The Cat in the Hat", "The Grinch", "Hello Kitty", "Perry the Platypus", "Phineas",
+  "Ferb", "Ash Ketchum", "Alvin the Chipmunk", "Papa Smurf", "Smurfette",
+  "A Lion", "A Tiger", "An Elephant", "A Giraffe", "A Zebra",
+  "A Monkey", "A Gorilla", "A Panda", "A Polar Bear", "A Kangaroo",
+  "A Koala", "A Penguin", "A Dolphin", "A Whale", "A Shark",
+  "An Octopus", "A Jellyfish", "An Eagle", "An Owl", "A Parrot",
+  "A Snake", "A Crocodile", "A Turtle", "A Frog", "A Butterfly",
+  "A Bee", "A Spider", "A Horse", "A Cow", "A Pig",
+  "A Chicken", "A Dog", "A Cat", "A Rabbit", "A Fox",
+  "A Wolf", "A Bat", "A Sloth", "A Hippo", "A Rhino",
+  "A Camel", "A Squirrel", "A Deer", "A Seal", "A Crab",
+  "A Ladybug", "A Snail", "A Caterpillar", "A Flamingo", "A Goat",
+  "A Donkey", "A Llama", "A Cheetah", "A Starfish", "A Seahorse",
+  "A Hamster", "A Chipmunk", "A Goose", "A Turkey", "A Peacock",
+  "A Swan", "A Hedgehog", "An Ostrich", "Tyrannosaurus Rex", "Triceratops",
+  "Stegosaurus", "A Velociraptor", "A Pterodactyl", "A Woolly Mammoth", "The Sun",
+  "The Moon", "The Earth", "Mars", "Saturn", "A Star",
+  "A Rainbow", "A Volcano", "A Tornado", "Lightning", "A Snowflake",
+  "A Cloud", "A Tree", "A Mountain", "A Snowman", "A Sandcastle",
+  "A Beach", "A Cave", "A Pizza", "Ice Cream", "A Hamburger",
+  "A Taco", "A Hot Dog", "Spaghetti", "Popcorn", "A Donut",
+  "Pancakes", "A Waffle", "A Sandwich", "Macaroni and Cheese", "Chicken Nuggets",
+  "A Banana", "An Apple", "An Orange", "Grapes", "A Strawberry",
+  "A Watermelon", "A Pineapple", "A Carrot", "Broccoli", "Corn on the Cob",
+  "Milk", "Lemonade", "A Cookie", "A Birthday Cake", "A Cupcake",
+  "A Lollipop", "A Chocolate Bar", "Bubble Gum", "A Marshmallow", "A Toothbrush",
+  "A Backpack", "A Skateboard", "A Bicycle", "A Fire Truck", "An Airplane",
+  "A Rocket Ship", "A School Bus", "A Guitar", "A Drum", "A Piano",
+  "A Soccer Ball", "A Basketball", "A Football", "A Baseball", "A Television",
+  "A Computer", "A Phone", "An Umbrella", "A Balloon", "A Teddy Bear",
+  "A Clock", "A Pencil", "A Crayon", "A Book", "A Pillow",
+  "A Blanket", "A Lamp", "A Chair", "A Door", "A Key",
+  "Scissors", "A Camera", "Headphones", "A Video Game Controller", "A Flashlight",
+  "A Kite", "A Jump Rope", "A Puzzle", "A Trampoline", "A Swing",
+  "A Slide", "A Train", "A Helicopter", "A Police Car", "An Ambulance",
+  "A Garbage Truck", "A Tractor", "A Motorcycle", "A Hot Air Balloon", "Roller Skates",
+  "A Frisbee", "A Yo-Yo",
+]);
 /* ============================================================
    ESPOwho — Accelerated Experiences LLC
    The question bank is GENERATED, not authored: every tag is a
@@ -2404,17 +2484,22 @@ const Kid = {
   /* ---- entering kid mode ---- */
   start(){
     this.on = true; document.body.classList.add('kid');
+    this.buttons = false; this.misses = 0;
+    const t = $('#talkbtn'); if(t) t.hidden = true;
     G.mode = 'guess'; G.rail = 2; G.cat = 'all'; setScene('all');
     Voice.unlock();
     this.think();
   },
-  leave(){ this.on = false; document.body.classList.remove('kid'); Listen.stop(); },
+  leave(){ this.on = false; document.body.classList.remove('kid'); Listen.stop();
+           const t = $('#talkbtn'); if(t) t.hidden = true; },
 
   /* "Think of somebody… say ready" */
   think(){
     show('play');
     $('#qtext').textContent = '';
     $('#s-play .acts').hidden = true;
+    this.buttons = false; this.misses = 0;
+    const tb = $('#talkbtn'); if(tb) tb.hidden = true;
     Orb.face('ask');
     const L = this.L;
     const lines = this.first ? [[L.hi,null],[L.think,$('#qtext')],[L.secret,null],[L.ready,null]]
@@ -2429,7 +2514,11 @@ const Kid = {
     $('#s-play .acts').hidden = true;
     const rb=$('#readybtn'); rb.hidden = false; rb.onclick = ()=>{ Voice.unlock(); this.go(); };
     this.readyMode = true;
-    Listen.ask('ready', ok => { if(this.on && this.readyMode) this.go(); });
+    /* On an iPad the microphone can only open from a tap, so asking to listen
+       here would fail instantly and mark the microphone dead for the whole
+       game. The big "I'm ready!" button IS the tap. */
+    if(!this.needTap)
+      Listen.ask('ready', ok => { if(this.on && this.readyMode) this.go(); });
   },
   go(){
     if(!this.on) return;
@@ -2481,6 +2570,92 @@ const Kid = {
     Voice.after(()=>{ this.first = true; show('splash'); });
   }
 };
+
+/* ============================================================
+   TAP AND TALK — the iPad fix, Sep 11 2026.
+   Anthony: "he just kept pressing those buttons... he didn't even
+   know what he was doing." He plays on an iPad, and Safari there
+   will only open the microphone from inside a real tap. Our code
+   started listening after Roz finished speaking, which is not a
+   tap, so it never heard him — and the picture buttons sitting on
+   screen were the only thing that ever did anything.
+   So in Just Play: she asks, ONE big button appears, he taps it and
+   talks. The picture buttons stay hidden until she has genuinely
+   failed to hear him twice — then they come back and stay.
+   ============================================================ */
+Kid.misses = 0;
+Kid.buttons = false;          /* once true, the pictures stay for this game */
+Kid.needTap = (function(){
+  const ua = navigator.userAgent || '';
+  const iOS = /iPad|iPhone|iPod/.test(ua) ||
+              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  return iOS;                 /* everywhere else she can just listen */
+})();
+
+Kid.showButtons = function(say){
+  this.buttons = true;
+  /* never while she is waiting for "I'm ready" — that screen has its own button */
+  if(this.readyMode) return;
+  const a = $('#s-play .acts'); if(a) a.hidden = false;
+  const t = $('#talkbtn'); if(t) t.hidden = true;
+  if(say) Voice.say('You can tap the pictures instead.', null);
+};
+
+Kid.gateAsk = function(mode, cb){
+  const t = $('#talkbtn');
+  /* no microphone at all, or it already failed — give him the pictures */
+  if(!Listen.ok || !Listen.on || Listen.dead || this.buttons || !t){
+    this.showButtons(false);
+    if(Listen.ok && Listen.on && !Listen.dead) Listen._ask(mode, cb);
+    return;
+  }
+  const lab = mode==='name' ? 'Tap, then say the name' : 'Tap, then talk';
+  t.querySelector('.lab').textContent = lab;
+  t.hidden = false;
+  Orb.tag('Tap the button');
+  t.onclick = () => {
+    t.hidden = true;
+    Voice.unlock();
+    /* started INSIDE the tap — this is the only way Safari allows it */
+    Listen._ask(mode, hit => { Kid.misses = 0; cb(hit); });
+    /* if it cannot start, the listener dies within a few seconds */
+    clearTimeout(Kid.watch);
+    Kid.watch = setTimeout(() => {
+      if(Kid.on && Listen.dead) Kid.showButtons(true);
+    }, 4000);
+  };
+};
+
+/* route Just Play's listening through the tap gate */
+(function(){
+  const orig = Listen.ask.bind(Listen);
+  Listen._ask = orig;
+  Listen.ask = function(mode, cb){
+    if(typeof Kid !== 'undefined' && Kid.on && Kid.needTap && (mode==='yesno' || mode==='name'))
+      return Kid.gateAsk(mode, cb);
+    return orig(mode, cb);
+  };
+  /* a mishear used to restart the microphone on its own — which Safari
+     refuses. Ask again, then put the button back so he can tap and talk. */
+  const again = Listen.again.bind(Listen);
+  Listen.again = function(msg){
+    if(typeof Kid !== 'undefined' && Kid.on && Kid.needTap && this.cb && (this.want==='yesno'||this.want==='name')){
+      const mode = this.want, cb = this.cb;
+      this.stop(); this.cb = null;
+      Kid.misses++;
+      Voice.add(msg, null);
+      Voice.after(()=>{ if(!Kid.on) return; if(Kid.misses>=2) Kid.showButtons(true); Kid.gateAsk(mode, cb); });
+      return;
+    }
+    return again(msg);
+  };
+  /* when the microphone dies mid-game, the pictures must appear */
+  const die = Listen.die.bind(Listen);
+  Listen.die = function(msg){
+    die(msg);
+    if(typeof Kid !== 'undefined' && Kid.on) Kid.showButtons(true);
+  };
+})();
 
 /* ---------------- VOICE ----------------
    Baked AE Voice Engine clips when assets/voice/ is present,
@@ -2670,6 +2845,10 @@ function readScreen(id){
 /* ---------------- GAME STATE ---------------- */
 let G = {};
 function pool(){
+  /* JUST PLAY is for a five-year-old, so she may only think of something he
+     can name. Anthony, Sep 11 2026: it guessed a badger and the boy was lost. */
+  if(typeof Kid !== 'undefined' && Kid.on && typeof KIDLIST !== 'undefined')
+    return DB.filter(e=>KIDLIST.has(e.name));
   /* in a friend game the world and the rail come from the game itself,
      because the person who joined never walked through those screens */
   const cat  = (Net.g && Net.g.cat)  || G.cat  || 'all';
@@ -2758,7 +2937,9 @@ function nextQuestion(){
                                      : 'Extra question ' + numWord(G.n-20);
   paintDots();
   Orb.face('ask');
-  $('#s-play .acts').hidden = false;
+  /* Just Play: a child presses whatever he can see, so the pictures do not
+     appear until she has actually failed to hear him (Sep 11 2026). */
+  $('#s-play .acts').hidden = (typeof Kid !== 'undefined' && Kid.on && Kid.needTap && !Kid.buttons);
   /* in Just Play she says a little word first, the way a person does */
   if(Kid.on && G.n>1) Voice.say([[Kid.connector(),null],[q.text,$('#qtext')]]);
   else Voice.say(q.text, $('#qtext'));
