@@ -74,6 +74,30 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 .hero h1{margin:0;font-size:clamp(31px,8.6vw,58px);line-height:1.02;font-weight:900;letter-spacing:-.033em}
 .hero h1 em{font-style:normal;color:var(--gold)}
 .hero p{margin:12px 0 0;font-size:clamp(15px,3.9vw,19px);line-height:1.5;color:var(--cream-2);max-width:52ch}
+/* ── on your phone — one quiet line in the hero, opens on ask ───────── */
+.hs{margin-top:14px}
+.hs-open{display:inline-flex;align-items:flex-start;gap:9px;background:none;border:0;padding:6px 0;
+  font:inherit;font-size:clamp(13.5px,3.4vw,15px);line-height:1.35;color:var(--cream-2);cursor:pointer;text-align:left}
+.hs-open b{font-weight:700;color:var(--cream);box-shadow:inset 0 -1px 0 rgba(200,121,79,.55)}
+.hs-open svg{width:17px;height:17px;flex:none;margin-top:1px;fill:none;stroke:var(--clay);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.hs-open .hs-chev{display:inline-block;width:7px;height:7px;margin-left:9px;vertical-align:middle;
+  border-right:1.8px solid var(--clay);border-bottom:1.8px solid var(--clay);
+  transform:rotate(45deg) translateY(-2px);transition:transform .18s ease}
+.hs-open[aria-expanded="true"] .hs-chev{transform:rotate(225deg) translateY(1px)}
+.hs-open:hover b{box-shadow:inset 0 -1px 0 var(--clay)}
+.hs-panel{margin-top:12px;max-width:540px;background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:16px 18px 17px;box-shadow:0 10px 30px rgba(28,61,34,.07)}
+.hs-tabs{display:flex;gap:7px;margin-bottom:13px}
+.hs-tabs button{flex:1;font:inherit;font-size:13px;font-weight:700;padding:8px 10px;border-radius:9px;cursor:pointer;
+  border:1px solid var(--line-2);background:transparent;color:var(--mute)}
+.hs-tabs button[aria-selected="true"]{background:rgba(200,121,79,.12);border-color:var(--clay);color:var(--cream)}
+.hs-steps{list-style:none;margin:0;padding:0;counter-reset:hs}
+.hs-steps li{counter-increment:hs;position:relative;padding-left:31px;margin-bottom:10px;font-size:14.5px;line-height:1.5;color:var(--cream-2)}
+.hs-steps li:last-child{margin-bottom:0}
+.hs-steps li::before{content:counter(hs);position:absolute;left:0;top:.5px;width:21px;height:21px;border-radius:50%;
+  background:rgba(200,121,79,.14);color:var(--clay);font-size:12px;font-weight:800;display:grid;place-items:center}
+.hs-steps b{color:var(--cream);font-weight:700}
+.hs-note{margin:13px 0 0;font-size:13px;line-height:1.5;color:var(--mute);border-top:1px solid var(--line);padding-top:11px}
 .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
 .fact{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#1c3d22;background:rgba(28,61,34,.08);border:1px solid var(--line-2);padding:7px 11px;border-radius:20px}
 
@@ -430,6 +454,31 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
   <div class="wrap">
     <h1>The <em>AE App Shop</em></h1>
     <p>Everything we build, in one place. Tap anything and you walk straight into the real thing — no demo, no sales call, no download.</p>
+
+    <!-- No app store. The three taps that put any of these on a phone — one line until asked for. -->
+    <div class="hs">
+      <button class="hs-open" id="hsOpen" type="button" aria-expanded="false" aria-controls="hsPanel">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.8" y="2.6" width="10.4" height="18.8" rx="2.6"/><path d="M12 13.2V6.9"/><path d="M9.4 9.5 12 6.9l2.6 2.6"/></svg>
+        <span>No app store &mdash; <b>add any app to your phone in three taps</b><i class="hs-chev"></i></span>
+      </button>
+      <div class="hs-panel" id="hsPanel" hidden>
+        <div class="hs-tabs" role="tablist" aria-label="Which phone">
+          <button type="button" id="hsI" role="tab" aria-selected="true" aria-controls="hsStepsI">iPhone</button>
+          <button type="button" id="hsA" role="tab" aria-selected="false" aria-controls="hsStepsA">Android</button>
+        </div>
+        <ol class="hs-steps" id="hsStepsI" role="tabpanel">
+          <li>Open the app in <b>Safari</b>.</li>
+          <li>Tap the <b>Share</b> button &mdash; the small square with an arrow coming out of the top, at the bottom middle of the screen.</li>
+          <li>Tap <b>Add to Home Screen</b>, then <b>Add</b>.</li>
+        </ol>
+        <ol class="hs-steps" id="hsStepsA" role="tabpanel" hidden>
+          <li>Open the app in <b>Chrome</b>.</li>
+          <li>Tap the <b>three dots</b> in the top right corner.</li>
+          <li>Scroll down to <b>Install</b>, and tap it.</li>
+        </ol>
+        <p class="hs-note">It then opens full screen, like anything else on your phone. Nothing to download, nothing to update, and no store in the middle taking a cut.</p>
+      </div>
+    </div>
 
     <!-- The one choice that matters. Made first, made big, so nobody has to work out
          whether a "hub" and an "app" are the same thing. They are not. -->
@@ -1067,6 +1116,29 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
 })();
 </script>
 <script src="/ae-concierge.js" data-persona="brian" defer></script>
+<script>
+/* The home-screen line: shut until asked, and it opens on the right phone. */
+(function(){
+  var open=document.getElementById('hsOpen'), panel=document.getElementById('hsPanel');
+  var tI=document.getElementById('hsI'), tA=document.getElementById('hsA');
+  var sI=document.getElementById('hsStepsI'), sA=document.getElementById('hsStepsA');
+  if(!open||!panel) return;
+  open.addEventListener('click',function(){
+    var now=open.getAttribute('aria-expanded')==='true';
+    open.setAttribute('aria-expanded', String(!now));
+    panel.hidden=now;
+  });
+  function pick(which){
+    var android=which==='a';
+    tA.setAttribute('aria-selected',String(android));
+    tI.setAttribute('aria-selected',String(!android));
+    sA.hidden=!android; sI.hidden=android;
+  }
+  tI.addEventListener('click',function(){pick('i');});
+  tA.addEventListener('click',function(){pick('a');});
+  if(/Android/i.test(navigator.userAgent)) pick('a');
+})();
+</script>
 </body>
 </html>
 
