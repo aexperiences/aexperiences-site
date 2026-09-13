@@ -77,7 +77,9 @@ function parseCatalog(src) {
      below). They carry `plans:` instead of `tiers:` — a real amount and a real
      billing interval, so a yearly plan can never be read as a monthly one. */
   const apps = [];
-  const re = /\{\s*id:\s*'([a-z0-9]+)'/g;
+  /* Hyphens count. Ids like 'espo-drama', 'espo-genius' and 'the-narcs' were invisible to
+     this parser, so those products could not be priced or sold at all (found Sep 13 2026). */
+  const re = /\{\s*id:\s*'([a-z0-9-]+)'/g;
   let m;
   while ((m = re.exec(src))) {
     const id = m[1];
@@ -110,7 +112,10 @@ function parseCatalog(src) {
           });
         }
         const urlOf = (body.match(/url:\s*'([^']+)'/) || [])[1] || '';
-        if (plans.length) apps.push({ id, name: nameOf, tag: tagOf, url: urlOf, plans });
+        /* A free-trial length, when the record states one. Stated on the product, not
+           per plan, so every plan of one app offers the same trial (Anthony, Sep 13 2026). */
+        const trialOf = +(((body.match(/trial:\s*(\d+)/) || [])[1]) || 0);
+        if (plans.length) apps.push({ id, name: nameOf, tag: tagOf, url: urlOf, trial: trialOf, plans });
       }
     }
 
