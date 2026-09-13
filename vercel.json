@@ -19,7 +19,77 @@
       "source": "/hubs/motorcade.html",
       "destination": "/shop.html",
       "permanent": true
-    }, { "source": "/hubs/real-estate.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/architecture.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/engineering.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/theater.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/cinema.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/concerts.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/kids-gym.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/showroom.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/targeted.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/home-care.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/field-service.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/tattoo.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/dental.html", "destination": "/shop.html", "permanent": true }, { "source": "/hubs/photo-video.html", "destination": "/shop.html", "permanent": true },
+    },
+    {
+      "source": "/hubs/real-estate.html",
+      "destination": "/shop.html",
+      "permanent": true
+    },
+    {
+      "source": "/hubs/architecture.html",
+      "destination": "/shop.html",
+      "permanent": true
+    },
+    {
+      "source": "/hubs/engineering.html",
+      "destination": "/shop.html",
+      "permanent": true
+    },
+    {
+      "source": "/hubs/theater.html",
+      "destination": "/shop.html",
+      "permanent": true
+    },
+    {
+      "source": "/hubs/cinema.html",
+      "destination": "/shop.html",
+      "permanent": true
+    },
+    {
+      "source": "/hubs/concerts.html",
+      "destination": "/shop.html",
+      "permanent": true
+    },
+    {
+      "source": "/hubs/kids-gym.html",
+      "destination": "/shop.html",
+      "permanent": true
+    },
+    {
+      "source": "/hubs/showroom.html",
+      "destination": "/shop.html",
+      "permanent": true
+    },
+    {
+      "source": "/hubs/targeted.html",
+      "destination": "/shop.html",
+      "permanent": true
+    },
+    {
+      "source": "/hubs/home-care.html",
+      "destination": "/shop.html",
+      "permanent": true
+    },
+    {
+      "source": "/hubs/field-service.html",
+      "destination": "/shop.html",
+      "permanent": true
+    },
+    {
+      "source": "/hubs/tattoo.html",
+      "destination": "/shop.html",
+      "permanent": true
+    },
+    {
+      "source": "/hubs/dental.html",
+      "destination": "/shop.html",
+      "permanent": true
+    },
+    {
+      "source": "/hubs/photo-video.html",
+      "destination": "/shop.html",
+      "permanent": true
+    },
     {
       "source": "/ae-mark.png",
       "destination": "/marks/ae-mark.svg",
@@ -27,10 +97,34 @@
     }
   ],
   "rewrites": [
-    {"source": "/apps/cut-and-effect/", "destination": "https://ae-cut-and-effect.vercel.app/index.html"},
-    {"source": "/apps/cut-and-effect/:path*", "destination": "https://ae-cut-and-effect.vercel.app/:path*"},
-    {"source": "/apps/xpense/", "destination": "https://xpense-os.vercel.app/index.html"},
-    {"source": "/apps/xpense/:path*", "destination": "https://xpense-os.vercel.app/:path*"},
+    {
+      "source": "/narcs",
+      "destination": "https://marketnarc-com.vercel.app/narcs"
+    },
+    {
+      "source": "/narcs/",
+      "destination": "https://marketnarc-com.vercel.app/narcs"
+    },
+    {
+      "source": "/narcs/:path*",
+      "destination": "https://marketnarc-com.vercel.app/narcs/:path*"
+    },
+    {
+      "source": "/apps/cut-and-effect/",
+      "destination": "https://ae-cut-and-effect.vercel.app/index.html"
+    },
+    {
+      "source": "/apps/cut-and-effect/:path*",
+      "destination": "https://ae-cut-and-effect.vercel.app/:path*"
+    },
+    {
+      "source": "/apps/xpense/",
+      "destination": "https://xpense-os.vercel.app/index.html"
+    },
+    {
+      "source": "/apps/xpense/:path*",
+      "destination": "https://xpense-os.vercel.app/:path*"
+    },
     {
       "source": "/apps/wire/",
       "destination": "https://ae-wire-accelerated-experiences.vercel.app/index.html"

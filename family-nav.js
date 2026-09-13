@@ -85,17 +85,13 @@
       logo: badge("#101B2E", "#6BA6FF", "&#9636;"), ownedKey: "espo_owned_edu", apps: []
     },
     narc: {
-      hostRe: /marketnarc\.com$/i, home: "https://marketnarc.com/",
-      brand: "Market", accentWord: "Narc",
+      // The Narcs live on a path of this domain, so they are matched by path, not host.
+      hostRe: /^never$/i, pathRe: /^\/narcs(\/|$)/i, home: "https://www.aexperiences.com/narcs/",
+      brand: "The ", accentWord: "Narcs",
       accent: "#E6A93C", bg: "#08100F", line: "#214F4C", ink: "#EAF3F0", dim: "#8FC4BB",
       logo: GLASS, ownedKey: "espo_owned_narc",
       apps: [
-        { k: "market", name: "MarketNarc", url: "/marketnarc-app" },
-        { k: "bill", name: "BillNarc", url: "/billnarc-app" },
-        { k: "tax", name: "TaxNarc", url: "/taxnarc-app" },
-        { k: "collections", name: "CollectionsNarc", url: "/collectionsnarc-app" },
-        { k: "home", name: "HomeNarc", url: "/homenarc-app" },
-        { k: "paw", name: "PawNarc", url: "/pawnarc-app" }
+        { k: "narc", name: "The Narc", url: "/narcs/thenarc-app" }
       ]
     },
     nd: {
@@ -120,7 +116,7 @@
     { key: "genius", name: "ESPO Genius", tag: "Navigate the system", url: "https://espogenius.com/" },
     { key: "drama", name: "ESPO Drama", tag: "Act & create", url: "https://espodrama.com/" },
     { key: "edu", name: "ESPO Curriculum", tag: "Homeschool K-12", url: "https://espoedu.com/" },
-    { key: "narc", name: "The Narcs", tag: "See through it", url: "https://marketnarc.com/" },
+    { key: "narc", name: "The Narcs", tag: "See through it", url: "https://www.aexperiences.com/narcs/" },
     { key: "nd", name: "Neuro Divulge", tag: "Regulation tools", url: "https://neurodivulge.com/" },
     { key: "hub", name: "AE Hub", tag: "Operations", url: "https://aexperiences.studio/" }
   ];
@@ -133,6 +129,8 @@
   }
   var famKey = null, fam = null, current = null;
   Object.keys(FAMILIES).forEach(function (k) { if (FAMILIES[k].hostRe.test(location.hostname)) { fam = FAMILIES[k]; famKey = k; } });
+  // A family that lives on a path of another family's domain wins over the host match.
+  Object.keys(FAMILIES).forEach(function (k) { var pr = FAMILIES[k].pathRe; if (pr && pr.test(path)) { fam = FAMILIES[k]; famKey = k; } });
   if (fam) current = findByPath(fam);
   if (!fam) { Object.keys(FAMILIES).forEach(function (k) { var c = findByPath(FAMILIES[k]); if (c) { fam = FAMILIES[k]; famKey = k; current = c; } }); }
   if (!fam) { fam = FAMILIES.ae; famKey = "ae"; }
