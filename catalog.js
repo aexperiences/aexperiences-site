@@ -243,9 +243,10 @@
 
     { id:'espovocab', name:'ESPOvocab', tag:'Words worth keeping', genre:'learning', state:'live',
       acc:'#1E2A24', mark:M+'espovocab.svg', family:'ESPOgraduate', url:'/apps/espovocab/',
+      plans:[ ['Monthly',1.99,'month','Cancel any time'], ['Yearly',14.99,'year','Billed once a year'] ],
       shots:['/shots/espovocab.png'],
       blurb:'A word a day that actually sticks — etymology, a journal, your own word list. No ads, works offline, export free.',
-      price:'Free right now', priceNote:'Plus coming: $1.99/mo · $14.99/yr — not switched on yet' },
+      price:'$1.99/mo', priceNote:'Or $14.99 a year, billed once \u00b7 the word a day and your list stay free' },
 
     { id:'espotendency', name:'ND Tendency', tag:'Mood & habits', genre:'mind', state:'live',
       acc:'#C23359', mark:'/apps/espotendency/icon.png', family:'Neuro Divulge', url:'/apps/espotendency/',
@@ -298,7 +299,7 @@
     { id:'esposign', name:'ESPOsign', tag:'Sign it yourself', genre:'money', state:'live',
       acc:'#2A1A4A', mark:M+'esposign.svg', family:'ESPO Genius', url:'/apps/esposign/',
       blurb:'Sign leases, school forms, waivers and contracts right in your browser — your document never leaves your device.',
-      price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr unlimited — vs DocuSign’s $120/yr for 5 documents' },
+      price:'Free', priceNote:'Free, and staying that way \u00b7 it also comes with ESPO Genius' },
 
     { id:'espovineyard', name:'ESPOvineyard', tag:'Wine journal · 21+', genre:'savor', state:'live',
       acc:'#2E0D19', mark:'/apps/espovineyard/icon.png', family:'ESPOsavor', age:'21+', url:'/apps/espovineyard/',
@@ -353,7 +354,7 @@
     { id:'kangatodo', name:'KangaToDo', tag:'Chores to every kid\'s phone', genre:'family', state:'live',
       acc:'#C78425', mark:'/marks/kangatodo.svg', family:'Accelerated Experiences', url:'/apps/kangatodo/', phase:'Testing',
       blurb:'A grown-up types a job on their phone and picks a kid. It writes into your own Skylight account — so it shows on the Calendar and on that child\'s Buddy — and then buzzes that child\'s phone. Every kid in the house, each with their own pouch, each seeing only their own list. Jobs can require a photo before they tick off.',
-      price:'Free right now', priceNote:'No account needed \u2014 start in one tap. If you own a Skylight Calendar you can connect it and jobs land there too. Paid plans not switched on yet.' }, { id:'ae-wire', name:'AE Wire', tag:'Meeting notes', genre:'work', state:'live', aisles:['personal','business'], acc:'#d9a441', url:'/apps/wire/', svg:'<rect x="19" y="7" width="10" height="18" rx="5"/><path d="M16 21v2a8 8 0 0 0 16 0v-2"/><path d="M24 31v6"/><path d="M18 37h12"/>', blurb:'It records the meeting and turns it into notes where every action item is one tap from the moment it was said. On-device, nothing uploaded.', price:'Free right now', priceNote:'Limited-time launch offer — regularly $2.99/mo · $23.88/yr, one person, on-device. Business plan coming.' },
+      price:'Free right now', priceNote:'No account needed \u2014 start in one tap. If you own a Skylight Calendar you can connect it and jobs land there too. Paid plans not switched on yet.' }, { id:'ae-wire', name:'AE Wire', tag:'Meeting notes', genre:'work', state:'live', aisles:['personal','business'], acc:'#d9a441', url:'/apps/wire/', plans:[ ['Monthly',2.99,'month','One person, on your own device'], ['Yearly',23.88,'year','One person, billed once a year'] ], svg:'<rect x="19" y="7" width="10" height="18" rx="5"/><path d="M16 21v2a8 8 0 0 0 16 0v-2"/><path d="M24 31v6"/><path d="M18 37h12"/>', blurb:'It records the meeting and turns it into notes where every action item is one tap from the moment it was said. On-device, nothing uploaded.', price:'$2.99/mo', priceNote:'Or $23.88 a year, billed once \u00b7 one person, on your own device \u00b7 a business plan is coming' },
     { id:'ae-fraud-division', name:'AE Fraud Division', tag:'Fraud screening for banks', genre:'work', state:'live', aisles:['business'],
       acc:'#c2482e', url:'/apps/fraud-division/', mark:'/marks/ae-fraud-division-512.png', img:'/marks/ae-fraud-division-512.png',
       blurb:'Three rooms for a fraud desk. Screen names against the live U.S. Treasury sanctions lists. Watch a transaction file for the classic patterns \u2014 structuring, velocity, duplicates \u2014 checked in your browser, so the file never leaves your machine. File what you find as an evidence-cited, SAR-ready case packet. Every alert shows its work: no citation, no alert.',
