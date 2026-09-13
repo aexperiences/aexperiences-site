@@ -130,7 +130,7 @@
       ] },
 
     { id:'espo-learning', name:'ESPO Learning', tag:'Kids · early skills', genre:'learning', state:'live',
-      acc:'#5c8a5f', url:'https://espolearning.com/', img:'/logo-learning.png', mark:'/marks/espolearning-icon.png',
+      acc:'#5c8a5f', url:'https://espolearning.com/', img:'/logo-learning.png', mark:'/marks/espolearning-icon.png', phase:'Testing',
       blurb:'Handwriting, reading, math and writing for young kids. No fail states, no red marks, nothing collected.',
       price:'Free to try', priceNote:'Paid plans not switched on yet' },
 
@@ -157,7 +157,9 @@
       blurb:'Around-the-clock checks on the settings that decide whether a stranger can send email as you, whether your site is encrypted, and whether a browser is told to protect your visitors. Every failure comes with a plain-English fix, and every check is kept as dated, sealed evidence you can hand an inspector or an insurer. It monitors readiness \u2014 it does not certify.',
       priceNote:'Included with the Mothership tier of every operating system \u00b7 sold on its own too' },
 
-    { id:'esposocial', name:'ESPOsocial', tag:'Private groups & video', genre:'social', state:'dev',
+    /* PULLED FROM THE STORE Sep 13 2026 (Anthony). It comes back on the business side as
+       AE Connect (B2B) — nothing else about it is decided yet, so nothing else was changed. */
+    { id:'esposocial', name:'ESPOsocial', tag:'Private groups & video', genre:'social', state:'off',
       acc:'#5a5fd6', url:'https://esposocial.com/', img:'/logo-social.png',
       blurb:'A quiet place for a real group — private chat, live video, and Tag for the conversations that do not fit a live call.', priceNote:'Paid plans not switched on yet' },
 
@@ -179,7 +181,7 @@
        `family` puts it on the ESPO Music shelf. It is NOT inside the ESPO Music app and
        NOT in All-Access — it is its own app that shares the family name. */
     { id:'espofunkmaster', name:'ESPOfunkmaster', tag:'Studio, looper & chop shop', genre:'arts', state:'live',
-      family:'ESPO Music', aisles:['personal','business'], partOf:'ae-cre8',
+      family:'ESPO Music', aisles:['personal','business'],
       acc:'#e0a83a', mark:'/marks/espofunkmaster.png', img:'/marks/espofunkmaster.png', url:'/apps/espofunkmaster/',
       shots:['/shots/espofunkmaster.png','/shots/espofunkmaster-2.png','/shots/espofunkmaster-desktop.png'],
       blurb:'A real studio in your browser, in plain English: a true drum kit, real-instrument keys, a bar-synced looper, your microphone, a mixing desk — and "Put it on wax" to make it sound like a record. Bring in your own song or a video you shot, chop it onto the pads, and send the finished track straight into ESPO Cutlabs as the music under your edit. Nothing uploaded, nothing collected.',
@@ -188,15 +190,15 @@
     /* ─────────── AE CREATE — the making tools. Each one stands alone; together they are
        a suite. All three carry aisles:['personal','business'] because the same tool serves
        one person and a company — one record each, shown on both shelves, never copied. ── */
-    { id:'espocutlabs', name:'ESPO Cutlabs', tag:'Video editing', genre:'arts', state:'live',
-      family:'AE Cre8', aisles:['personal','business'], partOf:'ae-cre8',
+    { id:'espocutlabs', name:'ESPO Cutlabs', tag:'Video editing', genre:'arts', state:'dev',
+      aisles:['personal','business'],
       acc:'#e0553a', mark:'/marks/espocutlabs.png', img:'/marks/espocutlabs.png',
       url:'https://ae-video-studio.vercel.app/',
       blurb:'Fast, loud, punchy video editing that runs entirely in your browser — captions that pop, zoom punches, freeze frames, slow-mo and fast-forward, and a synthesized sound-effect palette. Drop your clips in, cut, export to your downloads. Takes its music straight from ESPOfunkmaster.',
       price:'Free right now', priceNote:'No account, no upload — your footage never leaves your machine' },
 
     { id:'cut-and-effect', name:'Cut & Effect', tag:'Drop in your takes, Roz makes the movie', genre:'arts', state:'live',
-      family:'AE Cre8', aisles:['personal','business'], partOf:'ae-cre8',
+      aisles:['personal','business'],
       acc:'#e0a83a', mark:'/os-icons/Cut_and_Effect.png', img:'/os-icons/Cut_and_Effect.png', phase:'Testing',
       url:'/apps/cut-and-effect/',
       shots:['/shots/cut-and-effect-start.png','/shots/cut-and-effect-roz.png'],
@@ -204,12 +206,15 @@
       price:'Free while in testing',
       priceNote:'Testing phase — free, no account, no card. Paid plan comes after testing — payments not switched on yet' },
 
-    { id:'aevoice', name:'AE Voice Machine', tag:'Your voice, on tap', genre:'arts', state:'dev',
-      family:'AE Cre8', aisles:['personal','business'], partOf:'ae-cre8',
+    /* OFF THE SHELF Sep 13 2026 (Anthony). It keeps running inside the AE OS. */
+    { id:'aevoice', name:'AE Voice Machine', tag:'Your voice, on tap', genre:'arts', state:'off',
+      aisles:['personal','business'],
       acc:'#c8965a', mark:'/marks/aevoice.png', img:'/marks/aevoice.png',
       blurb:'Record a few seconds of your own voice, and it reads any script back in it — on your own machine, no per-take fee. Consent is recorded in your name before a clone is ever made, it only ever clones the voice of the person sitting there, and every file it produces is watermarked as synthetic. Not open to the public yet: today it runs inside the AE OS on our own hardware.' },
 
-    { id:'ae-cre8', name:'AE Cre8', tag:'Eight machines that make things', genre:'arts', state:'live',
+    /* OFF THE SHELF Sep 13 2026 (Anthony: "I want to remove Cre8 all together. it's disorganized").
+       The record is kept rather than deleted — deleting is his call, not a lane's. */
+    { id:'ae-cre8', name:'AE Cre8', tag:'Eight machines that make things', genre:'arts', state:'off',
       family:'AE Cre8', aisles:['personal','business'],
       bundle:['espofunkmaster','espocutlabs','aevoice'],
       acc:'#e0a83a', mark:'/marks/ae-cre8.png', img:'/marks/ae-cre8.png',
@@ -250,7 +255,7 @@
       price:'$1.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 3-day free trial — core stays free forever' },
 
     { id:'esponest', name:'ESPOnest', tag:'Baby tracker', genre:'family', state:'live',
-      acc:'#2E1F3A', mark:M+'esponest.svg', family:'ESPOfam', url:'/apps/esponest/',
+      acc:'#2E1F3A', mark:M+'esponest.svg', family:'ESPOfam', url:'/apps/esponest/', phase:'Testing',
       shots:['/shots/esponest.png'],
       blurb:'Sleep, feeds and diapers in one tap at 3am — nap-window estimate, growth log, free export, zero trackers.',
       price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — logging + export free forever' },
@@ -281,12 +286,12 @@
       price:'$1.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 3-day free trial — Level 1 and every SOS tool free forever' },
 
     { id:'espotrek', name:'ESPOtrek', tag:'Trip planner', genre:'travel', state:'live',
-      acc:'#12303E', mark:M+'espotrek.svg', family:'ESPOtravel', url:'/apps/espotrek/',
+      acc:'#12303E', mark:M+'espotrek.svg', family:'ESPOtravel', url:'/apps/espotrek/', phase:'Testing',
       blurb:'Days, stops, one-tap map routes, a budget that splits itself, and a printable one-pager — offline by default.',
       price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — offline, export & print free forever' },
 
     { id:'esponatlparks', name:'ESPOnatlparks', tag:'Park passport', genre:'travel', state:'live',
-      acc:'#173428', mark:M+'esponatlparks.svg', family:'ESPOtravel', url:'/apps/esponatlparks/',
+      acc:'#173428', mark:M+'esponatlparks.svg', family:'ESPOtravel', url:'/apps/esponatlparks/', phase:'Testing',
       blurb:'All 63 National Parks in a passport that stamps OFFLINE — one tap logs the visit, no signal required, never lost.',
       price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — the 63, your stamps & export free forever' },
 
@@ -316,7 +321,7 @@
       blurb:'A coffee journal that logs both sides of the habit — the pour-over you brewed and the latte you bought.',
       price:'$2.99/mo', priceNote:'Or $24.99 a year, billed once \u00b7 the journal stays free' },
 
-    { id:'esporacket', name:'ESPOracket', tag:'Tennis & pickleball', genre:'sport', state:'live',
+    { id:'esporacket', name:'ESPOracket', tag:'Tennis & pickleball', genre:'sport', state:'dev',
       acc:'#101C2C', mark:M+'esporacket.svg', family:'ESPOcenter', url:'/apps/esporacket/',
       blurb:'Load your match film, tag every point, tap a tag to jump straight to the moment — on any device, footage never uploaded.',
       price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — every price on the page, no hidden tiers' },
@@ -346,7 +351,7 @@
       price:'$1.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 3-day free trial \u00b7 a private monitoring aid — no ads, no tracking' },
 
     { id:'kangatodo', name:'KangaToDo', tag:'Chores to every kid\'s phone', genre:'family', state:'live',
-      acc:'#C78425', mark:'/marks/kangatodo.svg', family:'Accelerated Experiences', url:'/apps/kangatodo/',
+      acc:'#C78425', mark:'/marks/kangatodo.svg', family:'Accelerated Experiences', url:'/apps/kangatodo/', phase:'Testing',
       blurb:'A grown-up types a job on their phone and picks a kid. It writes into your own Skylight account — so it shows on the Calendar and on that child\'s Buddy — and then buzzes that child\'s phone. Every kid in the house, each with their own pouch, each seeing only their own list. Jobs can require a photo before they tick off.',
       price:'Free right now', priceNote:'No account needed \u2014 start in one tap. If you own a Skylight Calendar you can connect it and jobs land there too. Paid plans not switched on yet.' }, { id:'ae-wire', name:'AE Wire', tag:'Meeting notes', genre:'work', state:'live', aisles:['personal','business'], acc:'#d9a441', url:'/apps/wire/', svg:'<rect x="19" y="7" width="10" height="18" rx="5"/><path d="M16 21v2a8 8 0 0 0 16 0v-2"/><path d="M24 31v6"/><path d="M18 37h12"/>', blurb:'It records the meeting and turns it into notes where every action item is one tap from the moment it was said. On-device, nothing uploaded.', price:'Free right now', priceNote:'Limited-time launch offer — regularly $2.99/mo · $23.88/yr, one person, on-device. Business plan coming.' },
     { id:'ae-fraud-division', name:'AE Fraud Division', tag:'Fraud screening for banks', genre:'work', state:'live', aisles:['business'],
