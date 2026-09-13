@@ -249,8 +249,9 @@
 
     { id:'espohystory', name:'ESPOhystory', tag:'History, but hysterical', genre:'learning', state:'live',
       acc:'#8a5a2b', mark:'/apps/espohystory/icon.svg', family:'ESPO Learning', url:'/apps/espohystory/',
+      plans:[ ['Monthly',5.99,'month','Every story, and every new one as it lands'], ['Yearly',19.99,'year','Every story, billed once a year'] ],
       blurb:'K–6 history told funny — 35 read-along stories that highlight each word as they read aloud.',
-      price:'Free right now', priceNote:'Paid plans not switched on yet' },
+      price:'$5.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 new stories added often' },
 
 
     /* ─────────── AE XPENSE — live, and on both shelves ─────────── */
