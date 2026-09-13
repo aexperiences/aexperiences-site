@@ -11,8 +11,25 @@
 //
 // It never records a name, an email, or anything a visitor typed.
 
-const KV_URL = (process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || '').replace(/\/$/, '');
-const KV_TOK = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || '';
+// TWO SHELVES, ON PURPOSE (Sep 13 2026). The store and the hub sit on different Upstash
+// databases. Until they are one, every visit is written to BOTH so no day is ever lost and
+// the Traffic Room on the hub can read what the store collected. HUB_* is the hub's shelf;
+// when it is absent this behaves exactly as before and writes only to the store's own.
+const SHELVES = (() => {
+  const e = process.env;
+  const pairs = [
+    [e.HUB_KV_REST_API_URL || e.HUB_UPSTASH_REDIS_REST_URL, e.HUB_KV_REST_API_TOKEN || e.HUB_UPSTASH_REDIS_REST_TOKEN],
+    [e.KV_REST_API_URL || e.UPSTASH_REDIS_REST_URL, e.KV_REST_API_TOKEN || e.UPSTASH_REDIS_REST_TOKEN]
+  ];
+  const out = [], seen = new Set();
+  for (const [u, t] of pairs) {
+    if (!u || !t) continue;
+    const url = String(u).replace(/\/$/, '');
+    if (seen.has(url)) continue;
+    seen.add(url); out.push({ url, tok: t });
+  }
+  return out;
+})();
 const GIF = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64');
 const KEEP_DAYS = 400;
 
@@ -38,13 +55,18 @@ function osOf(ua){ if(!ua) return 'unknown';
   if(/Linux/.test(ua)) return 'Linux'; return 'other'; }
 
 async function kv(commands) {
-  if (!KV_URL || !KV_TOK) return null;
-  const r = await fetch(KV_URL + '/pipeline', {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + KV_TOK, 'content-type': 'application/json' },
-    body: JSON.stringify(commands)
-  });
-  return r.ok ? r.json() : null;
+  if (!SHELVES.length) return null;
+  const body = JSON.stringify(commands);
+  const results = await Promise.allSettled(SHELVES.map(sh =>
+    fetch(sh.url + '/pipeline', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + sh.tok, 'content-type': 'application/json' },
+      body
+    })
+  ));
+  // One shelf being down never costs the visit on the other.
+  const first = results.find(r => r.status === 'fulfilled' && r.value && r.value.ok);
+  return first ? first.value.json() : null;
 }
 
 export default async function handler(req, res) {
