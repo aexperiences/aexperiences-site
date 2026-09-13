@@ -136,22 +136,26 @@
 
     { id:'espo-genius', name:'ESPO Genius', tag:'Plain-English paperwork', genre:'money', state:'live',
       acc:'#7a6fd6', url:'https://espogenius.com/', img:'/logo-genius.png',
-      blurb:'The forms and fine print nobody explains — IEPs, benefits, care paperwork — translated into plain English.',
-      price:'Free right now', priceNote:'Paid plans not switched on yet' },
+      plans:[ ['Monthly',7.99,'month','Every door, ESPOsign included'], ['Yearly',39.99,'year','Every door, billed once a year'] ],
+      blurb:'The forms and fine print nobody explains — IEPs, benefits, care paperwork — translated into plain English. ESPOsign comes with it.',
+      price:'$7.99/mo', priceNote:'Or $39.99 a year, billed once \u00b7 ESPOsign included' },
 
     { id:'espo-drama', name:'ESPO Drama', tag:'Theater & dramatic arts', genre:'arts', state:'live',
       acc:'#c8794f', url:'https://espodrama.com/', img:'/logo-drama.png',
+      plans:[ ['Monthly',7.99,'month','Every room, every play, cancel any time'], ['Yearly',39.99,'year','Every room, billed once a year'] ],
       blurb:'Write with Roz your coach, run lines from a real play library, scan your own script, warm up, and learn every job in the room — for actors, writers and theater teachers, ages 5 to 90.',
-      price:'Free right now', priceNote:'Paid plans not switched on yet' },
+      price:'$7.99/mo', priceNote:'Or $39.99 a year, billed once' },
 
-    /* AE Comply — readiness monitoring. state:'dev' until Stripe and Wave 2 land.
+    /* AE Comply — readiness monitoring. LIVE since Sep 13 2026 (Anthony: "I'm pretty sure comply
+       is ready, i use it, i don't know why its in production"). Sold on its own AND included in
+       the Mothership tier of every operating system.
        NEVER describe this as certification: it monitors and evidences, it does not certify. */
-    { id:'ae-comply', name:'AE Comply', tag:'Compliance readiness monitoring', genre:'business', state:'dev',
+    { id:'ae-comply', name:'AE Comply', tag:'Compliance readiness monitoring', genre:'business', state:'live',
       aisles:['business'],
       acc:'#2C6639', mark:'/marks/aecomply.svg', img:'/marks/aecomply.svg',
       url:'https://www.aexperiences.com/apps/comply/',
       blurb:'Around-the-clock checks on the settings that decide whether a stranger can send email as you, whether your site is encrypted, and whether a browser is told to protect your visitors. Every failure comes with a plain-English fix, and every check is kept as dated, sealed evidence you can hand an inspector or an insurer. It monitors readiness \u2014 it does not certify.',
-      priceNote:'Pricing set, not switched on yet' },
+      priceNote:'Included with the Mothership tier of every operating system \u00b7 sold on its own too' },
 
     { id:'esposocial', name:'ESPOsocial', tag:'Private groups & video', genre:'social', state:'dev',
       acc:'#5a5fd6', url:'https://esposocial.com/', img:'/logo-social.png',
@@ -159,8 +163,9 @@
 
     { id:'the-narcs', name:'The Narcs', tag:'Fine print, decoded', genre:'money', state:'live',
       acc:'#2f8f7a', url:'https://marketnarc.com/open', img:'/logo-narcs.png',
-      blurb:'Two tools in one app: The Narc reads the fine print you were handed, MarketNarc watches the tickers you own.',
-      price:'Free right now', priceNote:'Paid plans not switched on yet' },
+      plans:[ ['Monthly',7.99,'month','Read every document you are handed'], ['Yearly',39.99,'year','Billed once a year'] ],
+      blurb:'The Narc reads the fine print you were handed — leases, contracts, benefit letters, terms — and tells you plainly what it says and what it costs you.',
+      price:'$7.99/mo', priceNote:'Or $39.99 a year, billed once' },
 
     { id:'neuro-divulge', name:'Neuro Divulge', tag:'Regulation tools', genre:'mind', state:'live',
       acc:'#a85f38', url:'https://neurodivulge.com/', img:'/logo-nd.png',
@@ -216,13 +221,15 @@
     /* ─────────── ESPO REMAKES — live, in-shop apps (/apps/<name>/) ─────────── */
     { id:'revolver', name:'AE Revolver', tag:'Record collection', genre:'arts', state:'live',
       acc:'#c43c36', mark:'/apps/revolver/icon.png', family:'Revolver', url:'/apps/revolver/',
+      plans:[ ['Monthly',1.99,'month','3-day free trial · cancel any time'], ['Yearly',19.99,'year','3-day free trial · billed once a year'] ], trial:3,
       blurb:'Point your camera at the shelf — Revolver identifies your vinyl, even several covers in one photo, and files them by genre. Your collection stays on your device, export free.',
-      price:'Free right now', priceNote:'Photo identification runs on our AI — free while we tune it' },
+      price:'$1.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 3-day free trial \u00b7 photo identification runs on our own AI' },
 
     { id:'thread', name:'ND Thread', tag:'Your master list — and the thing you were doing', genre:'mind', state:'live',
       acc:'#9A7A2C', mark:'/apps/thread/icon.png', family:'Neuro Divulge', url:'/apps/thread/',
+      plans:[ ['Monthly',1.99,'month','3-day free trial · cancel any time'], ['Yearly',19.99,'year','3-day free trial · billed once a year'] ], trial:3,
       blurb:'A master list that works the way a busy head does: write it down in any order, number it afterwards, notes under every task — and finished work turns yellow and STAYS on the list so you can see the day you had. Sort by number, group by mode, drag to reorder. Plus the thread card that tells you what you were doing after the doorway wipes it, tap-through quests for the kids (no fail states, no timers), and homes for the things you can never find. Mint classroom look with a dark skin.',
-      price:'Free right now', priceNote:'Free — from the Neuro Divulge work' },
+      price:'$1.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 3-day free trial' },
 
     { id:'tucasa', name:'Tu Casa OS', tag:'The home operating system', genre:'family', state:'dev',
       acc:'#c45c3c', mark:'/apps/tucasa/icon.png', family:'Tu Casa', url:'/apps/tucasa/',
@@ -237,9 +244,10 @@
 
     { id:'espotendency', name:'ND Tendency', tag:'Mood & habits', genre:'mind', state:'live',
       acc:'#C23359', mark:'/apps/espotendency/icon.png', family:'Neuro Divulge', url:'/apps/espotendency/',
+      plans:[ ['Monthly',1.99,'month','3-day free trial · cancel any time'], ['Yearly',19.99,'year','3-day free trial · billed once a year'] ], trial:3,
       shots:['/shots/espotendency.png'],
       blurb:'A 10-second daily check-in and one tiny win at a time. Everything stays on your device — no account, no cloud.',
-      price:'Free right now', priceNote:'Plus coming: $1.99/mo · $19.99/yr — core stays free forever' },
+      price:'$1.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 3-day free trial — core stays free forever' },
 
     { id:'esponest', name:'ESPOnest', tag:'Baby tracker', genre:'family', state:'live',
       acc:'#2E1F3A', mark:M+'esponest.svg', family:'ESPOfam', url:'/apps/esponest/',
@@ -268,8 +276,9 @@
 
     { id:'esporegulator', name:'ND Regulator', tag:'Emotional skills', genre:'mind', state:'live',
       acc:'#A32226', mark:'/apps/esporegulator/icon.png', family:'Neuro Divulge', url:'/apps/esporegulator/',
+      plans:[ ['Monthly',1.99,'month','3-day free trial · cancel any time'], ['Yearly',19.99,'year','3-day free trial · billed once a year'] ], trial:3,
       blurb:'Five-minute practice for anger, stress and anxiety — a real skills ladder plus right-now SOS tools. Skills, not affirmations.',
-      price:'Free right now', priceNote:'Plus coming: $1.99/mo · $19.99/yr — Level 1 + every SOS tool free forever' },
+      price:'$1.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 3-day free trial — Level 1 and every SOS tool free forever' },
 
     { id:'espotrek', name:'ESPOtrek', tag:'Trip planner', genre:'travel', state:'live',
       acc:'#12303E', mark:M+'espotrek.svg', family:'ESPOtravel', url:'/apps/espotrek/',
@@ -288,20 +297,24 @@
 
     { id:'espovineyard', name:'ESPOvineyard', tag:'Wine journal · 21+', genre:'savor', state:'live',
       acc:'#2E0D19', mark:'/apps/espovineyard/icon.png', family:'ESPOsavor', age:'21+', url:'/apps/espovineyard/',
+      plans:[ ['Monthly',2.99,'month','Cancel any time'], ['Yearly',24.99,'year','Billed once a year'] ],
       blurb:'A calm wine journal with a real Wine Country Notebook inside — no ads, no marketplace, a cellar that is actually yours.',
-      price:'Free right now', priceNote:'Plus coming: $2.99/mo · $24.99/yr — journal, cellar & Notebook stay free' },
+      price:'$2.99/mo', priceNote:'Or $24.99 a year, billed once \u00b7 journal, cellar and Notebook stay free' },
     { id:'espostogie', name:'ESPOstogie', tag:'Cigar journal · 21+', genre:'savor', state:'live',
       acc:'#7A3F18', mark:'/apps/espostogie/icon.png', family:'ESPOsavor', age:'21+', url:'/apps/espostogie/',
+      plans:[ ['Monthly',2.99,'month','Cancel any time'], ['Yearly',24.99,'year','Billed once a year'] ],
       blurb:'A cigar journal and humidor — vitola, wrapper, origin, strength, burn time and pairing, kept on your own device.',
-      price:'Free right now', priceNote:'Paid plans not switched on yet' },
+      price:'$2.99/mo', priceNote:'Or $24.99 a year, billed once \u00b7 the journal and your humidor stay free' },
     { id:'espowhiskey', name:'ESPOwhiskey', tag:'Whiskey journal · 21+', genre:'savor', state:'live',
       acc:'#8A5A18', mark:'/apps/espowhiskey/icon.png', family:'ESPOsavor', age:'21+', url:'/apps/espowhiskey/',
+      plans:[ ['Monthly',2.99,'month','Cancel any time'], ['Yearly',24.99,'year','Billed once a year'] ],
       blurb:'A whiskey journal with two sides on one shelf — log a neat pour or a built cocktail, and the base spirit lands in the same place either way.',
-      price:'Free right now', priceNote:'Paid plans not switched on yet' },
+      price:'$2.99/mo', priceNote:'Or $24.99 a year, billed once \u00b7 the journal stays free' },
     { id:'espobarista', name:'ESPObarista', tag:'Coffee journal', genre:'savor', state:'live',
       acc:'#7A4A28', mark:'/apps/espobarista/icon.png', family:'ESPOsavor', url:'/apps/espobarista/',
+      plans:[ ['Monthly',2.99,'month','Cancel any time'], ['Yearly',24.99,'year','Billed once a year'] ],
       blurb:'A coffee journal that logs both sides of the habit — the pour-over you brewed and the latte you bought.',
-      price:'Free right now', priceNote:'Paid plans not switched on yet' },
+      price:'$2.99/mo', priceNote:'Or $24.99 a year, billed once \u00b7 the journal stays free' },
 
     { id:'esporacket', name:'ESPOracket', tag:'Tennis & pickleball', genre:'sport', state:'live',
       acc:'#101C2C', mark:M+'esporacket.svg', family:'ESPOcenter', url:'/apps/esporacket/',
@@ -328,8 +341,9 @@
     { id:'espofocus', name:'ND Focus', tag:'ADHD weekly tracker', genre:'mind', state:'live',
       family:'Neuro Divulge',
       acc:'#93A82F', mark:'/apps/espofocus/icon.svg', url:'/apps/espofocus/',
+      plans:[ ['Monthly',1.99,'month','3-day free trial · cancel any time'], ['Yearly',19.99,'year','3-day free trial · billed once a year'] ], trial:3,
       blurb:'The weekly ADHD monitoring report your provider asks for — parents, teachers and behavior specialists rate the same 15 things each week, and ND Focus charts whether the plan is working. Not a diagnosis; private, initials only.',
-      price:'Free right now', priceNote:'A private monitoring aid — no ads, no tracking. Paid plans not switched on yet.' },
+      price:'$1.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 3-day free trial \u00b7 a private monitoring aid — no ads, no tracking' },
 
     { id:'kangatodo', name:'KangaToDo', tag:'Chores to every kid\'s phone', genre:'family', state:'live',
       acc:'#C78425', mark:'/marks/kangatodo.svg', family:'Accelerated Experiences', url:'/apps/kangatodo/',
