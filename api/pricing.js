@@ -73,6 +73,10 @@ function block(src, from, open, close) {
 
 function parseCatalog(src) {
   const hubs = [];
+  /* Consumer apps are NOT hubs and must never be invented into one (see the note
+     below). They carry `plans:` instead of `tiers:` — a real amount and a real
+     billing interval, so a yearly plan can never be read as a monthly one. */
+  const apps = [];
   const re = /\{\s*id:\s*'([a-z0-9]+)'/g;
   let m;
   while ((m = re.exec(src))) {
@@ -84,6 +88,32 @@ function parseCatalog(src) {
     /* Only live products, and only ones that actually carry tiers — an app with
        a single price is not a tiered hub and must not be invented into one. */
     if (!/state:\s*'live'/.test(body)) continue;
+
+    const nameOf = (body.match(/name:\s*'([^']+)'/) || [])[1] || id;
+    const tagOf  = (body.match(/tag:\s*'([^']+)'/)  || [])[1] || '';
+
+    /* An app with `plans:` is a consumer subscription: [name, amount, interval, includes].
+       The amount may carry cents and the interval is stated outright, never inferred. */
+    const pk = body.indexOf('plans:');
+    if (pk >= 0) {
+      const pb = block(body, pk, '[', ']');
+      if (pb) {
+        const plans = [];
+        const prow = /\[\s*(['"])((?:\\.|(?!\1).)*)\1\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(['"])(month|year)\4\s*(?:,\s*(['"])((?:\\.|(?!\6).)*)\6)?/g;
+        let p;
+        while ((p = prow.exec(pb.body))) {
+          plans.push({
+            name: p[2].replace(/\\(.)/g, '$1'),
+            amount: +p[3],
+            interval: p[5],
+            inc: p[7] ? p[7].replace(/\\(.)/g, '$1') : ''
+          });
+        }
+        const urlOf = (body.match(/url:\s*'([^']+)'/) || [])[1] || '';
+        if (plans.length) apps.push({ id, name: nameOf, tag: tagOf, url: urlOf, plans });
+      }
+    }
+
     const tk = body.indexOf('tiers:');
     if (tk < 0) continue;
     const tb = block(body, tk, '[', ']');
@@ -107,9 +137,7 @@ function parseCatalog(src) {
     }
     if (!tiers.length) continue;
 
-    const name = (body.match(/name:\s*'([^']+)'/) || [])[1] || id;
-    const tag  = (body.match(/tag:\s*'([^']+)'/)  || [])[1] || '';
-    hubs.push({ id, name, tag, tiers });
+    hubs.push({ id, name: nameOf, tag: tagOf, tiers });
   }
 
   const shop = src.match(/appShop:\s*\{\s*build:\s*(\d+)[^}]*terms:\s*'([^']*)'[^}]*turnaround:\s*'([^']*)'/);
@@ -117,7 +145,7 @@ function parseCatalog(src) {
     ? { build: +shop[1], terms: shop[2], turnaround: shop[3] }
     : null;
 
-  return { hubs, appShop };
+  return { hubs, apps, appShop };
 }
 
 module.exports = async (req, res) => {
@@ -140,11 +168,22 @@ module.exports = async (req, res) => {
     if (want) {
       const id = canonId(String(want).toLowerCase());
       const hub = book.hubs.find((h) => h.id === id);
-      if (!hub) { res.status(404).json({ ok: false, error: 'no such product', product: id }); return; }
-      res.status(200).json({
-        ok: true, product: hub.id, name: hub.name, tiers: hub.tiers,
-        source: 'catalog.js', updatedAt: new Date(CACHE_AT).toISOString()
-      });
+      if (hub) {
+        res.status(200).json({
+          ok: true, product: hub.id, name: hub.name, tiers: hub.tiers,
+          source: 'catalog.js', updatedAt: new Date(CACHE_AT).toISOString()
+        });
+        return;
+      }
+      const app = (book.apps || []).find((a) => a.id === id);
+      if (app) {
+        res.status(200).json({
+          ok: true, product: app.id, name: app.name, plans: app.plans,
+          source: 'catalog.js', updatedAt: new Date(CACHE_AT).toISOString()
+        });
+        return;
+      }
+      res.status(404).json({ ok: false, error: 'no such product', product: id });
       return;
     }
 
@@ -153,7 +192,8 @@ module.exports = async (req, res) => {
       updatedAt: new Date(CACHE_AT).toISOString(),
       source: 'catalog.js — the store\'s published catalogue, parsed at request time',
       appShop: book.appShop,
-      hubs: book.hubs
+      hubs: book.hubs,
+      apps: book.apps
     });
   } catch (e) {
     /* Say what broke. A pricing endpoint that fails quietly is how the drift
