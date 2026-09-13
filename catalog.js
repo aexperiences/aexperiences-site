@@ -168,7 +168,12 @@
       aisles:['business'],
       acc:'#0E2B2A', mark:'https://aexperiences.studio/marketnarc-192.png', img:'https://aexperiences.studio/marketnarc-192.png',
       url:'/apps/marketnarc/',
-      tiers:[ ['Core',99,0,'One market at a time \u00b7 the lead segment \u00b7 the call and the play'], ['Elite',249,0,'Ten markets, compared \u00b7 top ten segments \u00b7 code your own customers \u00b7 type to Roz'], ['Mothership',599,0,'All forty-eight segments \u00b7 the confidence working \u00b7 talk to Roz \u00b7 push to your CRM \u00b7 your own name on the report'] ],
+      /* TIERS DELIBERATELY NOT DECLARED HERE YET. api/pricing walks the file with a
+         brace matcher, and a tiers: array sitting in this dev record was being picked up
+         by the previous LIVE record (ESPO Music), which then quoted Core $99 / Elite $249 /
+         Mothership $599 on the store. Caught and pulled within minutes, Sep 13 2026.
+         The three numbers live in priceNote below until Market Narc has a public door and
+         goes state:'live' — then declare tiers here and re-check /api/pricing hubs. */
       blurb:'Six screens on any county or city in the country, read live from Census counts: who lives here, what they do for a living, who already sells here, where the money goes, where they live, and your own customers coded against all of it. Then one verdict \u2014 TARGET, REFINE or SCATTER \u2014 with the confidence behind it and a play card where every line traces back to the screen it came from. Every number is labeled Counted or Modeled. Nothing is invented.',
       price:'From $99/mo',
       priceNote:'Core $99 \u00b7 Elite $249 \u00b7 Mothership $599 a month \u00b7 also a room inside Targeted OS' },
