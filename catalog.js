@@ -154,8 +154,24 @@
       aisles:['business'],
       acc:'#2C6639', mark:'/marks/aecomply.svg', img:'/marks/aecomply.svg',
       url:'https://www.aexperiences.com/apps/comply/',
+      plans:[ ['Monthly',149,'month','The whole institution, never per seat'] ],
       blurb:'Around-the-clock checks on the settings that decide whether a stranger can send email as you, whether your site is encrypted, and whether a browser is told to protect your visitors. Every failure comes with a plain-English fix, and every check is kept as dated, sealed evidence you can hand an inspector or an insurer. It monitors readiness \u2014 it does not certify.',
-      priceNote:'Included with the Mothership tier of every operating system \u00b7 sold on its own too' },
+      price:'$149/mo', priceNote:'On its own, or free inside the Mothership tier of every operating system \u00b7 never per seat' },
+
+    /* MARKET NARC — the business side of the market-research room (Anthony, Sep 13 2026).
+       Three tiers, priced. Held at state:'dev' on purpose: the only Market Narc that exists
+       today is the founder-gated room on aexperiences.studio, so there is no public door for a
+       buyer to walk through yet. /api/pricing only reads state:'live', so nothing can be sold
+       until that door is built — the numbers are recorded here and nowhere else.
+       Mark is his shipped Market Narc icon, served from the hub. Never redraw it. */
+    { id:'marketnarc', name:'Market Narc', tag:'Read a market before you spend', genre:'business', state:'dev',
+      aisles:['business'],
+      acc:'#0E2B2A', mark:'https://aexperiences.studio/marketnarc-192.png', img:'https://aexperiences.studio/marketnarc-192.png',
+      url:'/apps/marketnarc/',
+      tiers:[ ['Core',99,0,'One market at a time \u00b7 the lead segment \u00b7 the call and the play'], ['Elite',249,0,'Ten markets, compared \u00b7 top ten segments \u00b7 code your own customers \u00b7 type to Roz'], ['Mothership',599,0,'All forty-eight segments \u00b7 the confidence working \u00b7 talk to Roz \u00b7 push to your CRM \u00b7 your own name on the report'] ],
+      blurb:'Six screens on any county or city in the country, read live from Census counts: who lives here, what they do for a living, who already sells here, where the money goes, where they live, and your own customers coded against all of it. Then one verdict \u2014 TARGET, REFINE or SCATTER \u2014 with the confidence behind it and a play card where every line traces back to the screen it came from. Every number is labeled Counted or Modeled. Nothing is invented.',
+      price:'From $99/mo',
+      priceNote:'Core $99 \u00b7 Elite $249 \u00b7 Mothership $599 a month \u00b7 also a room inside Targeted OS' },
 
     /* PULLED FROM THE STORE Sep 13 2026 (Anthony). It comes back on the business side as
        AE Connect (B2B) — nothing else about it is decided yet, so nothing else was changed. */
@@ -169,10 +185,14 @@
       blurb:'The Narc reads the fine print you were handed — leases, contracts, benefit letters, terms — and tells you plainly what it says and what it costs you.',
       price:'$7.99/mo', priceNote:'Or $39.99 a year, billed once' },
 
-    { id:'neuro-divulge', name:'Neuro Divulge', tag:'Regulation tools', genre:'mind', state:'live',
+    /* Neuro Divulge is the ND STORE, not a single app (Anthony, Sep 13 2026). Its subscription
+       is the all-four bundle: Focus, Thread, Tendency and Regulator, one price. Bought singly the
+       four come to $7.96 a month; this is the discount he asked for. */
+    { id:'neuro-divulge', name:'Neuro Divulge', tag:'All four ND apps, one price', genre:'mind', state:'live',
       acc:'#a85f38', url:'https://neurodivulge.com/', img:'/logo-nd.png',
-      blurb:'Practical regulation tools for ADHD and autistic brains — built by someone who needs them.',
-      price:'$9 per tool', priceNote:'One-time · free starter checklist included' },
+      plans:[ ['Monthly',4.99,'month','All four ND apps · 3-day free trial'], ['Yearly',39.99,'year','All four, billed once a year · 3-day free trial'] ], trial:3,
+      blurb:'Practical regulation tools for ADHD and autistic brains — built by someone who needs them. One subscription opens all four: ND Focus, ND Thread, ND Tendency and ND Regulator.',
+      price:'$4.99/mo', priceNote:'Or $39.99 a year, billed once \u00b7 all four ND apps \u00b7 3-day free trial \u00b7 singly they are $1.99 each' },
 
     /* ESPOfunkmaster sits in TWO aisles off ONE record — a person makes a track with it,
        and a business scores its own video with it. Same app, same price, two places to
@@ -183,9 +203,10 @@
     { id:'espofunkmaster', name:'ESPOfunkmaster', tag:'Studio, looper & chop shop', genre:'arts', state:'live',
       family:'ESPO Music', aisles:['personal','business'],
       acc:'#e0a83a', mark:'/marks/espofunkmaster.png', img:'/marks/espofunkmaster.png', url:'/apps/espofunkmaster/',
+      plans:[ ['Studio',4.99,'month','The whole studio, your hands on it'], ['Studio yearly',29.99,'year','The whole studio, billed once a year'], ['Agent',14.99,'month','An agent makes the music and the beats with you'], ['Agent yearly',119.99,'year','The agent, billed once a year'] ],
       shots:['/shots/espofunkmaster.png','/shots/espofunkmaster-2.png','/shots/espofunkmaster-desktop.png'],
       blurb:'A real studio in your browser, in plain English: a true drum kit, real-instrument keys, a bar-synced looper, your microphone, a mixing desk — and "Put it on wax" to make it sound like a record. Bring in your own song or a video you shot, chop it onto the pads, and send the finished track straight into ESPO Cutlabs as the music under your edit. Nothing uploaded, nothing collected.',
-      price:'Free right now', priceNote:'Pricing set: $4.99/mo · $29.99/yr — payments not switched on yet' },
+      price:'From $4.99/mo', priceNote:'Studio $4.99/mo or $29.99/yr \u00b7 Agent $14.99/mo or $119.99/yr \u2014 the Agent makes the music and the beats with you' },
 
     /* ─────────── AE CREATE — the making tools. Each one stands alone; together they are
        a suite. All three carry aisles:['personal','business'] because the same tool serves
