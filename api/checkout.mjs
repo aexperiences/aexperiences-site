@@ -81,7 +81,10 @@ export default async function handler(req, res) {
     form.set('mode', 'subscription');
     /* An app sends the buyer straight back into the app, carrying the session so it
        unlocks itself on arrival. A hub has nothing to unlock, so it lands on buy.html. */
-    const home = isApp && prod.url ? (SITE + prod.url + (prod.url.includes('?') ? '&' : '?') + 'unlocked={CHECKOUT_SESSION_ID}') : null;
+    /* An app on its own domain gives an absolute url; one in this store gives a path. Both
+       have to come back to the app itself, so the base is taken from the record (Sep 13 2026). */
+    const appHome = prod.url ? (/^https?:\/\//i.test(prod.url) ? prod.url : SITE + prod.url) : '';
+    const home = isApp && appHome ? (appHome + (appHome.includes('?') ? '&' : '?') + 'unlocked={CHECKOUT_SESSION_ID}') : null;
     form.set('success_url', home || (SITE + '/buy.html?state=success&product=' + encodeURIComponent(prod.id || prod.name) + '&session_id={CHECKOUT_SESSION_ID}'));
     form.set('cancel_url', SITE + '/buy.html?state=cancel&product=' + encodeURIComponent(prod.id || prod.name));
     form.set('line_items[0][quantity]', '1');
@@ -95,6 +98,10 @@ export default async function handler(req, res) {
     form.set('metadata[interval]', interval);
     form.set('metadata[kind]', isApp ? 'app' : 'hub');
     form.set('allow_promotion_codes', 'false');
+    /* A free trial, when the price record states one for this app. Stripe still takes the
+       card up front, charges nothing today, and bills on day trial+1 (Anthony, Sep 13 2026). */
+    const trialDays = isApp ? Math.floor(Number(prod.trial) || 0) : 0;
+    if (trialDays > 0 && trialDays <= 730) form.set('subscription_data[trial_period_days]', String(trialDays));
     // Stripe Tax (Anthony, Sep 11 2026): ask Stripe to add sales tax where Accelerated Experiences LLC is registered.
     form.set('automatic_tax[enabled]', 'true');
     form.set('line_items[0][price_data][product_data][tax_code]', 'txcd_10103001'); // SaaS — business use
@@ -122,7 +129,7 @@ export default async function handler(req, res) {
 
     if (isGet) { res.statusCode = 302; res.setHeader('location', sj.url); return res.end(); }
     return send(res, 200, { ready: true, url: sj.url, id: sj.id, product: prod.name, tier: lineName, amount, interval,
-      livemode: !!sj.livemode });
+      trialDays, livemode: !!sj.livemode });
   } catch (e) {
     return send(res, 500, { error: 'SERVER', message: String((e && e.message) || e) });
   }
