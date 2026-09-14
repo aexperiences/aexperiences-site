@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Neuro Divulge — all four apps, one place</title>
+<meta name="description" content="Information, Education, and Tools for Neurodivergent, by the Neurodivergent. ND Thread, ND Tendency, ND Regulator and ND Focus — one subscription opens all four.">
+<link rel="canonical" href="https://www.aexperiences.com/apps/nd/">
+<meta name="theme-color" content="#a85f38">
+<link rel="icon" href="/logo-nd.png">
+<link rel="apple-touch-icon" href="/logo-nd.png">
+<meta property="og:title" content="Neuro Divulge">
+<meta property="og:description" content="Information, Education, and Tools for Neurodivergent, by the Neurodivergent.">
+<meta property="og:image" content="https://www.aexperiences.com/logo-nd.png">
+<meta property="og:url" content="https://www.aexperiences.com/apps/nd/">
+<meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#f8f2e6; --card:#fffdf7; --clay:#a85f38; --ink:#2b1a12; --mut:#6d5647;
+  --line:rgba(43,26,18,.14);
+  --serif:Lora,Georgia,"Times New Roman",serif;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--cream);color:var(--ink);font:16px/1.55 var(--sans);
+  -webkit-font-smoothing:antialiased;padding-bottom:40px}
+.wrap{max-width:560px;margin:0 auto;padding:26px 18px 0}
+
+.head{text-align:center;margin-bottom:22px}
+.head img{width:118px;height:auto;display:block;margin:0 auto 12px}
+.head h1{font:600 27px/1.2 var(--serif);margin:0 0 8px;letter-spacing:-.01em}
+.head p{margin:0 auto;max-width:34ch;font-size:14.5px;color:var(--mut);font-style:italic;
+  font-family:var(--serif)}
+
+.kick{font:700 11px/1 var(--sans);letter-spacing:.11em;text-transform:uppercase;
+  color:var(--mut);margin:0 2px 9px}
+
+a.app{display:flex;align-items:center;gap:13px;text-decoration:none;color:inherit;
+  background:var(--card);border:1px solid var(--line);border-left:4px solid var(--acc,var(--clay));
+  border-radius:14px;padding:14px 15px;margin-bottom:10px;min-height:74px;
+  transition:border-color .12s ease,transform .12s ease}
+a.app:hover{border-color:rgba(43,26,18,.34);transform:translateY(-1px)}
+a.app:focus-visible{outline:2px solid var(--clay);outline-offset:3px}
+.ic{width:42px;height:42px;border-radius:11px;flex:none;object-fit:cover;background:#fff;
+  border:1px solid var(--line)}
+.txt{flex:1;min-width:0}
+.nm{display:block;font:700 16px/1.25 var(--sans);letter-spacing:-.005em}
+.tg{display:block;font-size:13px;color:var(--mut);margin-top:3px;line-height:1.35}
+.go{flex:none;color:var(--mut);font-size:19px;line-height:1}
+.last{font:700 10px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;
+  color:var(--clay);margin-top:5px;display:none}
+a.app[data-last="1"] .last{display:block}
+
+.price{margin:20px 0 6px;padding:15px 16px;background:var(--card);
+  border:1px solid var(--line);border-radius:14px;text-align:center}
+.price b{display:block;font:600 17px/1.3 var(--serif);margin-bottom:5px}
+.price p{margin:0;font-size:13.5px;color:var(--mut)}
+.price a{color:var(--clay);font-weight:600}
+
+.also{margin:18px 2px 0;font-size:13.5px;color:var(--mut);text-align:center}
+.also a{color:var(--clay);font-weight:600;text-decoration:none}
+.also a:hover{text-decoration:underline}
+
+footer{margin-top:30px;padding-top:20px;border-top:1px solid var(--line);text-align:center}
+footer img{width:34px;height:34px;display:block;margin:0 auto 7px}
+footer a{display:inline-block;color:var(--mut);text-decoration:none;font-size:13px;font-weight:600}
+footer a:hover{color:var(--ink);text-decoration:underline}
+footer small{display:block;margin-top:8px;font-size:11.5px;color:var(--mut);opacity:.85}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <img src="/logo-nd.png" alt="Neuro Divulge" width="118">
+    <h1>All four, one place.</h1>
+    <p>Information, Education, and Tools for Neurodivergent, by the Neurodivergent.</p>
+  </header>
+
+  <p class="kick" id="kick">Pick one</p>
+
+  <a class="app" href="/apps/thread/" data-id="thread" style="--acc:#9A7A2C">
+    <img class="ic" src="/apps/thread/icon.png" alt="" width="42" height="42" loading="lazy">
+    <span class="txt"><span class="nm">ND Thread</span>
+      <span class="tg">Your master list — and the thing you were doing</span>
+      <span class="last">Last opened</span></span>
+    <span class="go" aria-hidden="true">→</span>
+  </a>
+
+  <a class="app" href="/apps/espotendency/" data-id="espotendency" style="--acc:#C23359">
+    <img class="ic" src="/apps/espotendency/icon.png" alt="" width="42" height="42" loading="lazy">
+    <span class="txt"><span class="nm">ND Tendency</span>
+      <span class="tg">A ten-second check-in and one tiny win</span>
+      <span class="last">Last opened</span></span>
+    <span class="go" aria-hidden="true">→</span>
+  </a>
+
+  <a class="app" href="/apps/esporegulator/" data-id="esporegulator" style="--acc:#A32226">
+    <img class="ic" src="/apps/esporegulator/icon.png" alt="" width="42" height="42" loading="lazy">
+    <span class="txt"><span class="nm">ND Regulator</span>
+      <span class="tg">Five minutes of practice — skills, not affirmations</span>
+      <span class="last">Last opened</span></span>
+    <span class="go" aria-hidden="true">→</span>
+  </a>
+
+  <a class="app" href="/apps/espofocus/" data-id="espofocus" style="--acc:#93A82F">
+    <img class="ic" src="/apps/espofocus/icon.svg" alt="" width="42" height="42" loading="lazy">
+    <span class="txt"><span class="nm">ND Focus</span>
+      <span class="tg">The weekly ADHD report your provider asks for</span>
+      <span class="last">Last opened</span></span>
+    <span class="go" aria-hidden="true">→</span>
+  </a>
+
+  <div class="price">
+    <b>One subscription opens all four.</b>
+    <p>$4.99 a month, or $39.99 a year. Singly they are $1.99 each.
+       Three-day free trial. <a href="https://www.aexperiences.com/shop.html#a=personal">See it in the store</a></p>
+  </div>
+
+  <p class="also">Jessica's printable regulation tools live at
+    <a href="https://neurodivulge.com/">neurodivulge.com</a></p>
+
+  <footer>
+    <img src="/ae-disc.png" alt="" width="34" height="34" loading="lazy">
+    <a href="https://www.aexperiences.com/shop.html#a=personal">Accelerated Experiences</a>
+    <small>An Esposito Family Project · Post Falls, Idaho</small>
+  </footer>
+
+</div>
+
+<script>
+/* Remember which one you opened last. Own key, on purpose — the four apps each
+   store their data under their own scheme, and guessing at four different
+   schemas to show one line of text is not worth the breakage. */
+(function(){
+  var K='nd.last';
+  var last=null; try{ last=localStorage.getItem(K); }catch(e){}
+  var cards=document.querySelectorAll('a.app');
+  Array.prototype.forEach.call(cards,function(a){
+    if(last && a.dataset.id===last){
+      a.setAttribute('data-last','1');
+      a.parentNode.insertBefore(a,a.parentNode.querySelector('a.app'));
+      var k=document.getElementById('kick');
+      if(k) k.textContent='Pick up where you left off';
+    }
+    a.addEventListener('click',function(){
+      try{ localStorage.setItem(K,a.dataset.id); }catch(e){}
+    });
+  });
+})();
+</script>
+</body>
+</html>
