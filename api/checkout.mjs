@@ -93,6 +93,12 @@ export default async function handler(req, res) {
     form.set('line_items[0][price_data][recurring][interval]', interval);
     form.set('line_items[0][price_data][product_data][name]', prod.name + ' — ' + lineName + ' (' + (interval === 'year' ? 'yearly' : 'monthly') + ')');
     form.set('metadata[product]', prod.id || prod.name);
+    /* ⭐ Sep 17 2026 — session metadata does NOT travel to the Subscription object, so
+       /api/gate could never tell which app a subscription was bought for and had to
+       fail closed on every one. Stamp the SUBSCRIPTION itself as well. Without this
+       line the gate refuses every paying customer. */
+    form.set('subscription_data[metadata][product]', prod.id || prod.name);
+    form.set('subscription_data[metadata][kind]', isApp ? 'app' : 'hub');
     form.set('metadata[tier]', lineName);
     form.set('metadata[amount]', String(amount));
     form.set('metadata[interval]', interval);
