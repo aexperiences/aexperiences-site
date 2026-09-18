@@ -50,6 +50,7 @@ VERCEL = {
   "ae-fable-api":           "aexperiences/ae-fable-api",
   "ae-apply":               "aexperiences/ae-apply",
   # no repo attached — deployed straight, not from git
+  "whichway":               None,   # ← serves espodrama.com. See note below.
   "neuro-divulge":          None,
   "ae-fraud-division":      None,
   "ae-factory":             None,
@@ -63,13 +64,15 @@ HOST_PROJECT = {
   "espogenius.com":       "espogenius-com",
   "marketnarc.com":       "marketnarc-com",
   "www.marketnarc.com":   "marketnarc-com",
-  # espodrama.com answers, and the response says `server: Vercel` — but no project
-  # in the Accelerated Experiences team matches it (checked by name and by the
-  # project list, Sep 18 2026). The likeliest explanation is that it deploys from
-  # a PERSONAL Vercel scope rather than the company team. A $7.99/mo product
-  # shipping from outside the company account is exactly the sort of thing this
-  # page exists to surface. Unresolved on purpose until it is confirmed.
-  "espodrama.com":        None,
+  # espodrama.com is served by the Vercel project `whichway` — Anthony knew the
+  # name; nothing in the catalog, the domain or the product could have produced
+  # it. It IS in the company team (my guess that it was a personal scope was
+  # wrong), it was just past the page of projects the API handed back, under a
+  # name with no relationship to the product. That is the entire argument for
+  # writing this down instead of rediscovering it: no amount of searching finds
+  # `whichway` from `ESPO Drama`.
+  "espodrama.com":        "whichway",
+  "www.espodrama.com":    "whichway",
 }
 
 # ------------------------------------------------------------------- catalog
@@ -173,6 +176,11 @@ def door(p, loc):
         return "no index.html"
     if loc.get("repo") and loc["repo"] != "aexperiences/aexperiences-site":
         return "not in this repo"
+    if loc.get("project") and not loc.get("repo"):
+        # The project exists and serves a paying product, but Vercel reports no git
+        # link for it. No repo means no history, no deploy lane, and nowhere to put
+        # a door. That is a bigger problem than an open door.
+        return "no git lane"
     return "unknown"
 
 rows = []

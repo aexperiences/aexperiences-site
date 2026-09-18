@@ -109,6 +109,15 @@
       section('Not live yet', P.filter(function(p){return p.state!=='live';}));
 
     var blind = P.filter(function(p){ return (!p.where.project||p.where.project==='?') && p.state==='live'; });
+    var nolane = P.filter(function(p){ return p.door==='no git lane'; });
+    if(nolane.length){
+      document.getElementById('tables').insertAdjacentHTML('afterbegin',
+        '<h2 style="color:var(--bad)">Live and sold, with no git repo behind it · '+nolane.length+'</h2>'+
+        '<div class="tbl"><div class="r" style="grid-template-columns:1fr">'+
+        '<span>'+nolane.map(function(p){return '<b>'+esc(p.name)+'</b> <span class="m">'+esc(p.where.project)+' · '+esc(p.where.host)+'</span>';}).join(' &nbsp;·&nbsp; ')+
+        '<br><span class="m" style="color:var(--ink2)">No history, no deploy lane, and nowhere to put a door.</span></span></div></div>');
+    }
+
     if(blind.length){
       document.getElementById('tables').insertAdjacentHTML('afterbegin',
         '<h2 style="color:var(--warn)">Serving from somewhere this account cannot see · '+blind.length+'</h2>'+
