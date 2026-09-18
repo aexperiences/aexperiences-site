@@ -126,7 +126,10 @@
         'border-radius:4px;background:#f8f2e6;color:#2b1a12}' +
       '.ae-g-row button{flex:none;padding:11px 15px;border-radius:4px;border:1.5px solid #a85f38;background:#fffdf7;' +
         'color:#8c4a28;font:inherit;font-weight:700;cursor:pointer}' +
-      '.ae-g-lbl{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6d5647}' +
+      /* 11px uppercase grey is how you hide something in plain sight. This row is
+         the only way a comp code gets used, so it reads at any text size. */
+      '.ae-g-lbl{font-size:14px;font-weight:800;letter-spacing:.01em;color:#4a3a2e}' +
+      '.ae-g-or{margin-top:20px;padding-top:18px;border-top:2px solid #e6dbcb}' +
       '.ae-g-note{margin-top:12px;font-size:13.5px;color:#8c4a28;font-weight:600}' +
       '.ae-g-foot{margin-top:18px;font-size:12px;color:#6d5647;line-height:1.5}' +
       '.ae-g-foot a{color:#8c4a28}' +
@@ -139,7 +142,7 @@
         '<div class="ae-g-price"></div><div class="ae-g-sub"></div>' +
         '<button class="ae-g-btn" id="ae-g-buy"></button>' +
         (BUND ? '<button class="ae-g-btn alt" id="ae-g-bundle"></button>' : '') +
-        '<div class="ae-g-or"><div class="ae-g-lbl">Already bought it?</div>' +
+        '<div class="ae-g-or"><div class="ae-g-lbl">Have a code? Enter it here</div>' +
           '<div class="ae-g-row"><input id="ae-g-code" placeholder="Paste your code" autocomplete="off" spellcheck="false">' +
           '<button id="ae-g-go">Unlock</button></div>' +
           '<p class="ae-g-note" id="ae-g-note" hidden></p></div>' +
@@ -181,6 +184,28 @@
 
   function start() {
     var u = new URL(location.href);
+
+    /* A code in the URL. This is the whole point of a comp code: Anthony hands it
+       out. 'Open this and find the small box under the price' is not handing
+       something out - a link is. ?code=weirdo (or #code=weirdo, which survives
+       being pasted into apps that strip query strings) opens the app and takes
+       itself back out of the address bar so nobody screenshots their way in by
+       accident. It is still the SERVER that decides. */
+    var urlCode = u.searchParams.get('code') || u.searchParams.get('unlock') || '';
+    if (!urlCode && /(?:^|[#&])(?:code|unlock)=([^&]+)/.test(location.hash || '')) {
+      urlCode = decodeURIComponent(RegExp.$1);
+    }
+    if (urlCode) {
+      ask('app=' + encodeURIComponent(APP) + '&code=' + encodeURIComponent(urlCode)).then(function (j) {
+        u.searchParams.delete('code'); u.searchParams.delete('unlock');
+        var h = (location.hash || '').replace(/(?:^#|&)(?:code|unlock)=[^&]*/g, '').replace(/^&/, '#');
+        try { history.replaceState(null, '', u.pathname + u.search + (h === '#' ? '' : h)); } catch (e) {}
+        if (j && j.ok) return open(j.code || urlCode, j.via);
+        storefront('That link did not open this app.');
+      });
+      return;
+    }
+
     var sess = u.searchParams.get('ae_session');
     if (sess && /^cs_/.test(sess)) {
       ask('app=' + encodeURIComponent(APP) + '&session=' + encodeURIComponent(sess)).then(function (j) {
