@@ -90,7 +90,7 @@
   }
 
   var ROOMS = [
-    { id:'desk',    label:'Desk',     href:'/nd/os/',          icon:'desk',    live:false, blurb:'Who came, from where, what sold.' },
+    { id:'desk',    label:'Desk',     href:'/nd/os/',          icon:'desk',    live:true,  blurb:'Who came, from where, what sold.' },
     { id:'write',   label:'Write',    href:'/nd/write/',       icon:'write',   live:true,  blurb:'Write a note and publish it.' },
     { id:'notes',   label:'Notes',    href:'/nd/blog/',        icon:'notes',   live:true,  blurb:'The posts, as everyone sees them.' },
     { id:'blast',   label:'Blast',    href:'/nd/os/blast/',    icon:'blast',   live:true,  blurb:'Queue a post. Blastpack sends it.' },
@@ -183,6 +183,8 @@
     sheet.classList.toggle('up', open);
     scrim.classList.toggle('up', open);
     sheet.setAttribute('aria-hidden', open ? 'false' : 'true');
+    // the dock would otherwise sit on the sheet's own last row
+    if (dock) dock.classList.toggle('hide', open);
   }
 
   function mount(cfg) {
@@ -254,10 +256,13 @@
     var lastY = window.scrollY, idle = null;
     window.addEventListener('scroll', function () {
       var y = window.scrollY;
+      var sheetUp = sheet && sheet.classList.contains('up');
+      if (sheetUp) { lastY = y; return; }
       if (y > lastY + 12 && y > 140) dock.classList.add('hide');
       else if (y < lastY - 6) dock.classList.remove('hide');
       lastY = y;
-      clearTimeout(idle); idle = setTimeout(function(){ dock.classList.remove('hide'); }, 900);
+      clearTimeout(idle); idle = setTimeout(function(){
+        if (!(sheet && sheet.classList.contains('up'))) dock.classList.remove('hide'); }, 900);
     }, { passive: true });
 
     bus.emit('room:ready', { id: activeId }, true);
