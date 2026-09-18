@@ -227,3 +227,31 @@ the gear into ND OS · Privacy.
 - Phone, late at night. Everything built for him is phone-first.
 - He knows his business better than any register does. When he says a name, it
   is the name — go look it up rather than arguing with it.
+
+---
+
+# 10 · ⚠ OPEN AT HANDOFF — one commit built but not deployed
+
+At the close of Sep 18, **two production deployments sat in `INITIALIZING` for
+over fifteen minutes** and two later pushes created no deployment at all. Vercel's
+build queue for `aexperiences-site` was jammed. Nothing was wrong with the code.
+
+**What is on `origin/main` but may not yet be live:**
+
+- `4c0eb07` — the Watch section rewrite (three invented video titles removed) and
+  the Privacy link
+- everything after it, including these records
+
+**First thing to check on the next session:**
+
+```bash
+curl -s https://www.aexperiences.com/nd/ | grep -c watchblock     # want 1+
+```
+
+If it is still `0`, the queue never cleared. Look at the deployments list in
+Vercel; if those two are still INITIALIZING, cancel them and redeploy the latest
+commit from the dashboard. **Do not "fix" the file — the file is correct.**
+
+This is the fifth law in §3 in its live form: *a push GitHub accepts is not a
+deploy Vercel ran.* Everything money-critical — the three Stripe checkouts, the
+twelve doors, the domain move — **was verified live before this was written.**
