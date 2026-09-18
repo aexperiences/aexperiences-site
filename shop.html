@@ -1043,7 +1043,21 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     wireGallery();
 
     var foot=document.getElementById('shFoot');
-    if(a.state==='live'){
+    /* A consumer app that is SOLD does not get an 'Open' button here. That button was
+       the free way in: the price was on the card and an unlocked door right beside it.
+       A B2B hub keeps its Open, because walking into the hub IS the sale - that is the
+       whole pitch and it is meant to be open. Anything free or still in testing keeps it
+       too, honestly. A sold consumer app: the only way through this footer is the trial,
+       and the trial wants your details. (Anthony, Sep 18 2026.) */
+    var sold = !!(a.plans && a.plans.length) && !(a.tiers && a.tiers.length);
+    if(a.state==='live' && sold){
+      var first=a.plans[0];
+      var href='/api/checkout?product='+encodeURIComponent(a.id)+'&plan='+encodeURIComponent(first[0]);
+      var label=a.trial
+        ? 'Start the '+a.trial+'-day free trial →'
+        : 'Get '+esc(a.name)+' — $'+Number(first[1]).toFixed(2)+(first[2]==='year'?'/yr':'/mo');
+      foot.innerHTML='<a class="btn btn-primary btn-block" href="'+href+'">'+label+'</a>';
+    } else if(a.state==='live'){
       foot.innerHTML='<a class="btn btn-primary btn-block" href="'+esc(a.url)+'" target="_blank" rel="noopener">Open '+esc(a.name)+' →</a>';
     } else {
       foot.innerHTML='<form class="notify" action="https://formsubmit.co/anthonye@aexperiences.studio" method="POST">'
