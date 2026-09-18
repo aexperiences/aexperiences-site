@@ -1,0 +1,271 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light"><meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="List">
+<title>ND OS &middot; List</title>
+<link rel="icon" href="/logo-nd.png"><link rel="apple-touch-icon" href="/logo-nd.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Karla:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/nd/nd-theme.css">
+<link rel="stylesheet" href="/nd/os/nd-os.css">
+<style>
+  .hello{padding:22px 0 2px}
+  .hello .day{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--nd-terra)}
+  .hello h1{font-size:clamp(25px,6.2vw,33px);margin:8px 0 5px}
+  .hello p{color:var(--nd-ink-2);font-size:15px;margin:0}
+
+  .addbox{margin-top:16px;background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:17px;
+    padding:14px;box-shadow:var(--nd-shadow)}
+  .addbox input{border:0;background:none;padding:6px 2px;font-size:17px;border-radius:0}
+  .addbox input:focus{box-shadow:none}
+  .addrow{display:flex;gap:9px;margin-top:10px;align-items:center;flex-wrap:wrap}
+  .addrow .btn{flex:0 0 auto;width:auto;min-height:44px;padding:11px 18px;font-size:14px}
+  .addrow input[type=date]{flex:1 1 140px;width:auto;min-height:44px;font-size:14px;padding:10px 12px}
+
+  h2.sec{font-size:17px;margin:28px 0 0;display:flex;align-items:baseline;gap:9px}
+  h2.sec span{font:700 11px/1 var(--nd-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--nd-ink-2)}
+
+  .items{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .it{display:flex;align-items:flex-start;gap:12px;background:var(--nd-card);
+    border:1px solid var(--nd-rule);border-radius:14px;padding:13px 14px;
+    transition:transform .18s cubic-bezier(.2,.7,.3,1),opacity .25s,background .2s}
+  .it:active{transform:scale(.985)}
+  .tick{flex:none;width:26px;height:26px;border-radius:9px;border:2px solid var(--nd-rule);
+    background:#FFFDF8;cursor:pointer;padding:0;position:relative;margin-top:1px;
+    transition:background .2s,border-color .2s,transform .2s cubic-bezier(.34,1.46,.44,1)}
+  .tick:active{transform:scale(.86)}
+  .tick svg{position:absolute;inset:0;margin:auto;width:16px;height:16px;fill:none;
+    stroke:#FAF7F0;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;
+    stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset .3s ease}
+  .it.done .tick{background:var(--nd-sage-d);border-color:var(--nd-sage-d)}
+  .it.done .tick svg{stroke-dashoffset:0}
+  .it .txt{flex:1;min-width:0;font-size:16px;line-height:1.45;cursor:pointer;word-break:break-word}
+  .it.done .txt{color:var(--nd-ink-2);text-decoration:line-through;text-decoration-color:var(--nd-tan)}
+  .it .due{display:block;font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--nd-ink-2);margin-top:5px}
+  .it .due.late{color:var(--nd-terra-d)}
+  .x{border:0;background:none;color:var(--nd-ink-2);font:700 11px var(--nd-sans);letter-spacing:.1em;
+    text-transform:uppercase;cursor:pointer;padding:5px 2px;min-height:40px;flex:none}
+  .x.arm{color:var(--nd-terra-d)}
+  .done-wrap summary{list-style:none;cursor:pointer;padding:12px 2px;font:700 11.5px/1 var(--nd-sans);
+    letter-spacing:.14em;text-transform:uppercase;color:var(--nd-ink-2);min-height:44px;display:flex;
+    align-items:center;gap:8px}
+  .done-wrap summary::-webkit-details-marker{display:none}
+  .done-wrap summary:after{content:"\203A";transform:rotate(90deg);font-size:17px;transition:transform .25s}
+  .done-wrap[open] summary:after{transform:rotate(-90deg)}
+  .empty{padding:28px 6px;color:var(--nd-ink-2);font-size:15px}
+  .gate{max-width:420px;margin:8vh auto 0}
+</style>
+</head><body>
+
+<header class="mast"><div class="wrap">
+  <img src="/logo-nd.png" alt="">
+  <div><div class="wordmark">The Neuro<em>~</em>Divulge</div><div class="subword">ND OS &middot; List</div></div>
+  <a class="back" href="/nd/os/">Desk &rarr;</a>
+</div></header>
+
+<main class="wrap" id="main">
+
+  <section class="gate card" id="gate" hidden>
+    <h1 style="font-size:25px;margin-bottom:8px">The master list</h1>
+    <p class="muted" style="font-size:15px">Your word opens it.</p>
+    <div style="margin:18px 0 6px"><label for="key">Your word</label>
+      <input id="key" type="password" autocomplete="current-password" enterkeyhint="go"></div>
+    <button class="btn solid" id="unlock" style="width:100%">Open</button>
+  </section>
+
+  <div id="desk" hidden>
+    <section class="hello">
+      <div class="day" id="day">&nbsp;</div>
+      <h1>The list.</h1>
+      <p id="sub">One place, so it is not in four places.</p>
+    </section>
+
+    <div class="addbox">
+      <input id="what" placeholder="What needs doing?" enterkeyhint="done" aria-label="What needs doing">
+      <div class="addrow">
+        <input id="when" type="date" aria-label="When it is due">
+        <button class="btn solid" id="add" type="button">Add it</button>
+      </div>
+    </div>
+
+    <div id="board"></div>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <a class="aemark" href="/nd/os/">
+    <img src="/marks/ae-mark-gradient.png" alt="Accelerated Experiences, LLC">
+    <span><b>ND OS &middot; built by Accelerated Experiences, LLC</b>Runs on the AE Triad</span>
+  </a>
+</div></footer>
+
+<script src="/nd/os/nd-os.js"></script>
+<script>
+(function(){
+  var API='/api/nd-store?c=list';
+  var gate=document.getElementById('gate'), desk=document.getElementById('desk');
+  var elWhat=document.getElementById('what'), elWhen=document.getElementById('when');
+  var ITEMS=[];
+
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  var TICK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+  document.getElementById('day').textContent =
+    new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+
+  function dayKey(d){ return d.toISOString().slice(0,10); }
+  function label(at){
+    if(!at) return '';
+    var t=new Date(at), today=dayKey(new Date()), k=at.slice(0,10);
+    if(k===today) return 'today';
+    var tm=new Date(Date.now()+86400000);
+    if(k===dayKey(tm)) return 'tomorrow';
+    if(k<today) return 'was '+t.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+    return t.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+  }
+  function late(at){ return !!at && at.slice(0,10) < dayKey(new Date()); }
+
+  /* ---- gate ----------------------------------------------------------- */
+  function unlock(){
+    var k=document.getElementById('key').value.trim(); if(!k) return;
+    NDOS.auth.set(k);
+    load().then(function(ok){ if(!ok){ NDOS.say('That word did not work.',true); NDOS.auth.clear(); } });
+  }
+  document.getElementById('unlock').addEventListener('click',unlock);
+  document.getElementById('key').addEventListener('keydown',function(e){ if(e.key==='Enter') unlock(); });
+  NDOS.bus.on('auth:out',function(){ gate.hidden=false; desk.hidden=true; });
+
+  function load(){
+    if(!NDOS.auth.has()){ gate.hidden=false; desk.hidden=true; return Promise.resolve(false); }
+    return NDOS.net(API).then(function(j){
+      if(!j.ok){
+        if(j.__status===401){ gate.hidden=false; desk.hidden=true; return false; }
+        NDOS.say(NDOS.why(j),true); return true;
+      }
+      gate.hidden=true; desk.hidden=false; ITEMS=j.items||[]; draw(); return true;
+    });
+  }
+
+  /* ---- drawing -------------------------------------------------------- */
+  function draw(){
+    var today=dayKey(new Date());
+    var open=ITEMS.filter(function(i){ return !i.done; });
+    var done=ITEMS.filter(function(i){ return i.done; });
+    open.sort(function(a,b){
+      var A=a.at||'9999', B=b.at||'9999';
+      return A===B ? String(b.createdAt).localeCompare(String(a.createdAt)) : A.localeCompare(B);
+    });
+    done.sort(function(a,b){ return String(b.updatedAt).localeCompare(String(a.updatedAt)); });
+
+    var now=open.filter(function(i){ return i.at && i.at.slice(0,10)<=today; });
+    var next=open.filter(function(i){ return !i.at || i.at.slice(0,10)>today; });
+
+    var B=document.getElementById('board'); B.innerHTML='';
+    if(!ITEMS.length){
+      B.innerHTML='<p class="empty">Nothing on it. Put the first thing in above &mdash; even if it is "figure out what goes on this list".</p>';
+      return;
+    }
+    if(now.length) B.appendChild(group('Now', now.length+(now.some(function(i){return late(i.at);})?' · some overdue':''), now));
+    if(next.length) B.appendChild(group(now.length?'After that':'On the list', String(next.length), next));
+    if(done.length){
+      var d=document.createElement('details'); d.className='done-wrap';
+      d.innerHTML='<summary>Done · '+done.length+'</summary>';
+      var wrap=document.createElement('div'); wrap.className='items';
+      done.forEach(function(i){ wrap.appendChild(row(i)); });
+      d.appendChild(wrap); B.appendChild(d);
+    }
+  }
+  function group(title,count,list){
+    var f=document.createDocumentFragment();
+    var h=document.createElement('h2'); h.className='sec';
+    h.innerHTML=esc(title)+' <span>'+esc(count)+'</span>';
+    var r=document.createElement('div'); r.className='rule-paper'; r.innerHTML='<span></span>';
+    var wrap=document.createElement('div'); wrap.className='items';
+    list.forEach(function(i){ wrap.appendChild(row(i)); });
+    f.appendChild(h); f.appendChild(r); f.appendChild(wrap);
+    var d=document.createElement('div'); d.appendChild(f); return d;
+  }
+
+  function row(it){
+    var el=document.createElement('div'); el.className='it'+(it.done?' done':'');
+    el.innerHTML='<button class="tick" aria-label="Done">'+TICK+'</button>'+
+      '<span class="txt"></span><button class="x">Del</button>';
+    var t=el.querySelector('.txt');
+    t.textContent=it.text||'';
+    if(it.at){
+      var s=document.createElement('span'); s.className='due'+(late(it.at)&&!it.done?' late':'');
+      s.textContent=label(it.at); t.appendChild(s);
+    }
+    el.querySelector('.tick').addEventListener('click',function(){ toggle(it,el); });
+    t.addEventListener('click',function(e){ if(e.target===t||e.target.className==='txt') rename(it,t); });
+
+    var x=el.querySelector('.x'), armed=false, tm=null;
+    x.addEventListener('click',function(){
+      if(!armed){ armed=true; x.textContent='Sure?'; x.classList.add('arm');
+        tm=setTimeout(function(){ armed=false; x.textContent='Del'; x.classList.remove('arm'); },4000); return; }
+      clearTimeout(tm); x.textContent='…';
+      NDOS.net(API,{method:'POST',json:{id:it.id,delete:true}}).then(function(j){
+        if(j.ok){ ITEMS=ITEMS.filter(function(i){ return i.id!==it.id; }); draw(); NDOS.say('Gone.'); }
+        else { NDOS.say(NDOS.why(j),true); x.textContent='Del'; armed=false; x.classList.remove('arm'); }
+      });
+    });
+    return el;
+  }
+
+  /* an item flips instantly and the server catches up; if it refuses, it flips back */
+  function toggle(it,el){
+    var was=!!it.done; it.done=!was; el.classList.toggle('done',it.done);
+    NDOS.net(API,{method:'POST',json:{id:it.id,text:it.text,at:it.at||'',done:it.done}})
+      .then(function(j){
+        if(!j.ok){ it.done=was; el.classList.toggle('done',was); NDOS.say(NDOS.why(j),true); return; }
+        for(var i=0;i<ITEMS.length;i++) if(ITEMS[i].id===it.id) ITEMS[i]=j.item;
+        NDOS.bus.emit('list:changed',{id:it.id});
+        setTimeout(draw,320);
+      });
+  }
+
+  function rename(it,node){
+    var input=document.createElement('input');
+    input.value=it.text||''; input.style.font='inherit'; input.style.padding='2px 6px';
+    node.replaceWith(input); input.focus(); input.select();
+    function finish(){
+      var v=input.value.trim();
+      if(!v || v===it.text){ draw(); return; }
+      NDOS.net(API,{method:'POST',json:{id:it.id,text:v,at:it.at||'',done:!!it.done}}).then(function(j){
+        if(j.ok){ for(var i=0;i<ITEMS.length;i++) if(ITEMS[i].id===it.id) ITEMS[i]=j.item; NDOS.say('Changed.'); }
+        else NDOS.say(NDOS.why(j),true);
+        draw();
+      });
+    }
+    input.addEventListener('blur',finish);
+    input.addEventListener('keydown',function(e){ if(e.key==='Enter') input.blur();
+      if(e.key==='Escape'){ input.removeEventListener('blur',finish); draw(); } });
+  }
+
+  /* ---- adding --------------------------------------------------------- */
+  function add(){
+    var v=elWhat.value.trim();
+    if(!v){ elWhat.focus(); return; }
+    var at=elWhen.value ? new Date(elWhen.value+'T09:00').toISOString() : '';
+    NDOS.net(API,{method:'POST',json:{text:v,at:at,done:false}}).then(function(j){
+      if(!j.ok){ NDOS.say(NDOS.why(j),true); return; }
+      ITEMS.unshift(j.item); elWhat.value=''; elWhen.value=''; draw();
+      NDOS.bus.emit('list:changed',{id:j.item.id});
+      elWhat.focus();
+    });
+  }
+  document.getElementById('add').addEventListener('click',add);
+  elWhat.addEventListener('keydown',function(e){ if(e.key==='Enter') add(); });
+
+  NDOS.mount({ active:'list', primary:{ label:'Add to the list', icon:'up', onTap:function(){
+    if(desk.hidden){ document.getElementById('key').focus(); return; }
+    if(elWhat.value.trim()) add();
+    else { elWhat.scrollIntoView({behavior:'smooth',block:'center'}); elWhat.focus(); }
+  } } });
+
+  load();
+})();
+</script>
+</body></html>
