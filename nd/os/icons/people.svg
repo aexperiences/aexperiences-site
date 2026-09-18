@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="100%" height="100%">
+<defs>
+<linearGradient id="tile" x1="0" y1="0" x2="0.35" y2="1">
+<stop offset="0%" stop-color="#7ba0a0"/><stop offset="46%" stop-color="#4b7070"/><stop offset="100%" stop-color="#1c2e2e"/></linearGradient>
+<linearGradient id="glare" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#fff" stop-opacity=".20"/><stop offset="44%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="pap" x1="0" y1="0" x2="0.3" y2="1">
+<stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#ece8dc"/></linearGradient>
+<linearGradient id="trace" x1="0" y1="0" x2="0.3" y2="1">
+<stop offset="0%" stop-color="#fbf7ec"/><stop offset="100%" stop-color="#e7dfc9"/></linearGradient>
+<linearGradient id="brassy" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#e2b86c"/><stop offset="100%" stop-color="#9a6f2c"/></linearGradient>
+<linearGradient id="steel" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#e3e8ec"/><stop offset="100%" stop-color="#9aa5ad"/></linearGradient>
+<linearGradient id="leather" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".10"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient>
+<linearGradient id="pages" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
+</defs>
+<rect width="1024" height="1024" fill="url(#tile)"/><rect width="1024" height="1024" fill="url(#glare)"/>
+<ellipse cx="512" cy="900" rx="350" ry="30" fill="#000" opacity=".38"/>
+
+  <!-- the book -->
+  <rect x="200" y="196" width="540" height="620" rx="26" fill="#000" opacity=".35" transform="translate(14 18)"/>
+  <rect x="200" y="196" width="540" height="620" rx="26" fill="#5a3a26"/>
+  <rect x="200" y="196" width="540" height="620" rx="26" fill="url(#leather)"/>
+  <!-- spine -->
+  <rect x="200" y="196" width="66" height="620" rx="26" fill="#3d2618"/>
+  <rect x="246" y="196" width="20" height="620" fill="#3d2618"/>
+  <rect x="222" y="236" width="8" height="540" rx="4" fill="#2a1810" opacity=".5"/>
+  <!-- stitching -->
+  <rect x="290" y="222" width="424" height="568" rx="16" fill="none" stroke="#e0a83a" stroke-width="4" stroke-dasharray="14 12" opacity=".7"/>
+  <!-- brass corners -->
+  <path d="M740 196 L740 262 L674 196 Z" fill="#d9a441"/>
+  <path d="M740 816 L740 750 L674 816 Z" fill="#d9a441"/>
+  <!-- page block showing at the fore-edge -->
+  <rect x="692" y="212" width="16" height="588" fill="#efe7d3"/>
+  <rect x="692" y="212" width="16" height="588" fill="url(#pages)"/>
+  <!-- thumb tabs -->
+  <rect x="700" y="232" width="92" height="52" rx="12" fill="#e4dac2"/><rect x="728" y="252" width="36" height="12" rx="6" fill="#4a2e1e" opacity=".55"/><rect x="700" y="298" width="92" height="52" rx="12" fill="#efe7d3"/><rect x="728" y="318" width="36" height="12" rx="6" fill="#4a2e1e" opacity=".55"/><rect x="700" y="364" width="92" height="52" rx="12" fill="#e4dac2"/><rect x="728" y="384" width="36" height="12" rx="6" fill="#4a2e1e" opacity=".55"/><rect x="700" y="430" width="92" height="52" rx="12" fill="#efe7d3"/><rect x="728" y="450" width="36" height="12" rx="6" fill="#4a2e1e" opacity=".55"/><rect x="700" y="496" width="92" height="52" rx="12" fill="#e4dac2"/><rect x="728" y="516" width="36" height="12" rx="6" fill="#4a2e1e" opacity=".55"/><rect x="700" y="562" width="92" height="52" rx="12" fill="#efe7d3"/><rect x="728" y="582" width="36" height="12" rx="6" fill="#4a2e1e" opacity=".55"/><rect x="700" y="628" width="92" height="52" rx="12" fill="#e4dac2"/><rect x="728" y="648" width="36" height="12" rx="6" fill="#4a2e1e" opacity=".55"/><rect x="700" y="694" width="92" height="52" rx="12" fill="#efe7d3"/><rect x="728" y="714" width="36" height="12" rx="6" fill="#4a2e1e" opacity=".55"/>
+  <!-- the card tucked in the top -->
+  <g transform="rotate(-6 470 170)">
+    <rect x="340" y="86" width="260" height="150" rx="12" fill="#000" opacity=".25" transform="translate(6 8)"/>
+    <rect x="340" y="86" width="260" height="150" rx="12" fill="#fdfbf6"/>
+    <rect x="340" y="86" width="260" height="16" rx="6" fill="#d9a441"/>
+    <rect x="366" y="126" width="150" height="16" rx="8" fill="#2a1810"/>
+    <rect x="366" y="156" width="110" height="10" rx="5" fill="#9aa9b5"/>
+    <rect x="366" y="176" width="140" height="10" rx="5" fill="#9aa9b5"/>
+    <circle cx="560" cy="170" r="24" fill="#34546a"/>
+  </g>
+
+</svg>

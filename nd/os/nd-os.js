@@ -85,6 +85,7 @@
     cal:     'M4.2 4.4h15.6A2.2 2.2 0 0 1 22 6.6v13.2a2.2 2.2 0 0 1-2.2 2.2H4.2A2.2 2.2 0 0 1 2 19.8V6.6a2.2 2.2 0 0 1 2.2-2.2ZM4 10.4v9.4h16v-9.4H4Z@M7.2 1.4a1 1 0 0 1 1 1v1.6h-2V2.4a1 1 0 0 1 1-1Zm9.6 0a1 1 0 0 1 1 1v1.6h-2V2.4a1 1 0 0 1 1-1ZM7.6 13.4h2.4v2.4H7.6z',
     docs:    'M6 2.2h7L19 8.2v12.4a1.8 1.8 0 0 1-1.8 1.8H6a1.8 1.8 0 0 1-1.8-1.8V4A1.8 1.8 0 0 1 6 2.2Z@M13.4 2.4 19 8h-4.8a.8.8 0 0 1-.8-.8V2.4Z',
     records: 'M12 2.4c4.5 0 8 1.3 8 3v2.2c0 1.7-3.5 3-8 3s-8-1.3-8-3V5.4c0-1.7 3.5-3 8-3Z@M20 10.6v2.8c0 1.7-3.5 3-8 3s-8-1.3-8-3v-2.8c1.7 1.2 4.7 1.8 8 1.8s6.3-.6 8-1.8Zm0 5.4v2.6c0 1.7-3.5 3-8 3s-8-1.3-8-3V16c1.7 1.2 4.7 1.8 8 1.8s6.3-.6 8-1.8Z',
+    people:  'M9 11.3a3.9 3.9 0 1 0 0-7.8 3.9 3.9 0 0 0 0 7.8Zm-7 8.6c0-3.7 3.1-6.2 7-6.2s7 2.5 7 6.2a.9.9 0 0 1-.9.9H2.9a.9.9 0 0 1-.9-.9Z@M16.7 11.1a3.1 3.1 0 1 0 0-6.2 3.1 3.1 0 0 0 0 6.2Zm1 2.1c2.5.4 4.3 2.4 4.3 4.9a.8.8 0 0 1-.8.8h-3.4c0-2.3-1-4.3-2.6-5.5.8-.2 1.6-.3 2.5-.2Z',
     more:    'M5 10a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm7 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm7 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z',
     up:      'M12 2.6a1.2 1.2 0 0 1 .87.37l6.4 6.4a1.2 1.2 0 0 1-1.74 1.66L13.2 6.7V20.2a1.2 1.2 0 0 1-2.4 0V6.7l-4.33 4.33a1.2 1.2 0 1 1-1.74-1.66l6.4-6.4A1.2 1.2 0 0 1 12 2.6Z',
     save:    'M5 3.4h11.2L20.6 7.8V19a1.8 1.8 0 0 1-1.8 1.8H5A1.8 1.8 0 0 1 3.2 19V5.2A1.8 1.8 0 0 1 5 3.4Zm2.8 0v5h7.6v-5H7.8Z@M7.4 12.6h9.2v8.2H7.4z',
@@ -111,7 +112,8 @@
     { id:'list',    label:'List',     href:'/nd/os/list/',     icon:'list',    live:true,  blurb:'One list, not four places.' },
     { id:'cal',     label:'Calendar', href:'/nd/os/calendar/', icon:'cal',     live:true,  blurb:'Everything with a time, in one month.' },
     { id:'docs',    label:'Docs',     href:'/nd/os/docs/',     icon:'docs',    live:true,  blurb:'Write a real document. It saves itself.' },
-    { id:'records', label:'Records',  href:'/nd/os/records/',  icon:'records', live:true,  blurb:'What was decided, and when it went out.' }
+    { id:'records', label:'Records',  href:'/nd/os/records/',  icon:'records', live:true,  blurb:'What was decided, and when it went out.' },
+    { id:'people',  label:'People',   href:'/nd/os/people/',   icon:'people',  live:true,  blurb:'Everyone who gave you their email.' }
   ];
   function room(id) { for (var i=0;i<ROOMS.length;i++) if (ROOMS[i].id===id) return ROOMS[i]; return null; }
 

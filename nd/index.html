@@ -413,7 +413,7 @@ input[type=text]:focus,input[type=email]:focus{outline:none;border-color:var(--n
         <form id="leadForm" action="https://formsubmit.co/ae@aexperiences.studio" method="POST">
           <input type="hidden" name="_subject" value="ND checklist request">
           <input type="hidden" name="_captcha" value="false">
-          <input type="hidden" name="_next" value="https://neurodivulge.com/thanks.html">
+          <input type="hidden" name="_next" value="https://neurodivulge.com/nd/thanks/">
           <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
           <div>
             <label for="nm">First name</label>
@@ -609,6 +609,11 @@ input[type=text]:focus,input[type=email]:focus{outline:none;border-color:var(--n
   f.addEventListener('submit',function(){
     said.hidden=false;
     f.querySelector('button').textContent='Sending\u2026';
+    /* Her own people list (ND OS · People). Fired alongside the form, never in its way:
+       keepalive lets it finish while the page moves on to the thank-you. */
+    try{ fetch('/api/nd-people',{method:'POST',keepalive:true,headers:{'content-type':'application/json'},
+      body:JSON.stringify({join:{name:(f.querySelector('#nm')||{}).value||'',email:(f.querySelector('#em')||{}).value||'',
+        source:'Site · Reset Checklist',_honey:(f.querySelector('[name=_honey]')||{}).value||''}})}); }catch(e){}
   });
 })();
 </script>

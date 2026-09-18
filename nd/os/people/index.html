@@ -1,0 +1,245 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<script>try{document.documentElement.setAttribute("data-os-theme",localStorage.getItem("nd:os:theme")||"dark")}catch(e){document.documentElement.setAttribute("data-os-theme","dark")}</script><meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="People">
+<title>ND OS &middot; People</title>
+<link rel="icon" href="/logo-nd.png"><link rel="apple-touch-icon" href="/nd/os/icon-maskable-512.png">
+<link rel="manifest" href="/nd/os/manifest.webmanifest">
+<meta name="theme-color" content="#F3EEE5">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Karla:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/nd/nd-theme.css">
+<link rel="stylesheet" href="/nd/os/nd-os.css">
+<style>
+  .hello{padding:22px 0 2px}
+<style>
+  .hello{padding:22px 0 2px}
+  .hello .day{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--nd-terra)}
+  .hello h1{font-size:clamp(25px,6.2vw,33px);margin:8px 0 5px}
+  .hello p{color:var(--nd-ink-2);font-size:15px;margin:0}
+  .gate{max-width:420px;margin:8vh auto 0}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+  .stat{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:14px;padding:12px 12px 10px;
+    box-shadow:var(--nd-shadow);text-align:left;cursor:pointer;font:inherit;color:inherit}
+  .stat b{display:block;font:600 26px/1 var(--nd-serif)}
+  .stat span{display:block;margin-top:6px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--nd-ink-2)}
+  .stat.on{border-color:var(--nd-terra);box-shadow:0 0 0 2px var(--nd-terra) inset}
+
+  .tools{display:flex;gap:8px;margin-top:14px;align-items:center}
+  .tools input{flex:1;min-height:46px}
+  .tools .btn{flex:none;width:auto;min-height:46px;padding:10px 14px;font-size:14px}
+
+  .people{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+  .pp{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:15px;box-shadow:var(--nd-shadow);overflow:hidden}
+  .pp .top{display:flex;gap:12px;align-items:center;padding:12px 14px;cursor:pointer;width:100%;background:none;
+    border:0;font:inherit;color:inherit;text-align:left;min-height:64px}
+  .av{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+    font:700 16px/1 var(--nd-serif);background:var(--nd-tan);color:var(--nd-on-tan)}
+  .pp .who{flex:1;min-width:0}
+  .pp .nm{font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pp .em{font-size:14px;color:var(--nd-ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pp .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+  .tag{font-size:11px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:99px;
+    background:var(--nd-paper-2);color:var(--nd-ink-2)}
+  .tag.yes{background:var(--nd-sage);color:var(--nd-on-sage)}
+  .pp .when{flex:none;font-size:11.5px;font-weight:700;letter-spacing:.06em;color:var(--nd-ink-2);text-transform:uppercase}
+  .edit{display:none;padding:4px 14px 16px;border-top:1px dashed var(--nd-rule)}
+  .pp.open .edit{display:block}
+  .edit label{display:block;margin:12px 0 6px}
+  .edit textarea{min-height:84px;resize:vertical}
+  .yesrow{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:14.5px;line-height:1.4}
+  .yesrow input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--nd-sage-d)}
+  .row2{display:flex;gap:8px;margin-top:14px}
+  .row2 .btn{flex:1;min-height:46px}
+  .fine{font-size:12.5px;color:var(--nd-ink-2);margin-top:10px;line-height:1.45}
+  .empty{padding:28px 6px;color:var(--nd-ink-2);font-size:15px}
+</style>
+</head><body>
+
+<header class="mast"><div class="wrap">
+  <img src="/logo-nd.png" alt="">
+  <div><div class="wordmark">The Neuro<em>~</em>Divulge</div><div class="subword">ND OS &middot; People</div></div>
+  <a class="back" href="/nd/os/">Desk &rarr;</a>
+</div></header>
+
+<main class="wrap" id="main">
+
+  <section class="gate card" id="gate" hidden>
+    <h1 style="font-size:25px;margin-bottom:8px">Your people</h1>
+    <p class="muted" style="font-size:15px">Your word opens it.</p>
+    <div style="margin:18px 0 6px"><label for="key">Your word</label>
+      <input id="key" type="password" autocomplete="current-password" enterkeyhint="go"></div>
+    <button class="btn solid" id="unlock" style="width:100%">Open</button>
+  </section>
+
+  <div id="desk" hidden>
+    <section class="hello">
+      <div class="day" id="day">&nbsp;</div>
+      <h1>Your people.</h1>
+      <p>Everyone who gave you their email, in one place. It fills itself from your site.</p>
+    </section>
+
+    <div class="stats">
+      <button class="stat on" data-f="all" type="button"><b id="nAll">0</b><span>Everyone</span></button>
+      <button class="stat" data-f="site" type="button"><b id="nSite">0</b><span>From your site</span></button>
+      <button class="stat" data-f="yes" type="button"><b id="nYes">0</b><span>Said yes to email</span></button>
+    </div>
+
+    <div class="tools">
+      <input id="find" type="search" placeholder="Find a name, email or tag" aria-label="Find someone" enterkeyhint="search">
+      <button class="btn quiet" id="csv" type="button">Download</button>
+    </div>
+
+    <div class="people" id="list"></div>
+    <p class="fine">People who asked for the free checklist were promised one email and no list, so they come in as
+      &ldquo;not yet&rdquo; for email. Only someone marked <b>said yes to email</b> can ever get a newsletter from here.</p>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <a class="aemark" href="/nd/os/">
+    <img src="/marks/ae-mark-gradient.png" alt="Accelerated Experiences, LLC">
+    <span><b>ND OS &middot; built by Accelerated Experiences, LLC</b>Runs on the AE Triad</span>
+  </a>
+</div></footer>
+
+<script src="/nd/os/nd-os.js"></script>
+<script>
+(function(){
+  var API='/api/nd-people';
+  var gate=document.getElementById('gate'), desk=document.getElementById('desk');
+  var LIST=document.getElementById('list'), FIND=document.getElementById('find');
+  var PEOPLE=[], FILTER='all', OPEN=null;
+
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  document.getElementById('day').textContent =
+    new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+
+  /* ---- gate (the card itself is dressed as the AE OS sign-in by nd-os.js) ---- */
+  document.getElementById('unlock').addEventListener('click',function(){
+    var k=document.getElementById('key').value.trim(); if(!k) return;
+    NDOS.auth.set(k); load().then(function(ok){ if(!ok){ NDOS.say('That did not work.',true); NDOS.auth.clear(); } });
+  });
+  NDOS.bus.on('auth:out',function(){ gate.hidden=false; desk.hidden=true; });
+
+  function load(){
+    if(!NDOS.auth.has()){ gate.hidden=false; desk.hidden=true; return Promise.resolve(false); }
+    return NDOS.net(API).then(function(j){
+      if(!j.ok){ if(j.__status===401){ gate.hidden=false; desk.hidden=true; return false; }
+        NDOS.say(NDOS.why(j),true); return true; }
+      gate.hidden=true; desk.hidden=false; PEOPLE=j.people||[]; draw(); return true;
+    });
+  }
+
+  function fromSite(p){ return p.by==='site'; }
+  function when(p){
+    var d=new Date(p.lastSeen||p.firstSeen||p.createdAt); if(isNaN(d)) return '';
+    var days=Math.floor((Date.now()-d)/864e5);
+    return days<1?'today':days<2?'yesterday':days<7?days+' days ago':d.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+  }
+
+  function draw(){
+    document.getElementById('nAll').textContent=PEOPLE.length;
+    document.getElementById('nSite').textContent=PEOPLE.filter(fromSite).length;
+    document.getElementById('nYes').textContent=PEOPLE.filter(function(p){return p.consent;}).length;
+    var q=FIND.value.trim().toLowerCase();
+    var show=PEOPLE.filter(function(p){
+      if(FILTER==='site' && !fromSite(p)) return false;
+      if(FILTER==='yes' && !p.consent) return false;
+      if(!q) return true;
+      return [p.name,p.email,p.phone,(p.tags||[]).join(' '),p.notes,(p.sources||[]).join(' ')].join(' ').toLowerCase().indexOf(q)>-1;
+    });
+    LIST.innerHTML='';
+    if(OPEN==='new') LIST.appendChild(card({id:'',name:'',email:'',phone:'',tags:[],notes:'',consent:false,_new:true}));
+    if(!show.length && OPEN!=='new'){
+      LIST.innerHTML='<p class="empty">'+(PEOPLE.length
+        ? 'Nobody matches that.'
+        : 'Nobody yet. The first person who puts their email in on your site lands here by themselves. You can also add someone by hand with the button below.')+'</p>';
+      return;
+    }
+    show.forEach(function(p){ LIST.appendChild(card(p)); });
+  }
+
+  function card(p){
+    var el=document.createElement('div'); el.className='pp'+((OPEN===p.id||p._new)?' open':'');
+    var first=(p.name||p.email||'?').trim().charAt(0).toUpperCase();
+    var tags=(p.tags||[]).map(function(t){return '<span class="tag">'+esc(t)+'</span>';}).join('');
+    var src=(p.sources&&p.sources.length?p.sources[p.sources.length-1]:p.source)||'';
+    el.innerHTML=
+      (p._new?'':'<button class="top" type="button"><span class="av">'+esc(first)+'</span>'+
+        '<span class="who"><span class="nm">'+esc(p.name||p.email)+'</span>'+
+        (p.name?'<span class="em">'+esc(p.email)+'</span>':'')+
+        '<span class="meta">'+(p.consent?'<span class="tag yes">Said yes to email</span>':'')+
+          (src?'<span class="tag">'+esc(src)+'</span>':'')+tags+(p.asks>1?'<span class="tag">asked '+p.asks+'&times;</span>':'')+'</span></span>'+
+        '<span class="when">'+esc(when(p))+'</span></button>')+
+      '<div class="edit">'+
+        (p._new?'<h2 style="font-size:19px;margin:14px 0 2px">Add someone</h2>':'')+
+        '<label>Name</label><input class="f-name" autocomplete="off" value="'+esc(p.name)+'">'+
+        '<label>Email</label><input class="f-email" type="email" autocapitalize="off" spellcheck="false" value="'+esc(p.email)+'">'+
+        '<label>Phone</label><input class="f-phone" type="tel" value="'+esc(p.phone)+'">'+
+        '<label>Tags</label><input class="f-tags" placeholder="parent, teacher, OT" value="'+esc((p.tags||[]).join(', '))+'">'+
+        '<label>Notes</label><textarea class="f-notes">'+esc(p.notes)+'</textarea>'+
+        '<label class="yesrow" style="text-transform:none;letter-spacing:0;font-weight:500;color:var(--nd-ink)">'+
+          '<input class="f-yes" type="checkbox"'+(p.consent?' checked':'')+'> <span>They said yes to getting emails from The Neuro-Divulge.</span></label>'+
+        '<div class="row2"><button class="btn solid f-save" type="button">Save</button>'+
+          (p._new?'<button class="btn quiet f-cancel" type="button">Cancel</button>':'<button class="btn quiet f-del" type="button">Remove</button>')+'</div>'+
+      '</div>';
+    var top=el.querySelector('.top');
+    if(top) top.addEventListener('click',function(){ OPEN=(OPEN===p.id?null:p.id); draw(); });
+    el.querySelector('.f-save').addEventListener('click',function(){
+      var s={ id:p.id||'', name:el.querySelector('.f-name').value, email:el.querySelector('.f-email').value,
+        phone:el.querySelector('.f-phone').value, tags:el.querySelector('.f-tags').value,
+        notes:el.querySelector('.f-notes').value, consent:el.querySelector('.f-yes').checked };
+      NDOS.net(API,{method:'POST',json:{save:s}}).then(function(j){
+        if(!j.ok){ NDOS.say(j.error==='BAD_EMAIL'?'That email does not look right.':j.error==='NEED_NAME'?'It needs a name or an email.':NDOS.why(j),true); return; }
+        PEOPLE=PEOPLE.filter(function(x){return x.id!==j.person.id;}); PEOPLE.unshift(j.person);
+        OPEN=null; draw(); NDOS.say('Saved.'); NDOS.bus.emit('people:changed',{id:j.person.id});
+      });
+    });
+    var c=el.querySelector('.f-cancel'); if(c) c.addEventListener('click',function(){ OPEN=null; draw(); });
+    var d=el.querySelector('.f-del');
+    if(d){ var armed=false,tm=null; d.addEventListener('click',function(){
+      if(!armed){ armed=true; d.textContent='Sure?'; tm=setTimeout(function(){armed=false;d.textContent='Remove';},4000); return; }
+      clearTimeout(tm); d.textContent='…';
+      NDOS.net(API,{method:'POST',json:{remove:p.id}}).then(function(j){
+        if(j.ok){ PEOPLE=PEOPLE.filter(function(x){return x.id!==p.id;}); OPEN=null; draw(); NDOS.say('Removed.'); }
+        else { NDOS.say(NDOS.why(j),true); d.textContent='Remove'; armed=false; }
+      });
+    }); }
+    return el;
+  }
+
+  [].forEach.call(document.querySelectorAll('.stat'),function(b){
+    b.addEventListener('click',function(){
+      FILTER=b.dataset.f;
+      [].forEach.call(document.querySelectorAll('.stat'),function(x){x.classList.toggle('on',x===b);});
+      draw();
+    });
+  });
+  FIND.addEventListener('input',draw);
+
+  /* the file she can hand to any mailer: same columns every time */
+  document.getElementById('csv').addEventListener('click',function(){
+    fetch(API+'?csv=1',{headers:{'x-nd-key':NDOS.auth.get()}}).then(function(r){
+      if(!r.ok) throw new Error(r.status); return r.blob();
+    }).then(function(b){
+      var a=document.createElement('a'); a.href=URL.createObjectURL(b);
+      a.download='The Neuro-Divulge - people - '+new Date().toISOString().slice(0,10)+'.csv';
+      document.body.appendChild(a); a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},800);
+    }).catch(function(){ NDOS.say('The download did not come through. Try again.',true); });
+  });
+
+  NDOS.mount({ active:'people', primary:{ label:'Add someone', icon:'up', onTap:function(){
+    if(desk.hidden) return;
+    OPEN='new'; FILTER='all'; FIND.value=''; draw();
+    var f=LIST.querySelector('.f-name'); if(f){ f.focus(); f.scrollIntoView({behavior:'smooth',block:'center'}); }
+  } } });
+
+  load();
+})();
+</script>
+</body></html>
