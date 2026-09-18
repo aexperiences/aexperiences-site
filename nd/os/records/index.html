@@ -1,0 +1,249 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light"><meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Records">
+<title>ND OS &middot; Hall of Records</title>
+<link rel="icon" href="/logo-nd.png"><link rel="apple-touch-icon" href="/logo-nd.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Karla:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/nd/nd-theme.css">
+<link rel="stylesheet" href="/nd/os/nd-os.css">
+<style>
+  .hello{padding:22px 0 2px}
+  .hello .day{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--nd-terra)}
+  .hello h1{font-size:clamp(25px,6.2vw,33px);margin:8px 0 5px}
+  .hello p{color:var(--nd-ink-2);font-size:15px;margin:0}
+
+  .addbox{margin-top:16px;background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:17px;
+    padding:15px;box-shadow:var(--nd-shadow)}
+  .kinds{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:11px}
+  .kb{border:1.5px solid var(--nd-rule);background:#FFFDF8;border-radius:11px;padding:9px 13px;min-height:42px;
+    cursor:pointer;font:700 12.5px/1 var(--nd-sans);color:var(--nd-ink-2);
+    transition:transform .16s cubic-bezier(.2,.7,.3,1),background .2s,color .2s,border-color .2s}
+  .kb:active{transform:scale(.94)}
+  .kb.on{background:var(--nd-ink);border-color:var(--nd-ink);color:#FAF7F0}
+  .addbox textarea{min-height:82px;resize:vertical}
+  .addbox .btn{width:100%;margin-top:11px}
+
+  .tools{display:flex;gap:9px;margin-top:22px;flex-wrap:wrap}
+  .tools input{flex:1 1 180px;min-height:46px}
+  .filters{display:flex;gap:7px;overflow-x:auto;margin:11px -16px 0;padding:2px 16px 8px}
+  .filters::-webkit-scrollbar{display:none}
+  .fb{flex:none;border:1.5px solid var(--nd-rule);background:var(--nd-card);border-radius:11px;
+    padding:9px 13px;min-height:42px;cursor:pointer;font:700 12.5px/1 var(--nd-sans);color:var(--nd-ink-2);
+    transition:transform .16s cubic-bezier(.2,.7,.3,1),background .2s,color .2s,border-color .2s}
+  .fb:active{transform:scale(.94)}
+  .fb.on{background:var(--nd-terra);border-color:var(--nd-terra);color:#FAF7F0}
+
+  .ledger{margin-top:16px;position:relative;padding-left:20px}
+  .ledger:before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;
+    background:linear-gradient(180deg,transparent,var(--nd-rule) 12%,var(--nd-rule) 88%,transparent)}
+  .rec{position:relative;padding:0 0 18px}
+  .rec:before{content:"";position:absolute;left:-19px;top:6px;width:11px;height:11px;border-radius:99px;
+    background:var(--nd-card);border:2px solid var(--nd-tan)}
+  .rec.written:before{border-color:var(--nd-ink-2)}
+  .rec.note:before{border-color:var(--nd-terra)}
+  .rec.post:before{border-color:var(--nd-sage-d)}
+  .rec.doc:before{border-color:#8A7CA8}
+  .rec .head{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+  .rec .when{font:700 11px/1 var(--nd-sans);letter-spacing:.11em;text-transform:uppercase;color:var(--nd-ink-2)}
+  .rec .kind{font:700 10px/1 var(--nd-sans);letter-spacing:.13em;text-transform:uppercase;
+    padding:4px 8px;border-radius:7px;background:var(--nd-paper-2);color:var(--nd-ink-2)}
+  .rec .kind.auto{background:var(--nd-rule-soft)}
+  .rec p{margin:6px 0 0;font-size:15.5px;line-height:1.55;word-break:break-word}
+  .rec a{color:inherit}
+  .rec .x{border:0;background:none;color:var(--nd-ink-2);font:700 10.5px var(--nd-sans);letter-spacing:.1em;
+    text-transform:uppercase;cursor:pointer;padding:5px 3px;min-height:36px;margin-left:auto}
+  .rec .x.arm{color:var(--nd-terra-d)}
+  .empty{padding:26px 4px;color:var(--nd-ink-2);font-size:15px}
+  .gate{max-width:420px;margin:8vh auto 0}
+</style>
+</head><body>
+
+<header class="mast"><div class="wrap">
+  <img src="/logo-nd.png" alt="">
+  <div><div class="wordmark">The Neuro<em>~</em>Divulge</div><div class="subword">ND OS &middot; Records</div></div>
+  <a class="back" href="/nd/os/">Desk &rarr;</a>
+</div></header>
+
+<main class="wrap" id="main">
+
+  <section class="gate card" id="gate" hidden>
+    <h1 style="font-size:25px;margin-bottom:8px">The hall of records</h1>
+    <p class="muted" style="font-size:15px">Your word opens it.</p>
+    <div style="margin:18px 0 6px"><label for="key">Your word</label>
+      <input id="key" type="password" autocomplete="current-password" enterkeyhint="go"></div>
+    <button class="btn solid" id="unlock" style="width:100%">Open</button>
+  </section>
+
+  <div id="desk" hidden>
+    <section class="hello">
+      <div class="day" id="day">&nbsp;</div>
+      <h1>The hall of records.</h1>
+      <p>What was decided, what it cost, what went out and when. It fills itself as you work,
+         and you write down the things only you know.</p>
+    </section>
+
+    <div class="addbox">
+      <div class="kinds" id="kinds"></div>
+      <textarea id="what" placeholder="Write the record. One thing, plainly." aria-label="The record"></textarea>
+      <button class="btn solid" id="add" type="button">Enter it in the record</button>
+    </div>
+
+    <div class="tools"><input id="find" type="search" placeholder="Search the record" aria-label="Search"></div>
+    <div class="filters" id="filters"></div>
+
+    <div class="ledger" id="ledger"></div>
+
+    <p class="muted" style="font-size:12.5px;margin-top:8px;line-height:1.55">
+      Entries with a hollow ring were written by you. The rest the OS recorded itself as it happened,
+      and it cannot be edited &mdash; that is what makes it a record instead of a notebook.
+    </p>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <a class="aemark" href="/nd/os/">
+    <img src="/marks/ae-mark-gradient.png" alt="Accelerated Experiences, LLC">
+    <span><b>ND OS &middot; built by Accelerated Experiences, LLC</b>Runs on the AE Triad</span>
+  </a>
+</div></footer>
+
+<script src="/nd/os/nd-os.js"></script>
+<script>
+(function(){
+  var API='/api/nd-store?c=records';
+  var gate=document.getElementById('gate'), desk=document.getElementById('desk');
+  var KINDS=['Decision','Fact','Number','Person','Note'];
+  var kind='Decision', filter='all', ROWS=[];
+
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+  document.getElementById('day').textContent =
+    new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+
+  document.getElementById('kinds').innerHTML=KINDS.map(function(k){
+    return '<button class="kb'+(k===kind?' on':'')+'" data-k="'+k+'" type="button">'+k+'</button>'; }).join('');
+  document.getElementById('kinds').addEventListener('click',function(e){
+    var b=e.target.closest('.kb'); if(!b) return; kind=b.dataset.k;
+    [].forEach.call(this.querySelectorAll('.kb'),function(x){ x.classList.toggle('on',x===b); });
+  });
+
+  var FILTERS=[['all','Everything'],['written','Written by you'],['note','Notes'],
+               ['post','Posts'],['doc','Documents']];
+  document.getElementById('filters').innerHTML=FILTERS.map(function(f){
+    return '<button class="fb'+(f[0]===filter?' on':'')+'" data-f="'+f[0]+'" type="button">'+f[1]+'</button>'; }).join('');
+  document.getElementById('filters').addEventListener('click',function(e){
+    var b=e.target.closest('.fb'); if(!b) return; filter=b.dataset.f;
+    [].forEach.call(this.querySelectorAll('.fb'),function(x){ x.classList.toggle('on',x===b); });
+    draw();
+  });
+  document.getElementById('find').addEventListener('input',draw);
+
+  /* ---- gathering ------------------------------------------------------ */
+  function load(){
+    if(!NDOS.auth.has()){ gate.hidden=false; desk.hidden=true; return Promise.resolve(false); }
+    return Promise.all([
+      NDOS.net(API),
+      NDOS.net('/api/nd-blog?all=1'),
+      NDOS.net('/api/nd-queue'),
+      NDOS.net('/api/nd-store?c=docs')
+    ]).then(function(r){
+      var rec=r[0], blog=r[1], q=r[2], docs=r[3];
+      if(!rec.ok){
+        if(rec.__status===401){ gate.hidden=false; desk.hidden=true; return false; }
+        NDOS.say(NDOS.why(rec),true); return true;
+      }
+      gate.hidden=true; desk.hidden=false;
+
+      ROWS=[];
+      (rec.items||[]).forEach(function(i){
+        ROWS.push({at:i.createdAt,cls:'written',kind:i.kind||'Note',auto:false,text:i.text||'',id:i.id}); });
+      if(blog.ok) (blog.posts||[]).forEach(function(p){
+        ROWS.push({at:p.createdAt,cls:'note',kind:p.status==='published'?'Note published':'Note drafted',auto:true,
+          text:p.title||'', href:p.status==='published'?'/nd/blog/?p='+encodeURIComponent(p.slug):'/nd/write/'}); });
+      if(q.ok) (q.items||[]).forEach(function(i){
+        ROWS.push({at:i.createdAt,cls:'post',kind:i.status==='sent'?'Posted':'Queued',auto:true,
+          text:(i.platforms||[]).join(' · ')+' — '+String(i.text||'').slice(0,90),href:'/nd/os/blast/'}); });
+      if(docs.ok) (docs.items||[]).forEach(function(d){
+        ROWS.push({at:d.createdAt,cls:'doc',kind:'Document',auto:true,text:d.title||'Untitled',href:'/nd/os/docs/'}); });
+
+      ROWS.sort(function(a,b){ return String(b.at||'').localeCompare(String(a.at||'')); });
+      draw(); return true;
+    });
+  }
+
+  function draw(){
+    var q=(document.getElementById('find').value||'').toLowerCase().trim();
+    var rows=ROWS.filter(function(r){
+      if(filter==='written' && r.cls!=='written') return false;
+      if(filter!=='all' && filter!=='written' && r.cls!==filter) return false;
+      if(q && (r.text+' '+r.kind).toLowerCase().indexOf(q)===-1) return false;
+      return true;
+    });
+    var L=document.getElementById('ledger');
+    if(!rows.length){
+      L.innerHTML='<p class="empty">'+(q?'Nothing in the record matches that.':
+        'Nothing recorded yet. It starts filling the moment you do anything — or write the first one above.')+'</p>';
+      return;
+    }
+    L.innerHTML='';
+    rows.forEach(function(r){
+      var el=document.createElement('div'); el.className='rec '+r.cls;
+      var d=r.at?new Date(r.at):null;
+      var when=d?d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' · '+
+        d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'}):'';
+      el.innerHTML='<div class="head"><span class="when">'+esc(when)+'</span>'+
+        '<span class="kind'+(r.auto?' auto':'')+'">'+esc(r.kind)+'</span>'+
+        (r.cls==='written'?'<button class="x">Del</button>':'')+'</div><p></p>';
+      var p=el.querySelector('p');
+      if(r.href){ var a=document.createElement('a'); a.href=r.href; a.textContent=r.text; p.appendChild(a); }
+      else p.textContent=r.text;
+      if(r.cls==='written'){
+        var x=el.querySelector('.x'), armed=false, tm=null;
+        x.addEventListener('click',function(){
+          if(!armed){ armed=true; x.textContent='Sure?'; x.classList.add('arm');
+            tm=setTimeout(function(){ armed=false; x.textContent='Del'; x.classList.remove('arm'); },4000); return; }
+          clearTimeout(tm); x.textContent='…';
+          NDOS.net(API,{method:'POST',json:{id:r.id,delete:true}}).then(function(j){
+            if(j.ok){ NDOS.say('Struck from the record.'); load(); }
+            else { NDOS.say(NDOS.why(j),true); x.textContent='Del'; armed=false; x.classList.remove('arm'); }
+          });
+        });
+      }
+      L.appendChild(el);
+    });
+  }
+
+  function add(){
+    var v=document.getElementById('what').value.trim();
+    if(!v){ document.getElementById('what').focus(); return; }
+    NDOS.net(API,{method:'POST',json:{text:v,kind:kind}}).then(function(j){
+      if(!j.ok){ NDOS.say(NDOS.why(j),true); return; }
+      document.getElementById('what').value='';
+      NDOS.say('Entered in the record.'); load();
+    });
+  }
+  document.getElementById('add').addEventListener('click',add);
+
+  function unlock(){
+    var k=document.getElementById('key').value.trim(); if(!k) return;
+    NDOS.auth.set(k);
+    load().then(function(ok){ if(!ok){ NDOS.say('That word did not work.',true); NDOS.auth.clear(); } });
+  }
+  document.getElementById('unlock').addEventListener('click',unlock);
+  document.getElementById('key').addEventListener('keydown',function(e){ if(e.key==='Enter') unlock(); });
+  NDOS.bus.on('auth:out',function(){ gate.hidden=false; desk.hidden=true; });
+  NDOS.bus.on('post:saved',function(){ if(NDOS.auth.has()) load(); });
+
+  NDOS.mount({ active:'records', primary:{ label:'Enter a record', icon:'up', onTap:function(){
+    if(desk.hidden){ document.getElementById('key').focus(); return; }
+    var w=document.getElementById('what');
+    if(w.value.trim()) add(); else { w.scrollIntoView({behavior:'smooth',block:'center'}); w.focus(); }
+  } } });
+
+  load();
+})();
+</script>
+</body></html>
