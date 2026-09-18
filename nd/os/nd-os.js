@@ -71,23 +71,37 @@
   /* ---- rooms ------------------------------------------------------------- */
   /* One registry. The dock, the sheet and the Desk all read from it, so a new
      room appears in all three at once. `live:false` shows it greyed as soon. */
+  /* Two icon systems, on purpose, and the AE ICON SWAP MACHINE's own size floor
+     is the reason. The illustrated room art is a scene; under about 64px it turns
+     to mush. So the art rides the sheet and the Desk cards where it is big, and
+     the dock - 21px on dark glass - gets bold filled glyphs that hold at that size.
+     Thin strokes were the mistake; weight is what reads small. */
   var I = {
-    desk:    'M4 6.5h16M4 12h16M4 17.5h10',
-    write:   'M4.5 19.5h3.2l9.6-9.6a2.3 2.3 0 0 0-3.2-3.2L4.5 16.3v3.2zM13.8 7.2l3 3',
-    notes:   'M6 3.5h9l4 4v13H6zM15 3.5V8h4M9 12.5h7M9 16h5',
-    blast:   'M5 14.5V9.5h3l7-4.5v14l-7-4.5H5zM19 8.5a5 5 0 0 1 0 7',
-    list:    'M4.5 7h2m0 0 0 0M9 7h10.5M4.5 12h2M9 12h10.5M4.5 17h2M9 17h10.5',
-    cal:     'M4.5 6.5h15v13h-15zM4.5 10.5h15M8.5 4v4M15.5 4v4M8 14.5h2M14 14.5h2',
-    docs:    'M6.5 3.5h7l4.5 4.5v12h-11.5zM13.5 3.5V8H18M9.5 12.5h5M9.5 16h5',
-    records: 'M5 6.5c0-1.4 3.1-2.5 7-2.5s7 1.1 7 2.5v11c0 1.4-3.1 2.5-7 2.5s-7-1.1-7-2.5zM5 6.5c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5M5 12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5',
-    more:    'M6 12h.01M12 12h.01M18 12h.01',
-    up:      'M12 19V5M12 5l-6 6M12 5l6 6',
-    save:    'M5.5 5.5h10l3 3v10h-13zM8.5 5.5v5h6v-5M8.5 18.5v-5h7v5',
-    check:   'M5 12.5l4.5 4.5L19 7.5'
+    desk:    'M2.75 4.5h18.5a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H2.75a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Zm.25 2v9h18v-9H3Z|M8.5 19h7a1 1 0 0 1 0 2h-7a1 1 0 0 1 0-2Z@M5.5 12.2h2v2.3h-2zM10.9 9.4h2v5.1h-2zM16.3 7h2v7.5h-2z',
+    write:   'M17.9 1.7a3.1 3.1 0 0 1 4.4 4.4l-1.2 1.2-4.4-4.4 1.2-1.2ZM15.3 4.3l4.4 4.4-9.5 9.5-5.9 1.5 1.5-5.9 9.5-9.5Z@M3 20.3h18a.95.95 0 0 1 0 1.9H3a.95.95 0 0 1 0-1.9Z',
+    notes:   'M11.1 5.1v14.6C8.4 18.3 5.6 18 2.8 18.6a.9.9 0 0 1-1.1-.9V5.2a.9.9 0 0 1 .6-.85C5.2 3.4 8.2 3.7 11.1 5.1Z@M12.9 5.1v14.6c2.7-1.4 5.5-1.7 8.3-1.1a.9.9 0 0 0 1.1-.9V5.2a.9.9 0 0 0-.6-.85C18.8 3.4 15.8 3.7 12.9 5.1Z',
+    blast:   'M14.6 3.4a.9.9 0 0 1 1.4.75v15.7a.9.9 0 0 1-1.4.75L8.6 16.4H5.3A2.3 2.3 0 0 1 3 14.1V9.9a2.3 2.3 0 0 1 2.3-2.3h3.3l6-4.2Z|M6.1 16.4h2.5l.7 4a1.1 1.1 0 0 1-1.08 1.3h-.8a1.1 1.1 0 0 1-1.09-.94l-.23-4.36Z@M18.7 8a1.05 1.05 0 0 1 1.47.25 6.6 6.6 0 0 1 0 7.5 1.05 1.05 0 1 1-1.72-1.2 4.5 4.5 0 0 0 0-5.1A1.05 1.05 0 0 1 18.7 8Z',
+    list:    'M3.6 5.2a1.6 1.6 0 1 1 0 3.2 1.6 1.6 0 0 1 0-3.2Zm0 5.2a1.6 1.6 0 1 1 0 3.2 1.6 1.6 0 0 1 0-3.2Zm0 5.2a1.6 1.6 0 1 1 0 3.2 1.6 1.6 0 0 1 0-3.2Z@M8.4 5.9h12.4a.9.9 0 0 1 0 1.8H8.4a.9.9 0 0 1 0-1.8Zm0 5.2h12.4a.9.9 0 0 1 0 1.8H8.4a.9.9 0 0 1 0-1.8Zm0 5.2h12.4a.9.9 0 0 1 0 1.8H8.4a.9.9 0 0 1 0-1.8Z',
+    cal:     'M4.2 4.4h15.6A2.2 2.2 0 0 1 22 6.6v13.2a2.2 2.2 0 0 1-2.2 2.2H4.2A2.2 2.2 0 0 1 2 19.8V6.6a2.2 2.2 0 0 1 2.2-2.2ZM4 10.4v9.4h16v-9.4H4Z@M7.2 1.4a1 1 0 0 1 1 1v1.6h-2V2.4a1 1 0 0 1 1-1Zm9.6 0a1 1 0 0 1 1 1v1.6h-2V2.4a1 1 0 0 1 1-1ZM7.6 13.4h2.4v2.4H7.6z',
+    docs:    'M6 2.2h7L19 8.2v12.4a1.8 1.8 0 0 1-1.8 1.8H6a1.8 1.8 0 0 1-1.8-1.8V4A1.8 1.8 0 0 1 6 2.2Z@M13.4 2.4 19 8h-4.8a.8.8 0 0 1-.8-.8V2.4Z',
+    records: 'M12 2.4c4.5 0 8 1.3 8 3v2.2c0 1.7-3.5 3-8 3s-8-1.3-8-3V5.4c0-1.7 3.5-3 8-3Z@M20 10.6v2.8c0 1.7-3.5 3-8 3s-8-1.3-8-3v-2.8c1.7 1.2 4.7 1.8 8 1.8s6.3-.6 8-1.8Zm0 5.4v2.6c0 1.7-3.5 3-8 3s-8-1.3-8-3V16c1.7 1.2 4.7 1.8 8 1.8s6.3-.6 8-1.8Z',
+    more:    'M5 10a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm7 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm7 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z',
+    up:      'M12 2.6a1.2 1.2 0 0 1 .87.37l6.4 6.4a1.2 1.2 0 0 1-1.74 1.66L13.2 6.7V20.2a1.2 1.2 0 0 1-2.4 0V6.7l-4.33 4.33a1.2 1.2 0 1 1-1.74-1.66l6.4-6.4A1.2 1.2 0 0 1 12 2.6Z',
+    save:    'M5 3.4h11.2L20.6 7.8V19a1.8 1.8 0 0 1-1.8 1.8H5A1.8 1.8 0 0 1 3.2 19V5.2A1.8 1.8 0 0 1 5 3.4Zm2.8 0v5h7.6v-5H7.8Z@M7.4 12.6h9.2v8.2H7.4z',
+    check:   'M20.5 5.9a1.3 1.3 0 0 1 0 1.84l-9.6 9.6a1.3 1.3 0 0 1-1.84 0l-4.5-4.5a1.3 1.3 0 0 1 1.84-1.84l3.58 3.58 8.68-8.68a1.3 1.3 0 0 1 1.84 0Z',
+    sun:     'M12 6.6a5.4 5.4 0 1 1 0 10.8 5.4 5.4 0 0 1 0-10.8Z@M12 .9a1.1 1.1 0 0 1 1.1 1.1v1.8a1.1 1.1 0 0 1-2.2 0V2A1.1 1.1 0 0 1 12 .9Zm0 18.2a1.1 1.1 0 0 1 1.1 1.1V22a1.1 1.1 0 0 1-2.2 0v-1.8a1.1 1.1 0 0 1 1.1-1.1ZM23.1 12a1.1 1.1 0 0 1-1.1 1.1h-1.8a1.1 1.1 0 0 1 0-2.2H22a1.1 1.1 0 0 1 1.1 1.1Zm-18.2 0a1.1 1.1 0 0 1-1.1 1.1H2a1.1 1.1 0 0 1 0-2.2h1.8A1.1 1.1 0 0 1 4.9 12Zm14.9-7.8a1.1 1.1 0 0 1 0 1.56l-1.3 1.3a1.1 1.1 0 0 1-1.56-1.56l1.3-1.3a1.1 1.1 0 0 1 1.56 0ZM7.06 16.94a1.1 1.1 0 0 1 0 1.56l-1.3 1.3A1.1 1.1 0 0 1 4.2 18.24l1.3-1.3a1.1 1.1 0 0 1 1.56 0Zm12.74 2.86a1.1 1.1 0 0 1-1.56 0l-1.3-1.3a1.1 1.1 0 0 1 1.56-1.56l1.3 1.3a1.1 1.1 0 0 1 0 1.56ZM7.06 7.06a1.1 1.1 0 0 1-1.56 0L4.2 5.76A1.1 1.1 0 0 1 5.76 4.2l1.3 1.3a1.1 1.1 0 0 1 0 1.56Z',
+    moon:    'M20.6 14.9A9.2 9.2 0 0 1 9.1 3.4a.95.95 0 0 0-1.3-1.1 10.4 10.4 0 1 0 13.9 13.9.95.95 0 0 0-1.1-1.3Z'
   };
+  /* 'a|a2@b' — solid parts before @, the lighter accent after */
   function icon(k) {
-    return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + (I[k] || I.more) + '"/></svg>';
+    var raw = I[k] || I.more, parts = raw.split('@');
+    var out = '<svg viewBox="0 0 24 24" aria-hidden="true">';
+    parts[0].split('|').forEach(function (d) { out += '<path class="a" fill-rule="evenodd" d="' + d + '"/>'; });
+    if (parts[1]) parts[1].split('|').forEach(function (d) { out += '<path class="b" d="' + d + '"/>'; });
+    return out + '</svg>';
   }
+  /* the real thing, for anywhere it is drawn big enough to survive */
+  function art(id) { return '/nd/os/icons/' + id + '.svg'; }
 
   var ROOMS = [
     { id:'desk',    label:'Desk',     href:'/nd/os/',          icon:'desk',    live:true,  blurb:'Who came, from where, what sold.' },
@@ -218,11 +232,14 @@
     scrim = document.createElement('div'); scrim.className = 'nd-scrim';
     sheet = document.createElement('div'); sheet.className = 'nd-sheet';
     sheet.setAttribute('role','dialog'); sheet.setAttribute('aria-label','All rooms'); sheet.setAttribute('aria-hidden','true');
-    var rs = '<span class="grip"></span><h3>ND OS</h3><div class="rooms">';
+    var rs = '<span class="grip"></span><div class="sheethead"><h3>ND OS</h3>'
+           + '<button class="lamp" id="ndLamp" type="button" aria-label="Light or dark"></button></div>'
+           + '<div class="rooms">';
     for (var k = 0; k < ROOMS.length; k++) {
       var q = ROOMS[k];
       rs += '<a href="' + q.href + '" class="' + (q.live ? '' : 'soon') + '"'
-          + (q.id === activeId ? ' aria-current="page"' : '') + '>' + icon(q.icon)
+          + (q.id === activeId ? ' aria-current="page"' : '') + '>'
+          + '<img class="art" src="' + art(q.id) + '" alt="" loading="lazy">'
           + '<span>' + q.label + '</span></a>';
     }
     rs += '</div><a class="out" href="/nd/">Back to the site</a>';
@@ -230,6 +247,8 @@
     document.body.appendChild(scrim); document.body.appendChild(sheet);
 
     dock.querySelector('#ndMore').addEventListener('click', function () { openSheet(!sheet.classList.contains('up')); });
+    theme();  // paints the lamp now that it is in the page
+    sheet.querySelector('#ndLamp').addEventListener('click', function (e) { e.stopPropagation(); flipTheme(); });
     scrim.addEventListener('click', function () { openSheet(false); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') openSheet(false); });
 
@@ -278,6 +297,33 @@
     primeBtn.querySelector('svg') && primeBtn.querySelector('svg').classList.toggle('spin', !!(m && m.on));
   });
 
-  global.NDOS = { bus:bus, rooms:ROOMS, room:room, icon:icon, auth:auth, net:net, why:why,
-                  say:say, mount:mount, prime:setPrime, sheet:function(b){openSheet(b);} };
+  /* ---- light or dark -----------------------------------------------------
+     The front of house is light on purpose - classroom pastels, and that is not
+     up for debate. The back end is where she works at night with a kid asleep
+     in the next room, so it opens dark and remembers whichever she picks. */
+  var THEME_KEY = 'nd:os:theme';
+  function theme(next) {
+    if (next) { try { localStorage.setItem(THEME_KEY, next); } catch (e) {} }
+    var now = next || (function () {
+      try { return localStorage.getItem(THEME_KEY) || 'dark'; } catch (e) { return 'dark'; }
+    })();
+    document.documentElement.setAttribute('data-os-theme', now);
+    var m = document.querySelector('meta[name="theme-color"]');
+    if (m) m.setAttribute('content', now === 'dark' ? '#1E1A17' : '#F3EEE5');
+    var lamp = document.getElementById('ndLamp');
+    if (lamp) {
+      lamp.innerHTML = icon(now === 'dark' ? 'sun' : 'moon');
+      lamp.title = now === 'dark' ? 'Switch to light' : 'Switch to dark';
+    }
+    bus.emit('theme', { theme: now });
+    return now;
+  }
+  function flipTheme() {
+    return theme(document.documentElement.getAttribute('data-os-theme') === 'dark' ? 'light' : 'dark');
+  }
+  theme();
+
+  global.NDOS = { bus:bus, rooms:ROOMS, room:room, icon:icon, art:art, auth:auth, net:net, why:why,
+                  say:say, mount:mount, prime:setPrime, sheet:function(b){openSheet(b);},
+                  theme:theme, flipTheme:flipTheme };
 })(window);

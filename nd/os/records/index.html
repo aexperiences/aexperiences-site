@@ -1,6 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="color-scheme" content="light"><meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="light dark">
+<script>try{document.documentElement.setAttribute("data-os-theme",localStorage.getItem("nd:os:theme")||"dark")}catch(e){document.documentElement.setAttribute("data-os-theme","dark")}</script><meta name="robots" content="noindex,nofollow">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Records">
 <title>ND OS &middot; Hall of Records</title>
@@ -20,11 +21,11 @@
   .addbox{margin-top:16px;background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:17px;
     padding:15px;box-shadow:var(--nd-shadow)}
   .kinds{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:11px}
-  .kb{border:1.5px solid var(--nd-rule);background:#FFFDF8;border-radius:11px;padding:9px 13px;min-height:42px;
+  .kb{border:1.5px solid var(--nd-rule);background:var(--nd-field);border-radius:11px;padding:9px 13px;min-height:42px;
     cursor:pointer;font:700 12.5px/1 var(--nd-sans);color:var(--nd-ink-2);
     transition:transform .16s cubic-bezier(.2,.7,.3,1),background .2s,color .2s,border-color .2s}
   .kb:active{transform:scale(.94)}
-  .kb.on{background:var(--nd-ink);border-color:var(--nd-ink);color:#FAF7F0}
+  .kb.on{background:var(--nd-terra);border-color:var(--nd-terra);color:var(--nd-on-terra)}
   .addbox textarea{min-height:82px;resize:vertical}
   .addbox .btn{width:100%;margin-top:11px}
 
@@ -36,7 +37,7 @@
     padding:9px 13px;min-height:42px;cursor:pointer;font:700 12.5px/1 var(--nd-sans);color:var(--nd-ink-2);
     transition:transform .16s cubic-bezier(.2,.7,.3,1),background .2s,color .2s,border-color .2s}
   .fb:active{transform:scale(.94)}
-  .fb.on{background:var(--nd-terra);border-color:var(--nd-terra);color:#FAF7F0}
+  .fb.on{background:var(--nd-terra);border-color:var(--nd-terra);color:var(--nd-on-terra)}
 
   .ledger{margin-top:16px;position:relative;padding-left:20px}
   .ledger:before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;

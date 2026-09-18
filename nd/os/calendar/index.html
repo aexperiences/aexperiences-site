@@ -1,6 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="color-scheme" content="light"><meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="light dark">
+<script>try{document.documentElement.setAttribute("data-os-theme",localStorage.getItem("nd:os:theme")||"dark")}catch(e){document.documentElement.setAttribute("data-os-theme","dark")}</script><meta name="robots" content="noindex,nofollow">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Calendar">
 <title>ND OS &middot; Calendar</title>
@@ -33,7 +34,7 @@
   .d.out{color:var(--nd-rule);pointer-events:none}
   .d.today{color:var(--nd-terra);font-weight:700}
   .d.today:before{content:"";position:absolute;inset:3px;border:1.5px solid var(--nd-terra);border-radius:11px}
-  .d.on{background:var(--nd-terra);color:#FAF7F0}
+  .d.on{background:var(--nd-terra);color:var(--nd-on-terra)}
   .d.on:before{border-color:transparent}
   .dots{display:flex;gap:2.5px;height:5px}
   .dots i{width:5px;height:5px;border-radius:99px;display:block}

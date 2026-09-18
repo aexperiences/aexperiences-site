@@ -55,9 +55,10 @@ body.nd-os{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
 }
 .nd-dock button:active,.nd-dock a:active{transform:scale(.9)}
 .nd-dock .on{color:var(--os-on)}
-.nd-dock svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;
-  stroke-linecap:round;stroke-linejoin:round;
+.nd-dock svg{width:22px;height:22px;fill:currentColor;stroke:none;
   transition:transform .3s var(--os-spring)}
+.nd-dock svg .b{opacity:.5}
+.nd-dock .on svg .b{opacity:.72}
 .nd-dock .on svg{transform:translateY(-1px) scale(1.06)}
 
 /* the one raised button — whatever this room is for */
@@ -69,7 +70,7 @@ body.nd-os{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
     0 1px 0 rgba(255,255,255,.28) inset;
   border:1px solid rgba(255,255,255,.14);
 }
-.nd-dock .prime svg{width:25px;height:25px;stroke-width:2}
+.nd-dock .prime svg{width:24px;height:24px}
 .nd-dock .prime:active{transform:translateY(-16px) scale(.92)}
 .nd-dock .prime[disabled]{opacity:.45;box-shadow:none}
 .nd-dock .prime .spin{animation:ndspin .9s linear infinite;transform-origin:50% 50%}
@@ -98,8 +99,9 @@ body.nd-os{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
 .nd-sheet h3{font:700 10.5px/1 "Karla",Arial,sans-serif;letter-spacing:.17em;text-transform:uppercase;
   color:var(--os-off);margin:2px 0 10px 8px}
 .nd-sheet .rooms{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
-.nd-sheet a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
-  padding:14px 4px;border-radius:18px;text-decoration:none;color:var(--os-off);
+.nd-sheet a.soon .art{filter:grayscale(.75)}
+.nd-sheet a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  padding:12px 4px;border-radius:18px;text-decoration:none;color:var(--os-off);
   font:600 10px/1.1 "Karla",Arial,sans-serif;letter-spacing:.04em;text-align:center;
   -webkit-tap-highlight-color:transparent;transition:background .2s,color .2s,transform .2s var(--os-spring)}
 .nd-sheet a:active{transform:scale(.93)}
@@ -107,8 +109,18 @@ body.nd-os{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
 .nd-sheet a.soon{opacity:.5}
 .nd-sheet a.soon:after{content:"soon";display:block;font-size:8.5px;letter-spacing:.12em;
   text-transform:uppercase;color:var(--os-off);margin-top:-3px}
-.nd-sheet svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.7;
-  stroke-linecap:round;stroke-linejoin:round}
+.nd-sheet .art{width:50px;height:50px;border-radius:14px;display:block;
+  box-shadow:0 6px 16px -8px rgba(0,0,0,.8)}
+.nd-sheet svg{width:20px;height:20px;fill:currentColor;stroke:none}
+.nd-sheet .sheethead{display:flex;align-items:center;gap:10px}
+.nd-sheet .sheethead h3{flex:1;margin:2px 0 10px 8px}
+.nd-sheet .lamp{-webkit-appearance:none;appearance:none;background:none;border:0;cursor:pointer;
+  width:42px;height:42px;border-radius:13px;color:var(--os-off);margin:-4px 2px 6px 0;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+  transition:background .2s,color .2s,transform .3s var(--os-spring)}
+.nd-sheet .lamp:hover{background:rgba(243,238,229,.1);color:var(--os-on)}
+.nd-sheet .lamp:active{transform:scale(.88) rotate(28deg)}
 .nd-sheet .out{display:block;margin:12px 8px 0;padding:11px;border-radius:14px;text-align:center;
   color:var(--os-off);font:700 11px/1 "Karla",Arial,sans-serif;letter-spacing:.14em;
   text-transform:uppercase;border:1px solid var(--os-line);text-decoration:none}
@@ -132,3 +144,29 @@ body.nd-os{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
 @media(prefers-reduced-motion:reduce){
   .nd-dock,.nd-dock *,.nd-sheet,.nd-scrim,.nd-toast{transition:none!important;animation:none!important}
 }
+
+/* ============================================================================
+   DARK  ·  the back end only
+   The front of house stays light — classroom pastels, his call, not up for
+   debate. This file is loaded by the OS rooms and nowhere else, so nothing here
+   can reach /nd/. She works at night; the OS opens dark and remembers.
+   ========================================================================== */
+html[data-os-theme="dark"]{
+  --nd-paper:#1C1917; --nd-paper-2:#262120; --nd-card:#241F1C;
+  --nd-field:#191512;
+  --nd-tan:#5C4C3E; --nd-sage:#6F7F59; --nd-sage-d:#A8B78C;
+  --nd-terra:#D2703E; --nd-terra-d:#EB9061;
+  --nd-ink:#F0E9DD; --nd-ink-2:#AFA495;
+  --nd-rule:#37302B; --nd-rule-soft:#2B2522;
+  --nd-ruling-a:#2B2521; --nd-ruling-b:#211C19;
+  --nd-on-sage:#1B2214; --nd-on-tan:#241E18; --nd-on-terra:#1B120C;
+  --nd-shadow:0 1px 0 rgba(0,0,0,.3),0 16px 34px -22px rgba(0,0,0,.95);
+  color-scheme:dark;
+}
+/* a solid terracotta button wants light text, not the dark ink the tokens give
+   the rest of the dark theme */
+html[data-os-theme="dark"] .btn.solid,
+html[data-os-theme="dark"] .btn:hover{color:#1C1412}
+html[data-os-theme="dark"] .d.on{color:#1C1412}
+/* the illustrated art is bright on a dark sheet; take the edge off it */
+html[data-os-theme="dark"] .nd-sheet .art{filter:brightness(.94) saturate(.92)}

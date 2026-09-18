@@ -1,6 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="color-scheme" content="light"><meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="light dark">
+<script>try{document.documentElement.setAttribute("data-os-theme",localStorage.getItem("nd:os:theme")||"dark")}catch(e){document.documentElement.setAttribute("data-os-theme","dark")}</script><meta name="robots" content="noindex,nofollow">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="ND OS">
 <title>ND OS &middot; Desk</title>
@@ -19,7 +20,7 @@
 
   /* the Triad ruling — the thing she reads first */
   .ruling{margin-top:18px;padding:20px;border-radius:20px;border:1px solid var(--nd-rule);
-    background:linear-gradient(168deg,#FBF8F1,#F1EADE);box-shadow:var(--nd-shadow);position:relative;overflow:hidden}
+    background:linear-gradient(168deg,var(--nd-ruling-a),var(--nd-ruling-b));box-shadow:var(--nd-shadow);position:relative;overflow:hidden}
   .ruling:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--nd-sage)}
   .ruling.held:before{background:var(--nd-tan)}
   .ruling .who{font-size:10.5px;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:var(--nd-ink-2)}
@@ -84,16 +85,18 @@
     border:1px solid var(--nd-rule);box-shadow:var(--nd-shadow);text-decoration:none;color:inherit;
     transition:transform .18s cubic-bezier(.2,.7,.3,1),box-shadow .18s}
   .rm:hover{transform:translateY(-4px);box-shadow:0 20px 34px -20px rgba(67,60,53,.5)}
-  .rm svg{width:24px;height:24px;fill:none;stroke:var(--nd-terra);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .rm .art{width:46px;height:46px;border-radius:13px;display:block;
+    box-shadow:0 5px 14px -7px rgba(67,60,53,.6)}
+  .rm.soon .art{filter:grayscale(.75)}
   .rm b{font-family:var(--nd-serif);font-size:17px;font-weight:600}
   .rm span{font-size:13px;color:var(--nd-ink-2);line-height:1.4}
   .rm.soon{opacity:.62}
   .rm.soon b:after{content:"soon";font:700 9px/1 var(--nd-sans);letter-spacing:.14em;text-transform:uppercase;
-    background:var(--nd-tan);color:#4B4339;padding:4px 7px;border-radius:6px;margin-left:8px;vertical-align:2px}
+    background:var(--nd-tan);color:var(--nd-on-tan);padding:4px 7px;border-radius:6px;margin-left:8px;vertical-align:2px}
 
   .gate{max-width:420px;margin:8vh auto 0}
   .gate h1{font-size:27px;margin-bottom:8px}
-  .skel{background:linear-gradient(90deg,var(--nd-rule-soft),#F6F1E7,var(--nd-rule-soft));
+  .skel{background:linear-gradient(90deg,var(--nd-rule-soft),var(--nd-paper-2),var(--nd-rule-soft));
     background-size:200% 100%;animation:sk 1.3s linear infinite;border-radius:9px;color:transparent}
   @keyframes sk{to{background-position:-200% 0}}
   @media(min-width:620px){ .tiles{grid-template-columns:repeat(4,1fr)} .rooms{grid-template-columns:repeat(3,1fr)} }
@@ -298,7 +301,8 @@
   function rooms(){
     document.getElementById('rooms').innerHTML = NDOS.rooms.filter(function(r){ return r.id!=='desk'; })
       .map(function(r){
-        return '<a class="rm'+(r.live?'':' soon')+'" href="'+r.href+'">'+NDOS.icon(r.icon)+
+        return '<a class="rm'+(r.live?'':' soon')+'" href="'+r.href+'">'+
+          '<img class="art" src="'+NDOS.art(r.id)+'" alt="" loading="lazy">'+
           '<b>'+esc(r.label)+'</b><span>'+esc(r.blurb)+'</span></a>';
       }).join('');
   }

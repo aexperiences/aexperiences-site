@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+<defs>
+<linearGradient id="gcn" x1="0" y1="0" x2="0.65" y2="1">
+<stop offset="0%" stop-color="#a1ec8c"/><stop offset="55%" stop-color="#45ad28"/><stop offset="100%" stop-color="#18450c"/></linearGradient>
+<radialGradient id="glcn" cx="32%" cy="6%" r="80%">
+<stop offset="0%" stop-color="#ffffff" stop-opacity=".26"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
+
+</defs>
+<rect x="0" y="0" width="1024" height="1024" fill="url(#gcn)"/>
+<g id="art" transform="translate(27.61,20.04) scale(1.8922)">
+
+
+<!-- the tail, laid down first so the bubble's corner closes the joint -->
+<path d="M180 300 L180 424 L288 338 Z" fill="#fdfbf6"/>
+
+<!-- the bubble -->
+<rect x="52" y="96" width="408" height="264" rx="58" fill="#fdfbf6"/>
+<rect x="52" y="96" width="408" height="264" rx="58" fill="none" stroke="#e4dccb" stroke-width="4"/>
+
+<!-- a camera sitting in it: this room is talking AND faces -->
+<rect x="118" y="166" width="178" height="124" rx="30" fill="#2a201a"/>
+<path d="M312 196 L394 152 L394 304 L312 260 Z" fill="#2a201a"/>
+
+<!-- the live dot -->
+<circle cx="160" cy="228" r="15" fill="#e2673f"/>
+
+</g>
+<rect x="0" y="0" width="1024" height="1024" fill="url(#glcn)"/>
+
+</svg>

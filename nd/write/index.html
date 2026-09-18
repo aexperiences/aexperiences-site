@@ -1,6 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="color-scheme" content="light"><meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="light dark">
+<script>try{document.documentElement.setAttribute("data-os-theme",localStorage.getItem("nd:os:theme")||"dark")}catch(e){document.documentElement.setAttribute("data-os-theme","dark")}</script><meta name="robots" content="noindex,nofollow">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Write">
 <title>ND OS &middot; Write</title>
@@ -34,7 +35,7 @@
 
   /* the ruling drawer — comes up when she taps publish */
   .ruling{margin-top:16px;padding:18px;border-radius:18px;border:1px solid var(--nd-rule);
-    background:linear-gradient(168deg,#FBF8F1,#F1EADE);box-shadow:var(--nd-shadow);
+    background:linear-gradient(168deg,var(--nd-ruling-a),var(--nd-ruling-b));box-shadow:var(--nd-shadow);
     position:relative;overflow:hidden;display:none}
   .ruling.show{display:block;animation:pop .34s cubic-bezier(.34,1.46,.44,1)}
   @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.985)}}

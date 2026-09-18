@@ -1,6 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="color-scheme" content="light"><meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="light dark">
+<script>try{document.documentElement.setAttribute("data-os-theme",localStorage.getItem("nd:os:theme")||"dark")}catch(e){document.documentElement.setAttribute("data-os-theme","dark")}</script><meta name="robots" content="noindex,nofollow">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="List">
 <title>ND OS &middot; List</title>
@@ -34,11 +35,11 @@
     transition:transform .18s cubic-bezier(.2,.7,.3,1),opacity .25s,background .2s}
   .it:active{transform:scale(.985)}
   .tick{flex:none;width:26px;height:26px;border-radius:9px;border:2px solid var(--nd-rule);
-    background:#FFFDF8;cursor:pointer;padding:0;position:relative;margin-top:1px;
+    background:var(--nd-field);cursor:pointer;padding:0;position:relative;margin-top:1px;
     transition:background .2s,border-color .2s,transform .2s cubic-bezier(.34,1.46,.44,1)}
   .tick:active{transform:scale(.86)}
   .tick svg{position:absolute;inset:0;margin:auto;width:16px;height:16px;fill:none;
-    stroke:#FAF7F0;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;
+    stroke:var(--nd-paper);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;
     stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset .3s ease}
   .it.done .tick{background:var(--nd-sage-d);border-color:var(--nd-sage-d)}
   .it.done .tick svg{stroke-dashoffset:0}
