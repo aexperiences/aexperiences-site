@@ -1,4 +1,4 @@
-// /api/espofocus — the shared database for ESPOfocus (child ADHD weekly/daily monitoring).
+// /api/espofocus — the shared database for ND Focus (child ADHD weekly/daily monitoring).
 //
 // Real store: Upstash Redis REST (SAME env-var names as api/trail-reports.js / the AE Connect stack):
 //   UPSTASH_REDIS_REST_URL    (required to switch sync on)

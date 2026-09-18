@@ -1,4 +1,4 @@
-// /api/espofocus-push — web-push subscriptions for ESPOfocus daily reminders.
+// /api/espofocus-push — web-push subscriptions for ND Focus daily reminders.
 //
 // Uses the SAME Upstash Redis store as /api/espofocus (KV_REST_API_* or UPSTASH_*).
 // VAPID keys are generated ONCE and kept in Redis (ef:vapid) — no secret for anyone to paste,

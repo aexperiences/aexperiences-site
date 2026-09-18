@@ -1,4 +1,4 @@
-// /api/espofocus-nudge — the daily reminder sender for ESPOfocus (Vercel Cron, hourly).
+// /api/espofocus-nudge — the daily reminder sender for ND Focus (Vercel Cron, hourly).
 //
 // Each hour: for every subscription whose target UTC hour is now, if that account has NOT
 // logged today, send a "tickle" web-push (no payload) — the service worker shows "log today".

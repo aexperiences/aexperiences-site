@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ESPOfocus — rate today</title>
+<title>ND Focus — rate today</title>
 <meta name="theme-color" content="#14183a">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,7 +47,7 @@ label.lb{display:block;font-size:12px;font-weight:800;letter-spacing:.04em;text-
 </head>
 <body>
 <div class="top"><div class="in">
-  <div class="brand"><span class="mk"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/><circle cx="12" cy="12" r="3.4" fill="#fff"/></svg></span>ESPOfocus</div>
+  <div class="brand"><span class="mk"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/><circle cx="12" cy="12" r="3.4" fill="#fff"/></svg></span>ND Focus</div>
   <h1 id="hd">Loading…</h1><p class="sub" id="sub">One quick check‑in — about a minute.</p>
 </div></div>
 
@@ -65,7 +65,7 @@ var scores=new Array(15).fill(null), role='Teacher', note='';
 var $=function(id){return document.getElementById(id);};
 
 async function init(){
-  if(!TOKEN){ return fail('This link is missing its code. Ask the parent to resend the ESPOfocus rater link.'); }
+  if(!TOKEN){ return fail('This link is missing its code. Ask the parent to resend the ND Focus rater link.'); }
   try{
     var r=await fetch('/api/espofocus?action=rate.get&token='+encodeURIComponent(TOKEN)).then(function(r){return r.json();});
     if(!r.ok){ return fail('This link isn’t working. Ask the parent to resend it.'); }
@@ -74,7 +74,7 @@ async function init(){
     $('sub').textContent=r.alreadyToday? 'Already logged today — you can update it below.' : 'How was '+r.name+' today? Rate each item.';
     render();
     $('savebar').style.display='block'; $('disc').style.display='block';
-  }catch(e){ fail('Couldn’t reach ESPOfocus. Check the connection and reopen the link.'); }
+  }catch(e){ fail('Couldn’t reach ND Focus. Check the connection and reopen the link.'); }
 }
 function fail(msg){ $('hd').textContent='Hmm.'; $('sub').textContent=''; $('main').innerHTML='<div class="card center"><div class="big">🔗</div><p style="color:var(--mut)">'+msg+'</p></div>'; }
 

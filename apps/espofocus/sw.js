@@ -20,7 +20,7 @@ self.addEventListener("fetch", function(e){
 self.addEventListener("push", function (e) {
   var body = "Time for today's quick check-in.";
   try { if (e.data) { var d = e.data.json(); if (d && d.body) body = d.body; } } catch (x) {}
-  e.waitUntil(self.registration.showNotification("ESPOfocus", {
+  e.waitUntil(self.registration.showNotification("ND Focus", {
     body: body, icon: "./icon.png", badge: "./icon.png", tag: "espofocus-daily", renotify: false
   }));
 });
