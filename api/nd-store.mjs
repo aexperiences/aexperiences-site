@@ -1,3 +1,4 @@
+import { ndWho } from './_nd-auth.mjs';
 // /api/nd-store — one shelf for every ND OS room that keeps records.
 // Accelerated Experiences LLC · Sep 2026
 //
@@ -86,11 +87,9 @@ async function body(req) {
 export default async function handler(req, res) {
   try {
     if (!KV_URL || !KV_TOK) return send(res, 503, { ok: false, error: 'NO_STORE' });
-    const KEY = process.env.ND_BLOG_KEY || '';
     const url = new URL(req.url, 'https://www.aexperiences.com');
-    const given = req.headers['x-nd-key'] || url.searchParams.get('key') || '';
-    if (!KEY) return send(res, 503, { ok: false, error: 'NOT_CONFIGURED' });
-    if (given !== KEY) return send(res, 401, { ok: false, error: 'NEED_KEY' });
+    const who = await ndWho(req, url);   // AE OS session or the machine word (_nd-auth.mjs)
+    if (!who) return send(res, 401, { ok: false, error: 'NEED_KEY' });
 
     const c = String(url.searchParams.get('c') || '').toLowerCase();
     const spec = COLLECTIONS[c];

@@ -1,3 +1,4 @@
+import { ndWho } from './_nd-auth.mjs';
 // /api/nd-blog — the store behind The Neuro-Divulge blog.
 // Accelerated Experiences LLC · Sep 17 2026
 //
@@ -77,9 +78,7 @@ export default async function handler(req, res) {
   try {
     if (!ready()) return send(res, 503, { ok: false, error: 'NO_STORE' });
     const url = new URL(req.url, 'https://www.aexperiences.com');
-    const KEY = process.env.ND_BLOG_KEY || '';
-    const given = req.headers['x-nd-key'] || url.searchParams.get('key') || '';
-    const authed = !!KEY && given === KEY;
+    const authed = !!(await ndWho(req, url));   // AE OS session or the machine word (_nd-auth.mjs)
 
     if (req.method === 'GET') {
       const slug = clean(url.searchParams.get('slug'), 80);
@@ -98,7 +97,6 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'POST') {
-      if (!KEY) return send(res, 503, { ok: false, error: 'NOT_CONFIGURED' });
       if (!authed) return send(res, 401, { ok: false, error: 'NEED_KEY' });
       const b = await body(req);
       if (!b) return send(res, 400, { ok: false, error: 'BAD_JSON' });

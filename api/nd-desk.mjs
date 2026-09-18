@@ -1,3 +1,4 @@
+import { ndWho } from './_nd-auth.mjs';
 // /api/nd-desk — what the Desk in ND OS reads. Accelerated Experiences LLC · Sep 2026
 //
 // One endpoint, three shelves that already exist: the AE beacon's traffic rows
@@ -98,11 +99,9 @@ async function money() {
 export default async function handler(req, res) {
   try {
     if (!KV_URL || !KV_TOK) return send(res, 503, { ok: false, error: 'NO_STORE' });
-    const KEY = process.env.ND_BLOG_KEY || '';
     const url = new URL(req.url, 'https://www.aexperiences.com');
-    const given = req.headers['x-nd-key'] || url.searchParams.get('key') || '';
-    if (!KEY) return send(res, 503, { ok: false, error: 'NOT_CONFIGURED' });
-    if (given !== KEY) return send(res, 401, { ok: false, error: 'NEED_KEY' });
+    const who = await ndWho(req, url);   // AE OS session or the machine word (_nd-auth.mjs)
+    if (!who) return send(res, 401, { ok: false, error: 'NEED_KEY' });
 
     const days = Math.min(60, Math.max(1, Number(url.searchParams.get('days') || 14)));
     const today = new Date();

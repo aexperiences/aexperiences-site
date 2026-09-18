@@ -107,7 +107,7 @@
     { id:'desk',    label:'Desk',     href:'/nd/os/',          icon:'desk',    live:true,  blurb:'Who came, from where, what sold.' },
     { id:'write',   label:'Write',    href:'/nd/write/',       icon:'write',   live:true,  blurb:'Write a note and publish it.' },
     { id:'notes',   label:'Notes',    href:'/nd/blog/',        icon:'notes',   live:true,  blurb:'The posts, as everyone sees them.' },
-    { id:'blast',   label:'Blast',    href:'/nd/os/blast/',    icon:'blast',   live:true,  blurb:'Queue a post. Blastpack sends it.' },
+    { id:'blast',   label:'Blastpack', href:'/nd/os/blast/',   icon:'blast',   live:true,  blurb:'Queue a post. Blastpack sends it.' },
     { id:'list',    label:'List',     href:'/nd/os/list/',     icon:'list',    live:true,  blurb:'One list, not four places.' },
     { id:'cal',     label:'Calendar', href:'/nd/os/calendar/', icon:'cal',     live:true,  blurb:'Everything with a time, in one month.' },
     { id:'docs',    label:'Docs',     href:'/nd/os/docs/',     icon:'docs',    live:true,  blurb:'Write a real document. It saves itself.' },
@@ -125,6 +125,98 @@
       bus.emit(KEY ? 'auth:in' : 'auth:out', {}); },
     clear: function (why) { KEY=''; try{ localStorage.removeItem(LS); }catch(e){} bus.emit('auth:out',{why:why||''}); }
   };
+
+  /* ---- one sign-in: AE OS ----------------------------------------------
+     Anthony, Sep 18 2026: "if you are signed into one, you are the other... it's
+     like a mini hub within my hub... a private office for Jessica." So ND OS has no
+     password of its own. Signed into AE OS in this browser, a room bounces once to
+     aexperiences.studio/os-pass.html, comes back with a one-time pass, and trades it
+     at /api/nd-auth for a session that lives in the shared AE OS store. On the phone
+     app, which may not see the AE OS sign-in, the same card takes her AE OS email and
+     password, and AE OS checks them. A second brand is a copy of this folder with
+     BRAND changed and one line in os-pass.mjs on the hub. */
+  var HUB = 'https://aexperiences.studio', BRAND = 'nd', WHO_LS = 'nd:os:who', TRIED = 'nd:sso:tried';
+  var WHO = ''; try { WHO = localStorage.getItem(WHO_LS) || ''; } catch (e) {}
+  auth.who = function () { return WHO; };
+  function installed() {
+    try { return !!(navigator.standalone || (global.matchMedia && matchMedia('(display-mode: standalone)').matches)); }
+    catch (e) { return false; }
+  }
+  function passUrl() {
+    return HUB + '/os-pass.html?brand=' + BRAND + '&back=' +
+      encodeURIComponent(location.origin + location.pathname + location.search);
+  }
+  function gated() { return !!(document.getElementById('gate') || document.getElementById('lockbar')); }
+  function signedIn(j) {
+    KEY = j.token; WHO = (j.who && j.who.name) || '';
+    try { localStorage.setItem(LS, KEY); localStorage.setItem(WHO_LS, WHO); sessionStorage.removeItem(TRIED); } catch (e) {}
+    location.replace(location.pathname + location.search);   // every room re-reads the key on load
+  }
+  function trade(payload, sayEl) {
+    if (sayEl) sayEl.textContent = 'Checking with AE OS…';
+    return fetch('/api/nd-auth', { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify(payload) })
+      .then(function (r) { return r.json().catch(function(){ return { ok:false }; }); })
+      .catch(function () { return { ok:false, error:'OFFLINE' }; })
+      .then(function (j) {
+        if (j && j.ok && j.token) return signedIn(j);
+        var t = j && j.error === 'AEOS_NO' ? 'That is not your AE OS email and password.'
+              : j && j.error === 'NOT_YOURS' ? 'That AE OS seat does not open ND OS.'
+              : j && j.error === 'SLOW_DOWN' ? 'Too many tries. Wait fifteen minutes.'
+              : j && j.error === 'PASS_USED' ? 'That sign-in expired. Tap Sign in with AE OS again.'
+              : j && j.error === 'OFFLINE' ? MSG.OFFLINE : 'AE OS did not answer. Try again in a moment.';
+        if (sayEl) sayEl.textContent = t; else say(t, true);
+      });
+  }
+  auth.out = function () {
+    var t = KEY;
+    fetch('/api/nd-auth', { method:'POST', headers:{'content-type':'application/json','x-nd-key':t}, body:'{"out":true}' })
+      .catch(function(){}).then(function () {
+        WHO = ''; try { localStorage.removeItem(WHO_LS); sessionStorage.setItem(TRIED,'1'); } catch (e) {}
+        auth.clear('Signed out.'); location.reload();
+      });
+  };
+
+  /* coming back from AE OS with a pass */
+  var PASS = /[#&]aeos=([A-Za-z0-9_-]{20,80})/.exec(location.hash || '');
+  if (PASS) {
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    trade({ pass: PASS[1] });
+  } else if (!KEY && gated() && !installed()) {
+    /* nobody here yet: ask AE OS once per tab. Signed in there, she is back in a blink. */
+    var tried = '1'; try { tried = sessionStorage.getItem(TRIED); sessionStorage.setItem(TRIED, '1'); } catch (e) {}
+    if (!tried) location.replace(passUrl());
+  }
+
+  /* every room's lock card becomes the AE OS sign-in, in one place */
+  function dressGate() {
+    var key = document.getElementById('key'); if (!key) return;
+    var card = key.closest('.gate, .lockbar'); if (!card) return;
+    var row = key.parentNode, btn = document.getElementById('unlock');
+    row.hidden = true; row.style.display = 'none';
+    if (btn) { btn.hidden = true; btn.style.display = 'none'; }
+    var note = card.querySelector('p.muted'); 
+    if (note) note.textContent = 'Same sign-in as AE OS. Signed in there, you are signed in here.';
+    else card.firstChild && (card.firstChild.nodeType === 3) && (card.firstChild.textContent = 'Sign in with AE OS to schedule. ');
+    var sayEl = card.querySelector('#gateSay') || (function(){ var p=document.createElement('p'); p.className='say';
+      p.style.cssText='min-height:20px;font-size:13.5px;font-weight:600;color:var(--nd-terra-d)'; card.appendChild(p); return p; })();
+    var box = document.createElement('div'); box.className = 'aeos-in';
+    box.innerHTML =
+        '<a class="btn solid" id="aeosGo" style="width:100%;display:flex;justify-content:center;margin:16px 0 14px" href="' + passUrl() + '">Sign in with AE OS</a>'
+      + '<form id="aeosForm" autocomplete="on" style="margin:0">'
+      +   '<div style="font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.7;margin:4px 0 8px">Or your AE OS email and password</div>'
+      +   '<label for="aeosEmail">Email</label><input id="aeosEmail" name="email" type="email" autocomplete="username" inputmode="email" autocapitalize="off" spellcheck="false">'
+      +   '<label for="aeosPw" style="margin-top:10px;display:block">Password</label><input id="aeosPw" name="password" type="password" autocomplete="current-password" enterkeyhint="go">'
+      +   '<button class="btn" type="submit" style="width:100%;margin-top:12px">Sign in</button>'
+      + '</form>';
+    card.insertBefore(box, sayEl);
+    box.querySelector('#aeosForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var em = box.querySelector('#aeosEmail').value.trim(), pw = box.querySelector('#aeosPw').value;
+      if (!em || !pw) { sayEl.textContent = 'Both boxes, please.'; return; }
+      trade({ email: em, password: pw }, sayEl).then(function(){ box.querySelector('#aeosPw').value=''; });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', dressGate); else dressGate();
 
   /* ---- one way to talk to the server ------------------------------------ */
   /* Every room calls through here, so busy state, dead keys and plain-English
@@ -242,11 +334,14 @@
           + '<img class="art" src="' + art(q.id) + '" alt="" loading="lazy">'
           + '<span>' + q.label + '</span></a>';
     }
-    rs += '</div><a class="out" href="/nd/">Back to the site</a>';
+    rs += '</div>' + (KEY ? '<button class="out" id="ndOut" type="button" style="background:none;border:0;font:inherit;cursor:pointer">'
+        + (WHO ? 'Signed in as ' + WHO.replace(/[<>&"]/g,'') + ' &middot; ' : '') + 'Sign out</button>' : '')
+        + '<a class="out" href="/nd/">Back to the site</a>';
     sheet.innerHTML = rs;
     document.body.appendChild(scrim); document.body.appendChild(sheet);
 
     dock.querySelector('#ndMore').addEventListener('click', function () { openSheet(!sheet.classList.contains('up')); });
+    var outBtn = sheet.querySelector('#ndOut'); if (outBtn) outBtn.addEventListener('click', function () { auth.out(); });
     theme();  // paints the lamp now that it is in the page
     sheet.querySelector('#ndLamp').addEventListener('click', function (e) { e.stopPropagation(); flipTheme(); });
     scrim.addEventListener('click', function () { openSheet(false); });

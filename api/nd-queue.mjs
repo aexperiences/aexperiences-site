@@ -1,3 +1,4 @@
+import { ndWho } from './_nd-auth.mjs';
 // /api/nd-queue — the Blastpack queue for ND OS. Accelerated Experiences LLC · Sep 2026
 //
 // Blastpack's pipeline is built; its public door waits on Meta app review. Nothing she
@@ -72,11 +73,9 @@ async function body(req) {
 export default async function handler(req, res) {
   try {
     if (!KV_URL || !KV_TOK) return send(res, 503, { ok: false, error: 'NO_STORE' });
-    const KEY = process.env.ND_BLOG_KEY || '';
     const url = new URL(req.url, 'https://www.aexperiences.com');
-    const given = req.headers['x-nd-key'] || url.searchParams.get('key') || '';
-    if (!KEY) return send(res, 503, { ok: false, error: 'NOT_CONFIGURED' });
-    if (given !== KEY) return send(res, 401, { ok: false, error: 'NEED_KEY' });
+    const who = await ndWho(req, url);   // AE OS session or the machine word (_nd-auth.mjs)
+    if (!who) return send(res, 401, { ok: false, error: 'NEED_KEY' });
 
     if (req.method === 'GET') {
       const all = await readAll();

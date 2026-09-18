@@ -188,7 +188,8 @@
     document.getElementById('day').textContent=
       d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
     document.getElementById('greet').textContent =
-      h<5?'Still up.':h<12?'Good morning, Jessica.':h<17?'Good afternoon, Jessica.':'Good evening, Jessica.';
+      (function(nm){ return h<5?'Still up.':h<12?'Good morning, '+nm+'.':h<17?'Good afternoon, '+nm+'.':'Good evening, '+nm+'.'; })
+      ((NDOS.auth.who && NDOS.auth.who()) || 'Jessica');   /* whoever AE OS signed in */
   })();
 
   /* ---- unlocking ------------------------------------------------------ */
