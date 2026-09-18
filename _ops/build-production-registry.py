@@ -94,23 +94,71 @@ for m in re.finditer(r"id:'([^']+)'", src):
         plans=[p for p in plans if re.search(r"plans:\s*\[", t)],
     ))
 
+# --------------------------------------------------------------- the rewrites
+# A path on aexperiences.com is not proof that aexperiences.com serves it. The
+# store proxies whole products to other projects, and the first version of this
+# registry got The Narcs wrong for exactly that reason: it reported the store's
+# own repo for a page the store never had. vercel.json is the truth.
+REWRITES = []
+try:
+    _v = json.load(open("vercel.json"))
+    for _r in _v.get("rewrites", []):
+        _src, _dst = _r.get("source", ""), str(_r.get("destination", ""))
+        _m = re.match(r"https?://([^/]+)", _dst)
+        if _m:
+            REWRITES.append((re.sub(r"/:path\*$", "", _src).rstrip("/"), _m.group(1)))
+    REWRITES.sort(key=lambda x: -len(x[0]))
+except Exception:
+    pass
+
+VERCEL_HOST = {  # <project>.vercel.app -> project
+    (k.replace(".", "-") + ".vercel.app"): k for k in VERCEL
+}
+VERCEL_HOST.update({(k + ".vercel.app"): k for k in VERCEL})
+
+def proxied_to(path):
+    """Which project really answers this path on the store, if not the store."""
+    for src, host in REWRITES:
+        if src and (path == src or path.startswith(src + "/")):
+            return VERCEL_HOST.get(host, host)
+    return None
+
 # ------------------------------------------------- where it lives, and its door
 def locate(p):
     u = p["url"] or ""
+    host, path = None, None
     if u.startswith("/"):
-        return dict(host="www.aexperiences.com", path=u, project="aexperiences-site",
-                    repo=VERCEL.get("aexperiences-site"), local=("apps/" + p["id"]))
-    m = re.match(r"https?://([^/]+)(/.*)?$", u)
-    if not m:
-        return dict(host=None, path=None, project=None, repo=None, local=None)
-    host, path = m.group(1), m.group(2) or "/"
+        host, path = "www.aexperiences.com", u
+    else:
+        m = re.match(r"https?://([^/]+)(/.*)?$", u)
+        if not m:
+            return dict(host=None, path=None, project=None, repo=None, local=None, proxied=None)
+        host, path = m.group(1), m.group(2) or "/"
+
+    if host.endswith("aexperiences.com"):
+        via = proxied_to(path.rstrip("/"))
+        if via:
+            # the store only forwards; the HTML comes from somewhere else
+            return dict(host=host, path=path, project=via, repo=VERCEL.get(via),
+                        local=None, proxied=True)
+        return dict(host=host, path=path, project="aexperiences-site",
+                    repo=VERCEL.get("aexperiences-site"),
+                    local=("apps/" + p["id"]), proxied=False)
+
     proj = HOST_PROJECT.get(host, "?")
     return dict(host=host, path=path, project=proj,
-                repo=(VERCEL.get(proj) if proj else None),
-                local=("apps/" + p["id"]) if host.endswith("aexperiences.com") else None)
+                repo=(VERCEL.get(proj) if proj else None), local=None, proxied=False)
+
+# Pages that are meant to be walk-in: a bundle's own front page is a menu, and
+# the four apps behind it each have their own door.
+OPEN_BY_DESIGN = {"neuro-divulge": "bundle page"}
 
 def door(p, loc):
     """Computed, never typed. Only this repo can be inspected from here."""
+    if p["id"] in OPEN_BY_DESIGN:
+        return "open by design"
+    if loc.get("proxied"):
+        return "not in this repo"
     d = loc.get("local")
     if d and os.path.isdir(d):
         f = os.path.join(d, "index.html")

@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-18T18:30:47",
+ "generated": "2026-09-18T18:34:10",
  "vercelSeen": "2026-09-18",
  "count": 54,
  "products": [
@@ -16,9 +16,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/abode/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/abode"
+    "project": "ae-abode-showroom.vercel.app",
+    "repo": null,
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -36,9 +37,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/buttress/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/buttress"
+    "project": "ae-buttress-showroom.vercel.app",
+    "repo": null,
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -56,9 +58,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/truss/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/truss"
+    "project": "ae-truss-showroom.vercel.app",
+    "repo": null,
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -76,9 +79,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/musical/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/musical"
+    "project": "ae-musical-showroom.vercel.app",
+    "repo": null,
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -96,9 +100,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/8mm/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/8mm"
+    "project": "ae-8mm-showroom.vercel.app",
+    "repo": null,
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -116,9 +121,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/amphitheater/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/amphitheater"
+    "project": "ae-concert-hub",
+    "repo": "aexperiences/ae-concert-hub",
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -136,9 +142,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/lilninja/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/lilninja"
+    "project": "ae-lilninja-showroom.vercel.app",
+    "repo": null,
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -156,9 +163,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/moments/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/moments"
+    "project": "ae-moments-showroom.vercel.app",
+    "repo": null,
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -176,9 +184,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/smiley/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/smiley"
+    "project": "ae-smiley-showroom.vercel.app",
+    "repo": null,
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -196,9 +205,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/sleeves/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/sleeves"
+    "project": "ae-sleeves-showroom.vercel.app",
+    "repo": null,
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -216,9 +226,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/toolbelt/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/toolbelt"
+    "project": "ae-toolbelt-showroom.vercel.app",
+    "repo": null,
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -236,9 +247,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/stayathome/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/stayathome"
+    "project": "ae-stayathome-showroom.vercel.app",
+    "repo": null,
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -256,9 +268,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/4barrel/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/4barrel"
+    "project": "ae-showroom-hub",
+    "repo": "aexperiences/ae-showroom-hub",
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -276,9 +289,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/targeted/dashboard",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/targeted"
+    "project": "ae-targeted-showroom.vercel.app",
+    "repo": null,
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -298,7 +312,8 @@
     "path": "/",
     "project": "?",
     "repo": null,
-    "local": null
+    "local": null,
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -318,7 +333,8 @@
     "path": "/",
     "project": "?",
     "repo": null,
-    "local": null
+    "local": null,
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -349,7 +365,8 @@
     "path": "/",
     "project": "espogenius-com",
     "repo": "aexperiences/espogenius.com",
-    "local": null
+    "local": null,
+    "proxied": false
    },
    "sold": true,
    "door": "not in this repo"
@@ -380,7 +397,8 @@
     "path": "/",
     "project": null,
     "repo": null,
-    "local": null
+    "local": null,
+    "proxied": false
    },
    "sold": true,
    "door": "unknown"
@@ -404,9 +422,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/comply/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/ae-comply"
+    "project": "aecomply",
+    "repo": "aexperiences/aecomply",
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -426,7 +445,8 @@
     "path": "/apps/marketnarc/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/marketnarc"
+    "local": "apps/marketnarc",
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -446,7 +466,8 @@
     "path": "/",
     "project": "?",
     "repo": null,
-    "local": null
+    "local": null,
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -475,12 +496,13 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/narcs/open",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/the-narcs"
+    "project": "marketnarc-com",
+    "repo": "aexperiences/marketnarc.com",
+    "local": null,
+    "proxied": true
    },
    "sold": true,
-   "door": "unknown"
+   "door": "not in this repo"
   },
   {
    "id": "neuro-divulge",
@@ -508,10 +530,11 @@
     "path": "/apps/nd/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/neuro-divulge"
+    "local": "apps/neuro-divulge",
+    "proxied": false
    },
    "sold": true,
-   "door": "unknown"
+   "door": "open by design"
   },
   {
    "id": "espofunkmaster",
@@ -549,7 +572,8 @@
     "path": "/apps/espofunkmaster/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/espofunkmaster"
+    "local": "apps/espofunkmaster",
+    "proxied": false
    },
    "sold": true,
    "door": "locked"
@@ -569,7 +593,8 @@
     "path": "/",
     "project": "?",
     "repo": null,
-    "local": null
+    "local": null,
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -587,9 +612,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/cut-and-effect/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/cut-and-effect"
+    "project": "ae-cut-and-effect",
+    "repo": "aexperiences/ae-cut-and-effect",
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -609,7 +635,8 @@
     "path": null,
     "project": null,
     "repo": null,
-    "local": null
+    "local": null,
+    "proxied": null
    },
    "sold": false,
    "door": "n/a"
@@ -629,7 +656,8 @@
     "path": "/",
     "project": "?",
     "repo": null,
-    "local": null
+    "local": null,
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -660,7 +688,8 @@
     "path": "/apps/revolver/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/revolver"
+    "local": "apps/revolver",
+    "proxied": false
    },
    "sold": true,
    "door": "locked"
@@ -691,7 +720,8 @@
     "path": "/apps/thread/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/thread"
+    "local": "apps/thread",
+    "proxied": false
    },
    "sold": true,
    "door": "locked"
@@ -711,7 +741,8 @@
     "path": "/apps/tucasa/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/tucasa"
+    "local": "apps/tucasa",
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -742,7 +773,8 @@
     "path": "/apps/espovocab/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/espovocab"
+    "local": "apps/espovocab",
+    "proxied": false
    },
    "sold": true,
    "door": "locked"
@@ -773,7 +805,8 @@
     "path": "/apps/espotendency/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/espotendency"
+    "local": "apps/espotendency",
+    "proxied": false
    },
    "sold": true,
    "door": "locked"
@@ -793,7 +826,8 @@
     "path": "/apps/esponest/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/esponest"
+    "local": "apps/esponest",
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -824,7 +858,8 @@
     "path": "/apps/espohystory/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/espohystory"
+    "local": "apps/espohystory",
+    "proxied": false
    },
    "sold": true,
    "door": "locked"
@@ -853,12 +888,13 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/xpense/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/xpense"
+    "project": "xpense-os",
+    "repo": "aexperiences/xpense-os",
+    "local": null,
+    "proxied": true
    },
    "sold": true,
-   "door": "unknown"
+   "door": "not in this repo"
   },
   {
    "id": "esporegulator",
@@ -886,7 +922,8 @@
     "path": "/apps/esporegulator/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/esporegulator"
+    "local": "apps/esporegulator",
+    "proxied": false
    },
    "sold": true,
    "door": "locked"
@@ -906,7 +943,8 @@
     "path": "/apps/espotrek/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/espotrek"
+    "local": "apps/espotrek",
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -926,7 +964,8 @@
     "path": "/apps/esponatlparks/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/esponatlparks"
+    "local": "apps/esponatlparks",
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -946,7 +985,8 @@
     "path": "/apps/esposign/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/esposign"
+    "local": "apps/esposign",
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -977,7 +1017,8 @@
     "path": "/apps/espovineyard/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/espovineyard"
+    "local": "apps/espovineyard",
+    "proxied": false
    },
    "sold": true,
    "door": "locked"
@@ -1008,7 +1049,8 @@
     "path": "/apps/espostogie/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/espostogie"
+    "local": "apps/espostogie",
+    "proxied": false
    },
    "sold": true,
    "door": "locked"
@@ -1039,7 +1081,8 @@
     "path": "/apps/espowhiskey/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/espowhiskey"
+    "local": "apps/espowhiskey",
+    "proxied": false
    },
    "sold": true,
    "door": "locked"
@@ -1070,7 +1113,8 @@
     "path": "/apps/espobarista/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/espobarista"
+    "local": "apps/espobarista",
+    "proxied": false
    },
    "sold": true,
    "door": "locked"
@@ -1090,7 +1134,8 @@
     "path": "/apps/esporacket/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/esporacket"
+    "local": "apps/esporacket",
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -1110,7 +1155,8 @@
     "path": "/apps/espowords/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/espowords"
+    "local": "apps/espowords",
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -1130,7 +1176,8 @@
     "path": "/apps/espowho/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/espowho"
+    "local": "apps/espowho",
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -1150,7 +1197,8 @@
     "path": "/apps/espodraw/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/espodraw"
+    "local": "apps/espodraw",
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -1170,7 +1218,8 @@
     "path": "/apps/sparklesalon/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/sparklesalon"
+    "local": "apps/sparklesalon",
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -1201,7 +1250,8 @@
     "path": "/apps/espofocus/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/espofocus"
+    "local": "apps/espofocus",
+    "proxied": false
    },
    "sold": true,
    "door": "locked"
@@ -1221,7 +1271,8 @@
     "path": "/apps/kangatodo/",
     "project": "aexperiences-site",
     "repo": "aexperiences/aexperiences-site",
-    "local": "apps/kangatodo"
+    "local": "apps/kangatodo",
+    "proxied": false
    },
    "sold": false,
    "door": "n/a"
@@ -1250,12 +1301,13 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/wire/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/ae-wire"
+    "project": "ae-wire-accelerated-experiences.vercel.app",
+    "repo": null,
+    "local": null,
+    "proxied": true
    },
    "sold": true,
-   "door": "unknown"
+   "door": "not in this repo"
   },
   {
    "id": "ae-fraud-division",
@@ -1270,9 +1322,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/fraud-division/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/ae-fraud-division"
+    "project": "ae-fraud-division",
+    "repo": null,
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"
@@ -1290,9 +1343,10 @@
    "where": {
     "host": "www.aexperiences.com",
     "path": "/apps/blastpack/",
-    "project": "aexperiences-site",
-    "repo": "aexperiences/aexperiences-site",
-    "local": "apps/ae-blastpack"
+    "project": "aeblastpack",
+    "repo": "aexperiences/aeblastpack",
+    "local": null,
+    "proxied": true
    },
    "sold": false,
    "door": "n/a"

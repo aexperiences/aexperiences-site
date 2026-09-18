@@ -135,7 +135,10 @@
     var lives = w.host ? (w.host + (w.path && w.path!=='/' ? w.path : '')) : '<span class="miss">unresolved</span>';
     var proj  = w.project && w.project!=='?' ? esc(w.project) : '<span class="miss">none found</span>';
     var repo  = w.repo ? esc(w.repo) : '<span class="miss">'+(w.project?'no repo attached':'unknown')+'</span>';
-    var cls   = p.door==='locked' ? 'locked' : (p.door==='OPEN' ? 'OPEN' : (p.door==='n/a'||p.door==='not live' ? 'other':'warn'));
+    var cls   = p.door==='locked' ? 'locked'
+              : p.door==='OPEN' ? 'OPEN'
+              : (p.door==='n/a'||p.door==='not live'||p.door==='open by design') ? 'other'
+              : 'warn';
     return '<div class="r">'+
       '<span class="c1"><b>'+esc(p.name)+'</b><br><span class="m">'+esc(p.id)+'</span></span>'+
       '<span class="c2">'+price+'</span>'+
