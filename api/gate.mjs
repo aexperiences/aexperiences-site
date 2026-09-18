@@ -19,10 +19,15 @@ const norm = (s) => String(s || '').trim();
 /* Every gated consumer app, and which subscription opens it. A product opens
    itself; a BUNDLE opens each of its members. Anything absent is ungated. */
 const FAMILY = {
-  'neuro-divulge': ['thread', 'espotendency', 'esporegulator', 'espofocus']
+  'neuro-divulge': ['thread', 'espotendency', 'esporegulator', 'espofocus'],
+  'espo-music':    ['espofunkmaster']
 };
 const APPS = new Set([
-  'thread', 'espotendency', 'esporegulator', 'espofocus'
+  // The Neuro-Divulge
+  'thread', 'espotendency', 'esporegulator', 'espofocus',
+  // the rest of the sold consumer apps, Sep 18 2026
+  'espofunkmaster', 'revolver', 'espovocab', 'espohystory',
+  'espovineyard', 'espostogie', 'espowhiskey', 'espobarista'
 ]);
 
 function send(res, code, obj) {
