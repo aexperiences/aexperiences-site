@@ -1,0 +1,1301 @@
+{
+ "generated": "2026-09-18T18:30:47",
+ "vercelSeen": "2026-09-18",
+ "count": 54,
+ "products": [
+  {
+   "id": "abode",
+   "name": "Abode OS",
+   "tag": "Real estate",
+   "state": "live",
+   "genre": "business",
+   "url": "/apps/abode/",
+   "family": "",
+   "tiers": true,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/abode/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/abode"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "buttress",
+   "name": "Buttress OS",
+   "tag": "Architecture",
+   "state": "live",
+   "genre": "business",
+   "url": "/apps/buttress/",
+   "family": "",
+   "tiers": true,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/buttress/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/buttress"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "truss",
+   "name": "Truss OS",
+   "tag": "Engineering",
+   "state": "live",
+   "genre": "business",
+   "url": "/apps/truss/",
+   "family": "",
+   "tiers": true,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/truss/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/truss"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "musical",
+   "name": "Musical OS",
+   "tag": "Live theater",
+   "state": "live",
+   "genre": "business",
+   "url": "/apps/musical/",
+   "family": "",
+   "tiers": true,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/musical/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/musical"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "8mm",
+   "name": "8mm OS",
+   "tag": "Film & production",
+   "state": "live",
+   "genre": "business",
+   "url": "/apps/8mm/",
+   "family": "",
+   "tiers": true,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/8mm/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/8mm"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "amphitheater",
+   "name": "Amphitheater OS",
+   "tag": "Concerts & venues",
+   "state": "live",
+   "genre": "business",
+   "url": "/apps/amphitheater/",
+   "family": "",
+   "tiers": true,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/amphitheater/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/amphitheater"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "lilninja",
+   "name": "LilNinja OS",
+   "tag": "Kids gyms & programs",
+   "state": "live",
+   "genre": "business",
+   "url": "/apps/lilninja/",
+   "family": "",
+   "tiers": true,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/lilninja/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/lilninja"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "moments",
+   "name": "Moments OS",
+   "tag": "Photographers & videographers",
+   "state": "live",
+   "genre": "business",
+   "url": "/apps/moments/",
+   "family": "",
+   "tiers": true,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/moments/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/moments"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "smiley",
+   "name": "Smiley OS",
+   "tag": "Dental practices",
+   "state": "live",
+   "genre": "business",
+   "url": "/apps/smiley/",
+   "family": "",
+   "tiers": true,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/smiley/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/smiley"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "sleeves",
+   "name": "Sleeves OS",
+   "tag": "Tattoo studios",
+   "state": "live",
+   "genre": "business",
+   "url": "/apps/sleeves/",
+   "family": "",
+   "tiers": true,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/sleeves/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/sleeves"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "toolbelt",
+   "name": "Toolbelt OS",
+   "tag": "HVAC \\u00b7 plumbing \\u00b7 electrical",
+   "state": "live",
+   "genre": "business",
+   "url": "/apps/toolbelt/",
+   "family": "",
+   "tiers": true,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/toolbelt/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/toolbelt"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "stayathome",
+   "name": "Stay@Home OS",
+   "tag": "Home care agencies",
+   "state": "live",
+   "genre": "business",
+   "url": "/apps/stayathome/",
+   "family": "",
+   "tiers": true,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/stayathome/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/stayathome"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "4barrel",
+   "name": "4barrel OS",
+   "tag": "Used-car dealers",
+   "state": "live",
+   "genre": "business",
+   "url": "/apps/4barrel/",
+   "family": "",
+   "tiers": true,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/4barrel/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/4barrel"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "targeted",
+   "name": "Targeted OS",
+   "tag": "Marketing agencies & studios",
+   "state": "live",
+   "genre": "business",
+   "url": "/apps/targeted/dashboard",
+   "family": "",
+   "tiers": true,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/targeted/dashboard",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/targeted"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "espo-music",
+   "name": "ESPO Music",
+   "tag": "Instrument coaching",
+   "state": "live",
+   "genre": "arts",
+   "url": "https://espomusic.com/",
+   "family": "",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "espomusic.com",
+    "path": "/",
+    "project": "?",
+    "repo": null,
+    "local": null
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "espo-learning",
+   "name": "ESPO Learning",
+   "tag": "Kids \u00b7 early skills",
+   "state": "live",
+   "genre": "learning",
+   "url": "https://espolearning.com/",
+   "family": "",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "espolearning.com",
+    "path": "/",
+    "project": "?",
+    "repo": null,
+    "local": null
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "espo-genius",
+   "name": "ESPO Genius",
+   "tag": "Plain-English paperwork",
+   "state": "live",
+   "genre": "money",
+   "url": "https://espogenius.com/",
+   "family": "",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     7.99,
+     "month"
+    ],
+    [
+     "Yearly",
+     39.99,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "espogenius.com",
+    "path": "/",
+    "project": "espogenius-com",
+    "repo": "aexperiences/espogenius.com",
+    "local": null
+   },
+   "sold": true,
+   "door": "not in this repo"
+  },
+  {
+   "id": "espo-drama",
+   "name": "ESPO Drama",
+   "tag": "Theater & dramatic arts",
+   "state": "live",
+   "genre": "arts",
+   "url": "https://espodrama.com/",
+   "family": "",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     7.99,
+     "month"
+    ],
+    [
+     "Yearly",
+     39.99,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "espodrama.com",
+    "path": "/",
+    "project": null,
+    "repo": null,
+    "local": null
+   },
+   "sold": true,
+   "door": "unknown"
+  },
+  {
+   "id": "ae-comply",
+   "name": "AE Comply",
+   "tag": "Compliance readiness monitoring",
+   "state": "live",
+   "genre": "business",
+   "url": "https://www.aexperiences.com/apps/comply/",
+   "family": "",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     149.0,
+     "month"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/comply/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/ae-comply"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "marketnarc",
+   "name": "Market Narc",
+   "tag": "Read a market before you spend",
+   "state": "dev",
+   "genre": "business",
+   "url": "/apps/marketnarc/",
+   "family": "",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/marketnarc/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/marketnarc"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "esposocial",
+   "name": "ESPOsocial",
+   "tag": "Private groups & video",
+   "state": "off",
+   "genre": "social",
+   "url": "https://esposocial.com/",
+   "family": "",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "esposocial.com",
+    "path": "/",
+    "project": "?",
+    "repo": null,
+    "local": null
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "the-narcs",
+   "name": "The Narcs",
+   "tag": "Fine print, decoded",
+   "state": "live",
+   "genre": "money",
+   "url": "https://www.aexperiences.com/narcs/open",
+   "family": "",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     7.99,
+     "month"
+    ],
+    [
+     "Yearly",
+     39.99,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/narcs/open",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/the-narcs"
+   },
+   "sold": true,
+   "door": "unknown"
+  },
+  {
+   "id": "neuro-divulge",
+   "name": "The Neuro-Divulge",
+   "tag": "All four ND apps, one price",
+   "state": "live",
+   "genre": "mind",
+   "url": "https://www.aexperiences.com/apps/nd/",
+   "family": "",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     4.99,
+     "month"
+    ],
+    [
+     "Yearly",
+     39.99,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/nd/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/neuro-divulge"
+   },
+   "sold": true,
+   "door": "unknown"
+  },
+  {
+   "id": "espofunkmaster",
+   "name": "ESPOfunkmaster",
+   "tag": "Studio, looper & chop shop",
+   "state": "live",
+   "genre": "arts",
+   "url": "/apps/espofunkmaster/",
+   "family": "ESPO Music",
+   "tiers": false,
+   "plans": [
+    [
+     "Studio",
+     4.99,
+     "month"
+    ],
+    [
+     "Studio yearly",
+     29.99,
+     "year"
+    ],
+    [
+     "Agent",
+     14.99,
+     "month"
+    ],
+    [
+     "Agent yearly",
+     119.99,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/espofunkmaster/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/espofunkmaster"
+   },
+   "sold": true,
+   "door": "locked"
+  },
+  {
+   "id": "espocutlabs",
+   "name": "ESPO Cutlabs",
+   "tag": "Video editing",
+   "state": "dev",
+   "genre": "arts",
+   "url": "https://ae-video-studio.vercel.app/",
+   "family": "",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "ae-video-studio.vercel.app",
+    "path": "/",
+    "project": "?",
+    "repo": null,
+    "local": null
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "cut-and-effect",
+   "name": "Cut & Effect",
+   "tag": "Drop in your takes, Roz makes the movie",
+   "state": "live",
+   "genre": "arts",
+   "url": "/apps/cut-and-effect/",
+   "family": "",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/cut-and-effect/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/cut-and-effect"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "aevoice",
+   "name": "AE Voice Machine",
+   "tag": "Your voice, on tap",
+   "state": "off",
+   "genre": "arts",
+   "url": "",
+   "family": "",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": null,
+    "path": null,
+    "project": null,
+    "repo": null,
+    "local": null
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "ae-cre8",
+   "name": "AE Cre8",
+   "tag": "Eight machines that make things",
+   "state": "off",
+   "genre": "arts",
+   "url": "https://ae-cre8.vercel.app/",
+   "family": "AE Cre8",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "ae-cre8.vercel.app",
+    "path": "/",
+    "project": "?",
+    "repo": null,
+    "local": null
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "revolver",
+   "name": "AE Revolver",
+   "tag": "Record collection",
+   "state": "live",
+   "genre": "arts",
+   "url": "/apps/revolver/",
+   "family": "Revolver",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     1.99,
+     "month"
+    ],
+    [
+     "Yearly",
+     19.99,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/revolver/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/revolver"
+   },
+   "sold": true,
+   "door": "locked"
+  },
+  {
+   "id": "thread",
+   "name": "ND Thread",
+   "tag": "Your master list \u2014 and the thing you were doing",
+   "state": "live",
+   "genre": "mind",
+   "url": "/apps/thread/",
+   "family": "The Neuro-Divulge",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     1.99,
+     "month"
+    ],
+    [
+     "Yearly",
+     19.99,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/thread/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/thread"
+   },
+   "sold": true,
+   "door": "locked"
+  },
+  {
+   "id": "tucasa",
+   "name": "Tu Casa OS",
+   "tag": "The home operating system",
+   "state": "dev",
+   "genre": "family",
+   "url": "/apps/tucasa/",
+   "family": "Tu Casa",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/tucasa/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/tucasa"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "espovocab",
+   "name": "ESPOvocab",
+   "tag": "Words worth keeping",
+   "state": "live",
+   "genre": "learning",
+   "url": "/apps/espovocab/",
+   "family": "ESPOgraduate",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     1.99,
+     "month"
+    ],
+    [
+     "Yearly",
+     14.99,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/espovocab/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/espovocab"
+   },
+   "sold": true,
+   "door": "locked"
+  },
+  {
+   "id": "espotendency",
+   "name": "ND Tendency",
+   "tag": "Mood & habits",
+   "state": "live",
+   "genre": "mind",
+   "url": "/apps/espotendency/",
+   "family": "The Neuro-Divulge",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     1.99,
+     "month"
+    ],
+    [
+     "Yearly",
+     19.99,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/espotendency/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/espotendency"
+   },
+   "sold": true,
+   "door": "locked"
+  },
+  {
+   "id": "esponest",
+   "name": "ESPOnest",
+   "tag": "Baby tracker",
+   "state": "live",
+   "genre": "family",
+   "url": "/apps/esponest/",
+   "family": "ESPOfam",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/esponest/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/esponest"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "espohystory",
+   "name": "ESPOhystory",
+   "tag": "History, but hysterical",
+   "state": "live",
+   "genre": "learning",
+   "url": "/apps/espohystory/",
+   "family": "ESPO Learning",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     5.99,
+     "month"
+    ],
+    [
+     "Yearly",
+     19.99,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/espohystory/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/espohystory"
+   },
+   "sold": true,
+   "door": "locked"
+  },
+  {
+   "id": "xpense",
+   "name": "Xpense OS",
+   "tag": "Expenses, spoken",
+   "state": "live",
+   "genre": "money",
+   "url": "/apps/xpense/",
+   "family": "",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     9.0,
+     "month"
+    ],
+    [
+     "Yearly",
+     79.0,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/xpense/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/xpense"
+   },
+   "sold": true,
+   "door": "unknown"
+  },
+  {
+   "id": "esporegulator",
+   "name": "ND Regulator",
+   "tag": "Emotional skills",
+   "state": "live",
+   "genre": "mind",
+   "url": "/apps/esporegulator/",
+   "family": "The Neuro-Divulge",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     1.99,
+     "month"
+    ],
+    [
+     "Yearly",
+     19.99,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/esporegulator/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/esporegulator"
+   },
+   "sold": true,
+   "door": "locked"
+  },
+  {
+   "id": "espotrek",
+   "name": "ESPOtrek",
+   "tag": "Trip planner",
+   "state": "live",
+   "genre": "travel",
+   "url": "/apps/espotrek/",
+   "family": "ESPOtravel",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/espotrek/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/espotrek"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "esponatlparks",
+   "name": "ESPOnatlparks",
+   "tag": "Park passport",
+   "state": "live",
+   "genre": "travel",
+   "url": "/apps/esponatlparks/",
+   "family": "ESPOtravel",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/esponatlparks/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/esponatlparks"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "esposign",
+   "name": "ESPOsign",
+   "tag": "Sign it yourself",
+   "state": "live",
+   "genre": "money",
+   "url": "/apps/esposign/",
+   "family": "ESPO Genius",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/esposign/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/esposign"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "espovineyard",
+   "name": "ESPOvineyard",
+   "tag": "Wine journal \u00b7 21+",
+   "state": "live",
+   "genre": "savor",
+   "url": "/apps/espovineyard/",
+   "family": "ESPOsavor",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     2.99,
+     "month"
+    ],
+    [
+     "Yearly",
+     24.99,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/espovineyard/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/espovineyard"
+   },
+   "sold": true,
+   "door": "locked"
+  },
+  {
+   "id": "espostogie",
+   "name": "ESPOstogie",
+   "tag": "Cigar journal \u00b7 21+",
+   "state": "live",
+   "genre": "savor",
+   "url": "/apps/espostogie/",
+   "family": "ESPOsavor",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     2.99,
+     "month"
+    ],
+    [
+     "Yearly",
+     24.99,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/espostogie/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/espostogie"
+   },
+   "sold": true,
+   "door": "locked"
+  },
+  {
+   "id": "espowhiskey",
+   "name": "ESPOwhiskey",
+   "tag": "Whiskey journal \u00b7 21+",
+   "state": "live",
+   "genre": "savor",
+   "url": "/apps/espowhiskey/",
+   "family": "ESPOsavor",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     2.99,
+     "month"
+    ],
+    [
+     "Yearly",
+     24.99,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/espowhiskey/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/espowhiskey"
+   },
+   "sold": true,
+   "door": "locked"
+  },
+  {
+   "id": "espobarista",
+   "name": "ESPObarista",
+   "tag": "Coffee journal",
+   "state": "live",
+   "genre": "savor",
+   "url": "/apps/espobarista/",
+   "family": "ESPOsavor",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     2.99,
+     "month"
+    ],
+    [
+     "Yearly",
+     24.99,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/espobarista/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/espobarista"
+   },
+   "sold": true,
+   "door": "locked"
+  },
+  {
+   "id": "esporacket",
+   "name": "ESPOracket",
+   "tag": "Tennis & pickleball",
+   "state": "dev",
+   "genre": "sport",
+   "url": "/apps/esporacket/",
+   "family": "ESPOcenter",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/esporacket/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/esporacket"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "espowords",
+   "name": "ESPOwords",
+   "tag": "Play the people you know",
+   "state": "live",
+   "genre": "games",
+   "url": "/apps/espowords/",
+   "family": "ESPOparlor",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/espowords/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/espowords"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "espowho",
+   "name": "ESPOwho",
+   "tag": "Twenty questions, out loud",
+   "state": "live",
+   "genre": "games",
+   "url": "/apps/espowho/",
+   "family": "ESPOparlor",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/espowho/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/espowho"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "espodraw",
+   "name": "ESPOdraw",
+   "tag": "Draw it, they guess it",
+   "state": "live",
+   "genre": "games",
+   "url": "/apps/espodraw/",
+   "family": "ESPOparlor",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/espodraw/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/espodraw"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "sparklesalon",
+   "name": "Sparkle Salon",
+   "tag": "Salon game \u00b7 ages 6\u201310",
+   "state": "live",
+   "genre": "games",
+   "url": "/apps/sparklesalon/",
+   "family": "AE Games",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/sparklesalon/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/sparklesalon"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "espofocus",
+   "name": "ND Focus",
+   "tag": "ADHD weekly tracker",
+   "state": "live",
+   "genre": "mind",
+   "url": "/apps/espofocus/",
+   "family": "The Neuro-Divulge",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     1.99,
+     "month"
+    ],
+    [
+     "Yearly",
+     19.99,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/espofocus/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/espofocus"
+   },
+   "sold": true,
+   "door": "locked"
+  },
+  {
+   "id": "kangatodo",
+   "name": "KangaToDo",
+   "tag": "Chores to every kid\\'s phone",
+   "state": "live",
+   "genre": "family",
+   "url": "/apps/kangatodo/",
+   "family": "Accelerated Experiences",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/kangatodo/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/kangatodo"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "ae-wire",
+   "name": "AE Wire",
+   "tag": "Meeting notes",
+   "state": "live",
+   "genre": "work",
+   "url": "/apps/wire/",
+   "family": "",
+   "tiers": false,
+   "plans": [
+    [
+     "Monthly",
+     2.99,
+     "month"
+    ],
+    [
+     "Yearly",
+     23.88,
+     "year"
+    ]
+   ],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/wire/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/ae-wire"
+   },
+   "sold": true,
+   "door": "unknown"
+  },
+  {
+   "id": "ae-fraud-division",
+   "name": "AE Fraud Division",
+   "tag": "Fraud screening for banks",
+   "state": "live",
+   "genre": "work",
+   "url": "/apps/fraud-division/",
+   "family": "",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/fraud-division/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/ae-fraud-division"
+   },
+   "sold": false,
+   "door": "n/a"
+  },
+  {
+   "id": "ae-blastpack",
+   "name": "AE Blastpack",
+   "tag": "Post everywhere at once",
+   "state": "dev",
+   "genre": "social",
+   "url": "/apps/blastpack/",
+   "family": "",
+   "tiers": false,
+   "plans": [],
+   "where": {
+    "host": "www.aexperiences.com",
+    "path": "/apps/blastpack/",
+    "project": "aexperiences-site",
+    "repo": "aexperiences/aexperiences-site",
+    "local": "apps/ae-blastpack"
+   },
+   "sold": false,
+   "door": "n/a"
+  }
+ ]
+}

@@ -29,7 +29,10 @@ const APPS = new Set([
   'espofunkmaster', 'revolver', 'espovocab', 'espohystory',
   'espovineyard', 'espostogie', 'espowhiskey', 'espobarista',
   // apps on their own domains, gated across origin
-  'espo-genius', 'the-narcs'
+  'espo-genius', 'the-narcs',
+  // internal: the production registry. No subscription sells it, so only a comp
+  // code opens it - which is exactly the intent.
+  'ops'
 ]);
 
 function send(res, code, obj) {
