@@ -1,0 +1,318 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light"><meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ND OS">
+<title>ND OS &middot; Desk</title>
+<link rel="icon" href="/logo-nd.png"><link rel="apple-touch-icon" href="/logo-nd.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Karla:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/nd/nd-theme.css">
+<link rel="stylesheet" href="/nd/os/nd-os.css">
+<style>
+  .hello{padding:22px 0 6px}
+  .hello .day{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--nd-terra)}
+  .hello h1{font-size:clamp(26px,6.5vw,34px);margin:8px 0 4px}
+  .hello p{color:var(--nd-ink-2);font-size:15px;margin:0}
+
+  /* the Triad ruling — the thing she reads first */
+  .ruling{margin-top:18px;padding:20px;border-radius:20px;border:1px solid var(--nd-rule);
+    background:linear-gradient(168deg,#FBF8F1,#F1EADE);box-shadow:var(--nd-shadow);position:relative;overflow:hidden}
+  .ruling:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--nd-sage)}
+  .ruling.held:before{background:var(--nd-tan)}
+  .ruling .who{font-size:10.5px;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:var(--nd-ink-2)}
+  .ruling h2{font-family:var(--nd-serif);font-size:clamp(19px,4.6vw,24px);margin:8px 0 10px;line-height:1.24}
+  .ruling ul{margin:0;padding-left:17px;font-size:14.5px;color:var(--nd-ink-2)}
+  .ruling li{margin:.35em 0}
+  .meter{height:6px;border-radius:99px;background:var(--nd-rule-soft);margin:16px 0 7px;overflow:hidden}
+  .meter i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--nd-sage),var(--nd-sage-d));
+    width:0;transition:width 1.1s cubic-bezier(.2,.8,.25,1)}
+  .ruling.held .meter i{background:linear-gradient(90deg,var(--nd-tan),#B99C80)}
+  .meter-l{display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--nd-ink-2)}
+  .lensbtn{margin-top:14px;background:none;border:0;padding:0;font:700 11.5px/1 var(--nd-sans);
+    letter-spacing:.13em;text-transform:uppercase;color:var(--nd-terra-d);cursor:pointer;min-height:40px}
+  .lenses{display:none;margin-top:10px;border-top:1px dashed var(--nd-rule);padding-top:14px}
+  .lenses.open{display:block}
+  .lens{margin-bottom:12px}
+  .lens b{display:block;font:700 11px/1 var(--nd-sans);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+  .lens.for b{color:var(--nd-sage-d)} .lens.against b{color:var(--nd-terra-d)}
+  .lens p{margin:0 0 4px;font-size:14px;color:var(--nd-ink-2)}
+
+  .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-top:20px}
+  .tile{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:17px;padding:15px 16px;
+    box-shadow:var(--nd-shadow)}
+  .tile .n{font-family:var(--nd-serif);font-size:clamp(27px,8vw,34px);font-weight:700;line-height:1;
+    letter-spacing:-.02em;display:block}
+  .tile .l{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--nd-ink-2);
+    margin-top:7px;display:block}
+  .tile .s{font-size:12.5px;color:var(--nd-ink-2);margin-top:3px;display:block}
+  .tile.wide{grid-column:1/-1}
+
+  .spark{display:flex;align-items:flex-end;gap:3px;height:52px;margin-top:12px}
+  .spark i{flex:1;background:var(--nd-sage);border-radius:3px 3px 0 0;min-height:3px;opacity:.85;
+    transition:height .7s cubic-bezier(.2,.8,.25,1)}
+  .spark i.today{background:var(--nd-terra)}
+
+  h2.sec{font-size:19px;margin:30px 0 0}
+  .rows{margin-top:10px;display:flex;flex-direction:column;gap:1px;background:var(--nd-rule);
+    border:1px solid var(--nd-rule);border-radius:15px;overflow:hidden}
+  .row{background:var(--nd-card);padding:12px 15px;display:flex;align-items:center;gap:12px;font-size:14.5px}
+  .row .k{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row .v{font-weight:700;font-variant-numeric:tabular-nums}
+  .row .bar{position:absolute;inset:0 auto 0 0;background:rgba(169,182,148,.22)}
+  .row{position:relative}.row>*{position:relative}
+
+  details.log{margin-top:14px;border:1px solid var(--nd-rule);border-radius:15px;background:var(--nd-card);
+    overflow:hidden}
+  details.log summary{list-style:none;cursor:pointer;padding:14px 16px;font:700 12px/1 var(--nd-sans);
+    letter-spacing:.14em;text-transform:uppercase;color:var(--nd-ink-2);min-height:46px;display:flex;
+    align-items:center;justify-content:space-between}
+  details.log summary::-webkit-details-marker{display:none}
+  details.log summary:after{content:"\203A";transform:rotate(90deg);font-size:19px;transition:transform .25s}
+  details.log[open] summary:after{transform:rotate(-90deg)}
+  .hit{border-top:1px solid var(--nd-rule-soft);padding:11px 16px;font-size:13.5px;display:flex;gap:10px;align-items:baseline}
+  .hit .when{font-variant-numeric:tabular-nums;color:var(--nd-ink-2);font-size:12px;flex:none;width:44px}
+  .hit .what{flex:1;min-width:0}
+  .hit .what b{display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hit .what span{color:var(--nd-ink-2);font-size:12.5px}
+
+  .rooms{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-top:12px}
+  .rm{display:flex;flex-direction:column;gap:8px;padding:16px;border-radius:17px;background:var(--nd-card);
+    border:1px solid var(--nd-rule);box-shadow:var(--nd-shadow);text-decoration:none;color:inherit;
+    transition:transform .18s cubic-bezier(.2,.7,.3,1),box-shadow .18s}
+  .rm:hover{transform:translateY(-4px);box-shadow:0 20px 34px -20px rgba(67,60,53,.5)}
+  .rm svg{width:24px;height:24px;fill:none;stroke:var(--nd-terra);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .rm b{font-family:var(--nd-serif);font-size:17px;font-weight:600}
+  .rm span{font-size:13px;color:var(--nd-ink-2);line-height:1.4}
+  .rm.soon{opacity:.62}
+  .rm.soon b:after{content:"soon";font:700 9px/1 var(--nd-sans);letter-spacing:.14em;text-transform:uppercase;
+    background:var(--nd-tan);color:#4B4339;padding:4px 7px;border-radius:6px;margin-left:8px;vertical-align:2px}
+
+  .gate{max-width:420px;margin:8vh auto 0}
+  .gate h1{font-size:27px;margin-bottom:8px}
+  .skel{background:linear-gradient(90deg,var(--nd-rule-soft),#F6F1E7,var(--nd-rule-soft));
+    background-size:200% 100%;animation:sk 1.3s linear infinite;border-radius:9px;color:transparent}
+  @keyframes sk{to{background-position:-200% 0}}
+  @media(min-width:620px){ .tiles{grid-template-columns:repeat(4,1fr)} .rooms{grid-template-columns:repeat(3,1fr)} }
+</style>
+</head><body>
+
+<header class="mast"><div class="wrap">
+  <img src="/logo-nd.png" alt="">
+  <div><div class="wordmark">The Neuro<em>~</em>Divulge</div><div class="subword">ND OS &middot; Desk</div></div>
+  <a class="back" href="/nd/">Site &rarr;</a>
+</div></header>
+
+<main class="wrap" id="main">
+
+  <section class="gate card" id="gate" hidden>
+    <h1>Welcome to your OS.</h1>
+    <p class="muted" style="font-size:15px">Everything The Neuro-Divulge does lives behind this one word.
+      Type it once and this phone will remember.</p>
+    <div style="margin:18px 0 6px"><label for="key">Your word</label>
+      <input id="key" type="password" autocomplete="current-password" enterkeyhint="go"></div>
+    <p class="say" id="gateSay" style="min-height:20px;font-size:13.5px;font-weight:600;color:var(--nd-terra-d)"></p>
+    <button class="btn solid" id="unlock" style="width:100%">Open</button>
+  </section>
+
+  <div id="desk" hidden>
+    <section class="hello">
+      <div class="day" id="day">&nbsp;</div>
+      <h1 id="greet">Good evening.</h1>
+      <p id="sub">Here is what The Neuro-Divulge did while you were living your life.</p>
+    </section>
+
+    <section class="ruling" id="ruling">
+      <div class="who">Pacemaker &middot; Desk</div>
+      <h2 class="skel" id="verdict">Reading the numbers&hellip;</h2>
+      <ul id="because"></ul>
+      <div class="meter"><i id="meterBar"></i></div>
+      <div class="meter-l"><span>Confidence</span><span id="confN">&mdash;</span></div>
+      <button class="lensbtn" id="lensbtn" type="button">Show both lenses</button>
+      <div class="lenses" id="lenses"></div>
+    </section>
+
+    <section class="tiles" id="tiles">
+      <div class="tile"><span class="n skel">00</span><span class="l">People</span><span class="s">&nbsp;</span></div>
+      <div class="tile"><span class="n skel">00</span><span class="l">Reads</span><span class="s">&nbsp;</span></div>
+      <div class="tile"><span class="n skel">00</span><span class="l">Notes live</span><span class="s">&nbsp;</span></div>
+      <div class="tile"><span class="n skel">00</span><span class="l">Paid</span><span class="s">&nbsp;</span></div>
+    </section>
+
+    <div class="tile wide" style="margin-top:11px" id="sparkWrap" hidden>
+      <span class="l">Last 14 days</span>
+      <div class="spark" id="spark"></div>
+    </div>
+
+    <section id="listy"></section>
+
+    <h2 class="sec">Your rooms</h2>
+    <div class="rule-paper"><span></span></div>
+    <div class="rooms" id="rooms"></div>
+
+    <p class="muted" style="font-size:12.5px;margin-top:22px;line-height:1.55">
+      Every number here is counted, never guessed. When there is not enough to read,
+      this page says so instead of drawing you a picture.
+    </p>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <a class="aemark" href="/shop.html">
+    <img src="/marks/ae-mark-gradient.png" alt="Accelerated Experiences, LLC">
+    <span><b>ND OS &middot; built by Accelerated Experiences, LLC</b>Runs on the AE Triad</span>
+  </a>
+</div></footer>
+
+<script src="/nd/os/nd-os.js"></script>
+<script src="/nd/os/nd-triad.js"></script>
+<script>
+(function(){
+  var gate=document.getElementById('gate'), desk=document.getElementById('desk');
+  var elKey=document.getElementById('key'), gateSay=document.getElementById('gateSay');
+  var DATA=null;
+
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function money(c){ return '$'+(Number(c||0)/100).toFixed(Number(c||0)%100?2:0); }
+
+  /* ---- greeting ------------------------------------------------------- */
+  (function(){
+    var d=new Date(), h=d.getHours();
+    document.getElementById('day').textContent=
+      d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+    document.getElementById('greet').textContent =
+      h<5?'Still up.':h<12?'Good morning, Jessica.':h<17?'Good afternoon, Jessica.':'Good evening, Jessica.';
+  })();
+
+  /* ---- unlocking ------------------------------------------------------ */
+  function unlock(){
+    var k=elKey.value.trim(); if(!k) return;
+    gateSay.textContent='Checking…';
+    NDOS.auth.set(k);
+    load().then(function(ok){ if(!ok){ gateSay.textContent='That word did not work.'; NDOS.auth.clear(); }
+                              else { elKey.value=''; gateSay.textContent=''; } });
+  }
+  document.getElementById('unlock').addEventListener('click',unlock);
+  elKey.addEventListener('keydown',function(e){ if(e.key==='Enter') unlock(); });
+
+  /* ---- the load ------------------------------------------------------- */
+  function load(){
+    if(!NDOS.auth.has()){ gate.hidden=false; desk.hidden=true; return Promise.resolve(false); }
+    return NDOS.net('/api/nd-desk?days=14').then(function(j){
+      if(!j.ok){
+        if(j.__status===401){ gate.hidden=false; desk.hidden=true; return false; }
+        gate.hidden=true; desk.hidden=false; DATA=null; paintEmpty(NDOS.why(j)); return true;
+      }
+      gate.hidden=true; desk.hidden=false; DATA=j; paint(j); return true;
+    });
+  }
+
+  function paintEmpty(msg){
+    var r=document.getElementById('ruling'); r.classList.add('held');
+    document.getElementById('verdict').className=''; document.getElementById('verdict').textContent=msg;
+    document.getElementById('because').innerHTML='';
+    document.getElementById('confN').textContent='—';
+    rooms();
+  }
+
+  /* ---- paint ---------------------------------------------------------- */
+  function paint(j){
+    var t=j.traffic, m=j.money||{}, n=j.notes||{};
+
+    /* the Triad reads it. It is allowed to say no. */
+    var ruling = NDTRIAD.ask('desk',{
+      people:t.people, hits:t.hits, perDay:t.perDay, money:m,
+      topPage:(t.pages[0]||{}).k, topFrom:(t.from[0]||{}).k
+    });
+
+    var box=document.getElementById('ruling');
+    box.classList.toggle('held',!ruling.released);
+    var v=document.getElementById('verdict'); v.className=''; v.textContent=ruling.verdict;
+    document.getElementById('because').innerHTML=
+      ruling.because.map(function(b){ return '<li>'+esc(b)+'</li>'; }).join('');
+    document.getElementById('confN').textContent=ruling.confidence+'%';
+    requestAnimationFrame(function(){ document.getElementById('meterBar').style.width=ruling.confidence+'%'; });
+
+    document.getElementById('lenses').innerHTML = ruling.lenses.map(function(L){
+      if(!L.says.length) return '';
+      return '<div class="lens '+(L.side==='for'?'for':'against')+'"><b>'+esc(L.name)+
+        (L.side==='for'?' — for':' — against')+'</b>'+
+        L.says.map(function(s){ return '<p>'+esc(s)+'</p>'; }).join('')+'</div>';
+    }).join('') + '<p class="muted" style="font-size:12.5px;margin:2px 0 0">'+
+      'They never confer. The Pacemaker clears them, or holds.</p>';
+
+    /* tiles */
+    var paid = m.ready ? (m.live?money(m.mrrCents)+'/mo':'$0') : '—';
+    var paidSub = m.ready ? (m.live+' active'+(m.trialing?', '+m.trialing+' trialing':'')) : 'not switched on';
+    tile(0, t.people, 'People', t.people?'in the last 14 days':'nobody yet');
+    tile(1, t.hits, 'Reads', (t.pages[0]?'top: '+t.pages[0].k:' '));
+    tile(2, n.published||0, 'Notes live', (n.drafts?n.drafts+' draft'+(n.drafts===1?'':'s'):'no drafts'));
+    tile(3, paid, 'Paid', paidSub);
+
+    /* sparkline */
+    if(t.perDay && t.perDay.length){
+      var max=Math.max.apply(null,t.perDay.map(function(d){return d.hits;}))||1;
+      document.getElementById('sparkWrap').hidden=false;
+      document.getElementById('spark').innerHTML=t.perDay.map(function(d,i){
+        var h=Math.round((d.hits/max)*100);
+        return '<i title="'+esc(d.day)+': '+d.hits+'" style="height:'+(h||3)+'%"'+
+          (i===t.perDay.length-1?' class="today"':'')+'></i>';
+      }).join('');
+    }
+
+    /* lists */
+    var L=document.getElementById('listy'); L.innerHTML='';
+    L.innerHTML += block('What they read', t.pages);
+    L.innerHTML += block('Where they came from', t.from);
+    L.innerHTML += block('Where they are', t.places);
+    if(t.recent && t.recent.length){
+      L.innerHTML += '<details class="log"><summary><span>The log &middot; '+t.recent.length+' most recent</span></summary>'+
+        t.recent.map(function(h){
+          var when=(h.t||'').slice(11,16);
+          var where=[h.city,h.country].filter(Boolean).join(', ');
+          return '<div class="hit"><span class="when">'+esc(when)+'</span><span class="what">'+
+            '<b>'+esc(h.path||'/')+'</b><span>'+esc([where,h.ip,h.device,h.ref?'via '+h.ref:''].filter(Boolean).join(' · '))+
+            '</span></span></div>';
+        }).join('')+'</details>';
+    }
+    rooms();
+  }
+
+  function tile(i,n,label,sub){
+    var el=document.getElementById('tiles').children[i];
+    el.innerHTML='<span class="n">'+esc(n)+'</span><span class="l">'+esc(label)+'</span><span class="s">'+esc(sub)+'</span>';
+  }
+  function block(title,rows){
+    if(!rows||!rows.length) return '';
+    var max=rows[0].n||1;
+    return '<h2 class="sec">'+esc(title)+'</h2><div class="rule-paper"><span></span></div><div class="rows">'+
+      rows.map(function(r){
+        return '<div class="row"><span class="bar" style="width:'+Math.round((r.n/max)*100)+'%"></span>'+
+          '<span class="k">'+esc(r.k)+'</span><span class="v">'+r.n+'</span></div>';
+      }).join('')+'</div>';
+  }
+  function rooms(){
+    document.getElementById('rooms').innerHTML = NDOS.rooms.filter(function(r){ return r.id!=='desk'; })
+      .map(function(r){
+        return '<a class="rm'+(r.live?'':' soon')+'" href="'+r.href+'">'+NDOS.icon(r.icon)+
+          '<b>'+esc(r.label)+'</b><span>'+esc(r.blurb)+'</span></a>';
+      }).join('');
+  }
+
+  document.getElementById('lensbtn').addEventListener('click',function(){
+    var l=document.getElementById('lenses'), open=l.classList.toggle('open');
+    this.textContent = open ? 'Hide the lenses' : 'Show both lenses';
+  });
+
+  /* the bus tells us when the key dies, wherever it died */
+  NDOS.bus.on('auth:out',function(){ gate.hidden=false; desk.hidden=true; });
+  NDOS.bus.on('post:saved',function(){ if(NDOS.auth.has()) load(); });
+
+  NDOS.mount({ active:'desk', primary:{ label:'Write a note', icon:'write',
+    onTap:function(){ location.href='/nd/write/'; } } });
+
+  load();
+})();
+</script>
+</body></html>

@@ -272,7 +272,7 @@ input[type=text]:focus,input[type=email]:focus{outline:none;border-color:var(--n
   .subword{font-size:9.5px;letter-spacing:.12em}
   .mast nav{
     position:fixed;left:0;right:0;bottom:0;margin:0;z-index:100;
-    display:grid;grid-template-columns:repeat(5,1fr);gap:0;
+    display:grid;grid-template-columns:repeat(6,1fr);gap:0;
     background:rgba(52,46,40,.72);
     -webkit-backdrop-filter:saturate(1.6) blur(20px);backdrop-filter:saturate(1.6) blur(20px);
     border-top:1px solid rgba(243,238,229,.14);
@@ -280,7 +280,8 @@ input[type=text]:focus,input[type=email]:focus{outline:none;border-color:var(--n
     box-shadow:0 -10px 30px -16px rgba(0,0,0,.6)}
   .mast nav a{
     display:flex;align-items:center;justify-content:center;text-align:center;
-    min-height:46px;padding:4px 2px;font-size:11.5px;font-weight:700;line-height:1.15;
+    min-height:46px;padding:4px 1px;font-size:10.5px;font-weight:700;line-height:1.15;
+    white-space:nowrap;letter-spacing:-.01em;
     border-bottom:0;border-radius:10px;color:rgba(243,238,229,.82);letter-spacing:.01em;
     -webkit-tap-highlight-color:transparent}
   .mast nav a:active{background:rgba(243,238,229,.14);color:#F3EEE5}
@@ -327,6 +328,29 @@ input[type=text]:focus,input[type=email]:focus{outline:none;border-color:var(--n
   .mast{padding-top:env(safe-area-inset-top,0px)}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
+
+/* ---- the gear: her door into ND OS ------------------------------------- */
+.gear{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border-radius:13px;color:var(--nd-ink-2);flex:none;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .5s cubic-bezier(.3,1.3,.4,1),background .2s,color .2s}
+.gear svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.gear:hover{background:var(--nd-paper-2);color:var(--nd-terra);transform:rotate(60deg)}
+.gear:active{transform:rotate(60deg) scale(.92)}
+
+/* ---- Notes on the front page ------------------------------------------- */
+#notes .notegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:8px}
+#notes .note{display:block;text-decoration:none;color:inherit;background:var(--nd-card);
+  border:1px solid var(--nd-rule);border-radius:15px;padding:19px;
+  box-shadow:0 1px 0 rgba(67,60,53,.04),0 10px 26px -18px rgba(67,60,53,.4);
+  transition:transform .18s cubic-bezier(.2,.7,.3,1),box-shadow .18s}
+#notes .note:hover{transform:translateY(-5px);
+  box-shadow:0 2px 0 rgba(67,60,53,.05),0 22px 38px -20px rgba(67,60,53,.55)}
+#notes .note .when{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--nd-terra)}
+#notes .note h3{font-family:var(--nd-serif);font-size:19px;font-weight:600;margin:8px 0 6px;line-height:1.25}
+#notes .note p{font-size:14.5px;color:var(--nd-ink-2);margin:0}
+#notes .notegrid:empty+p{margin-top:4px}
 </style>
 
 </head>
@@ -338,9 +362,13 @@ input[type=text]:focus,input[type=email]:focus{outline:none;border-color:var(--n
       <div class="wordmark">The Neuro<em>~</em>Divulge</div>
       <div class="subword">An Esposito Family Project</div>
     </div>
+    <a class="gear" href="/nd/os/" aria-label="Open ND OS" title="ND OS">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.1"/><path d="M12 3.4v2.2M12 18.4v2.2M20.6 12h-2.2M5.6 12H3.4M18.08 5.92l-1.56 1.56M7.48 16.52l-1.56 1.56M18.08 18.08l-1.56-1.56M7.48 7.48 5.92 5.92"/></svg>
+    </a>
     <nav>
       <a href="#checklist"><span class="wide">Free&nbsp;</span>Checklist</a>
       <a href="#printables">Printables</a>
+      <a href="#notes">Notes</a>
       <a href="#apps">Apps</a>
       <a href="#watch">Watch</a>
       <a href="#about">About</a>
@@ -422,6 +450,20 @@ input[type=text]:focus,input[type=email]:focus{outline:none;border-color:var(--n
           </div>
         </article>
       </div>
+    </div>
+  </section>
+
+  <section id="notes">
+    <div class="wrap">
+      <div class="sechead">
+        <div class="eyebrow">Notes</div>
+        <div class="rule-paper"><span></span></div>
+        <h2>What we are figuring out, as we figure it out.</h2>
+        <p class="lede">No polish, no expert voice. A homeschooling family in north Idaho writing down
+          what worked this week and what did not.</p>
+      </div>
+      <div id="ndNotes" class="notegrid"></div>
+      <p style="margin-top:18px"><a class="btn" href="/nd/blog/">Read all the notes</a></p>
     </div>
   </section>
 
@@ -571,6 +613,27 @@ input[type=text]:focus,input[type=email]:focus{outline:none;border-color:var(--n
     said.hidden=false;
     f.querySelector('button').textContent='Sending\u2026';
   });
+})();
+</script>
+
+<script>
+/* The three newest notes, straight off the blog. If there are none, or the
+   store is not answering, the section simply stays quiet — the page never
+   shows a broken shelf. */
+(function(){
+  var box=document.getElementById('ndNotes'); if(!box) return;
+  var esc=function(t){return String(t).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
+  fetch('/api/nd-blog').then(function(r){return r.json();}).then(function(j){
+    if(!j||!j.ok||!j.posts||!j.posts.length){ document.getElementById('notes').hidden=true; return; }
+    box.innerHTML=j.posts.slice(0,3).map(function(p){
+      var d=p.createdAt?new Date(p.createdAt).toLocaleDateString(undefined,{month:'short',day:'numeric'}):'';
+      var teaser=p.dek || String(p.body||'').replace(/[#*>_`]/g,'').slice(0,120);
+      return '<a class="note" href="/nd/blog/?p='+encodeURIComponent(p.slug)+'">'+
+        '<span class="when">'+esc(d)+'</span><h3>'+esc(p.title)+'</h3>'+
+        '<p>'+esc(teaser)+(teaser.length>=120?'\u2026':'')+'</p></a>';
+    }).join('');
+  }).catch(function(){ document.getElementById('notes').hidden=true; });
 })();
 </script>
 

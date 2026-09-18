@@ -1,0 +1,134 @@
+/* ============================================================================
+   ND OS  ·  the back-end shell  ·  Accelerated Experiences LLC · Sep 2026
+   Phone first, and not a tab bar. A floating glass dock that sits off the
+   bottom edge, a pill that slides to whatever room you are in, one raised
+   button for the thing this room is actually for, and a sheet for the rest.
+   Front-of-house (/nd/) keeps its flat bar. This is the back.
+   ========================================================================== */
+
+:root{
+  --os-glass:rgba(48,42,37,.66);
+  --os-glass-2:rgba(48,42,37,.86);
+  --os-line:rgba(243,238,229,.16);
+  --os-on:rgba(243,238,229,.95);
+  --os-off:rgba(243,238,229,.58);
+  --os-lift:0 18px 44px -14px rgba(26,22,19,.62),0 2px 0 rgba(243,238,229,.06) inset;
+  --os-spring:cubic-bezier(.34,1.46,.44,1);
+}
+
+/* room gets out of the dock's way */
+body.nd-os{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+
+/* ---- the dock ------------------------------------------------------------ */
+.nd-dock{
+  position:fixed;z-index:120;left:14px;right:14px;
+  bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  max-width:480px;margin-inline:auto;height:64px;
+  border-radius:24px;border:1px solid var(--os-line);
+  background:var(--os-glass);
+  -webkit-backdrop-filter:blur(26px) saturate(170%);backdrop-filter:blur(26px) saturate(170%);
+  box-shadow:var(--os-lift);
+  display:grid;grid-template-columns:repeat(5,1fr);align-items:center;
+  padding:0 6px;
+  transition:transform .32s var(--os-spring),opacity .22s;
+}
+.nd-dock.hide{transform:translateY(130%);opacity:0;pointer-events:none}
+
+/* the pill that chases the active room */
+.nd-dock .glide{
+  position:absolute;top:7px;height:50px;border-radius:17px;
+  background:rgba(243,238,229,.13);
+  box-shadow:0 1px 0 rgba(243,238,229,.12) inset;
+  transition:transform .42s var(--os-spring),width .42s var(--os-spring),opacity .2s;
+  pointer-events:none;opacity:0;
+}
+.nd-dock.ready .glide{opacity:1}
+
+.nd-dock button,.nd-dock a{
+  position:relative;z-index:1;-webkit-appearance:none;appearance:none;
+  background:none;border:0;padding:0;margin:0;cursor:pointer;text-decoration:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  height:58px;color:var(--os-off);font:600 9.5px/1 "Karla","Helvetica Neue",Arial,sans-serif;
+  letter-spacing:.055em;text-transform:uppercase;
+  -webkit-tap-highlight-color:transparent;
+  transition:color .22s,transform .2s var(--os-spring);
+}
+.nd-dock button:active,.nd-dock a:active{transform:scale(.9)}
+.nd-dock .on{color:var(--os-on)}
+.nd-dock svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;
+  transition:transform .3s var(--os-spring)}
+.nd-dock .on svg{transform:translateY(-1px) scale(1.06)}
+
+/* the one raised button — whatever this room is for */
+.nd-dock .prime{
+  width:58px;height:58px;border-radius:20px;justify-self:center;gap:0;
+  transform:translateY(-16px);
+  background:linear-gradient(160deg,#CE6733,#A44A21);
+  color:#FDF8EF;box-shadow:0 12px 26px -8px rgba(164,74,33,.72),
+    0 1px 0 rgba(255,255,255,.28) inset;
+  border:1px solid rgba(255,255,255,.14);
+}
+.nd-dock .prime svg{width:25px;height:25px;stroke-width:2}
+.nd-dock .prime:active{transform:translateY(-16px) scale(.92)}
+.nd-dock .prime[disabled]{opacity:.45;box-shadow:none}
+.nd-dock .prime .spin{animation:ndspin .9s linear infinite;transform-origin:50% 50%}
+@keyframes ndspin{to{transform:rotate(360deg)}}
+
+/* ---- the sheet ----------------------------------------------------------- */
+.nd-scrim{position:fixed;inset:0;z-index:118;background:rgba(32,27,23,.42);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+  opacity:0;pointer-events:none;transition:opacity .26s}
+.nd-scrim.up{opacity:1;pointer-events:auto}
+
+.nd-sheet{
+  position:fixed;z-index:119;left:10px;right:10px;
+  bottom:calc(10px + env(safe-area-inset-bottom,0px));
+  max-width:480px;margin-inline:auto;
+  border-radius:28px;border:1px solid var(--os-line);
+  background:var(--os-glass-2);
+  -webkit-backdrop-filter:blur(30px) saturate(170%);backdrop-filter:blur(30px) saturate(170%);
+  box-shadow:var(--os-lift);
+  padding:10px 12px calc(16px + env(safe-area-inset-bottom,0px));
+  transform:translateY(120%);transition:transform .4s var(--os-spring);
+}
+.nd-sheet.up{transform:translateY(0)}
+.nd-sheet .grip{width:38px;height:4px;border-radius:99px;background:rgba(243,238,229,.28);
+  margin:2px auto 12px}
+.nd-sheet h3{font:700 10.5px/1 "Karla",Arial,sans-serif;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--os-off);margin:2px 0 10px 8px}
+.nd-sheet .rooms{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.nd-sheet a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
+  padding:14px 4px;border-radius:18px;text-decoration:none;color:var(--os-off);
+  font:600 10px/1.1 "Karla",Arial,sans-serif;letter-spacing:.04em;text-align:center;
+  -webkit-tap-highlight-color:transparent;transition:background .2s,color .2s,transform .2s var(--os-spring)}
+.nd-sheet a:active{transform:scale(.93)}
+.nd-sheet a:hover{background:rgba(243,238,229,.1);color:var(--os-on)}
+.nd-sheet a.soon{opacity:.5}
+.nd-sheet a.soon:after{content:"soon";display:block;font-size:8.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--os-off);margin-top:-3px}
+.nd-sheet svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.nd-sheet .out{display:block;margin:12px 8px 0;padding:11px;border-radius:14px;text-align:center;
+  color:var(--os-off);font:700 11px/1 "Karla",Arial,sans-serif;letter-spacing:.14em;
+  text-transform:uppercase;border:1px solid var(--os-line);text-decoration:none}
+
+/* a toast that lands above the dock instead of pushing the page around */
+.nd-toast{position:fixed;z-index:121;left:14px;right:14px;
+  bottom:calc(92px + env(safe-area-inset-bottom,0px));max-width:420px;margin-inline:auto;
+  background:var(--os-glass-2);border:1px solid var(--os-line);border-radius:15px;
+  -webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);
+  box-shadow:var(--os-lift);color:var(--os-on);
+  font:600 13.5px/1.35 "Karla",Arial,sans-serif;padding:12px 15px;
+  transform:translateY(16px) scale(.97);opacity:0;pointer-events:none;
+  transition:transform .3s var(--os-spring),opacity .24s}
+.nd-toast.up{transform:none;opacity:1}
+.nd-toast.bad{color:#FFD9C6;border-color:rgba(206,103,51,.5)}
+
+@media(min-width:760px){
+  .nd-dock{height:66px}
+  .nd-sheet .rooms{grid-template-columns:repeat(4,1fr)}
+}
+@media(prefers-reduced-motion:reduce){
+  .nd-dock,.nd-dock *,.nd-sheet,.nd-scrim,.nd-toast{transition:none!important;animation:none!important}
+}

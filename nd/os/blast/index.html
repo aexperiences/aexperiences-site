@@ -1,0 +1,179 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light"><meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Blast">
+<title>ND OS &middot; Blast</title>
+<link rel="icon" href="/logo-nd.png"><link rel="apple-touch-icon" href="/logo-nd.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Karla:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/nd/nd-theme.css">
+<link rel="stylesheet" href="/nd/os/nd-os.css">
+<style>
+  .hello{padding:22px 0 4px}
+  .hello .day{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--nd-terra)}
+  .hello h1{font-size:clamp(25px,6.2vw,33px);margin:8px 0 6px}
+  .hello p{color:var(--nd-ink-2);font-size:15px;margin:0}
+
+  .picker{display:flex;gap:8px;overflow-x:auto;margin:18px -16px 0;padding:2px 16px 8px;
+    scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+  .picker::-webkit-scrollbar{display:none}
+  .pk{flex:none;scroll-snap-align:start;border:1.5px solid var(--nd-rule);background:var(--nd-card);
+    border-radius:13px;padding:11px 16px;min-height:46px;cursor:pointer;
+    font:700 13.5px/1 var(--nd-sans);color:var(--nd-ink-2);
+    transition:transform .18s cubic-bezier(.2,.7,.3,1),background .2s,color .2s,border-color .2s}
+  .pk:active{transform:scale(.95)}
+  .pk.on{background:var(--nd-terra);border-color:var(--nd-terra);color:#FAF7F0}
+
+  .ruling{margin-top:16px;padding:20px;border-radius:20px;border:1px solid var(--nd-rule);
+    background:linear-gradient(168deg,#FBF8F1,#F1EADE);box-shadow:var(--nd-shadow);position:relative;overflow:hidden}
+  .ruling:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--nd-sage)}
+  .ruling.held:before{background:var(--nd-tan)}
+  .ruling .who{font-size:10.5px;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:var(--nd-ink-2)}
+  .ruling h2{font-family:var(--nd-serif);font-size:clamp(20px,5vw,25px);margin:8px 0 10px;line-height:1.24}
+  .ruling ul{margin:0;padding-left:17px;font-size:14.5px;color:var(--nd-ink-2)}
+  .ruling li{margin:.35em 0}
+  .meter{height:6px;border-radius:99px;background:var(--nd-rule-soft);margin:16px 0 6px;overflow:hidden}
+  .meter i{display:block;height:100%;border-radius:99px;width:0;
+    background:linear-gradient(90deg,var(--nd-sage),var(--nd-sage-d));transition:width 1s cubic-bezier(.2,.8,.25,1)}
+  .ruling.held .meter i{background:linear-gradient(90deg,var(--nd-tan),#B99C80)}
+  .meter-l{display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--nd-ink-2)}
+
+  /* the week — 7 columns of 24 hours, the windows lit */
+  .weekwrap{margin-top:12px;background:var(--nd-card);border:1px solid var(--nd-rule);
+    border-radius:17px;padding:15px 14px;box-shadow:var(--nd-shadow)}
+  .week{display:grid;grid-template-columns:30px repeat(7,1fr);gap:3px;margin-top:10px}
+  .week .hd{font:700 10px/1 var(--nd-sans);letter-spacing:.06em;text-transform:uppercase;
+    color:var(--nd-ink-2);text-align:center;padding-bottom:4px}
+  .week .hr{font:600 9.5px/1 var(--nd-sans);color:var(--nd-ink-2);text-align:right;padding-right:4px;
+    align-self:center}
+  .week i{display:block;height:9px;border-radius:3px;background:var(--nd-rule-soft)}
+  .week i.hot{background:var(--nd-sage)}
+  .week i.now{outline:2px solid var(--nd-terra);outline-offset:1px}
+  .legend{display:flex;gap:14px;margin-top:11px;font-size:11.5px;color:var(--nd-ink-2);align-items:center}
+  .legend s{width:13px;height:9px;border-radius:3px;background:var(--nd-sage);display:inline-block;
+    text-decoration:none;margin-right:5px;vertical-align:-1px}
+
+  .door{margin-top:20px;padding:20px;border-radius:20px;border:1px solid var(--nd-rule);
+    background:var(--nd-card);box-shadow:var(--nd-shadow)}
+  .door h2{font-size:21px;margin-bottom:6px}
+  .door p{font-size:14.5px;color:var(--nd-ink-2);margin:0 0 14px}
+  .door .btn{width:100%}
+  .note{margin-top:20px;font-size:12.5px;color:var(--nd-ink-2);line-height:1.55}
+</style>
+</head><body>
+
+<header class="mast"><div class="wrap">
+  <img src="/logo-nd.png" alt="">
+  <div><div class="wordmark">The Neuro<em>~</em>Divulge</div><div class="subword">ND OS &middot; Blast</div></div>
+  <a class="back" href="/nd/os/">Desk &rarr;</a>
+</div></header>
+
+<main class="wrap" id="main">
+  <section class="hello">
+    <div class="day" id="day">&nbsp;</div>
+    <h1>One video. Everywhere.</h1>
+    <p>Blastpack takes what is already on your phone and sends it to every account at once.
+       This room tells you when to hit send.</p>
+  </section>
+
+  <div class="picker" id="picker"></div>
+
+  <section class="ruling" id="ruling">
+    <div class="who">Pacemaker &middot; Reach</div>
+    <h2 id="verdict">&nbsp;</h2>
+    <ul id="because"></ul>
+    <div class="meter"><i id="meterBar"></i></div>
+    <div class="meter-l"><span>Confidence</span><span id="confN">&mdash;</span></div>
+  </section>
+
+  <div class="weekwrap">
+    <span style="font:700 11px/1 var(--nd-sans);letter-spacing:.13em;text-transform:uppercase;color:var(--nd-ink-2)"
+      id="weekTitle">The week</span>
+    <div class="week" id="week"></div>
+    <div class="legend"><span><s></s>a window</span><span style="color:var(--nd-terra)">&#9633; right now</span></div>
+  </div>
+
+  <section class="door">
+    <h2>Open Blastpack</h2>
+    <p id="doorNote">The pipeline is built and running. The public door opens when Meta finishes app review.</p>
+    <a class="btn solid" href="/apps/blastpack/">Go to Blastpack</a>
+  </section>
+
+  <p class="note">The windows above are the general published findings on social timing &mdash;
+    not measurements of your accounts. The Pacemaker says so out loud every time, and it will keep
+    saying so until your own numbers are big enough to replace them. That swap happens by itself.</p>
+</main>
+
+<footer><div class="wrap">
+  <a class="aemark" href="/nd/os/">
+    <img src="/marks/ae-mark-gradient.png" alt="Accelerated Experiences, LLC">
+    <span><b>ND OS &middot; built by Accelerated Experiences, LLC</b>Runs on the AE Triad</span>
+  </a>
+</div></footer>
+
+<script src="/nd/os/nd-os.js"></script>
+<script src="/nd/os/nd-triad.js"></script>
+<script>
+(function(){
+  var PLATS=[['instagram','Instagram'],['tiktok','TikTok'],['facebook','Facebook'],
+             ['youtube','YouTube'],['pinterest','Pinterest']];
+  var DAYS=['S','M','T','W','T','F','S'];
+  var pick='instagram';
+
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+  document.getElementById('day').textContent =
+    new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+
+  document.getElementById('picker').innerHTML = PLATS.map(function(p){
+    return '<button class="pk'+(p[0]===pick?' on':'')+'" data-p="'+p[0]+'" type="button">'+p[1]+'</button>';
+  }).join('');
+  document.getElementById('picker').addEventListener('click',function(e){
+    var b=e.target.closest('.pk'); if(!b) return;
+    pick=b.dataset.p;
+    [].forEach.call(this.querySelectorAll('.pk'),function(x){ x.classList.toggle('on',x===b); });
+    paint();
+  });
+
+  function paint(){
+    var r=NDTRIAD.ask('reach',{when:new Date(),platform:pick});
+    var box=document.getElementById('ruling');
+    box.classList.toggle('held',!r.released);
+    document.getElementById('verdict').textContent=r.verdict;
+    document.getElementById('because').innerHTML=r.because.map(function(b){ return '<li>'+esc(b)+'</li>'; }).join('');
+    document.getElementById('confN').textContent=r.confidence+'%';
+    document.getElementById('meterBar').style.width='0%';
+    requestAnimationFrame(function(){ document.getElementById('meterBar').style.width=r.confidence+'%'; });
+    week();
+  }
+
+  function week(){
+    var w=NDTRIAD.windows[pick], now=new Date(), nd=now.getDay(), nh=now.getHours();
+    var HOURS=[6,8,10,12,14,16,18,20,22];
+    var html='<span></span>'+DAYS.map(function(d,i){
+      return '<span class="hd"'+(i===nd?' style="color:var(--nd-terra)"':'')+'>'+d+'</span>';
+    }).join('');
+    HOURS.forEach(function(h){
+      var lab=h===12?'12p':h>12?(h-12)+'p':h+'a';
+      html+='<span class="hr">'+lab+'</span>';
+      for(var d=0;d<7;d++){
+        var hot = w.days.indexOf(d)>-1 && w.hours.some(function(r){ return h>=r[0]&&h<r[1]; });
+        var isNow = d===nd && nh>=h && nh<h+2;
+        html+='<i class="'+(hot?'hot':'')+(isNow?' now':'')+'"></i>';
+      }
+    });
+    document.getElementById('week').innerHTML=html;
+    document.getElementById('weekTitle').textContent='The week · '+
+      (PLATS.filter(function(p){return p[0]===pick;})[0]||['',''])[1];
+  }
+
+  NDOS.mount({ active:'blast', primary:{ label:'Open Blastpack', icon:'blast',
+    onTap:function(){ location.href='/apps/blastpack/'; } } });
+
+  paint();
+  setInterval(paint, 60000);
+})();
+</script>
+</body></html>

@@ -1,0 +1,266 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light"><meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Write">
+<title>ND OS &middot; Write</title>
+<link rel="icon" href="/logo-nd.png"><link rel="apple-touch-icon" href="/logo-nd.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Karla:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/nd/nd-theme.css">
+<link rel="stylesheet" href="/nd/os/nd-os.css">
+<style>
+  .topline{display:flex;align-items:center;gap:10px;padding:16px 0 4px;flex-wrap:wrap}
+  .topline .chip{flex:none}
+  .topline .where{flex:1;min-width:0;font-size:12.5px;color:var(--nd-ink-2);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ghost{background:none;border:0;padding:9px 2px;min-height:44px;cursor:pointer;
+    font:700 11.5px/1 var(--nd-sans);letter-spacing:.13em;text-transform:uppercase;color:var(--nd-terra-d)}
+  .ghost.dim{color:var(--nd-ink-2)}
+
+  #title{font-family:var(--nd-serif);font-size:23px;font-weight:600;border:0;background:none;
+    padding:4px 0;border-bottom:1px solid var(--nd-rule);border-radius:0}
+  #title:focus{box-shadow:none;border-bottom-color:var(--nd-terra)}
+  #dek{border:0;background:none;padding:6px 0;border-bottom:1px solid var(--nd-rule);border-radius:0;
+    font-size:15.5px;color:var(--nd-ink-2)}
+  #dek:focus{box-shadow:none;border-bottom-color:var(--nd-terra)}
+  #body{border:0;background:none;padding:10px 0 0;min-height:44vh;font-size:17.5px;line-height:1.7;
+    resize:none;border-radius:0}
+  #body:focus{box-shadow:none}
+  .count{font-size:12px;color:var(--nd-ink-2);text-align:right;padding-top:6px;
+    font-variant-numeric:tabular-nums}
+
+  /* the ruling drawer — comes up when she taps publish */
+  .ruling{margin-top:16px;padding:18px;border-radius:18px;border:1px solid var(--nd-rule);
+    background:linear-gradient(168deg,#FBF8F1,#F1EADE);box-shadow:var(--nd-shadow);
+    position:relative;overflow:hidden;display:none}
+  .ruling.show{display:block;animation:pop .34s cubic-bezier(.34,1.46,.44,1)}
+  @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.985)}}
+  .ruling:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--nd-sage)}
+  .ruling.held:before{background:var(--nd-tan)}
+  .ruling .who{font-size:10.5px;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:var(--nd-ink-2)}
+  .ruling h3{font-family:var(--nd-serif);font-size:19px;margin:8px 0 9px;line-height:1.25}
+  .ruling ul{margin:0;padding-left:17px;font-size:14.5px;color:var(--nd-ink-2)}
+  .ruling li{margin:.35em 0}
+  .meter{height:6px;border-radius:99px;background:var(--nd-rule-soft);margin:14px 0 6px;overflow:hidden}
+  .meter i{display:block;height:100%;border-radius:99px;width:0;
+    background:linear-gradient(90deg,var(--nd-sage),var(--nd-sage-d));transition:width .9s cubic-bezier(.2,.8,.25,1)}
+  .ruling.held .meter i{background:linear-gradient(90deg,var(--nd-tan),#B99C80)}
+  .meter-l{display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--nd-ink-2)}
+  .acts{display:flex;gap:9px;margin-top:15px;flex-wrap:wrap}
+  .acts .btn{flex:1 1 130px;width:auto;min-height:46px;font-size:14.5px}
+
+  h2.sec{font-size:19px;margin:32px 0 0}
+  .plist{display:flex;flex-direction:column;gap:9px;margin-top:11px}
+  .prow{display:flex;align-items:center;gap:10px;background:var(--nd-card);border:1px solid var(--nd-rule);
+    border-radius:14px;padding:11px 13px}
+  .prow.on{border-color:var(--nd-terra);box-shadow:0 0 0 3px rgba(192,92,46,.12)}
+  .prow .t{flex:1;min-width:0;text-align:left;background:none;border:0;padding:0;cursor:pointer;font:inherit;color:inherit}
+  .prow .t b{display:block;font-family:var(--nd-serif);font-size:16px;font-weight:600;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .prow .t span{font-size:12px;color:var(--nd-ink-2)}
+  .x{border:0;background:none;color:var(--nd-ink-2);font:700 11px var(--nd-sans);letter-spacing:.1em;
+    text-transform:uppercase;cursor:pointer;padding:8px 4px;min-height:44px}
+  .x.arm{color:var(--nd-terra-d)}
+
+  .gate{max-width:420px;margin:8vh auto 0}
+</style>
+</head><body>
+
+<header class="mast"><div class="wrap">
+  <img src="/logo-nd.png" alt="">
+  <div><div class="wordmark">The Neuro<em>~</em>Divulge</div><div class="subword">ND OS &middot; Write</div></div>
+  <a class="back" href="/nd/blog/">Notes &rarr;</a>
+</div></header>
+
+<main class="wrap" id="main">
+
+  <section class="gate card" id="gate" hidden>
+    <h1 style="font-size:25px;margin-bottom:8px">Sign in to write</h1>
+    <p class="muted" style="font-size:15px">Your word. This phone remembers it after the first time.</p>
+    <div style="margin:18px 0 6px"><label for="key">Your word</label>
+      <input id="key" type="password" autocomplete="current-password" enterkeyhint="go"></div>
+    <p id="gateSay" style="min-height:20px;font-size:13.5px;font-weight:600;color:var(--nd-terra-d)"></p>
+    <button class="btn solid" id="unlock" style="width:100%">Open</button>
+  </section>
+
+  <section id="desk" hidden>
+    <div class="topline">
+      <span class="chip draft" id="statusChip">Draft</span>
+      <span class="where" id="whereLine">New note</span>
+      <button class="ghost dim" id="saveDraft" type="button">Save</button>
+      <button class="ghost" id="newPost" type="button">New</button>
+    </div>
+
+    <input id="title" placeholder="Title" enterkeyhint="next" aria-label="Title">
+    <input id="dek" placeholder="One line under it &mdash; optional" aria-label="One line under the title">
+    <textarea id="body" placeholder="Write it the way you would say it." aria-label="The post"></textarea>
+    <div class="count" id="count">0 words</div>
+
+    <div class="ruling" id="ruling">
+      <div class="who">Pacemaker &middot; Publish</div>
+      <h3 id="verdict"></h3>
+      <ul id="because"></ul>
+      <div class="meter"><i id="meterBar"></i></div>
+      <div class="meter-l"><span>Confidence</span><span id="confN">&mdash;</span></div>
+      <div class="acts">
+        <button class="btn quiet" id="keepWriting" type="button">Keep writing</button>
+        <button class="btn solid" id="goAnyway" type="button">Publish it</button>
+      </div>
+    </div>
+
+    <h2 class="sec">Your notes</h2>
+    <div class="rule-paper"><span></span></div>
+    <div class="plist" id="plist"><p class="muted">Loading&hellip;</p></div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <a class="aemark" href="/nd/os/">
+    <img src="/marks/ae-mark-gradient.png" alt="Accelerated Experiences, LLC">
+    <span><b>ND OS &middot; built by Accelerated Experiences, LLC</b>Runs on the AE Triad</span>
+  </a>
+</div></footer>
+
+<script src="/nd/os/nd-os.js"></script>
+<script src="/nd/os/nd-triad.js"></script>
+<script>
+(function(){
+  var API='/api/nd-blog', WIP='nd:write:wip';
+  var gate=document.getElementById('gate'), desk=document.getElementById('desk');
+  var elKey=document.getElementById('key'), gateSay=document.getElementById('gateSay');
+  var elTitle=document.getElementById('title'), elDek=document.getElementById('dek'), elBody=document.getElementById('body');
+  var chip=document.getElementById('statusChip'), whereLine=document.getElementById('whereLine');
+  var plist=document.getElementById('plist'), box=document.getElementById('ruling');
+  var current={slug:'',status:'draft'};
+
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function store(k,v){ try{ v===null?localStorage.removeItem(k):localStorage.setItem(k,v);}catch(e){} }
+  function recall(k){ try{ return localStorage.getItem(k)||''; }catch(e){ return ''; } }
+
+  function setChip(st){
+    current.status = st==='published' ? 'published' : 'draft';
+    chip.className='chip '+(current.status==='published'?'live':'draft');
+    chip.textContent=current.status==='published'?'Live':'Draft';
+    whereLine.textContent=current.slug ? '/nd/blog/?p='+current.slug : 'New note';
+  }
+  function grow(){ elBody.style.height='auto'; elBody.style.height=Math.max(elBody.scrollHeight, window.innerHeight*0.44)+'px'; }
+  function counted(){
+    var w=elBody.value.trim()?elBody.value.trim().split(/\s+/).length:0;
+    document.getElementById('count').textContent=w+' word'+(w===1?'':'s')+
+      (w>60?' · about '+Math.max(1,Math.round(w/220))+' min to read':'');
+  }
+  function wipSave(){ store(WIP,JSON.stringify({slug:current.slug,status:current.status,
+    title:elTitle.value,dek:elDek.value,body:elBody.value})); }
+  function wipLoad(){
+    var raw=recall(WIP); if(!raw) return;
+    try{ var w=JSON.parse(raw); elTitle.value=w.title||''; elDek.value=w.dek||''; elBody.value=w.body||'';
+      current.slug=w.slug||''; setChip(w.status); }catch(e){}
+  }
+  [elTitle,elDek,elBody].forEach(function(el){
+    el.addEventListener('input',function(){ wipSave(); if(el===elBody){grow();counted();} hideRuling(); });
+  });
+
+  /* ---- gate ----------------------------------------------------------- */
+  function unlock(){
+    var k=elKey.value.trim(); if(!k) return;
+    gateSay.textContent='Checking…'; NDOS.auth.set(k);
+    load().then(function(ok){ if(!ok){ gateSay.textContent='That word did not work.'; NDOS.auth.clear(); }
+                              else { elKey.value=''; gateSay.textContent=''; } });
+  }
+  document.getElementById('unlock').addEventListener('click',unlock);
+  elKey.addEventListener('keydown',function(e){ if(e.key==='Enter') unlock(); });
+
+  function load(){
+    if(!NDOS.auth.has()){ gate.hidden=false; desk.hidden=true; return Promise.resolve(false); }
+    return NDOS.net(API+'?all=1').then(function(j){
+      if(!j.ok){
+        if(j.__status===401){ gate.hidden=false; desk.hidden=true; return false; }
+        NDOS.say(NDOS.why(j),true); return true;
+      }
+      gate.hidden=true; desk.hidden=false;
+      render(j.posts); wipLoad(); setChip(current.status); grow(); counted();
+      return true;
+    });
+  }
+
+  /* ---- the list ------------------------------------------------------- */
+  function render(posts){
+    if(!posts||!posts.length){ plist.innerHTML='<p class="muted">Nothing written yet. The first one goes above.</p>'; return; }
+    plist.innerHTML='';
+    posts.forEach(function(p){
+      var row=document.createElement('div');
+      row.className='prow'+(p.slug===current.slug?' on':'');
+      row.innerHTML='<button class="t"><b></b><span>'+esc(String(p.createdAt||'').slice(0,10))+'</span></button>'+
+        '<span class="chip '+(p.status==='published'?'live':'draft')+'">'+
+        (p.status==='published'?'Live':'Draft')+'</span><button class="x">Del</button>';
+      row.querySelector('b').textContent=p.title||'(untitled)';
+      row.querySelector('.t').addEventListener('click',function(){ edit(p); });
+      var x=row.querySelector('.x'), armed=false, t=null;
+      x.addEventListener('click',function(){
+        if(!armed){ armed=true; x.textContent='Sure?'; x.classList.add('arm');
+          t=setTimeout(function(){ armed=false; x.textContent='Del'; x.classList.remove('arm'); },4000); return; }
+        clearTimeout(t); x.textContent='…';
+        NDOS.net(API,{method:'POST',json:{slug:p.slug,delete:true}}).then(function(j){
+          if(j.ok){ if(current.slug===p.slug) blank(); NDOS.say('Deleted.');
+            NDOS.bus.emit('post:gone',{slug:p.slug}); load(); }
+          else { NDOS.say(NDOS.why(j),true); x.textContent='Del'; armed=false; x.classList.remove('arm'); }
+        });
+      });
+      plist.appendChild(row);
+    });
+  }
+  function edit(p){
+    current.slug=p.slug; elTitle.value=p.title||''; elDek.value=p.dek||''; elBody.value=p.body||'';
+    setChip(p.status); wipSave(); grow(); counted(); hideRuling();
+    NDOS.say('Opened “'+(p.title||'untitled')+'”.');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function blank(){ current.slug=''; elTitle.value=''; elDek.value=''; elBody.value='';
+    setChip('draft'); wipSave(); grow(); counted(); hideRuling(); }
+
+  /* ---- the Triad sits between her and the publish button -------------- */
+  function hideRuling(){ box.classList.remove('show'); }
+  function showRuling(){
+    var r=NDTRIAD.ask('publish',{title:elTitle.value,dek:elDek.value,body:elBody.value});
+    box.classList.add('show'); box.classList.toggle('held',!r.released);
+    document.getElementById('verdict').textContent=r.verdict;
+    document.getElementById('because').innerHTML=r.because.map(function(b){ return '<li>'+esc(b)+'</li>'; }).join('');
+    document.getElementById('confN').textContent=r.confidence+'%';
+    requestAnimationFrame(function(){ document.getElementById('meterBar').style.width=r.confidence+'%'; });
+    document.getElementById('goAnyway').textContent = r.released ? 'Publish it' : 'Publish anyway';
+    box.scrollIntoView({behavior:'smooth',block:'nearest'});
+    return r;
+  }
+  document.getElementById('keepWriting').addEventListener('click',function(){ hideRuling(); elBody.focus(); });
+  document.getElementById('goAnyway').addEventListener('click',function(){ hideRuling(); save('published'); });
+
+  /* ---- saving --------------------------------------------------------- */
+  function save(status){
+    var title=elTitle.value.trim();
+    if(!title){ NDOS.say('It needs a title first.',true); elTitle.focus(); return; }
+    NDOS.net(API,{method:'POST',json:{slug:current.slug||undefined,title:title,
+      dek:elDek.value.trim(),body:elBody.value,status:status}}).then(function(j){
+      if(!j.ok){ NDOS.say(NDOS.why(j),true); return; }
+      current.slug=j.post.slug; setChip(j.post.status); wipSave();
+      NDOS.say(status==='published'?'Published. It is live on Notes.':'Saved. Nobody can see it yet.');
+      NDOS.bus.emit('post:saved',{post:j.post});
+      load();
+    });
+  }
+  document.getElementById('saveDraft').addEventListener('click',function(){ save('draft'); });
+  document.getElementById('newPost').addEventListener('click',function(){ blank(); NDOS.say('Blank page.'); elTitle.focus(); });
+
+  NDOS.bus.on('auth:out',function(){ gate.hidden=false; desk.hidden=true; });
+
+  NDOS.mount({ active:'write', primary:{ label:'Publish', icon:'up', onTap:function(){
+    if(!elTitle.value.trim()){ NDOS.say('It needs a title first.',true); elTitle.focus(); return; }
+    showRuling();
+  } } });
+
+  window.addEventListener('resize',grow);
+  load();
+})();
+</script>
+</body></html>
