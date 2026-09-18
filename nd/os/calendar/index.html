@@ -1,0 +1,282 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light"><meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Calendar">
+<title>ND OS &middot; Calendar</title>
+<link rel="icon" href="/logo-nd.png"><link rel="apple-touch-icon" href="/logo-nd.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Karla:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/nd/nd-theme.css">
+<link rel="stylesheet" href="/nd/os/nd-os.css">
+<style>
+  .monthbar{display:flex;align-items:center;gap:10px;padding:20px 0 12px}
+  .monthbar h1{flex:1;font-size:clamp(23px,5.6vw,30px);margin:0}
+  .nav{width:44px;height:44px;border-radius:13px;border:1px solid var(--nd-rule);background:var(--nd-card);
+    cursor:pointer;color:var(--nd-ink-2);font:700 18px/1 var(--nd-sans);flex:none;
+    transition:transform .16s cubic-bezier(.2,.7,.3,1),background .2s,color .2s}
+  .nav:active{transform:scale(.9)} .nav:hover{background:var(--nd-paper-2);color:var(--nd-terra)}
+
+  .grid{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:19px;padding:13px 11px 15px;
+    box-shadow:var(--nd-shadow)}
+  .dow{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:6px}
+  .dow span{text-align:center;font:700 10px/1 var(--nd-sans);letter-spacing:.1em;text-transform:uppercase;
+    color:var(--nd-ink-2)}
+  .days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+  .d{aspect-ratio:1/1;border:0;background:none;border-radius:12px;cursor:pointer;position:relative;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:0;
+    font:600 15px/1 var(--nd-sans);color:var(--nd-ink);min-height:40px;
+    transition:background .18s,transform .16s cubic-bezier(.2,.7,.3,1),color .18s}
+  .d:active{transform:scale(.9)}
+  .d.out{color:var(--nd-rule);pointer-events:none}
+  .d.today{color:var(--nd-terra);font-weight:700}
+  .d.today:before{content:"";position:absolute;inset:3px;border:1.5px solid var(--nd-terra);border-radius:11px}
+  .d.on{background:var(--nd-terra);color:#FAF7F0}
+  .d.on:before{border-color:transparent}
+  .dots{display:flex;gap:2.5px;height:5px}
+  .dots i{width:5px;height:5px;border-radius:99px;display:block}
+  .dots i.due{background:var(--nd-terra)} .dots i.post{background:var(--nd-sage-d)}
+  .dots i.note{background:var(--nd-tan)} .dots i.ev{background:#8A7CA8}
+  .d.on .dots i{background:rgba(250,247,240,.9)}
+
+  .key{display:flex;flex-wrap:wrap;gap:13px;margin-top:13px;font-size:11.5px;color:var(--nd-ink-2)}
+  .key span{display:inline-flex;align-items:center;gap:6px}
+  .key s{width:8px;height:8px;border-radius:99px;display:inline-block;text-decoration:none}
+
+  h2.sec{font-size:19px;margin:28px 0 0}
+  .day-list{display:flex;flex-direction:column;gap:9px;margin-top:11px}
+  .ev{display:flex;gap:12px;align-items:flex-start;background:var(--nd-card);border:1px solid var(--nd-rule);
+    border-radius:14px;padding:13px 14px}
+  .ev .tag{flex:none;width:4px;align-self:stretch;border-radius:99px;min-height:28px}
+  .ev .mid{flex:1;min-width:0}
+  .ev .mid b{display:block;font-size:15.5px;font-weight:600;line-height:1.4;word-break:break-word}
+  .ev .mid span{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--nd-ink-2)}
+  .ev a{text-decoration:none;color:inherit}
+  .x{border:0;background:none;color:var(--nd-ink-2);font:700 11px var(--nd-sans);letter-spacing:.1em;
+    text-transform:uppercase;cursor:pointer;padding:5px 2px;min-height:40px;flex:none}
+  .x.arm{color:var(--nd-terra-d)}
+  .empty{padding:22px 4px;color:var(--nd-ink-2);font-size:15px}
+
+  .addbox{margin-top:16px;background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:17px;
+    padding:14px;box-shadow:var(--nd-shadow)}
+  .addbox input[type=text]{border:0;background:none;padding:6px 2px;font-size:16.5px;border-radius:0}
+  .addbox input[type=text]:focus{box-shadow:none}
+  .addrow{display:flex;gap:9px;margin-top:10px;align-items:center;flex-wrap:wrap}
+  .addrow input[type=time]{flex:1 1 120px;width:auto;min-height:44px;font-size:14px;padding:10px 12px}
+  .addrow .btn{flex:0 0 auto;width:auto;min-height:44px;padding:11px 18px;font-size:14px}
+  .gate{max-width:420px;margin:8vh auto 0}
+</style>
+</head><body>
+
+<header class="mast"><div class="wrap">
+  <img src="/logo-nd.png" alt="">
+  <div><div class="wordmark">The Neuro<em>~</em>Divulge</div><div class="subword">ND OS &middot; Calendar</div></div>
+  <a class="back" href="/nd/os/">Desk &rarr;</a>
+</div></header>
+
+<main class="wrap" id="main">
+
+  <section class="gate card" id="gate" hidden>
+    <h1 style="font-size:25px;margin-bottom:8px">The calendar</h1>
+    <p class="muted" style="font-size:15px">Your word opens it.</p>
+    <div style="margin:18px 0 6px"><label for="key">Your word</label>
+      <input id="key" type="password" autocomplete="current-password" enterkeyhint="go"></div>
+    <button class="btn solid" id="unlock" style="width:100%">Open</button>
+  </section>
+
+  <div id="desk" hidden>
+    <div class="monthbar">
+      <h1 id="monthName">&nbsp;</h1>
+      <button class="nav" id="prev" type="button" aria-label="Previous month">&lsaquo;</button>
+      <button class="nav" id="next" type="button" aria-label="Next month">&rsaquo;</button>
+    </div>
+
+    <div class="grid">
+      <div class="dow"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+      <div class="days" id="days"></div>
+      <div class="key">
+        <span><s style="background:var(--nd-terra)"></s>due</span>
+        <span><s style="background:var(--nd-sage-d)"></s>posting</span>
+        <span><s style="background:var(--nd-tan)"></s>a note went out</span>
+        <span><s style="background:#8A7CA8"></s>on the calendar</span>
+      </div>
+    </div>
+
+    <h2 class="sec" id="dayName">&nbsp;</h2>
+    <div class="rule-paper"><span></span></div>
+    <div class="day-list" id="dayList"></div>
+
+    <div class="addbox">
+      <input id="what" type="text" placeholder="Put something on this day" enterkeyhint="done" aria-label="What">
+      <div class="addrow">
+        <input id="time" type="time" aria-label="Time">
+        <button class="btn solid" id="add" type="button">Add</button>
+      </div>
+    </div>
+
+    <p class="muted" style="font-size:12.5px;margin-top:20px;line-height:1.55">
+      Everything with a time is already here &mdash; what the list says is due, what the queue is waiting
+      to post, and the day a note went live. You did not have to enter any of it twice.
+    </p>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <a class="aemark" href="/nd/os/">
+    <img src="/marks/ae-mark-gradient.png" alt="Accelerated Experiences, LLC">
+    <span><b>ND OS &middot; built by Accelerated Experiences, LLC</b>Runs on the AE Triad</span>
+  </a>
+</div></footer>
+
+<script src="/nd/os/nd-os.js"></script>
+<script>
+(function(){
+  var CAL='/api/nd-store?c=cal';
+  var gate=document.getElementById('gate'), desk=document.getElementById('desk');
+  var view=new Date(), sel=new Date(), MARKS={}, EVENTS=[];
+
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function key(d){ var p=function(n){return String(n).padStart(2,'0');};
+    return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
+  function dayOf(iso){ return iso ? new Date(iso).toLocaleDateString('sv').slice(0,10) : ''; }
+
+  /* ---- gate ----------------------------------------------------------- */
+  function unlock(){
+    var k=document.getElementById('key').value.trim(); if(!k) return;
+    NDOS.auth.set(k);
+    load().then(function(ok){ if(!ok){ NDOS.say('That word did not work.',true); NDOS.auth.clear(); } });
+  }
+  document.getElementById('unlock').addEventListener('click',unlock);
+  document.getElementById('key').addEventListener('keydown',function(e){ if(e.key==='Enter') unlock(); });
+  NDOS.bus.on('auth:out',function(){ gate.hidden=false; desk.hidden=true; });
+
+  /* ---- everything with a time, gathered once -------------------------- */
+  function load(){
+    if(!NDOS.auth.has()){ gate.hidden=false; desk.hidden=true; return Promise.resolve(false); }
+    return Promise.all([
+      NDOS.net(CAL),
+      NDOS.net('/api/nd-store?c=list'),
+      NDOS.net('/api/nd-queue'),
+      NDOS.net('/api/nd-blog?all=1')
+    ]).then(function(r){
+      var cal=r[0], list=r[1], q=r[2], blog=r[3];
+      if(!cal.ok){
+        if(cal.__status===401){ gate.hidden=false; desk.hidden=true; return false; }
+        NDOS.say(NDOS.why(cal),true); return true;
+      }
+      gate.hidden=true; desk.hidden=false;
+
+      EVENTS=[];
+      (cal.items||[]).forEach(function(i){
+        if(i.at) EVENTS.push({k:dayOf(i.at),at:i.at,kind:'ev',text:i.text||'',id:i.id,own:true}); });
+      if(list.ok) (list.items||[]).forEach(function(i){
+        if(i.at && !i.done) EVENTS.push({k:dayOf(i.at),at:i.at,kind:'due',text:i.text||'',href:'/nd/os/list/'}); });
+      if(q.ok) (q.items||[]).forEach(function(i){
+        if(i.at) EVENTS.push({k:dayOf(i.at),at:i.at,kind:'post',
+          text:(i.platforms||[]).join(' · ')+' — '+String(i.text||'').slice(0,70),href:'/nd/os/blast/'}); });
+      if(blog.ok) (blog.posts||[]).forEach(function(p){
+        if(p.status==='published'&&p.createdAt) EVENTS.push({k:dayOf(p.createdAt),at:p.createdAt,kind:'note',
+          text:p.title||'',href:'/nd/blog/?p='+encodeURIComponent(p.slug)}); });
+
+      MARKS={};
+      EVENTS.forEach(function(e){ (MARKS[e.k]=MARKS[e.k]||{})[e.kind]=true; });
+      month(); day();
+      return true;
+    });
+  }
+
+  /* ---- the month ------------------------------------------------------ */
+  function month(){
+    var y=view.getFullYear(), m=view.getMonth();
+    document.getElementById('monthName').textContent=
+      view.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+    var first=new Date(y,m,1), start=first.getDay();
+    var last=new Date(y,m+1,0).getDate(), prevLast=new Date(y,m,0).getDate();
+    var today=key(new Date()), on=key(sel);
+    var cells=[];
+    for(var i=start-1;i>=0;i--) cells.push({n:prevLast-i,out:true});
+    for(var d=1;d<=last;d++) cells.push({n:d,out:false,k:key(new Date(y,m,d))});
+    while(cells.length%7) cells.push({n:cells.length,out:true});
+
+    document.getElementById('days').innerHTML=cells.map(function(c){
+      if(c.out) return '<button class="d out" tabindex="-1">'+c.n+'</button>';
+      var mk=MARKS[c.k]||{}, dots='';
+      ['due','post','note','ev'].forEach(function(t){ if(mk[t]) dots+='<i class="'+t+'"></i>'; });
+      return '<button class="d'+(c.k===today?' today':'')+(c.k===on?' on':'')+'" data-k="'+c.k+'">'+
+        c.n+'<span class="dots">'+dots+'</span></button>';
+    }).join('');
+  }
+  document.getElementById('days').addEventListener('click',function(e){
+    var b=e.target.closest('.d[data-k]'); if(!b) return;
+    sel=new Date(b.dataset.k+'T12:00'); month(); day();
+  });
+  document.getElementById('prev').addEventListener('click',function(){
+    view=new Date(view.getFullYear(),view.getMonth()-1,1); month(); });
+  document.getElementById('next').addEventListener('click',function(){
+    view=new Date(view.getFullYear(),view.getMonth()+1,1); month(); });
+
+  /* ---- the chosen day ------------------------------------------------- */
+  var COLOR={due:'var(--nd-terra)',post:'var(--nd-sage-d)',note:'var(--nd-tan)',ev:'#8A7CA8'};
+  var WORD={due:'due',post:'posting',note:'went live',ev:''};
+  function day(){
+    var k=key(sel);
+    document.getElementById('dayName').textContent=
+      sel.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+    var mine=EVENTS.filter(function(e){ return e.k===k; })
+      .sort(function(a,b){ return String(a.at).localeCompare(String(b.at)); });
+    var L=document.getElementById('dayList');
+    if(!mine.length){ L.innerHTML='<p class="empty">Nothing on this day.</p>'; return; }
+    L.innerHTML='';
+    mine.forEach(function(e){
+      var t=new Date(e.at).toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+      var row=document.createElement('div'); row.className='ev';
+      row.innerHTML='<span class="tag" style="background:'+COLOR[e.kind]+'"></span>'+
+        '<span class="mid"><b></b><span>'+esc(t+(WORD[e.kind]?' · '+WORD[e.kind]:''))+'</span></span>'+
+        (e.own?'<button class="x">Del</button>':'');
+      var b=row.querySelector('b');
+      if(e.href){ var a=document.createElement('a'); a.href=e.href; a.textContent=e.text; b.appendChild(a); }
+      else b.textContent=e.text;
+      if(e.own){
+        var x=row.querySelector('.x'), armed=false, tm=null;
+        x.addEventListener('click',function(){
+          if(!armed){ armed=true; x.textContent='Sure?'; x.classList.add('arm');
+            tm=setTimeout(function(){ armed=false; x.textContent='Del'; x.classList.remove('arm'); },4000); return; }
+          clearTimeout(tm); x.textContent='…';
+          NDOS.net(CAL,{method:'POST',json:{id:e.id,delete:true}}).then(function(j){
+            if(j.ok){ NDOS.say('Off the calendar.'); load(); }
+            else { NDOS.say(NDOS.why(j),true); x.textContent='Del'; armed=false; x.classList.remove('arm'); }
+          });
+        });
+      }
+      L.appendChild(row);
+    });
+  }
+
+  /* ---- adding --------------------------------------------------------- */
+  function add(){
+    var v=document.getElementById('what').value.trim();
+    if(!v){ document.getElementById('what').focus(); return; }
+    var hm=document.getElementById('time').value||'09:00';
+    var at=new Date(key(sel)+'T'+hm).toISOString();
+    NDOS.net(CAL,{method:'POST',json:{text:v,at:at}}).then(function(j){
+      if(!j.ok){ NDOS.say(NDOS.why(j),true); return; }
+      document.getElementById('what').value=''; document.getElementById('time').value='';
+      NDOS.say('On the calendar.'); load();
+    });
+  }
+  document.getElementById('add').addEventListener('click',add);
+  document.getElementById('what').addEventListener('keydown',function(e){ if(e.key==='Enter') add(); });
+
+  NDOS.bus.on('list:changed',function(){ if(NDOS.auth.has()) load(); });
+  NDOS.bus.on('post:saved',function(){ if(NDOS.auth.has()) load(); });
+
+  NDOS.mount({ active:'cal', primary:{ label:'Add to this day', icon:'up', onTap:function(){
+    if(desk.hidden){ document.getElementById('key').focus(); return; }
+    var w=document.getElementById('what');
+    if(w.value.trim()) add(); else { w.scrollIntoView({behavior:'smooth',block:'center'}); w.focus(); }
+  } } });
+
+  load();
+})();
+</script>
+</body></html>

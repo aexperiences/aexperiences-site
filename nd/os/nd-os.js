@@ -95,7 +95,7 @@
     { id:'notes',   label:'Notes',    href:'/nd/blog/',        icon:'notes',   live:true,  blurb:'The posts, as everyone sees them.' },
     { id:'blast',   label:'Blast',    href:'/nd/os/blast/',    icon:'blast',   live:true,  blurb:'Queue a post. Blastpack sends it.' },
     { id:'list',    label:'List',     href:'/nd/os/list/',     icon:'list',    live:true,  blurb:'One list, not four places.' },
-    { id:'cal',     label:'Calendar', href:'/nd/os/calendar/', icon:'cal',     live:false, blurb:'What is posting, and when.' },
+    { id:'cal',     label:'Calendar', href:'/nd/os/calendar/', icon:'cal',     live:true,  blurb:'Everything with a time, in one month.' },
     { id:'docs',    label:'Docs',     href:'/nd/os/docs/',     icon:'docs',    live:false, blurb:'Write a real document.' },
     { id:'records', label:'Records',  href:'/nd/os/records/',  icon:'records', live:false, blurb:'The hall of records.' }
   ];
