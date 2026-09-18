@@ -124,4 +124,17 @@
   });
 })();
 </script>
+
+<script>
+/* Arriving here from the back end, the way back should be the back end — not the
+   public site. A visitor from anywhere else never sees this. */
+(function(){
+  try{
+    var r=document.referrer||'';
+    if(!/\/nd\/(os|write)\//.test(r)) return;
+    var a=document.querySelector('.mast .back');
+    if(a){ a.href='/nd/os/'; a.innerHTML='&larr; ND OS'; }
+  }catch(e){}
+})();
+</script>
 </body></html>
