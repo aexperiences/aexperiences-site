@@ -27,7 +27,9 @@ const APPS = new Set([
   'thread', 'espotendency', 'esporegulator', 'espofocus',
   // the rest of the sold consumer apps, Sep 18 2026
   'espofunkmaster', 'revolver', 'espovocab', 'espohystory',
-  'espovineyard', 'espostogie', 'espowhiskey', 'espobarista'
+  'espovineyard', 'espostogie', 'espowhiskey', 'espobarista',
+  // apps on their own domains, gated across origin
+  'espo-genius', 'the-narcs'
 ]);
 
 function send(res, code, obj) {

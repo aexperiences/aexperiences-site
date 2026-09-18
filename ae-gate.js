@@ -57,7 +57,12 @@
       if (wide) localStorage.setItem(SHARED, c);
     } catch (e) {}
   }
-  function ask(qs)      { return fetch('/api/gate?' + qs, { cache: 'no-store' }).then(function (r) { return r.json(); }).catch(function () { return { ok: false, error: 'OFFLINE' }; }); }
+  /* An app on its own domain (espogenius.com, marketnarc.com) has no /api/gate of
+     its own, so it points at the store's. api/gate.mjs answers with
+     access-control-allow-origin: *, which is safe because the endpoint only ever
+     ANSWERS a yes/no about a code or a subscription id - it hands out nothing. */
+  var API = D('api', '/api/gate');
+  function ask(qs)      { return fetch(API + '?' + qs, { cache: 'no-store' }).then(function (r) { return r.json(); }).catch(function () { return { ok: false, error: 'OFFLINE' }; }); }
 
   /* The app stays hidden until the gate has answered, so a paid app never flashes
      its contents to someone who has not paid. Removed again on any outcome. */
