@@ -151,5 +151,29 @@ footer small{display:block;margin-top:8px;font-size:11.5px;color:var(--mut);opac
   });
 })();
 </script>
+<script>
+/* A bundle bought from any of the four comes back HERE (the price record sends The
+   Neuro-Divulge's buyers to this page with ?unlocked=cs_...). This page has no door of its
+   own, so it trades the receipt for the subscription itself, drops it in the slot all four
+   apps read, and sends the buyer back to the app they were in. Sep 18 2026 — before this,
+   a bundle buyer paid and every app still showed the storefront. */
+(function(){
+  var u=new URL(location.href), cs=u.searchParams.get('unlocked')||u.searchParams.get('ae_session');
+  if(!cs||!/^cs_/.test(cs)) return;
+  u.searchParams.delete('unlocked'); u.searchParams.delete('ae_session');
+  try{ history.replaceState(null,'',u.pathname+u.search); }catch(e){}
+  var k=document.getElementById('kick');
+  if(k) k.textContent='Opening your four apps…';
+  fetch('/api/gate?app=thread&session='+encodeURIComponent(cs),{cache:'no-store'})
+    .then(function(r){return r.json();}).catch(function(){return null;})
+    .then(function(j){
+      if(!j||!j.ok||!j.code){ if(k) k.textContent='Your payment went through. If an app still asks, open it from your receipt email.'; return; }
+      try{ localStorage.setItem('ae.gate.shared',j.code); localStorage.setItem('ae.gate.thread',j.code); }catch(e){}
+      var back=null; try{ back=JSON.parse(localStorage.getItem('ae.gate.back')||'null'); localStorage.removeItem('ae.gate.back'); }catch(e){}
+      if(back&&back.to&&Date.now()-back.t<3600e3&&back.to.indexOf(location.origin+'/apps/')===0){ location.replace(back.to); return; }
+      if(k) k.textContent='You are in. All four are open.';
+    });
+})();
+</script>
 </body>
 </html>

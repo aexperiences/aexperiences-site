@@ -74,15 +74,32 @@
 
   function open(code, via) { save(code, via === 'comp'); reveal(); try { document.dispatchEvent(new CustomEvent('ae-gate:open', { detail: { app: APP, via: via } })); } catch (e) {} }
 
+  /* Sep 18 2026 — THIS BUTTON NEVER WORKED. It fetched the GET form of /api/checkout, which
+     answers with a 302 straight to Stripe; fetch followed it, got Stripe's HTML page back,
+     failed to read it as JSON and said "Could not reach checkout" to every buyer on all
+     twelve apps. Anthony's list: "Buttons for her store don't work." Now:
+       - same site: POST, which answers { url }, then go there
+       - an app on its own domain (data-api): a plain page load of the GET form, which is
+         what a 302 is for - no fetch, so nothing to read and nothing cross-origin to block
+     Before leaving, it remembers which app sent the buyer, so a bundle bought from inside
+     ND Thread comes back to ND Thread, not to the bundle's menu. */
+  var BASE = /^https?:\/\//i.test(API) ? API.replace(/\/api\/gate.*$/i, '') : '';
   function buy(product) {
-    var u = '/api/checkout?product=' + encodeURIComponent(product) +
-            '&plan=Monthly&home=' + encodeURIComponent(location.origin + location.pathname + '?ae_session={CHECKOUT_SESSION_ID}');
-    fetch(u, { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
-      if (j && j.url) { location.href = j.url; return; }
-      note(j && j.error === 'NOT_CONNECTED'
-        ? 'Payments are not switched on yet. Nothing was charged.'
-        : 'Could not start checkout just now. Nothing was charged.');
-    }).catch(function () { note('Could not reach checkout. Nothing was charged.'); });
+    try { localStorage.setItem('ae.gate.back', JSON.stringify({ to: location.origin + location.pathname, t: Date.now() })); } catch (e) {}
+    if (BASE) {
+      location.href = BASE + '/api/checkout?product=' + encodeURIComponent(product) + '&plan=Monthly';
+      return;
+    }
+    note('Opening checkout…');
+    fetch('/api/checkout', { method: 'POST', cache: 'no-store', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ product: product, plan: 'Monthly' }) })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (j && j.url) { location.href = j.url; return; }
+        note(j && j.ready === false
+          ? 'Payments are not switched on yet. Nothing was charged.'
+          : 'Could not start checkout just now. Nothing was charged.');
+      }).catch(function () { note('Could not reach checkout. Nothing was charged.'); });
   }
 
   var noteEl;
@@ -206,12 +223,14 @@
       return;
     }
 
-    var sess = u.searchParams.get('ae_session');
+    /* /api/checkout sends a buyer back with ?unlocked=cs_... — this used to listen only for
+       ?ae_session=, so a customer who had just paid landed on the storefront again (Sep 18 2026). */
+    var sess = u.searchParams.get('ae_session') || u.searchParams.get('unlocked');
     if (sess && /^cs_/.test(sess)) {
       ask('app=' + encodeURIComponent(APP) + '&session=' + encodeURIComponent(sess)).then(function (j) {
-        u.searchParams.delete('ae_session');
+        u.searchParams.delete('ae_session'); u.searchParams.delete('unlocked');
         try { history.replaceState(null, '', u.toString()); } catch (e) {}
-        if (j && j.ok) return open(j.code, j.via);
+        if (j && j.ok) { save(j.code, true); return open(j.code, j.via); }
         storefront();
       });
       return;
