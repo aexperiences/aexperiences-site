@@ -1,4 +1,4 @@
-/* nd-nav.js — the Neuro Divulge line strip.
+/* nd-nav.js — the Neuro-Divulge line strip.
    One file, no dependencies, no build step. Drop one <script defer src="/nd-nav.js">
    into any ND app and it gains: a way OUT, a way to the other three, and a way to the store.
 
@@ -94,7 +94,7 @@
   /* ── the strip ─────────────────────────────────────────────────────────── */
   var strip = document.createElement('nav');
   strip.className = 'ndn-strip';
-  strip.setAttribute('aria-label', 'Neuro Divulge');
+  strip.setAttribute('aria-label', 'Neuro-Divulge');
 
   var out = document.createElement('button');
   out.type = 'button';
@@ -102,7 +102,7 @@
   out.setAttribute('aria-haspopup', 'dialog');
   out.innerHTML = '<svg width="8" height="13" viewBox="0 0 8 13" aria-hidden="true" fill="none">'
     + '<path d="M6.5 1.5 1.5 6.5l5 5" stroke="currentColor" stroke-width="2" '
-    + 'stroke-linecap="round" stroke-linejoin="round"/></svg> Neuro Divulge';
+    + 'stroke-linecap="round" stroke-linejoin="round"/></svg> Neuro-Divulge';
 
   var label = document.createElement('div');
   label.className = 'ndn-here';
@@ -140,10 +140,10 @@
     sheet.className = 'ndn-sheet';
     sheet.setAttribute('role', 'dialog');
     sheet.setAttribute('aria-modal', 'true');
-    sheet.setAttribute('aria-label', 'Neuro Divulge apps');
+    sheet.setAttribute('aria-label', 'Neuro-Divulge apps');
 
     var h = document.createElement('h2');
-    h.textContent = 'Neuro Divulge';
+    h.textContent = 'Neuro-Divulge';
     var sub = document.createElement('p');
     sub.className = 'ndn-sub';
     sub.textContent = 'Information, Education, and Tools for Neurodivergent, by the Neurodivergent.';
@@ -187,7 +187,7 @@
     var nd = document.createElement('a');
     nd.className = 'ndn-foot';
     nd.href = STORE;
-    nd.textContent = 'Neuro Divulge \u2014 store & printables \u2192';
+    nd.textContent = 'The Neuro-Divulge \u2014 store & printables \u2192';
     sheet.appendChild(nd);
 
     var store = document.createElement('a');

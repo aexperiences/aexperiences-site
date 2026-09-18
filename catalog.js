@@ -190,10 +190,10 @@
       blurb:'The Narc reads the fine print you were handed — leases, contracts, benefit letters, terms — and tells you plainly what it says and what it costs you.',
       price:'$7.99/mo', priceNote:'Or $39.99 a year, billed once' },
 
-    /* Neuro Divulge is the ND STORE, not a single app (Anthony, Sep 13 2026). Its subscription
+    /* Neuro-Divulge is the ND STORE, not a single app (Anthony, Sep 13 2026). Its subscription
        is the all-four bundle: Focus, Thread, Tendency and Regulator, one price. Bought singly the
        four come to $7.96 a month; this is the discount he asked for. */
-    { id:'neuro-divulge', name:'Neuro Divulge', tag:'All four ND apps, one price', genre:'mind', state:'live',
+    { id:'neuro-divulge', name:'The Neuro-Divulge', tag:'All four ND apps, one price', genre:'mind', state:'live',
       acc:'#a85f38', url:'https://www.aexperiences.com/apps/nd/', img:'/logo-nd.png',
       plans:[ ['Monthly',4.99,'month','All four ND apps · 3-day free trial'], ['Yearly',39.99,'year','All four, billed once a year · 3-day free trial'] ], trial:3,
       blurb:'Practical regulation tools for ADHD and autistic brains — built by someone who needs them. One subscription opens all four: ND Focus, ND Thread, ND Tendency and ND Regulator.',
@@ -257,7 +257,7 @@
       price:'$1.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 3-day free trial \u00b7 photo identification runs on our own AI' },
 
     { id:'thread', name:'ND Thread', tag:'Your master list — and the thing you were doing', genre:'mind', state:'live',
-      acc:'#9A7A2C', mark:'/apps/thread/icon.png', family:'Neuro Divulge', url:'/apps/thread/',
+      acc:'#9A7A2C', mark:'/apps/thread/icon.png', family:'The Neuro-Divulge', url:'/apps/thread/',
       plans:[ ['Monthly',1.99,'month','3-day free trial · cancel any time'], ['Yearly',19.99,'year','3-day free trial · billed once a year'] ], trial:3,
       blurb:'A master list that works the way a busy head does: write it down in any order, number it afterwards, notes under every task — and finished work turns yellow and STAYS on the list so you can see the day you had. Sort by number, group by mode, drag to reorder. Plus the thread card that tells you what you were doing after the doorway wipes it, tap-through quests for the kids (no fail states, no timers), and homes for the things you can never find. Mint classroom look with a dark skin.',
       price:'$1.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 3-day free trial' },
@@ -275,7 +275,7 @@
       price:'$1.99/mo', priceNote:'Or $14.99 a year, billed once \u00b7 the word a day and your list stay free' },
 
     { id:'espotendency', name:'ND Tendency', tag:'Mood & habits', genre:'mind', state:'live',
-      acc:'#C23359', mark:'/apps/espotendency/icon.png', family:'Neuro Divulge', url:'/apps/espotendency/',
+      acc:'#C23359', mark:'/apps/espotendency/icon.png', family:'The Neuro-Divulge', url:'/apps/espotendency/',
       plans:[ ['Monthly',1.99,'month','3-day free trial · cancel any time'], ['Yearly',19.99,'year','3-day free trial · billed once a year'] ], trial:3,
       shots:['/shots/espotendency.png'],
       blurb:'A 10-second daily check-in and one tiny win at a time. Everything stays on your device — no account, no cloud.',
@@ -307,7 +307,7 @@
     /* ─────────── IN DEVELOPMENT — no price, no buy path, notify-me only ─────────── */
 
     { id:'esporegulator', name:'ND Regulator', tag:'Emotional skills', genre:'mind', state:'live',
-      acc:'#A32226', mark:'/apps/esporegulator/icon.png', family:'Neuro Divulge', url:'/apps/esporegulator/',
+      acc:'#A32226', mark:'/apps/esporegulator/icon.png', family:'The Neuro-Divulge', url:'/apps/esporegulator/',
       plans:[ ['Monthly',1.99,'month','3-day free trial · cancel any time'], ['Yearly',19.99,'year','3-day free trial · billed once a year'] ], trial:3,
       blurb:'Five-minute practice for anger, stress and anxiety — a real skills ladder plus right-now SOS tools. Skills, not affirmations.',
       price:'$1.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 3-day free trial — Level 1 and every SOS tool free forever' },
@@ -371,7 +371,7 @@
       price:'Free', priceNote:'A free kids’ game — no ads, no accounts, nothing to buy, nothing collected' },
 
     { id:'espofocus', name:'ND Focus', tag:'ADHD weekly tracker', genre:'mind', state:'live',
-      family:'Neuro Divulge',
+      family:'The Neuro-Divulge',
       acc:'#93A82F', mark:'/apps/espofocus/icon.svg', url:'/apps/espofocus/',
       plans:[ ['Monthly',1.99,'month','3-day free trial · cancel any time'], ['Yearly',19.99,'year','3-day free trial · billed once a year'] ], trial:3,
       blurb:'The weekly ADHD monitoring report your provider asks for — parents, teachers and behavior specialists rate the same 15 things each week, and ND Focus charts whether the plan is working. Not a diagnosis; private, initials only.',

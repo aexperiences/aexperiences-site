@@ -117,7 +117,7 @@
     { key: "drama", name: "ESPO Drama", tag: "Act & create", url: "https://espodrama.com/" },
     { key: "edu", name: "ESPO Curriculum", tag: "Homeschool K-12", url: "https://espoedu.com/" },
     { key: "narc", name: "The Narcs", tag: "See through it", url: "https://www.aexperiences.com/narcs/" },
-    { key: "nd", name: "Neuro Divulge", tag: "Regulation tools", url: "https://neurodivulge.com/" },
+    { key: "nd", name: "The Neuro-Divulge", tag: "Regulation tools", url: "https://neurodivulge.com/" },
     { key: "hub", name: "AE Hub", tag: "Operations", url: "https://aexperiences.studio/" }
   ];
 
