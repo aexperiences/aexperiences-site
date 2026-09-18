@@ -14,7 +14,7 @@
   .hello h1{font-size:clamp(25px,6.2vw,33px);margin:8px 0 6px}
   .hello p{color:var(--nd-ink-2);font-size:15px;margin:0}
 
-  .picker{display:flex;gap:8px;overflow-x:auto;margin:18px -16px 0;padding:2px 16px 8px;
+  .picker{display:flex;gap:8px;overflow-x:auto;margin:16px -16px 0;padding:2px 16px 8px;
     scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
   .picker::-webkit-scrollbar{display:none}
   .pk{flex:none;scroll-snap-align:start;border:1.5px solid var(--nd-rule);background:var(--nd-card);
@@ -24,7 +24,7 @@
   .pk:active{transform:scale(.95)}
   .pk.on{background:var(--nd-terra);border-color:var(--nd-terra);color:#FAF7F0}
 
-  .ruling{margin-top:16px;padding:20px;border-radius:20px;border:1px solid var(--nd-rule);
+  .ruling{margin-top:14px;padding:20px;border-radius:20px;border:1px solid var(--nd-rule);
     background:linear-gradient(168deg,#FBF8F1,#F1EADE);box-shadow:var(--nd-shadow);position:relative;overflow:hidden}
   .ruling:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--nd-sage)}
   .ruling.held:before{background:var(--nd-tan)}
@@ -39,14 +39,12 @@
   .meter-l{display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.1em;
     text-transform:uppercase;color:var(--nd-ink-2)}
 
-  /* the week — 7 columns of 24 hours, the windows lit */
   .weekwrap{margin-top:12px;background:var(--nd-card);border:1px solid var(--nd-rule);
     border-radius:17px;padding:15px 14px;box-shadow:var(--nd-shadow)}
   .week{display:grid;grid-template-columns:30px repeat(7,1fr);gap:3px;margin-top:10px}
   .week .hd{font:700 10px/1 var(--nd-sans);letter-spacing:.06em;text-transform:uppercase;
     color:var(--nd-ink-2);text-align:center;padding-bottom:4px}
-  .week .hr{font:600 9.5px/1 var(--nd-sans);color:var(--nd-ink-2);text-align:right;padding-right:4px;
-    align-self:center}
+  .week .hr{font:600 9.5px/1 var(--nd-sans);color:var(--nd-ink-2);text-align:right;padding-right:4px;align-self:center}
   .week i{display:block;height:9px;border-radius:3px;background:var(--nd-rule-soft)}
   .week i.hot{background:var(--nd-sage)}
   .week i.now{outline:2px solid var(--nd-terra);outline-offset:1px}
@@ -54,12 +52,48 @@
   .legend s{width:13px;height:9px;border-radius:3px;background:var(--nd-sage);display:inline-block;
     text-decoration:none;margin-right:5px;vertical-align:-1px}
 
-  .door{margin-top:20px;padding:20px;border-radius:20px;border:1px solid var(--nd-rule);
+  h2.sec{font-size:20px;margin:32px 0 0}
+  .compose{margin-top:11px;background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:19px;
+    padding:18px;box-shadow:var(--nd-shadow)}
+  .compose textarea{min-height:120px;resize:vertical}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 2px}
+  .ch{border:1.5px solid var(--nd-rule);background:#FFFDF8;border-radius:11px;padding:10px 13px;
+    min-height:44px;cursor:pointer;font:700 13px/1 var(--nd-sans);color:var(--nd-ink-2);
+    transition:transform .16s cubic-bezier(.2,.7,.3,1),background .2s,color .2s,border-color .2s}
+  .ch:active{transform:scale(.94)}
+  .ch.on{background:var(--nd-sage);border-color:var(--nd-sage-d);color:#2F3A26}
+  .lim{font-size:12.5px;color:var(--nd-ink-2);text-align:right;padding-top:6px;font-variant-numeric:tabular-nums}
+  .lim.over{color:var(--nd-terra-d);font-weight:700}
+  .whenrow{display:flex;gap:9px;align-items:flex-end;flex-wrap:wrap;margin-top:14px}
+  .whenrow>div{flex:1 1 170px;min-width:0}
+  .suggest{background:none;border:1.5px dashed var(--nd-sage-d);border-radius:11px;padding:11px 13px;
+    min-height:46px;cursor:pointer;font:700 12.5px/1.25 var(--nd-sans);color:var(--nd-sage-d);
+    flex:1 1 150px;text-align:left}
+  .suggest:active{transform:scale(.97)}
+
+  .qlist{display:flex;flex-direction:column;gap:9px;margin-top:11px}
+  .q{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:15px;padding:14px 15px;
+    display:flex;gap:11px;align-items:flex-start}
+  .q .when{flex:none;width:58px;text-align:center}
+  .q .when b{display:block;font-family:var(--nd-serif);font-size:17px;line-height:1.1}
+  .q .when span{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--nd-ink-2)}
+  .q .mid{flex:1;min-width:0}
+  .q .mid p{margin:0 0 6px;font-size:14.5px;line-height:1.45;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .q .who{font-size:11.5px;color:var(--nd-ink-2);font-weight:600}
+  .x{border:0;background:none;color:var(--nd-ink-2);font:700 11px var(--nd-sans);letter-spacing:.1em;
+    text-transform:uppercase;cursor:pointer;padding:6px 2px;min-height:44px;flex:none}
+  .x.arm{color:var(--nd-terra-d)}
+
+  .door{margin-top:22px;padding:19px;border-radius:19px;border:1px solid var(--nd-rule);
     background:var(--nd-card);box-shadow:var(--nd-shadow)}
-  .door h2{font-size:21px;margin-bottom:6px}
+  .door h2{font-size:20px;margin-bottom:6px}
   .door p{font-size:14.5px;color:var(--nd-ink-2);margin:0 0 14px}
   .door .btn{width:100%}
   .note{margin-top:20px;font-size:12.5px;color:var(--nd-ink-2);line-height:1.55}
+  .lockbar{margin-top:11px;padding:15px 16px;border-radius:15px;border:1px dashed var(--nd-rule);
+    background:var(--nd-paper-2);font-size:14px;color:var(--nd-ink-2)}
+  .lockbar .btn{margin-top:11px;width:100%}
 </style>
 </head><body>
 
@@ -73,8 +107,8 @@
   <section class="hello">
     <div class="day" id="day">&nbsp;</div>
     <h1>One video. Everywhere.</h1>
-    <p>Blastpack takes what is already on your phone and sends it to every account at once.
-       This room tells you when to hit send.</p>
+    <p>Write it once and put it in the queue. Blastpack sends the whole queue the day
+       its door opens &mdash; nothing you write between now and then is wasted.</p>
   </section>
 
   <div class="picker" id="picker"></div>
@@ -94,10 +128,46 @@
     <div class="legend"><span><s></s>a window</span><span style="color:var(--nd-terra)">&#9633; right now</span></div>
   </div>
 
+  <h2 class="sec">Put one in the queue</h2>
+  <div class="rule-paper"><span></span></div>
+
+  <div class="lockbar" id="lockbar" hidden>
+    Scheduling needs your word &mdash; the same one as the Desk.
+    <div style="margin-top:10px"><label for="key">Your word</label>
+      <input id="key" type="password" autocomplete="current-password" enterkeyhint="go"></div>
+    <button class="btn solid" id="unlock" type="button">Unlock scheduling</button>
+  </div>
+
+  <div id="sched" hidden>
+    <div class="compose">
+      <label for="text">The caption</label>
+      <textarea id="text" placeholder="What are you saying with it?"></textarea>
+      <div class="lim" id="lim">&nbsp;</div>
+
+      <label style="margin-top:14px">Where it goes</label>
+      <div class="chips" id="chips"></div>
+
+      <label for="media" style="margin-top:14px">The video or picture</label>
+      <input id="media" placeholder="A note to yourself &mdash; which file, or a link">
+
+      <div class="whenrow">
+        <div><label for="at">When</label><input id="at" type="datetime-local"></div>
+        <button class="suggest" id="suggest" type="button">Pick the next good window</button>
+      </div>
+
+      <button class="btn solid" id="add" type="button" style="width:100%;margin-top:15px">Add to the queue</button>
+    </div>
+
+    <h2 class="sec">The queue</h2>
+    <div class="rule-paper"><span></span></div>
+    <div class="qlist" id="qlist"><p class="muted">Loading&hellip;</p></div>
+  </div>
+
   <section class="door">
     <h2>Open Blastpack</h2>
-    <p id="doorNote">The pipeline is built and running. The public door opens when Meta finishes app review.</p>
-    <a class="btn solid" href="/apps/blastpack/">Go to Blastpack</a>
+    <p>The pipeline is built and running. The public door opens when Meta finishes app review,
+       and the queue drains itself that day.</p>
+    <a class="btn" href="/apps/blastpack/">Go to Blastpack</a>
   </section>
 
   <p class="note">The windows above are the general published findings on social timing &mdash;
@@ -116,17 +186,22 @@
 <script src="/nd/os/nd-triad.js"></script>
 <script>
 (function(){
-  var PLATS=[['instagram','Instagram'],['tiktok','TikTok'],['facebook','Facebook'],
-             ['youtube','YouTube'],['pinterest','Pinterest']];
+  var API='/api/nd-queue';
+  var PLATS=[['instagram','Instagram',2200],['tiktok','TikTok',2200],['facebook','Facebook',63206],
+             ['youtube','YouTube',5000],['pinterest','Pinterest',500]];
   var DAYS=['S','M','T','W','T','F','S'];
-  var pick='instagram';
+  var LONG=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var pick='instagram', going={instagram:true};
 
   function esc(s){return String(s).replace(/[&<>"']/g,function(c){
     return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function name(id){ for(var i=0;i<PLATS.length;i++) if(PLATS[i][0]===id) return PLATS[i][1]; return id; }
+  function chosen(){ return Object.keys(going).filter(function(k){ return going[k]; }); }
 
   document.getElementById('day').textContent =
     new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
 
+  /* ---- the reading half (always open) --------------------------------- */
   document.getElementById('picker').innerHTML = PLATS.map(function(p){
     return '<button class="pk'+(p[0]===pick?' on':'')+'" data-p="'+p[0]+'" type="button">'+p[1]+'</button>';
   }).join('');
@@ -148,31 +223,153 @@
     requestAnimationFrame(function(){ document.getElementById('meterBar').style.width=r.confidence+'%'; });
     week();
   }
-
   function week(){
     var w=NDTRIAD.windows[pick], now=new Date(), nd=now.getDay(), nh=now.getHours();
     var HOURS=[6,8,10,12,14,16,18,20,22];
     var html='<span></span>'+DAYS.map(function(d,i){
-      return '<span class="hd"'+(i===nd?' style="color:var(--nd-terra)"':'')+'>'+d+'</span>';
-    }).join('');
+      return '<span class="hd"'+(i===nd?' style="color:var(--nd-terra)"':'')+'>'+d+'</span>'; }).join('');
     HOURS.forEach(function(h){
       var lab=h===12?'12p':h>12?(h-12)+'p':h+'a';
       html+='<span class="hr">'+lab+'</span>';
       for(var d=0;d<7;d++){
-        var hot = w.days.indexOf(d)>-1 && w.hours.some(function(r){ return h>=r[0]&&h<r[1]; });
-        var isNow = d===nd && nh>=h && nh<h+2;
+        var hot=w.days.indexOf(d)>-1 && w.hours.some(function(r){ return h>=r[0]&&h<r[1]; });
+        var isNow=d===nd && nh>=h && nh<h+2;
         html+='<i class="'+(hot?'hot':'')+(isNow?' now':'')+'"></i>';
       }
     });
     document.getElementById('week').innerHTML=html;
-    document.getElementById('weekTitle').textContent='The week · '+
-      (PLATS.filter(function(p){return p[0]===pick;})[0]||['',''])[1];
+    document.getElementById('weekTitle').textContent='The week · '+name(pick);
   }
 
-  NDOS.mount({ active:'blast', primary:{ label:'Open Blastpack', icon:'blast',
-    onTap:function(){ location.href='/apps/blastpack/'; } } });
+  /* ---- the scheduling half (behind the word) -------------------------- */
+  document.getElementById('chips').innerHTML = PLATS.map(function(p){
+    return '<button class="ch'+(going[p[0]]?' on':'')+'" data-p="'+p[0]+'" type="button">'+p[1]+'</button>';
+  }).join('');
+  document.getElementById('chips').addEventListener('click',function(e){
+    var b=e.target.closest('.ch'); if(!b) return;
+    var id=b.dataset.p; going[id]=!going[id];
+    b.classList.toggle('on',!!going[id]); limit();
+  });
 
-  paint();
+  var elText=document.getElementById('text');
+  function limit(){
+    var n=elText.value.length, on=chosen();
+    if(!on.length){ document.getElementById('lim').textContent=n+' characters · pick where it goes';
+      document.getElementById('lim').className='lim'; return; }
+    var cap=Math.min.apply(null,PLATS.filter(function(p){ return going[p[0]]; }).map(function(p){ return p[2]; }));
+    var tight=PLATS.filter(function(p){ return going[p[0]] && p[2]===cap; })[0];
+    var el=document.getElementById('lim');
+    el.textContent=n+' / '+cap+' · '+tight[1]+' is the tightest';
+    el.className='lim'+(n>cap?' over':'');
+  }
+  elText.addEventListener('input',limit);
+
+  /* the next hour that suits the most of the chosen platforms */
+  function nextWindow(){
+    var on=chosen(); if(!on.length) on=[pick];
+    var now=new Date(), best=null, bestScore=0;
+    for(var step=1; step<=24*7; step++){
+      var t=new Date(now.getTime()+step*3600000);
+      t.setMinutes(0,0,0);
+      var d=t.getDay(), h=t.getHours(), score=0;
+      on.forEach(function(p){
+        var w=NDTRIAD.windows[p]; if(!w) return;
+        if(w.days.indexOf(d)>-1 && w.hours.some(function(r){ return h>=r[0]&&h<r[1]; })) score++;
+      });
+      if(score>bestScore){ bestScore=score; best=t; if(score===on.length) break; }
+    }
+    return best;
+  }
+  function localValue(d){
+    var p=function(n){ return String(n).padStart(2,'0'); };
+    return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes());
+  }
+  document.getElementById('suggest').addEventListener('click',function(){
+    var t=nextWindow();
+    if(!t){ NDOS.say('No window in the next week for that mix.',true); return; }
+    document.getElementById('at').value=localValue(t);
+    NDOS.say(LONG[t.getDay()]+' at '+t.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})+' — set.');
+  });
+
+  document.getElementById('add').addEventListener('click',function(){
+    var text=elText.value.trim();
+    if(!text){ NDOS.say('It needs a caption first.',true); elText.focus(); return; }
+    var on=chosen();
+    if(!on.length){ NDOS.say('Pick at least one place for it to go.',true); return; }
+    var atv=document.getElementById('at').value;
+    var at=atv?new Date(atv).toISOString():(nextWindow()||new Date()).toISOString();
+    NDOS.net(API,{method:'POST',json:{text:text,platforms:on,media:document.getElementById('media').value.trim(),at:at}})
+      .then(function(j){
+        if(!j.ok){ NDOS.say(NDOS.why(j),true); return; }
+        elText.value=''; document.getElementById('media').value=''; document.getElementById('at').value='';
+        limit(); NDOS.say('In the queue. It holds until Blastpack opens.');
+        NDOS.bus.emit('queue:added',{item:j.item}); load();
+      });
+  });
+
+  function load(){
+    if(!NDOS.auth.has()){ document.getElementById('lockbar').hidden=false;
+      document.getElementById('sched').hidden=true; return Promise.resolve(false); }
+    return NDOS.net(API).then(function(j){
+      if(!j.ok){
+        if(j.__status===401){ document.getElementById('lockbar').hidden=false;
+          document.getElementById('sched').hidden=true; return false; }
+        NDOS.say(NDOS.why(j),true); return true;
+      }
+      document.getElementById('lockbar').hidden=true; document.getElementById('sched').hidden=false;
+      queue(j.items); limit(); return true;
+    });
+  }
+
+  function queue(items){
+    var L=document.getElementById('qlist');
+    if(!items||!items.length){ L.innerHTML='<p class="muted">Nothing waiting. The first one goes above.</p>'; return; }
+    L.innerHTML='';
+    items.forEach(function(it){
+      var t=it.at?new Date(it.at):null;
+      var row=document.createElement('div'); row.className='q';
+      row.innerHTML='<span class="when"><b>'+(t?t.getDate():'?')+'</b><span>'+
+        (t?t.toLocaleDateString(undefined,{month:'short'})+' '+t.toLocaleTimeString(undefined,{hour:'numeric'}).replace(' ',''):'')+
+        '</span></span><span class="mid"><p></p><span class="who">'+
+        esc(it.platforms.map(name).join(' · '))+'</span> <span class="chip '+
+        (it.status==='sent'?'live':'draft')+'">'+(it.status==='sent'?'Sent':'Waiting')+'</span></span>'+
+        '<button class="x">Del</button>';
+      row.querySelector('p').textContent=it.text;
+      var x=row.querySelector('.x'), armed=false, tm=null;
+      x.addEventListener('click',function(){
+        if(!armed){ armed=true; x.textContent='Sure?'; x.classList.add('arm');
+          tm=setTimeout(function(){ armed=false; x.textContent='Del'; x.classList.remove('arm'); },4000); return; }
+        clearTimeout(tm); x.textContent='…';
+        NDOS.net(API,{method:'POST',json:{id:it.id,delete:true}}).then(function(j){
+          if(j.ok){ NDOS.say('Taken out of the queue.'); load(); }
+          else { NDOS.say(NDOS.why(j),true); x.textContent='Del'; armed=false; x.classList.remove('arm'); }
+        });
+      });
+      L.appendChild(row);
+    });
+  }
+
+  function unlock(){
+    var k=document.getElementById('key').value.trim(); if(!k) return;
+    NDOS.auth.set(k);
+    load().then(function(ok){ if(!ok){ NDOS.say('That word did not work.',true); NDOS.auth.clear(); }
+                              else { document.getElementById('key').value=''; } });
+  }
+  document.getElementById('unlock').addEventListener('click',unlock);
+  document.getElementById('key').addEventListener('keydown',function(e){ if(e.key==='Enter') unlock(); });
+  NDOS.bus.on('auth:out',function(){ document.getElementById('lockbar').hidden=false;
+    document.getElementById('sched').hidden=true; });
+
+  NDOS.mount({ active:'blast', primary:{ label:'Add to the queue', icon:'up', onTap:function(){
+    if(document.getElementById('sched').hidden){
+      document.getElementById('lockbar').scrollIntoView({behavior:'smooth',block:'center'});
+      document.getElementById('key').focus(); return;
+    }
+    if(!elText.value.trim()){ elText.scrollIntoView({behavior:'smooth',block:'center'}); elText.focus(); return; }
+    document.getElementById('add').click();
+  } } });
+
+  paint(); limit(); load();
   setInterval(paint, 60000);
 })();
 </script>
