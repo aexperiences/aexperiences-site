@@ -1,0 +1,571 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Printables and apps for neurodivergent kids, made by a homeschooling family in Post Falls, Idaho."><link rel="icon" href="https://www.aexperiences.com/logo-nd.png"><title>The Neuro-Divulge</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Karla:wght@400;500;600;700&display=swap">
+<style>
+/* ============================================================
+   THE NEURO~DIVULGE THEME  ·  v1  ·  the machine's token block
+   Everything below --- TOKENS --- is portable. Swap nothing else.
+   ============================================================ */
+:root{
+  /* sampled straight off Anthony's reference: cream, tan, sage, terracotta, espresso */
+  --nd-paper:#F3EEE5; --nd-paper-2:#EAE3D8; --nd-card:#FAF7F0;
+  --nd-tan:#D5C3B2; --nd-sage:#A9B694; --nd-sage-d:#78895F;
+  --nd-terra:#C05C2E; --nd-terra-d:#A44A21;
+  --nd-ink:#433C35; --nd-ink-2:#6E6459; --nd-rule:#DFD5C6; --nd-rule-soft:#EAE3D8;
+  --nd-clay:#C05C2E; --nd-clay-deep:#A44A21; --nd-store:#C05C2E;
+  --nd-thread:#9A7A2C; --nd-tendency:#C23359; --nd-regulator:#A32226; --nd-focus:#93A82F;
+  --nd-thread-f:#EBDCAB; --nd-tendency-f:#F4C4D0; --nd-regulator-f:#EDBDB8; --nd-focus-f:#DEE9B7;
+  --nd-serif:"Lora",Georgia,"Times New Roman",serif;
+  --nd-sans:"Karla","Helvetica Neue",Arial,sans-serif;
+  --nd-max:1080px; --nd-gap:clamp(18px,3vw,30px); --nd-r:15px;
+  --nd-shadow:0 1px 0 rgba(67,60,53,.04),0 10px 26px -18px rgba(67,60,53,.4);
+  color-scheme:light;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--nd-paper);color:var(--nd-ink);
+  font-family:var(--nd-sans);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--nd-max);margin-inline:auto;padding-inline:20px}
+img{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2.5px solid var(--nd-clay);outline-offset:3px;border-radius:11px}
+
+/* --- practice paper: the one device the whole site is built on ---
+   Three ruled lines with a dashed midline, the way a handwriting
+   worksheet is ruled. Used under every section eyebrow. */
+.rule-paper{height:22px;margin:6px 0 20px;position:relative}
+.rule-paper:before,.rule-paper:after{content:"";position:absolute;left:0;right:0;height:1px;background:var(--nd-rule)}
+.rule-paper:before{top:0}
+.rule-paper:after{bottom:0}
+.rule-paper span{position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--nd-rule);display:block}
+
+.eyebrow{
+  font-family:var(--nd-sans);font-size:11px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--nd-terra);
+}
+
+h1,h2,h3{font-family:var(--nd-serif);font-weight:600;line-height:1.15;text-wrap:balance;margin:0}
+h2{font-size:clamp(25px,3.4vw,34px);letter-spacing:-.01em}
+h3{font-size:19px}
+p{margin:0 0 1em}
+.lede{font-family:var(--nd-serif);font-size:clamp(17px,2vw,20px);line-height:1.6;color:var(--nd-ink-2);max-width:60ch}
+
+/* ---------- masthead ---------- */
+.mast{border-bottom:1px solid var(--nd-rule);background:var(--nd-paper)}
+.mast .wrap{display:flex;align-items:center;gap:14px;padding-block:16px;flex-wrap:wrap}
+.mark{width:46px;height:46px;border-radius:12px;flex:none;display:block;box-shadow:var(--nd-shadow)}
+.wordmark{font-family:var(--nd-serif);font-size:21px;font-weight:700;letter-spacing:-.015em;line-height:1.1}
+.wordmark em{font-style:normal;color:var(--nd-terra)}
+.subword{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--nd-ink-2);font-weight:600}
+.mast nav{margin-left:auto;display:flex;gap:20px;flex-wrap:wrap}
+.mast nav a{font-size:14px;font-weight:600;text-decoration:none;color:var(--nd-ink-2);padding-block:4px;border-bottom:2px solid transparent}
+.mast nav a:hover{color:var(--nd-ink);border-bottom-color:var(--nd-clay)}
+
+/* ---------- hero ---------- */
+.hero{padding-block:clamp(40px,7vw,72px) clamp(32px,5vw,56px)}
+.hero h1{font-size:clamp(34px,6vw,58px);letter-spacing:-.025em;max-width:16ch}
+.hero h1 em{font-style:italic;color:var(--nd-terra)}
+.hero .lede{margin-top:20px}
+.byline{
+  margin-top:26px;padding-top:18px;border-top:1px solid var(--nd-rule);
+  font-size:15px;color:var(--nd-ink-2);max-width:56ch
+}
+.byline b{color:var(--nd-ink);font-weight:700}
+
+/* ---------- the checklist card (lead magnet) ---------- */
+.get{
+  background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:var(--nd-r);
+  box-shadow:var(--nd-shadow);padding:clamp(22px,3.5vw,34px);
+  display:grid;grid-template-columns:1fr;gap:22px;position:relative;overflow:hidden
+}
+/* the red margin rule down an index card */
+.get:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--nd-terra)}
+@media(min-width:720px){.get{grid-template-columns:1.15fr .85fr;align-items:center}}
+.get h2{font-size:clamp(23px,3vw,30px)}
+.get .free{display:inline-block;font-family:var(--nd-sans);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--nd-card);background:var(--nd-store);padding:5px 11px;border-radius:8px;margin-bottom:12px}
+form{display:flex;flex-direction:column;gap:11px}
+label{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--nd-ink-2)}
+input[type=text],input[type=email]{
+  font-family:var(--nd-sans);font-size:16px;padding:12px 14px;
+  border:1px solid var(--nd-rule);border-radius:11px;background:var(--nd-paper);color:var(--nd-ink);width:100%
+}
+input::placeholder{color:var(--nd-ink-2);opacity:.65}
+.btn{
+  font-family:var(--nd-sans);font-size:15px;font-weight:700;letter-spacing:.02em;
+  background:var(--nd-card);color:var(--nd-clay-deep);border:1.5px solid var(--nd-clay);border-radius:11px;
+  padding:13px 18px;cursor:pointer;text-align:center;text-decoration:none;display:inline-block
+}
+.btn:hover{background:var(--nd-clay);color:#fffdf7;border-color:var(--nd-clay)}
+.btn.clay{background:var(--nd-store);color:#fffdf7;border-color:var(--nd-store)}
+.btn.clay:hover{background:var(--nd-clay-deep);border-color:var(--nd-clay-deep)}
+.formnote{font-size:12.5px;color:var(--nd-ink-2);margin:0}
+.said{margin:0;font-size:14px;font-weight:600;color:var(--nd-clay)}
+
+/* ---------- sections ---------- */
+section{padding-block:clamp(38px,6vw,64px)}
+section.alt{background:var(--nd-paper-2);border-block:1px solid var(--nd-rule)}
+.sechead{max-width:62ch;margin-bottom:26px}
+
+/* ---------- printables: index cards ---------- */
+.cards .card:nth-child(1){background:var(--nd-tan);border-color:#C9B6A3}
+.cards .card:nth-child(3){background:var(--nd-sage);border-color:#9AAA85}
+.cards .card:nth-child(3) p,.cards .card:nth-child(1) p{color:#4B4339}
+.cards{display:grid;gap:var(--nd-gap);grid-template-columns:repeat(auto-fit,minmax(255px,1fr))}
+.card{
+  background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:var(--nd-r);
+  box-shadow:var(--nd-shadow);padding:0 0 20px;display:flex;flex-direction:column;overflow:hidden
+}
+/* the ruled band at the top of an index card */
+.card .band{
+  height:52px;border-bottom:1px solid var(--nd-rule);
+  background:transparent;border-bottom:1px solid rgba(67,60,53,.12);
+  display:flex;align-items:center;padding-inline:20px;gap:10px
+}
+.card .band b{font-family:var(--nd-sans);font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--nd-ink-2)}
+.card .body{padding:18px 20px 0;display:flex;flex-direction:column;gap:9px;flex:1}
+.card h3{font-size:18px}
+.card p{font-size:14.5px;color:var(--nd-ink-2);margin:0}
+.card .foot{margin-top:auto;padding-top:16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.price{font-family:var(--nd-serif);font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* ---------- the four apps: subject dividers ---------- */
+.apps{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(232px,1fr))}
+.app{
+  background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:var(--nd-r);
+  padding:18px 20px 20px;display:flex;flex-direction:column;gap:7px;
+  text-decoration:none;box-shadow:var(--nd-shadow);
+  border-top:5px solid var(--nd-acc);background:linear-gradient(var(--nd-acc-f) 0 4px,var(--nd-card) 4px);position:relative
+}
+.app:hover{border-color:var(--nd-acc)}
+.app[data-id=thread]{--nd-acc:var(--nd-thread);--nd-acc-f:var(--nd-thread-f)}
+.app[data-id=tendency]{--nd-acc:var(--nd-tendency);--nd-acc-f:var(--nd-tendency-f)}
+.app[data-id=regulator]{--nd-acc:var(--nd-regulator);--nd-acc-f:var(--nd-regulator-f)}
+.app[data-id=focus]{--nd-acc:var(--nd-focus);--nd-acc-f:var(--nd-focus-f)}
+.app .tag{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--nd-acc)}
+.app h3{font-size:18px}
+.app p{font-size:14px;color:var(--nd-ink-2);margin:0}
+.app .go{margin-top:8px;font-size:13.5px;font-weight:700;color:var(--nd-ink)}
+.bundle{
+  margin-top:20px;background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:var(--nd-r);
+  padding:20px 22px;display:flex;flex-wrap:wrap;align-items:center;gap:16px;box-shadow:var(--nd-shadow)
+}
+.bundle .big{font-family:var(--nd-serif);font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.bundle p{margin:0;font-size:14.5px;color:var(--nd-ink-2);flex:1;min-width:210px}
+
+/* ---------- about ---------- */
+.about{display:grid;gap:var(--nd-gap);align-items:start}
+@media(min-width:760px){.about{grid-template-columns:.9fr 1.1fr}}
+.about .plate{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:var(--nd-r);padding:26px;box-shadow:var(--nd-shadow)}
+.about .plate img{width:74px;height:74px;border-radius:14px;display:block;margin-bottom:16px}
+.factrow{display:flex;gap:10px;padding-block:9px;border-top:1px solid var(--nd-rule-soft);font-size:14px}
+.factrow:first-of-type{border-top:0}
+.factrow dt{font-weight:700;min-width:104px;color:var(--nd-ink-2);margin:0}
+.factrow dd{margin:0}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--nd-rule);padding-block:30px 40px;font-size:13.5px;color:var(--nd-ink-2)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center}
+footer a{text-decoration:none;font-weight:600}
+footer a:hover{color:var(--nd-clay)}
+footer .right{margin-left:auto}
+.aemark{text-decoration:none}
+@media(max-width:560px){footer .right{margin-left:0}}
+
+/* ---------- one product, four apps inside ---------- */
+.one{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:var(--nd-r);box-shadow:var(--nd-shadow);padding:clamp(20px,3vw,30px);position:relative;overflow:hidden}
+.one:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--nd-terra)}
+.one-head{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.one-mark{width:58px;height:58px;border-radius:13px;flex:none;box-shadow:var(--nd-shadow)}
+.one-head h3{font-size:clamp(21px,2.6vw,26px)}
+.one-head p{margin:3px 0 0;font-size:14.5px;color:var(--nd-ink-2)}
+.one-price{margin-left:auto;font-family:var(--nd-serif);font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.one-price span{font-family:var(--nd-sans);font-size:14px;font-weight:600;color:var(--nd-ink-2)}
+.one-say{margin:18px 0 0;font-size:15.5px;color:var(--nd-ink-2);max-width:60ch}
+.inside{margin-top:20px;border-top:1px solid var(--nd-rule);padding-top:16px}
+.inside summary{cursor:pointer;font-family:var(--nd-sans);font-size:13.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--nd-clay);list-style:none;display:flex;align-items:center;gap:8px}
+.inside summary::-webkit-details-marker{display:none}
+.inside summary:after{content:"+";font-size:18px;line-height:1}
+.inside[open] summary:after{content:"\2212"}
+.inside .apps{margin-top:16px}
+.one .btn{margin-top:20px}
+@media(max-width:520px){.one-price{margin-left:0}}
+
+/* ---------- social ---------- */
+.social{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.social a{
+  display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+  font-size:13.5px;font-weight:700;padding:9px 14px;border-radius:11px;
+  border:1px solid var(--nd-rule);background:var(--nd-card);color:var(--nd-ink);
+  box-shadow:var(--nd-shadow)
+}
+.social a:hover{border-color:var(--nd-clay);color:var(--nd-clay)}
+.social svg{width:16px;height:16px;flex:none;fill:currentColor}
+
+
+/* ---------- the whole card moves, the way his other sites do ---------- */
+.card,.app,.one,.get,.social a,.about .plate{
+  transition:transform .18s cubic-bezier(.2,.7,.3,1), box-shadow .18s cubic-bezier(.2,.7,.3,1), border-color .18s}
+.card:hover,.app:hover,.social a:hover{
+  transform:translateY(-5px);
+  box-shadow:0 2px 0 rgba(67,60,53,.05),0 22px 38px -20px rgba(67,60,53,.55)}
+.card:active,.app:active,.social a:active{transform:translateY(-1px)}
+.card:hover .btn{background:var(--nd-terra);color:#FAF7F0;border-color:var(--nd-terra)}
+.one:hover{box-shadow:0 2px 0 rgba(67,60,53,.05),0 24px 44px -22px rgba(67,60,53,.5)}
+.btn{transition:transform .14s, background .18s, color .18s, border-color .18s}
+.btn:active{transform:translateY(1px)}
+@media(prefers-reduced-motion:reduce){
+  .card,.app,.one,.get,.social a,.about .plate,.btn{transition:none!important}
+  .card:hover,.app:hover,.social a:hover,.card:active,.app:active{transform:none!important}
+}
+
+/* ---------- the AE mark in the footer, Anthony's own gradient one ---------- */
+.aemark{display:flex;align-items:center;gap:10px;margin-top:22px;padding-top:18px;
+  border-top:1px solid var(--nd-rule);width:100%}
+.aemark img{width:42px;height:42px;flex:none}
+.aemark span{font-size:12.5px;color:var(--nd-ink-2);line-height:1.45}
+.aemark b{display:block;color:var(--nd-ink);font-size:13px}
+
+/* ---------- polish ---------- */
+.card .band{background:rgba(67,60,53,.055)!important;border-bottom:1px solid rgba(67,60,53,.10)!important;height:46px}
+.card .band b{letter-spacing:.2em;font-size:10px;opacity:.75}
+.card{box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 1px 2px rgba(67,60,53,.06),0 14px 30px -22px rgba(67,60,53,.5)}
+.card h3{letter-spacing:-.005em}
+.price{font-size:26px;letter-spacing:-.015em}
+.btn{padding:12px 20px;letter-spacing:.005em;box-shadow:0 1px 2px rgba(67,60,53,.07)}
+.btn.clay{box-shadow:0 1px 2px rgba(164,74,33,.25),0 8px 18px -12px rgba(164,74,33,.8)}
+.eyebrow{opacity:.95}
+.rule-paper{opacity:.5;height:18px;margin-bottom:16px}
+.lede{max-width:56ch}
+.sechead{margin-bottom:30px}
+section{padding-block:clamp(44px,6.5vw,72px)}
+.hero h1{line-height:1.08}
+.one{box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 2px 4px rgba(67,60,53,.05),0 20px 40px -26px rgba(67,60,53,.55)}
+.one-price{letter-spacing:-.02em}
+.inside summary{transition:color .16s}
+.inside summary:hover{color:var(--nd-terra-d)}
+.app{box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 1px 2px rgba(67,60,53,.05),0 12px 26px -20px rgba(67,60,53,.5)}
+.mast{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;
+  background:rgba(243,238,229,.92);backdrop-filter:saturate(1.3) blur(10px);-webkit-backdrop-filter:saturate(1.3) blur(10px)}
+.mast nav a{border-radius:6px}
+input[type=text],input[type=email]{transition:border-color .16s, box-shadow .16s;background:#FFFDF8}
+input[type=text]:focus,input[type=email]:focus{outline:none;border-color:var(--nd-terra);
+  box-shadow:0 0 0 3px rgba(192,92,46,.16)}
+.social a{padding:10px 15px}
+.aemark{transition:opacity .16s}.aemark:hover{opacity:.78}
+.factrow dt{letter-spacing:.01em}
+@media(max-width:560px){.hero h1{font-size:clamp(30px,8.5vw,40px)}}
+
+/* ================= HYPER MOBILE =================
+   This is a phone surface first. Everything below 700px is the real design;
+   the desktop layout is the accommodation, not the other way round. */
+@media (max-width:700px){
+  /* ⛔ backdrop-filter on an ancestor makes it the containing block for position:fixed
+     children, which pinned the bottom bar inside the header and hid the logo behind it.
+     The blur lives on the bar itself, never on .mast, at these widths. */
+  .mast{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--nd-paper)}
+  /* compact sticky masthead: mark + wordmark only, nav moves to the thumb */
+  .mast .wrap{padding-block:10px;gap:11px;flex-wrap:nowrap}
+  .mark{width:38px;height:38px;border-radius:11px}
+  .wordmark{font-size:17px}
+  .subword{font-size:9.5px;letter-spacing:.12em}
+  .mast nav{
+    position:fixed;left:0;right:0;bottom:0;margin:0;z-index:100;
+    display:grid;grid-template-columns:repeat(5,1fr);gap:0;
+    background:rgba(243,238,229,.94);
+    -webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px);
+    border-top:1px solid var(--nd-rule);
+    padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));
+    box-shadow:0 -6px 20px -14px rgba(67,60,53,.6)}
+  .mast nav a{
+    display:flex;align-items:center;justify-content:center;text-align:center;
+    min-height:46px;padding:4px 2px;font-size:11.5px;font-weight:700;line-height:1.15;
+    border-bottom:0;border-radius:10px;color:var(--nd-ink-2);letter-spacing:.01em}
+  .mast nav a:active{background:rgba(192,92,46,.1);color:var(--nd-terra)}
+  body{padding-bottom:64px}                    /* clear the bottom bar */
+
+  /* type that fits a hand */
+  .hero{padding-block:26px 30px}
+  .hero h1{font-size:31px;letter-spacing:-.02em;line-height:1.12;max-width:none}
+  .lede{font-size:16.5px;line-height:1.55}
+  .hero .lede{margin-top:14px}
+  .byline{margin-top:18px;padding-top:14px;font-size:14px}
+  h2{font-size:24px}
+  section{padding-block:34px}
+  .sechead{margin-bottom:20px}
+  .wrap{padding-inline:16px}
+
+  /* chunky, thumb-sized controls */
+  .btn{width:100%;min-height:50px;font-size:16px;padding:14px 18px}
+  .card .foot{flex-direction:column;align-items:stretch;gap:12px}
+  .card .foot .price{font-size:27px}
+  .inside summary{min-height:46px;align-items:center;font-size:13px}
+  footer .wrap{gap:4px 18px}
+  footer a{min-height:44px;display:inline-flex;align-items:center}
+  .social a{min-height:46px;flex:1 1 44%;justify-content:center}
+
+  /* cards breathe, corners soften, one per row */
+  .cards,.apps{grid-template-columns:1fr;gap:14px}
+  .card,.one,.get,.about .plate{border-radius:16px}
+  .get{padding:20px}
+  .one{padding:20px}
+  .one-price{font-size:27px}
+  .aemark{margin-top:18px}
+
+  /* a hover lift means nothing on a touch screen - press feedback instead */
+  .card:hover,.app:hover,.social a:hover{transform:none;box-shadow:inherit}
+  .card:active,.app:active{transform:scale(.985)}
+}
+@media (max-width:700px) and (display-mode:standalone){
+  .mast{padding-top:env(safe-area-inset-top,0px)}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+
+</head>
+<body>
+<header class="mast">
+  <div class="wrap">
+    <img class="mark" src="https://www.aexperiences.com/logo-nd.png" alt="The Neuro-Divulge mark: a brain beside a speech bubble">
+    <div>
+      <div class="wordmark">The Neuro<em>~</em>Divulge</div>
+      <div class="subword">An Esposito Family Project</div>
+    </div>
+    <nav>
+      <a href="#checklist">Free checklist</a>
+      <a href="#printables">Printables</a>
+      <a href="#apps">Apps</a>
+      <a href="#watch">Watch</a>
+      <a href="#about">About</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow">Information, education and tools</div>
+      <div class="rule-paper"><span></span></div>
+      <h1>For neurodivergent kids, <em>by</em> a neurodivergent family.</h1>
+      <p class="lede">Printables and apps built in a house where all of this is Tuesday — not theory. Made because we needed them first.</p>
+      <p class="byline"><b>Jessica Esposito</b> — homeschooling mom to four beautiful children, three with an autistic diagnosis. Everything here got made for one of them before it got made for anyone else.</p>
+    </div>
+  </section>
+
+  <section id="checklist" class="alt">
+    <div class="wrap">
+      <div class="get">
+        <div>
+          <span class="free">Free</span>
+          <h2>The ND Homeschool Reset Checklist</h2>
+          <p class="lede" style="font-size:16.5px;margin-top:12px">A simple, sensory-informed checklist for the days the homeschool has come off the rails — and you need a way back that doesn't start with a lecture.</p>
+        </div>
+        <form id="leadForm" action="https://formsubmit.co/ae@aexperiences.studio" method="POST">
+          <input type="hidden" name="_subject" value="ND checklist request">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_next" value="https://neurodivulge.com/thanks.html">
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div>
+            <label for="nm">First name</label>
+            <input id="nm" name="name" type="text" placeholder="Jessica" autocomplete="given-name">
+          </div>
+          <div>
+            <label for="em">Email</label>
+            <input id="em" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+          <button class="btn clay" type="submit">Send me the checklist</button>
+          <p class="formnote">One email with the download. No list, no drip, no selling your address.</p>
+          <p class="said" id="said" hidden>Check your inbox — it's on the way.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section id="printables">
+    <div class="wrap">
+      <div class="sechead">
+        <div class="eyebrow">Printables</div>
+        <div class="rule-paper"><span></span></div>
+        <h2>Print it, laminate it, put it on the wall.</h2>
+        <p class="lede" style="margin-top:12px">Three sets, each one built for a specific hard moment. Instant download, yours to reprint forever.</p>
+      </div>
+      <div class="cards">
+        <article class="card">
+          <div class="band"><b>What to say</b></div>
+          <div class="body">
+            <h3>Calm Transitions: What to Say Cards</h3>
+            <p>Exact words to use when starting feels hard, transitions fall apart, or big emotions take over. You don't have to think of the sentence in the moment — it's on the card.</p>
+            <div class="foot"><span class="price">$9</span><a class="btn" href="#">Get the cards</a></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="band"><b>Movement</b></div>
+          <div class="body">
+            <h3>Regulation Through Movement: Flash Cards</h3>
+            <p>Printable animal-movement cards for regulation breaks. Pull one, do the animal, come back to the table with a different body.</p>
+            <div class="foot"><span class="price">$9</span><a class="btn" href="#">Get the cards</a></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="band"><b>Routines</b></div>
+          <div class="body">
+            <h3>Visual Routine Charts</h3>
+            <p>Six printable 8&times;10 charts with picture checklists — morning, evening and more. For the kid who can't hold a five-step instruction, but can follow a picture.</p>
+            <div class="foot"><span class="price">$13</span><a class="btn" href="#">Get the charts</a></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="apps" class="alt">
+    <div class="wrap">
+      <div class="sechead">
+        <div class="eyebrow">The apps</div>
+        <div class="rule-paper"><span></span></div>
+        <h2>One subscription. Four tools that live on the phone, not the fridge.</h2>
+        <p class="lede" style="margin-top:12px">Same house, same reasons. Nothing is collected, nothing is uploaded, and there's a free trial on the whole thing.</p>
+      </div>
+
+      <div class="one">
+        <div class="one-head">
+          <img class="one-mark" src="https://www.aexperiences.com/logo-nd.png" alt="">
+          <div>
+            <h3>The Neuro-Divulge</h3>
+            <p>Four apps, one subscription</p>
+          </div>
+          <div class="one-price">$4.99<span>/mo</span></div>
+        </div>
+        <p class="one-say">Practical regulation tools for ADHD and autistic brains, built by someone who needs them. One subscription opens all four — or take them one at a time at $1.99 a month, $19.99 a year. The bundle is $39.99 a year. Three-day free trial.</p>
+
+        <details class="inside">
+          <summary>See the four apps inside</summary>
+          <div class="apps">
+        <a class="app" data-id="thread" href="https://www.aexperiences.com/apps/nd/">
+          <span class="tag">Thread</span>
+          <h3>ND Thread</h3>
+          <p>Hold the thought you're about to lose, and pick the thread back up later.</p>
+          <span class="go">See it in the App Shop &rarr;</span>
+        </a>
+        <a class="app" data-id="tendency" href="https://www.aexperiences.com/apps/nd/">
+          <span class="tag">Tendency</span>
+          <h3>ND Tendency</h3>
+          <p>A ten-second check-in and one tiny win at a time. Everything stays on your device.</p>
+          <span class="go">See it in the App Shop &rarr;</span>
+        </a>
+        <a class="app" data-id="regulator" href="https://www.aexperiences.com/apps/nd/">
+          <span class="tag">Regulator</span>
+          <h3>ND Regulator</h3>
+          <p>Five-minute practice for anger, stress and anxiety, plus right-now SOS tools. Skills, not affirmations.</p>
+          <span class="go">See it in the App Shop &rarr;</span>
+        </a>
+        <a class="app" data-id="focus" href="https://www.aexperiences.com/apps/nd/">
+          <span class="tag">Focus</span>
+          <h3>ND Focus</h3>
+          <p>The weekly ADHD monitoring report your provider asks for — parents, teachers and specialists rating the same fifteen things.</p>
+          <span class="go">See it in the App Shop &rarr;</span>
+        </a>
+          </div>
+        </details>
+
+        <a class="btn clay" href="https://www.aexperiences.com/apps/nd/">Open all four &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="watch">
+    <div class="wrap">
+      <div class="sechead">
+        <div class="eyebrow">Watch</div>
+        <div class="rule-paper"><span></span></div>
+        <h2>Short videos from an ordinary week.</h2>
+        <p class="lede" style="margin-top:12px">Teaching tips, routines that actually held, and the days they didn't. Filmed on a phone, in a house with four kids in it. Posted here first, then everywhere else.</p>
+      </div>
+      <div class="cards">
+        <article class="card">
+          <div class="band"><b>Teaching tip</b></div>
+          <div class="body">
+            <h3>The two-minute warning that works</h3>
+            <p>Why "five more minutes" fails and what to say instead — the version we use before every transition.</p>
+            <div class="foot"><span style="font-size:13px;font-weight:700;color:var(--nd-ink-2)">Short &middot; 0:48</span><a class="btn" href="#">Watch</a></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="band"><b>Routine</b></div>
+          <div class="body">
+            <h3>Morning chart, start to finish</h3>
+            <p>A full run of the morning routine chart with a seven-year-old, unedited, including the part where it stalls.</p>
+            <div class="foot"><span style="font-size:13px;font-weight:700;color:var(--nd-ink-2)">Short &middot; 1:12</span><a class="btn" href="#">Watch</a></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="band"><b>Movement break</b></div>
+          <div class="body">
+            <h3>Three animals, ninety seconds</h3>
+            <p>The movement cards in real use — what a regulation break looks like when it's working.</p>
+            <div class="foot"><span style="font-size:13px;font-weight:700;color:var(--nd-ink-2)">Short &middot; 1:30</span><a class="btn" href="#">Watch</a></div>
+          </div>
+        </article>
+      </div>
+      <p class="formnote" style="margin-top:18px">A podcast is coming. Until it does, everything lives here as short video.</p>
+    </div>
+  </section>
+
+  <section id="about" class="alt">
+    <div class="wrap about">
+      <div class="plate">
+        <img src="https://www.aexperiences.com/logo-nd.png" alt="The Neuro-Divulge mark">
+        <h2 style="font-size:24px">Why this exists</h2>
+        <p style="margin-top:12px;color:var(--nd-ink-2);font-size:15px">Nothing here started as a product. It started as the thing we made on a Tuesday because the morning had already gone wrong and we needed it to go differently tomorrow.</p>
+        <p style="margin:0;color:var(--nd-ink-2);font-size:15px">If it helped in this house, it goes on the site. If it didn't, it doesn't.</p>
+      </div>
+      <div>
+        <div class="eyebrow">The house</div>
+        <div class="rule-paper"><span></span></div>
+        <dl style="margin:0">
+          <div class="factrow"><dt>Who</dt><dd>Jessica Esposito — homeschooling mom to four, three with an autistic diagnosis.</dd></div>
+          <div class="factrow"><dt>Where</dt><dd>Post Falls, Idaho.</dd></div>
+          <div class="factrow"><dt>Made for</dt><dd>Parents doing this at home, without a team, usually before 8am.</dd></div>
+          <div class="factrow"><dt>Not</dt><dd>A diagnosis, a therapy programme, or advice from someone who read about it.</dd></div>
+        </dl>
+        <p style="margin-top:22px;color:var(--nd-ink-2);font-size:15px;max-width:52ch">The Neuro-Divulge is an Esposito family project. The apps are built and supported by Accelerated Experiences, LLC — the family's software studio, also in Post Falls.</p>
+
+        <div class="eyebrow" style="margin-top:26px">Come find us</div>
+        <div class="rule-paper"><span></span></div>
+        <div class="social">
+          <a href="#" aria-label="The Neuro-Divulge on TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 2c.3 2.2 1.6 3.6 3.8 3.8v2.6c-1.3.1-2.5-.2-3.8-.9v5.9c0 5.4-5.9 7.1-8.3 3.2-1.5-2.5-.6-6.4 4.2-6.6v2.7c-.4.1-.8.2-1.1.3-1.1.4-1.7 1.1-1.5 2.3.3 2.3 4.5 3 4.2-1.5V2h2.5z"/></svg>TikTok</a>
+          <a href="#" aria-label="The Neuro-Divulge on Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.9.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 4 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zm0 3.1A6.7 6.7 0 1 0 18.7 12 6.7 6.7 0 0 0 12 5.3zm0 11A4.3 4.3 0 1 1 16.3 12 4.3 4.3 0 0 1 12 16.3zm6.9-11.2a1.6 1.6 0 1 0 1.6 1.6 1.6 1.6 0 0 0-1.6-1.6z"/></svg>Instagram</a>
+          <a href="#" aria-label="The Neuro-Divulge on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>Facebook</a>
+          <a href="#" aria-label="The Neuro-Divulge on Pinterest"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.6 19.3c-.1-.8-.1-2 .1-2.9l1.2-5.1s-.3-.6-.3-1.5c0-1.4.8-2.5 1.8-2.5.9 0 1.3.6 1.3 1.4 0 .9-.5 2.2-.8 3.4-.3 1 .5 1.9 1.5 1.9 1.8 0 3.2-1.9 3.2-4.7 0-2.4-1.8-4.2-4.3-4.2a4.5 4.5 0 0 0-4.7 4.5c0 .9.3 1.8.8 2.3.1.1.1.2.1.3l-.3 1c0 .2-.1.3-.3.2-1.3-.6-2.1-2.5-2.1-4 0-3.2 2.4-6.2 6.8-6.2 3.6 0 6.3 2.5 6.3 5.9 0 3.6-2.2 6.4-5.4 6.4-1 0-2-.5-2.4-1.2l-.6 2.5c-.2.9-.8 2-1.2 2.6A10 10 0 1 0 12 2z"/></svg>Pinterest</a>
+          <a href="#" aria-label="The Neuro-Divulge on YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 12s0-3.2-.4-4.7a2.5 2.5 0 0 0-1.7-1.8C19.3 5 12 5 12 5s-7.3 0-8.9.5a2.5 2.5 0 0 0-1.7 1.8C1 8.8 1 12 1 12s0 3.2.4 4.7a2.5 2.5 0 0 0 1.7 1.8c1.6.5 8.9.5 8.9.5s7.3 0 8.9-.5a2.5 2.5 0 0 0 1.7-1.8C23 15.2 23 12 23 12zM9.7 15.2V8.8l6 3.2z"/></svg>YouTube</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>The Neuro-Divulge &middot; An Esposito Family Project</span>
+    <a href="#">Privacy</a>
+    <a href="https://www.aexperiences.com/apps/nd/">The apps</a>
+    <a class="aemark" href="https://www.aexperiences.com/shop.html">
+      <img src="https://www.aexperiences.com/marks/ae-mark-gradient.png" alt="Accelerated Experiences, LLC">
+      <span><b>Built by Accelerated Experiences, LLC</b>Post Falls, Idaho &middot; see everything we make</span>
+    </a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var f=document.getElementById('leadForm'),said=document.getElementById('said');
+  if(!f)return;
+  f.addEventListener('submit',function(){
+    said.hidden=false;
+    f.querySelector('button').textContent='Sending\u2026';
+  });
+})();
+</script>
+
+</body></html>
