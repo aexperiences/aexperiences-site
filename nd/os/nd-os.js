@@ -251,19 +251,9 @@
     window.addEventListener('resize', function () { place(activeId); });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ place(activeId); });
 
-    /* the dock gets out of the way when you scroll down to read, and comes
-       back the moment you scroll up or stop */
-    var lastY = window.scrollY, idle = null;
-    window.addEventListener('scroll', function () {
-      var y = window.scrollY;
-      var sheetUp = sheet && sheet.classList.contains('up');
-      if (sheetUp) { lastY = y; return; }
-      if (y > lastY + 12 && y > 140) dock.classList.add('hide');
-      else if (y < lastY - 6) dock.classList.remove('hide');
-      lastY = y;
-      clearTimeout(idle); idle = setTimeout(function(){
-        if (!(sheet && sheet.classList.contains('up'))) dock.classList.remove('hide'); }, 900);
-    }, { passive: true });
+    /* The dock used to hide itself on scroll. It is gone: on a phone, a
+       navigation that disappears is a navigation you cannot find, and the
+       page already leaves room for it. It stays put. */
 
     bus.emit('room:ready', { id: activeId }, true);
     return { place: place, sheet: openSheet, prime: setPrime };

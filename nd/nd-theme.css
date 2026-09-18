@@ -8,6 +8,8 @@
   --nd-tan:#D5C3B2; --nd-sage:#A9B694; --nd-sage-d:#78895F;
   --nd-terra:#C05C2E; --nd-terra-d:#A44A21;
   --nd-ink:#433C35; --nd-ink-2:#6E6459; --nd-rule:#DFD5C6; --nd-rule-soft:#EAE3D8;
+  --nd-field:#FFFDF8; --nd-ruling-a:#FBF8F1; --nd-ruling-b:#F1EADE;
+  --nd-on-sage:#33402A; --nd-on-tan:#4B4339; --nd-on-terra:#FAF7F0;
   --nd-serif:"Lora",Georgia,"Times New Roman",serif;
   --nd-sans:"Karla","Helvetica Neue",Arial,sans-serif;
   --nd-max:760px; --nd-r:15px;
@@ -51,14 +53,14 @@ a.card:active{transform:scale(.99)}
   color:var(--nd-terra-d);border:1.5px solid var(--nd-terra);border-radius:11px;padding:13px 20px;
   cursor:pointer;text-align:center;text-decoration:none;display:inline-block;min-height:48px;
   transition:transform .14s,background .18s,color .18s}
-.btn:hover{background:var(--nd-terra);color:#FAF7F0}
+.btn:hover{background:var(--nd-terra);color:var(--nd-on-terra)}
 .btn:active{transform:translateY(1px)}
-.btn.solid{background:var(--nd-terra);color:#FAF7F0}
+.btn.solid{background:var(--nd-terra);color:var(--nd-on-terra)}
 .btn.solid:hover{background:var(--nd-terra-d)}
 .btn.quiet{border-color:var(--nd-rule);color:var(--nd-ink-2)}
 .btn.quiet:hover{background:var(--nd-paper-2);color:var(--nd-ink)}
 input,textarea,select{font-family:var(--nd-sans);font-size:16px;padding:12px 14px;width:100%;
-  border:1px solid var(--nd-rule);border-radius:11px;background:#FFFDF8;color:var(--nd-ink);
+  border:1px solid var(--nd-rule);border-radius:11px;background:var(--nd-field);color:var(--nd-ink);
   transition:border-color .16s,box-shadow .16s}
 input:focus,textarea:focus,select:focus{outline:none;border-color:var(--nd-terra);
   box-shadow:0 0 0 3px rgba(192,92,46,.16)}
@@ -67,8 +69,8 @@ label{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercas
 .muted{color:var(--nd-ink-2)}
 .chip{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
   padding:5px 11px;border-radius:8px}
-.chip.live{background:var(--nd-sage);color:#33402A}
-.chip.draft{background:var(--nd-tan);color:#4B4339}
+.chip.live{background:var(--nd-sage);color:var(--nd-on-sage)}
+.chip.draft{background:var(--nd-tan);color:var(--nd-on-tan)}
 footer{border-top:1px solid var(--nd-rule);margin-top:34px;padding-block:24px 30px;
   font-size:13px;color:var(--nd-ink-2)}
 .aemark{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
