@@ -98,6 +98,26 @@
   ],
   "rewrites": [
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "neurodivulge.com"
+        }
+      ],
+      "destination": "/nd/index.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.neurodivulge.com"
+        }
+      ],
+      "destination": "/nd/index.html"
+    },
+    {
       "source": "/narcs",
       "destination": "https://marketnarc-com.vercel.app/narcs"
     },
