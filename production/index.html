@@ -109,13 +109,13 @@
       section('Not live yet', P.filter(function(p){return p.state!=='live';}));
 
     var blind = P.filter(function(p){ return (!p.where.project||p.where.project==='?') && p.state==='live'; });
-    var nolane = P.filter(function(p){ return p.door==='no git lane'; });
+    var nolane = P.filter(function(p){ return p.door==='repo not recorded'; });
     if(nolane.length){
       document.getElementById('tables').insertAdjacentHTML('afterbegin',
-        '<h2 style="color:var(--bad)">Live and sold, with no git repo behind it · '+nolane.length+'</h2>'+
+        '<h2 style="color:var(--warn)">Live and sold, repo not recorded here · '+nolane.length+'</h2>'+
         '<div class="tbl"><div class="r" style="grid-template-columns:1fr">'+
         '<span>'+nolane.map(function(p){return '<b>'+esc(p.name)+'</b> <span class="m">'+esc(p.where.project)+' · '+esc(p.where.host)+'</span>';}).join(' &nbsp;·&nbsp; ')+
-        '<br><span class="m" style="color:var(--ink2)">No history, no deploy lane, and nowhere to put a door.</span></span></div></div>');
+        '<br><span class="m" style="color:var(--ink2)">This file does not know where it deploys from. That is not the same as there being nowhere.</span></span></div></div>');
     }
 
     if(blind.length){

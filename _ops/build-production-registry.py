@@ -50,7 +50,7 @@ VERCEL = {
   "ae-fable-api":           "aexperiences/ae-fable-api",
   "ae-apply":               "aexperiences/ae-apply",
   # no repo attached — deployed straight, not from git
-  "whichway":               None,   # ← serves espodrama.com. See note below.
+  "whichway":               "aexperiences/espodrama",
   "neuro-divulge":          None,
   "ae-fraud-division":      None,
   "ae-factory":             None,
@@ -64,13 +64,18 @@ HOST_PROJECT = {
   "espogenius.com":       "espogenius-com",
   "marketnarc.com":       "marketnarc-com",
   "www.marketnarc.com":   "marketnarc-com",
-  # espodrama.com is served by the Vercel project `whichway` — Anthony knew the
-  # name; nothing in the catalog, the domain or the product could have produced
-  # it. It IS in the company team (my guess that it was a personal scope was
-  # wrong), it was just past the page of projects the API handed back, under a
-  # name with no relationship to the product. That is the entire argument for
-  # writing this down instead of rediscovering it: no amount of searching finds
-  # `whichway` from `ESPO Drama`.
+  # espodrama.com  <-  Vercel `whichway`  <-  GitHub aexperiences/espodrama
+  #
+  # All three facts were already in the hall of records and I did not look:
+  #   aehub/api/_sot.mjs           "ESPO Drama (espodrama.com) - LIVE: ESPO Studios
+  #                                 (screenplay + branching 'WhichWay' story)"
+  #   session-logs/ESPO Drama - Roz Voice Fix (Jul 24 2026)
+  #                                "Repo aexperiences/espodrama -> Vercel project
+  #                                 whichway -> espodrama.com"
+  # WhichWay is a FEATURE of the app - the branching story - which is why the
+  # project carries that name. The record explains the name; guessing never could.
+  #
+  # Working copy of the source: Strictly Research/espodrama-build/
   "espodrama.com":        "whichway",
   "www.espodrama.com":    "whichway",
 }
@@ -177,10 +182,14 @@ def door(p, loc):
     if loc.get("repo") and loc["repo"] != "aexperiences/aexperiences-site":
         return "not in this repo"
     if loc.get("project") and not loc.get("repo"):
-        # The project exists and serves a paying product, but Vercel reports no git
-        # link for it. No repo means no history, no deploy lane, and nowhere to put
-        # a door. That is a bigger problem than an open door.
-        return "no git lane"
+        # NOT "no repo" - "not recorded here". Twice in one session I turned an
+        # absence of data into a claim about the world: a GitHub 404 (which is what
+        # a private repo returns to a token that cannot see it) became "no such
+        # repo", and a Vercel API response that simply omits the `link` field became
+        # "no git repo attached". Both were wrong, and the second one had me telling
+        # Anthony a live product had no source control.
+        # A blank in this column means THIS FILE does not know. Nothing else.
+        return "repo not recorded"
     return "unknown"
 
 rows = []

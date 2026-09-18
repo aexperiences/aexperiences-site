@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-18T18:42:43",
+ "generated": "2026-09-18T18:49:21",
  "vercelSeen": "2026-09-18",
  "count": 54,
  "products": [
@@ -396,12 +396,12 @@
     "host": "espodrama.com",
     "path": "/",
     "project": "whichway",
-    "repo": null,
+    "repo": "aexperiences/espodrama",
     "local": null,
     "proxied": false
    },
    "sold": true,
-   "door": "no git lane"
+   "door": "not in this repo"
   },
   {
    "id": "ae-comply",
