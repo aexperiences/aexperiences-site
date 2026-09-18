@@ -99,6 +99,16 @@ button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
 .hs-steps b{color:var(--cream);font-weight:700}
 .hs-note{margin:13px 0 0;font-size:13px;line-height:1.5;color:var(--mute);border-top:1px solid var(--line);padding-top:11px}
 .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.fam{display:flex;flex-direction:column;gap:8px;margin:2px 0 6px}
+.fam-row{display:flex;align-items:center;gap:11px;width:100%;text-align:left;cursor:pointer;background:rgba(28,61,34,.05);border:1px solid var(--line-2);border-radius:12px;padding:11px 13px;font:inherit;color:inherit}
+.fam-row:hover{border-color:var(--gold)}
+.fam-dot{width:10px;height:10px;border-radius:50%;flex:none}
+.fam-t{display:flex;flex-direction:column;flex:1;min-width:0}
+.fam-t b{font-size:15px}
+.fam-t small{font-size:12.5px;color:var(--mute)}
+.fam-p{font-size:13px;font-weight:600;color:var(--mute);white-space:nowrap}
+.fam-back{background:none;border:0;font:inherit;color:var(--mute);cursor:pointer;padding:0 0 10px;font-size:13.5px;font-weight:600}
+.fam-back:hover{color:var(--gold)}
 .fact{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#1c3d22;background:rgba(28,61,34,.08);border:1px solid var(--line-2);padding:7px 11px;border-radius:20px}
 
 /* the two doors — the first and only decision on the page */
@@ -689,6 +699,10 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
        product is listed once there, not twice. The aisle is a view, never a copy. */
     if(aisle!=='all' && !C.isIn(a, aisle)) return false;
     if(genre!=='all' && a.genre!==genre) return false;
+    /* A product that belongs to a family is not its own tile on the shelf — the
+       family's tile is the door, and the four sit inside it (Anthony, Sep 17 2026).
+       It stays findable: a search by its own name still surfaces it. */
+    if(!term && a.family) return false;
     if(!term) return true;
     return (a.name+' '+a.tag+' '+a.blurb+' '+(a.family||'')).toLowerCase().indexOf(term)>-1;
   }
@@ -996,6 +1010,22 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     document.getElementById('shPr').innerHTML=verb(a);
 
     var body=galleryHTML(a)+'<h4>What it is</h4><p>'+esc(a.blurb)+'</p>';
+
+    /* One tile, four apps inside. The family's sheet is the door. */
+    var kids=C.CATALOG.filter(function(x){ return x.family===a.name; });
+    if(kids.length){
+      var word={1:'one',2:'two',3:'three',4:'four',5:'five',6:'six'}[kids.length]||kids.length;
+      body+='<h4>The '+word+' apps inside</h4><div class="fam">'+kids.map(function(k){
+        return '<button class="fam-row" type="button" data-open="'+esc(k.id)+'">'
+          +'<span class="fam-dot" style="background:'+esc(k.acc||'#888')+'"></span>'
+          +'<span class="fam-t"><b>'+esc(k.name)+'</b><small>'+esc(k.tag||'')+'</small></span>'
+          +'<span class="fam-p">'+esc(k.price||'In the bundle')+'</span></button>';
+      }).join('')+'</div>';
+    }
+    if(a.family){
+      var par=C.CATALOG.filter(function(x){ return x.name===a.family; })[0];
+      if(par) body='<button class="fam-back" type="button" data-open="'+esc(par.id)+'">\u2190 All of '+esc(par.name)+'</button>'+body;
+    }
     if(a.state==='live'){
       body+=(a.tiers&&a.tiers.length?('<h4>Plans</h4><div class="tiers">'+a.tiers.map(function(t){return '<div class="tier"><div class="tn">'+esc(t[0])+'</div><div class="tp">$'+Number(t[1]).toLocaleString()+'<small>/mo</small></div><div class="ti">'+esc(t[3])+'</div>'+(a.genre==='business'?'<a class="btn btn-primary btn-buy" href="/api/checkout?product='+encodeURIComponent(a.id)+'&tier='+encodeURIComponent(t[0])+'">Buy '+esc(t[0])+' \u2014 $'+Number(t[1]).toLocaleString()+'/mo</a>':'')+'</div>';}).join('')+'</div><p class="tnote">A flat monthly, nothing down, no build fee. It never costs more when you hire somebody. Pay by card through Stripe and the receipt lands in your email.</p>'):'')+(a.plans&&a.plans.length?('<h4>Plans</h4><div class="tiers">'+a.plans.map(function(p){return '<div class="tier"><div class="tn">'+esc(p[0])+'</div><div class="tp">$'+Number(p[1]).toFixed(2)+'<small>'+(p[2]==='year'?'/yr':'/mo')+'</small></div><div class="ti">'+esc(p[3]||'')+'</div><a class="btn btn-primary btn-buy" href="/api/checkout?product='+encodeURIComponent(a.id)+'&plan='+encodeURIComponent(p[0])+'">Buy '+esc(p[0])+' \u2014 $'+Number(p[1]).toFixed(2)+(p[2]==='year'?'/yr':'/mo')+'</a></div>';}).join('')+'</div><p class="tnote">It renews until you cancel, and you can cancel any time from the receipt in your email. Pay by card through Stripe.</p>'):'')+'<div class="rows"'+((a.tiers&&a.tiers.length)||(a.plans&&a.plans.length)?' hidden':'')+'><div class="rw"><span>Price</span><span>'+esc(a.price||'—')+'</span></div>'
         +(a.priceNote?'<div class="rw"><span>Details</span><span>'+esc(a.priceNote)+'</span></div>':'')
@@ -1007,6 +1037,9 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     }
     document.getElementById('shBody').innerHTML=body;
     document.getElementById('shBody').scrollTop=0;
+    [].forEach.call(document.getElementById('shBody').querySelectorAll('[data-open]'),function(btn){
+      btn.addEventListener('click',function(){ open(btn.getAttribute('data-open')); });
+    });
     wireGallery();
 
     var foot=document.getElementById('shFoot');
