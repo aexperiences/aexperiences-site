@@ -6,6 +6,23 @@
 <link rel="icon" href="/logo-nd.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Karla:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="/nd/nd-theme.css">
+<script>
+/* Opened from inside ND OS, Notes stays inside ND OS: same dark (or light) she picked, same
+   dock. Anthony, Sep 18 2026: "one of the pages in the OS switches to the other color" - it
+   was this one. A reader arriving from anywhere else still gets the light site. */
+(function(){
+  var inside=false;
+  try{
+    if(/[?&]in=os\b/.test(location.search)) sessionStorage.setItem('nd:os:inside','1');
+    inside = sessionStorage.getItem('nd:os:inside')==='1' || /\/nd\/(os|write)\//.test(document.referrer||'');
+  }catch(e){}
+  if(!inside) return;
+  window.__ND_INSIDE=true;
+  try{ document.documentElement.setAttribute('data-os-theme', localStorage.getItem('nd:os:theme')||'dark'); }
+  catch(e){ document.documentElement.setAttribute('data-os-theme','dark'); }
+  document.write('<link rel="stylesheet" href="/nd/os/nd-os.css">');
+})();
+</script>
 <style>
   .post-list{display:flex;flex-direction:column;gap:14px;margin-top:6px}
   .post-list .when{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--nd-terra)}
@@ -136,5 +153,13 @@
     if(a){ a.href='/nd/os/'; a.innerHTML='&larr; ND OS'; }
   }catch(e){}
 })();
+</script>
+<script>
+if(window.__ND_INSIDE){
+  var s=document.createElement('script'); s.src='/nd/os/nd-os.js';
+  s.onload=function(){ if(window.NDOS) NDOS.mount({ active:'notes', primary:{ label:'Write a note', icon:'write',
+    onTap:function(){ location.href='/nd/write/'; } } }); };
+  document.body.appendChild(s);
+}
 </script>
 </body></html>

@@ -107,7 +107,7 @@
   var ROOMS = [
     { id:'desk',    label:'Desk',     href:'/nd/os/',          icon:'desk',    live:true,  blurb:'Who came, from where, what sold.' },
     { id:'write',   label:'Write',    href:'/nd/write/',       icon:'write',   live:true,  blurb:'Write a note and publish it.' },
-    { id:'notes',   label:'Notes',    href:'/nd/blog/',        icon:'notes',   live:true,  blurb:'The posts, as everyone sees them.' },
+    { id:'notes',   label:'Notes',    href:'/nd/blog/?in=os',        icon:'notes',   live:true,  blurb:'The posts, as everyone sees them.' },
     { id:'blast',   label:'Blastpack', href:'/nd/os/blast/',   icon:'blast',   live:true,  blurb:'Queue a post. Blastpack sends it.' },
     { id:'list',    label:'List',     href:'/nd/os/list/',     icon:'list',    live:true,  blurb:'One list, not four places.' },
     { id:'cal',     label:'Calendar', href:'/nd/os/calendar/', icon:'cal',     live:true,  blurb:'Everything with a time, in one month.' },
