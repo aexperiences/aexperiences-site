@@ -191,11 +191,11 @@
 <script>
 (function(){
   var API='/api/nd-queue';
-  var PLATS=[['instagram','Instagram',2200],['tiktok','TikTok',2200],['facebook','Facebook',63206],
+  var PLATS=[['tiktok','TikTok',2200],['instagram','Instagram',2200],['facebook','Facebook',63206],
              ['youtube','YouTube',5000],['pinterest','Pinterest',500]];
   var DAYS=['S','M','T','W','T','F','S'];
   var LONG=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  var pick='instagram', going={instagram:true};
+  var pick='tiktok', going={tiktok:true};   /* TikTok first: 1,059 of her people are there (IG 39, FB 28), Sep 18 2026 */
 
   function esc(s){return String(s).replace(/[&<>"']/g,function(c){
     return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
