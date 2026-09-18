@@ -63,7 +63,13 @@ HOST_PROJECT = {
   "espogenius.com":       "espogenius-com",
   "marketnarc.com":       "marketnarc-com",
   "www.marketnarc.com":   "marketnarc-com",
-  "espodrama.com":        None,          # ← not in the Vercel account. Unresolved.
+  # espodrama.com answers, and the response says `server: Vercel` — but no project
+  # in the Accelerated Experiences team matches it (checked by name and by the
+  # project list, Sep 18 2026). The likeliest explanation is that it deploys from
+  # a PERSONAL Vercel scope rather than the company team. A $7.99/mo product
+  # shipping from outside the company account is exactly the sort of thing this
+  # page exists to surface. Unresolved on purpose until it is confirmed.
+  "espodrama.com":        None,
 }
 
 # ------------------------------------------------------------------- catalog

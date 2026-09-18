@@ -108,6 +108,15 @@
       section('Free / in testing', P.filter(function(p){return !p.sold && !p.tiers && p.genre!=='business' && p.state==='live';})) +
       section('Not live yet', P.filter(function(p){return p.state!=='live';}));
 
+    var blind = P.filter(function(p){ return (!p.where.project||p.where.project==='?') && p.state==='live'; });
+    if(blind.length){
+      document.getElementById('tables').insertAdjacentHTML('afterbegin',
+        '<h2 style="color:var(--warn)">Serving from somewhere this account cannot see · '+blind.length+'</h2>'+
+        '<div class="tbl"><div class="r" style="grid-template-columns:1fr">'+
+        '<span>'+blind.map(function(p){return esc(p.name)+' <span class="m">'+esc(p.where.host||p.url||'?')+'</span>';}).join(' &nbsp;·&nbsp; ')+
+        '</span></div></div>');
+    }
+
     document.getElementById('foot').innerHTML =
       'Rebuild with <code>python3 _ops/build-production-registry.py</code>. The Vercel column is the '+
       'one part typed by hand, from the Vercel API on '+esc(d.vercelSeen)+' — if a project is added or '+
