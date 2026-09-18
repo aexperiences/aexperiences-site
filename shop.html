@@ -696,10 +696,23 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
   /* Which family names actually have a tile to click. Built from the catalog, so
      adding a family card is the only thing needed to make a family collapse. */
   var DOORS = null;
-  function hasDoor(fam){
+  function collapses(fam){
     if(!DOORS){
-      DOORS = {};
-      C.CATALOG.forEach(function(x){ DOORS[x.name] = true; });
+      DOORS = {}; var names = {}, count = {};
+      C.CATALOG.forEach(function(x){
+        names[x.name] = true;
+        if(x.family) count[x.family] = (count[x.family]||0) + 1;
+      });
+      /* Two conditions, and both are needed.
+         1. A tile named after the family has to exist, or the members vanish with
+            nothing to click (that cost sixteen live apps, Sep 18 2026).
+         2. The family has to hold MORE THAN ONE member. Collapsing exists so four
+            ND apps do not crowd the shelf. Hiding a lone app behind a door named
+            after something else is not tidying, it is losing it - which is exactly
+            what happened to ESPOhystory, buried inside ESPO Learning. */
+      Object.keys(count).forEach(function(f){
+        if(names[f] && count[f] > 1) DOORS[f] = true;
+      });
     }
     return !!DOORS[fam];
   }
@@ -719,7 +732,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
        named after them — so sixteen live apps, ESPOhystory among them, dropped out
        of the shop with nothing to click to reach them. A family hides its members
        only if it has a tile of its own. Sep 18 2026. */
-    if(!term && a.family && hasDoor(a.family)) return false;
+    if(!term && a.family && collapses(a.family)) return false;
     if(!term) return true;
     return (a.name+' '+a.tag+' '+a.blurb+' '+(a.family||'')).toLowerCase().indexOf(term)>-1;
   }
@@ -1032,7 +1045,7 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     var kids=C.CATALOG.filter(function(x){ return x.family===a.name; });
     if(kids.length){
       var word={1:'one',2:'two',3:'three',4:'four',5:'five',6:'six'}[kids.length]||kids.length;
-      body+='<h4>The '+word+' apps inside</h4><div class="fam">'+kids.map(function(k){
+      body+='<h4>'+(kids.length===1 ? 'The app inside' : 'The '+word+' apps inside')+'</h4><div class="fam">'+kids.map(function(k){
         return '<button class="fam-row" type="button" data-open="'+esc(k.id)+'">'
           +'<span class="fam-dot" style="background:'+esc(k.acc||'#888')+'"></span>'
           +'<span class="fam-t"><b>'+esc(k.name)+'</b><small>'+esc(k.tag||'')+'</small></span>'
