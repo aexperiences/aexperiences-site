@@ -194,7 +194,7 @@
        is the all-four bundle: Focus, Thread, Tendency and Regulator, one price. Bought singly the
        four come to $7.96 a month; this is the discount he asked for. */
     { id:'neuro-divulge', name:'Neuro Divulge', tag:'All four ND apps, one price', genre:'mind', state:'live',
-      acc:'#a85f38', url:'https://neurodivulge.com/', img:'/logo-nd.png',
+      acc:'#a85f38', url:'https://www.aexperiences.com/apps/nd/', img:'/logo-nd.png',
       plans:[ ['Monthly',4.99,'month','All four ND apps · 3-day free trial'], ['Yearly',39.99,'year','All four, billed once a year · 3-day free trial'] ], trial:3,
       blurb:'Practical regulation tools for ADHD and autistic brains — built by someone who needs them. One subscription opens all four: ND Focus, ND Thread, ND Tendency and ND Regulator.',
       price:'$4.99/mo', priceNote:'Or $39.99 a year, billed once \u00b7 all four ND apps \u00b7 3-day free trial \u00b7 singly they are $1.99 each' },

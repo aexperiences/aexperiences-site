@@ -18,6 +18,7 @@
   /* ── the line. One list, one place to add the fifth app. ───────────────── */
   var HOME = '/apps/nd/';
   var SHOP = 'https://www.aexperiences.com/shop.html#a=personal';
+  var STORE = 'https://neurodivulge.com/';
   var APPS = [
     { id: 'thread',        name: 'ND Thread',    tag: 'Your master list',    url: '/apps/thread/',        acc: '#9A7A2C' },
     { id: 'espotendency',  name: 'ND Tendency',  tag: 'Mood & habits',       url: '/apps/espotendency/',  acc: '#C23359' },
@@ -182,6 +183,12 @@
     home.href = HOME;
     home.textContent = 'All four in one place →';
     sheet.appendChild(home);
+
+    var nd = document.createElement('a');
+    nd.className = 'ndn-foot';
+    nd.href = STORE;
+    nd.textContent = 'Neuro Divulge \u2014 store & printables \u2192';
+    sheet.appendChild(nd);
 
     var store = document.createElement('a');
     store.className = 'ndn-foot';
