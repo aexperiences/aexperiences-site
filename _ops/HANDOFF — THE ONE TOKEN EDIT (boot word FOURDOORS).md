@@ -70,7 +70,25 @@ aexperiences/espogenius.com
 aexperiences/marketnarc.com
 aexperiences/xpense-os
 aexperiences/espodrama
+aexperiences/neurodivulge-store     <- added Sep 18, see below
 ```
+
+**Five repos, four doors.** The fifth is not an app. `neurodivulge-store` is the
+Vercel project that owns **neurodivulge.com** and **www.neurodivulge.com**, and
+it is still serving a 10KB OLD store page. Jessica's real site — the one with
+the gear into ND OS, Notes, the apps and the printables — lives at
+`aexperiences.com/nd/`, where nobody goes. Her TikTok has **1,059 followers**
+and her bio sends every one of them to `NeuroDivulge.com`.
+
+Her audience is being pointed at the wrong page. Two ways to fix it:
+
+1. **Token route** — add `neurodivulge-store`, deploy the real site to that
+   project. Blocked on the same edit as the four.
+2. **Domain route, available with no token change** — in Vercel, move
+   `neurodivulge.com` + `www` off `neurodivulge-store` onto `aexperiences-site`,
+   then add a rewrite so `/` serves `/nd/`. This also retires a duplicate
+   project, which was already wanted. Drive it in his browser; do not hand him
+   steps.
 
 He has dyslexia and learning disabilities. **Drive the browser to that exact
 page for him and name the single action.** Do not hand him a list of steps and
