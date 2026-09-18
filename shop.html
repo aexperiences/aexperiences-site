@@ -693,6 +693,17 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     return b;
   }
 
+  /* Which family names actually have a tile to click. Built from the catalog, so
+     adding a family card is the only thing needed to make a family collapse. */
+  var DOORS = null;
+  function hasDoor(fam){
+    if(!DOORS){
+      DOORS = {};
+      C.CATALOG.forEach(function(x){ DOORS[x.name] = true; });
+    }
+    return !!DOORS[fam];
+  }
+
   function matches(a){
     /* Membership, not equality — a product can belong to both aisles (see aislesOf in
        catalog.js). On "Everything" the aisle test is skipped entirely, so a dual-aisle
@@ -700,9 +711,15 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
     if(aisle!=='all' && !C.isIn(a, aisle)) return false;
     if(genre!=='all' && a.genre!==genre) return false;
     /* A product that belongs to a family is not its own tile on the shelf — the
-       family's tile is the door, and the four sit inside it (Anthony, Sep 17 2026).
-       It stays findable: a search by its own name still surfaces it. */
-    if(!term && a.family) return false;
+       family's tile is the door, and the members sit inside it (Anthony, Sep 17 2026).
+       It stays findable: a search by its own name still surfaces it.
+
+       ⚠ ONLY when that door actually exists. The first version of this hid every
+       product carrying a `family:` string, and nine of those families have no card
+       named after them — so sixteen live apps, ESPOhystory among them, dropped out
+       of the shop with nothing to click to reach them. A family hides its members
+       only if it has a tile of its own. Sep 18 2026. */
+    if(!term && a.family && hasDoor(a.family)) return false;
     if(!term) return true;
     return (a.name+' '+a.tag+' '+a.blurb+' '+(a.family||'')).toLowerCase().indexOf(term)>-1;
   }
