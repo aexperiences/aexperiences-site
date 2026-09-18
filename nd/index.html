@@ -351,6 +351,21 @@ input[type=text]:focus,input[type=email]:focus{outline:none;border-color:var(--n
 #notes .note h3{font-family:var(--nd-serif);font-size:19px;font-weight:600;margin:8px 0 6px;line-height:1.25}
 #notes .note p{font-size:14.5px;color:var(--nd-ink-2);margin:0}
 #notes .notegrid:empty+p{margin-top:4px}
+
+/* ---- Watch: one true block, not three invented videos -------------------- */
+#watch .watchblock{display:block;text-decoration:none;color:inherit;margin-top:10px;
+  background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:16px;padding:24px 22px;
+  box-shadow:0 1px 0 rgba(67,60,53,.04),0 10px 26px -18px rgba(67,60,53,.4);
+  transition:transform .18s cubic-bezier(.2,.7,.3,1),box-shadow .18s}
+#watch .watchblock:hover{transform:translateY(-5px);
+  box-shadow:0 2px 0 rgba(67,60,53,.05),0 22px 38px -20px rgba(67,60,53,.55)}
+#watch .wb-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--nd-clay,#C05C2E)}
+#watch .wb-h{display:block;font-family:var(--nd-serif);font-size:clamp(22px,5.4vw,29px);
+  font-weight:600;letter-spacing:-.01em;margin:9px 0 8px}
+#watch .wb-p{display:block;font-size:15.5px;color:var(--nd-ink-2);max-width:52ch}
+#watch .wb-go{display:inline-block;margin-top:16px;font-size:15px;font-weight:700;
+  color:var(--nd-clay,#C05C2E)}
 </style>
 
 </head>
@@ -530,32 +545,14 @@ input[type=text]:focus,input[type=email]:focus{outline:none;border-color:var(--n
         <h2>Short videos from an ordinary week.</h2>
         <p class="lede" style="margin-top:12px">Teaching tips, routines that actually held, and the days they didn't. Filmed on a phone, in a house with four kids in it. Posted here first, then everywhere else.</p>
       </div>
-      <div class="cards">
-        <article class="card">
-          <div class="band"><b>Teaching tip</b></div>
-          <div class="body">
-            <h3>The two-minute warning that works</h3>
-            <p>Why "five more minutes" fails and what to say instead — the version we use before every transition.</p>
-            <div class="foot"><span style="font-size:13px;font-weight:700;color:var(--nd-ink-2)">Short &middot; 0:48</span><a class="btn" href="#">Watch</a></div>
-          </div>
-        </article>
-        <article class="card">
-          <div class="band"><b>Routine</b></div>
-          <div class="body">
-            <h3>Morning chart, start to finish</h3>
-            <p>A full run of the morning routine chart with a seven-year-old, unedited, including the part where it stalls.</p>
-            <div class="foot"><span style="font-size:13px;font-weight:700;color:var(--nd-ink-2)">Short &middot; 1:12</span><a class="btn" href="#">Watch</a></div>
-          </div>
-        </article>
-        <article class="card">
-          <div class="band"><b>Movement break</b></div>
-          <div class="body">
-            <h3>Three animals, ninety seconds</h3>
-            <p>The movement cards in real use — what a regulation break looks like when it's working.</p>
-            <div class="foot"><span style="font-size:13px;font-weight:700;color:var(--nd-ink-2)">Short &middot; 1:30</span><a class="btn" href="#">Watch</a></div>
-          </div>
-        </article>
-      </div>
+      <a class="watchblock" href="https://www.tiktok.com/@theneuro_divulge" target="_blank" rel="noopener">
+        <span class="wb-tag">On TikTok</span>
+        <span class="wb-h">@theneuro_divulge</span>
+        <span class="wb-p">Everything she films is there &mdash; teaching tips, routines that held, and the
+          days they didn&rsquo;t. New ones most weeks.</span>
+        <span class="wb-go">Watch on TikTok &rarr;</span>
+      </a>
+
       <p class="formnote" style="margin-top:18px">A podcast is coming. Until it does, everything lives here as short video.</p>
     </div>
   </section>
@@ -596,7 +593,7 @@ input[type=text]:focus,input[type=email]:focus{outline:none;border-color:var(--n
 <footer>
   <div class="wrap">
     <span>The Neuro-Divulge &middot; An Esposito Family Project</span>
-    <a href="#">Privacy</a>
+    <a href="https://www.aexperiences.com/privacy.html">Privacy</a>
     <a href="https://www.aexperiences.com/shop.html#neuro-divulge">The apps</a>
     <a class="aemark" href="https://www.aexperiences.com/shop.html">
       <img src="https://www.aexperiences.com/marks/ae-mark-gradient.png" alt="Accelerated Experiences, LLC">
