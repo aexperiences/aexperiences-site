@@ -7,12 +7,12 @@
    ========================================================================== */
 
 :root{
-  --os-glass:rgba(48,42,37,.66);
-  --os-glass-2:rgba(48,42,37,.86);
-  --os-line:rgba(243,238,229,.16);
-  --os-on:rgba(243,238,229,.95);
-  --os-off:rgba(243,238,229,.58);
-  --os-lift:0 18px 44px -14px rgba(26,22,19,.62),0 2px 0 rgba(243,238,229,.06) inset;
+  --os-glass:rgba(38,32,27,.82);
+  --os-glass-2:rgba(34,29,24,.92);
+  --os-line:rgba(243,238,229,.2);
+  --os-on:#FBF7EF;
+  --os-off:rgba(243,238,229,.72);
+  --os-lift:0 22px 50px -16px rgba(22,18,15,.78),0 1px 0 rgba(255,255,255,.14) inset;
   --os-spring:cubic-bezier(.34,1.46,.44,1);
 }
 
@@ -25,8 +25,8 @@ body.nd-os{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
   bottom:calc(14px + env(safe-area-inset-bottom,0px));
   max-width:480px;margin-inline:auto;height:64px;
   border-radius:24px;border:1px solid var(--os-line);
-  background:var(--os-glass);
-  -webkit-backdrop-filter:blur(26px) saturate(170%);backdrop-filter:blur(26px) saturate(170%);
+  background:linear-gradient(180deg,rgba(62,53,45,.9),var(--os-glass));
+  -webkit-backdrop-filter:blur(30px) saturate(185%);backdrop-filter:blur(30px) saturate(185%);
   box-shadow:var(--os-lift);
   display:grid;grid-template-columns:repeat(5,1fr);align-items:center;
   padding:0 6px;
@@ -37,8 +37,8 @@ body.nd-os{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
 /* the pill that chases the active room */
 .nd-dock .glide{
   position:absolute;top:7px;height:50px;border-radius:17px;
-  background:rgba(243,238,229,.13);
-  box-shadow:0 1px 0 rgba(243,238,229,.12) inset;
+  background:rgba(243,238,229,.17);
+  box-shadow:0 0 0 1px rgba(243,238,229,.13) inset,0 1px 0 rgba(255,255,255,.14) inset;
   transition:transform .42s var(--os-spring),width .42s var(--os-spring),opacity .2s;
   pointer-events:none;opacity:0;
 }
@@ -48,7 +48,7 @@ body.nd-os{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
   position:relative;z-index:1;-webkit-appearance:none;appearance:none;
   background:none;border:0;padding:0;margin:0;cursor:pointer;text-decoration:none;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-  height:58px;color:var(--os-off);font:600 9.5px/1 "Karla","Helvetica Neue",Arial,sans-serif;
+  height:58px;color:var(--os-off);font:700 9.5px/1 "Karla","Helvetica Neue",Arial,sans-serif;
   letter-spacing:.055em;text-transform:uppercase;
   -webkit-tap-highlight-color:transparent;
   transition:color .22s,transform .2s var(--os-spring);
