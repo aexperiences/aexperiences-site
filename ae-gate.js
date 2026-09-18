@@ -43,9 +43,20 @@
   var BNAME  = D('bundle-name');
   var BPRICE = D('bundle-price');
   var KEY    = 'ae.gate.' + APP;
+  /* A comp code is a comp code everywhere, so it is typed ONCE. All the apps sit on
+     the same origin, so one shared slot lets ND Thread's unlock open ND Focus too.
+     This is only a convenience: the code is still sent to /api/gate on every load
+     and the SERVER decides. A stale or revoked code in here opens nothing. */
+  var SHARED = 'ae.gate.shared';
 
-  function saved()      { try { return localStorage.getItem(KEY) || ''; } catch (e) { return ''; } }
-  function save(c)      { try { c ? localStorage.setItem(KEY, c) : localStorage.removeItem(KEY); } catch (e) {} }
+  function saved()      { try { return localStorage.getItem(KEY) || localStorage.getItem(SHARED) || ''; } catch (e) { return ''; } }
+  function save(c, wide) {
+    try {
+      if (!c) { localStorage.removeItem(KEY); return; }
+      localStorage.setItem(KEY, c);
+      if (wide) localStorage.setItem(SHARED, c);
+    } catch (e) {}
+  }
   function ask(qs)      { return fetch('/api/gate?' + qs, { cache: 'no-store' }).then(function (r) { return r.json(); }).catch(function () { return { ok: false, error: 'OFFLINE' }; }); }
 
   /* The app stays hidden until the gate has answered, so a paid app never flashes
@@ -56,7 +67,7 @@
   document.documentElement.classList.add('ae-gate-wait');
   function reveal() { document.documentElement.classList.remove('ae-gate-wait'); }
 
-  function open(code, via) { save(code); reveal(); try { document.dispatchEvent(new CustomEvent('ae-gate:open', { detail: { app: APP, via: via } })); } catch (e) {} }
+  function open(code, via) { save(code, via === 'comp'); reveal(); try { document.dispatchEvent(new CustomEvent('ae-gate:open', { detail: { app: APP, via: via } })); } catch (e) {} }
 
   function buy(product) {
     var u = '/api/checkout?product=' + encodeURIComponent(product) +
