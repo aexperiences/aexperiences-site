@@ -1,0 +1,21 @@
+{
+  "name": "ND OS — The Neuro-Divulge",
+  "short_name": "ND OS",
+  "description": "The back end of The Neuro-Divulge. Desk, Write, Blast, List, Calendar, Docs and the Hall of Records.",
+  "start_url": "/nd/os/",
+  "scope": "/nd/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F3EEE5",
+  "theme_color": "#F3EEE5",
+  "icons": [
+    { "src": "/nd/os/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/nd/os/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/nd/os/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Write a note", "url": "/nd/write/" },
+    { "name": "The list",     "url": "/nd/os/list/" },
+    { "name": "Blast",        "url": "/nd/os/blast/" }
+  ]
+}
