@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script src="/ae-voice.js"></script>
 <script src="/ae-gate.js"
         data-app="espovocab" data-name="ESPOvocab"
         data-tag="Words worth keeping"
@@ -424,27 +425,17 @@ document.getElementById("tKeep").onclick=function(){
   save();drawToday();
 };
 document.getElementById("tAnother").onclick=function(){S.extra++;save();pick()};
-/* ─── hear it — on-device, nothing leaves the phone ─── */
-function bestVoice(){
-  var vs=(window.speechSynthesis&&speechSynthesis.getVoices())||[];
-  return vs.find(function(v){return /en[-_]US/i.test(v.lang)&&/(Samantha|Google US English|Aria|Jenny|Microsoft)/i.test(v.name)})
-      || vs.find(function(v){return /en[-_]US/i.test(v.lang)})
-      || vs.find(function(v){return /^en/i.test(v.lang)}) || null;
-}
-if(window.speechSynthesis){try{speechSynthesis.onvoiceschanged=function(){};speechSynthesis.getVoices();}catch(e){}}
+/* ─── hear it — the HOUSE voice (SSOT A5.3). The device synthesizer is gone on purpose:
+   the cast speaks in the cast's voices or it does not speak. A word is generated once and
+   then served from the edge, so the same word costs nothing the second time. ─── */
+var SAY_VOICE="brian";
 function speakWord(){
   var btn=document.getElementById("tSay");
-  if(!("speechSynthesis" in window)){toast("This device can't read aloud");return}
-  try{
-    speechSynthesis.cancel();
-    var u=new SpeechSynthesisUtterance(W.w);
-    u.lang="en-US"; u.rate=.9; u.pitch=1;
-    var v=bestVoice(); if(v)u.voice=v;
-    u.onstart=function(){btn.classList.add("speaking")};
-    u.onend=function(){btn.classList.remove("speaking")};
-    u.onerror=function(){btn.classList.remove("speaking")};
-    speechSynthesis.speak(u);
-  }catch(e){btn.classList.remove("speaking");toast("Couldn't play audio")}
+  btn.classList.add("speaking");
+  AEVoice.speak(W.w,{voice:SAY_VOICE}).then(function(heard){
+    btn.classList.remove("speaking");
+    if(!heard)toast("The voice machine is waking up — try that again");
+  });
 }
 document.getElementById("tSay").onclick=speakWord;
 document.getElementById("tSaveNote").onclick=function(){
