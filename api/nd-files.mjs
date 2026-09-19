@@ -100,8 +100,12 @@ export default async function handler(req, res) {
       const bytes = Buffer.concat(chunks);
       if (!bytes.length) return send(res, 400, { ok: false, error: 'EMPTY' });
       const pathname = 'nd/' + BRAND + '/files/' + new Date().toISOString().slice(0, 10) + '/' + name;
-      const r = await fetch('https://blob.vercel-storage.com/' + pathname, { method: 'PUT',
-        headers: { authorization: 'Bearer ' + BLOB, 'x-api-version': '7', 'x-content-type': type, 'x-add-random-suffix': '1', 'x-access': 'private' }, body: bytes });
+      // the same call @vercel/blob's put() makes today (API v12), header for header
+      const storeId = BLOB.split('_')[3] || '';
+      const r = await fetch('https://vercel.com/api/blob/?pathname=' + encodeURIComponent(pathname), { method: 'PUT',
+        headers: { authorization: 'Bearer ' + BLOB, 'x-api-version': '12', 'x-vercel-blob-store-id': storeId,
+          'x-api-blob-request-id': storeId + ':' + Date.now() + ':' + Math.random().toString(16).slice(2), 'x-api-blob-request-attempt': '0',
+          'x-vercel-blob-access': 'private', 'x-content-type': type, 'x-add-random-suffix': '1', 'x-content-length': String(bytes.length) }, body: bytes });
       const text = await r.text();
       if (!r.ok) { console.error('nd-files store PUT', r.status, text.slice(0, 300)); return send(res, 502, { ok: false, error: 'STORE_SAID_NO', status: r.status, message: text.slice(0, 200) }); }
       let put = {}; try { put = JSON.parse(text); } catch (e) { return send(res, 502, { ok: false, error: 'STORE_SAID_NO', message: 'unreadable reply' }); }
