@@ -279,7 +279,7 @@
       plans:[ ['Monthly',1.99,'month','3-day free trial · cancel any time'], ['Yearly',19.99,'year','3-day free trial · billed once a year'] ], trial:3,
       shots:['/shots/espotendency.png'],
       blurb:'A 10-second daily check-in and one tiny win at a time. Everything stays on your device — no account, no cloud.',
-      price:'$1.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 3-day free trial — core stays free forever' },
+      price:'$1.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 3-day free trial' },
 
     { id:'esponest', name:'ESPOnest', tag:'Baby tracker', genre:'family', state:'live',
       acc:'#2E1F3A', mark:M+'esponest.svg', family:'ESPOfam', url:'/apps/esponest/', phase:'Testing',
@@ -310,7 +310,7 @@
       acc:'#A32226', mark:'/apps/esporegulator/icon.png', family:'The Neuro-Divulge', url:'/apps/esporegulator/',
       plans:[ ['Monthly',1.99,'month','3-day free trial · cancel any time'], ['Yearly',19.99,'year','3-day free trial · billed once a year'] ], trial:3,
       blurb:'Five-minute practice for anger, stress and anxiety — a real skills ladder plus right-now SOS tools. Skills, not affirmations.',
-      price:'$1.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 3-day free trial — Level 1 and every SOS tool free forever' },
+      price:'$1.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 3-day free trial' },
 
     { id:'espotrek', name:'ESPOtrek', tag:'Trip planner', genre:'travel', state:'live',
       acc:'#12303E', mark:M+'espotrek.svg', family:'ESPOtravel', url:'/apps/espotrek/', phase:'Testing',
