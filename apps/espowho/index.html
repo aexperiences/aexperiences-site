@@ -2694,6 +2694,11 @@ const Voice = {
       a.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
       a.play().catch(()=>{});
     }
+    /* The house engine sleeps when nobody is using it and takes about a minute to wake.
+       Wake it on the very first tap, so a line nobody baked yet is ready by the time the
+       game asks for it instead of leaving a kid staring at a silent screen. Costs one
+       short take, once, and it is cached from then on. */
+    try{ fetch('/api/voice?voice='+encodeURIComponent(VOICE)+'&say=ok'); }catch(e){}
   },
   stop(){
     this.queue=[]; this.speaking=false; this.idle=null;
