@@ -175,20 +175,21 @@
     }
 
     EL.onended = function () { if (gen !== R.gen) return; stopTick(); try { window.finishStory(); } catch (e) {} };
-    EL.onerror = function () { if (gen !== R.gen) return; stopTick(); F.tried[F.id] = false; F.words = null; standDown(); };
+    EL.onerror = function () { if (gen !== R.gen) return; stopTick(); F.tried[F.id] = false; F.words = null; toLive(gen); };
 
     if (EL.src !== src) {
       var started = false;
       EL.src = src;
       EL.onloadedmetadata = function () { started = true; go(); };
-      // A child must never be left staring at a silent page. If the audio has not opened within
-      // 10 seconds (dead connection, blocked media), hand the story to the device voice and keep
-      // reading. A reload brings Roz back.
+      // A child must never be left staring at a silent page. The rendered file is over a
+      // megabyte, so on a slow line it can still be opening well after ten seconds — that is not
+      // a failure, it is a wait, and cutting it off used to drop the story onto a robot voice.
+      // Give it twenty-five seconds, and if it truly has not opened, keep reading in LIVE Roz.
       setTimeout(function () {
         if (gen !== R.gen || started || EL.readyState > 0) return;
         stopTick();
-        standDown();
-      }, 10000);
+        toLive(gen);
+      }, 25000);
       EL.load();
     } else go();
   }
@@ -295,6 +296,18 @@
     });
   }
 
+  /* Hand the story to live Roz. The rendered file is the fast, free path; this is what keeps
+     the SAME voice reading when that file cannot open, instead of a robot or silence. */
+  function toLive(gen) {
+    if (gen !== R.gen) return;
+    if (!R.live) { standDown(); return; }
+    var pi = window.P.pi || 0, wi = window.P.wi || 0;
+    Q.list = buildQueue(pi, wi); Q.i = 0; Q.piece = null;
+    if (!Q.list.length) { try { window.finishStory(); } catch (e) {} return; }
+    prefetch(0); prefetch(1);
+    playApi(gen);
+  }
+
   // ================= PATH 3 — say so, and stay quiet =============================================
   /* This used to hand the story back to the device's own synthesizer. It does not any more:
      a strange robot voice taking over mid-story is exactly what Anthony could hear, and it is
@@ -331,11 +344,7 @@
     loadStory(id).then(function (haveFile) {
       if (gen !== R.gen) return;
       if (haveFile) { playFile(gen, flat(pi, wi)); return; }
-      if (!R.live) { standDown(); return; }
-      Q.list = buildQueue(pi, wi); Q.i = 0; Q.piece = null;
-      if (!Q.list.length) { try { window.finishStory(); } catch (e) {} return; }
-      prefetch(0); prefetch(1);
-      playApi(gen);
+      toLive(gen);
     });
   };
 
