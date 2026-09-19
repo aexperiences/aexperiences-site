@@ -2658,8 +2658,12 @@ Kid.gateAsk = function(mode, cb){
 })();
 
 /* ---------------- VOICE ----------------
-   Baked AE Voice Engine clips when assets/voice/ is present,
-   the browser's own voice until then. Same slug on both sides. */
+   ONE voice, start to finish: Roz. A line that is already baked plays from
+   assets/voice/; anything else is spoken live by the house AE Voice Engine in the
+   SAME voice. The browser's own synthesizer is gone on purpose — a baked line in
+   Roz followed by a device line in some other voice is the "two voices" you could
+   hear, and SSOT A5.3.1 forbids it: the cast speaks in the cast's voice or not at all. */
+const VOICE = 'roz';
 const Voice = {
   manifest:null, on:true, el:null, audio:null, unlocked:false,
   async init(){
@@ -2690,7 +2694,6 @@ const Voice = {
       a.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
       a.play().catch(()=>{});
     }
-    if(window.speechSynthesis){ try{ const u=new SpeechSynthesisUtterance(' '); u.volume=0; speechSynthesis.speak(u); }catch(e){} }
   },
   stop(){
     this.queue=[]; this.speaking=false; this.idle=null;
@@ -2736,11 +2739,10 @@ const Voice = {
     this.guard = setTimeout(()=>this.done(mine), 1600 + (''+text).length*95);
     const s = slug(text);
     if(this.manifest && this.manifest.slugs.includes(s)) this.baked(s, text, mine);
-    else this.browser(text, mine);
+    else this.house(text, mine);
   },
   /* nothing may still be making noise when the next line starts */
   silence(){
-    if(window.speechSynthesis) try{ speechSynthesis.cancel(); }catch(e){}
     this.players.forEach(a=>{ try{ a.pause(); a.onended=null; }catch(e){} });
   },
   done(mine){
@@ -2775,32 +2777,38 @@ const Voice = {
     };
     a.onended=()=>this.done(mine);
     a.play().then(()=>{ if(times) requestAnimationFrame(tick); })
-            .catch(()=>{ if(this.tok===mine) this.browser(text, mine); });
+            .catch(()=>{ if(this.tok===mine) this.house(text, mine); });
   },
-  browser(text, mine){
-    if(!window.speechSynthesis){ this.done(mine); return; }
-    const u=new SpeechSynthesisUtterance(text);
-    u.rate=.9; u.pitch=1.05; u.lang='en-US';
-    const v=this.pickVoice();
-    if(v) u.voice=v;
-    u.onboundary=e=>{
-      if(this.tok!==mine) return;
-      if(e.name && e.name!=='word') return;
-      this.light((text.slice(0,e.charIndex).match(/\S+/g)||[]).length);
+  /* A line nobody baked yet, spoken live by the house engine in Roz. It plays through
+     the SAME player the baked clips use, so stop() and silence() already reach it and
+     two lines can never be making noise at once. */
+  house(text, mine){
+    const a=this.player();
+    a.onended=null;
+    /* The take has to be generated, and a sleeping engine has to wake, so the watchdog
+       from run() would otherwise "finish" this line while it is still coming and let the
+       next one start on top of it. Hold it open, then size it to the real take. */
+    clearTimeout(this.guard);
+    this.guard=setTimeout(()=>this.done(mine), 95000);
+    a.src='/api/voice?voice='+encodeURIComponent(VOICE)+'&say='+encodeURIComponent(text);
+    const words=(''+text).split(/\s+/).filter(Boolean).length;
+    let idx=-1;
+    const tick=()=>{
+      if(this.tok!==mine || a.paused || a.ended) return;
+      if(words && a.duration && isFinite(a.duration)){
+        const k=Math.min(words-1, Math.floor(a.currentTime/(a.duration/words)));
+        if(k!==idx){ idx=k; this.light(k); }
+      }
+      requestAnimationFrame(tick);
     };
-    u.onend=()=>this.done(mine);
-    u.onerror=()=>this.done(mine);
-    try{ speechSynthesis.speak(u); }catch(e){ this.done(mine); }
-  },
-  /* one browser voice, chosen once and kept — the voice list arrives late in
-     some browsers, so picking per line made the app change voice mid-game */
-  pickVoice(){
-    if(this._v !== undefined) return this._v;
-    const vs=speechSynthesis.getVoices()||[];
-    if(!vs.length) return null;                 /* not ready yet, try again next line */
-    this._v = vs.find(x=>/samantha|karen|moira|zira|google us english/i.test(x.name))
-           || vs.find(x=>x.lang&&x.lang.indexOf('en')===0) || null;
-    return this._v;
+    a.onended=()=>this.done(mine);
+    a.onerror=()=>this.done(mine);
+    a.play().then(()=>{
+      if(this.tok!==mine){ try{ a.pause(); }catch(e){} return; }
+      clearTimeout(this.guard);
+      this.guard=setTimeout(()=>this.done(mine), ((a.duration&&isFinite(a.duration)?a.duration:8)*1000)+2500);
+      requestAnimationFrame(tick);
+    }).catch(()=>{ this.done(mine); });
   }
 };
 
