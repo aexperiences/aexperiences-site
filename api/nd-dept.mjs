@@ -128,15 +128,55 @@ async function seat(lens) {
 }
 async function fable(lens, persona, prompt, context, section) {
   const sess = await seat(lens);
-  const r = await fetch(FABLE, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ ns: BRAND, sess, brand: BRAND_NAME, persona, section: section || 'quality', prompt, context: context || '' })
-  });
-  let j = null; try { j = await r.json(); } catch (e) { j = null; }
-  if (!j) return { ok: false, error: 'FABLE_' + r.status };
-  if (j.ok) return { ok: true, text: String(j.text || '') };
-  return { ok: false, error: j.error || j.reason || 'FABLE', message: j.message || '' };
+  let j = null, status = 0;
+  try {
+    const r = await fetch(FABLE, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ ns: BRAND, sess, brand: BRAND_NAME, persona, section: section || 'quality', prompt, context: context || '' })
+    });
+    status = r.status;
+    try { j = await r.json(); } catch (e) { j = null; }
+  } catch (e) { j = null; }
+  if (j && j.ok) return { ok: true, text: String(j.text || ''), via: 'fable' };
+  // Fable refused on content (a reader's email, phone or address): that is final, say so.
+  if (j && j.reason === 'pii_blocked') return { ok: false, error: 'PII', message: j.message || '' };
+  // Fable is not switched on for this office yet (no store, no key, or unreachable): the site's own seat.
+  const local = await direct(persona, prompt, context);
+  if (local) return local;
+  return { ok: false, error: (j && (j.error || j.reason)) || ('FABLE_' + status), message: (j && j.message) || 'Fable did not answer.' };
+}
+
+/* ---- the same model, on the seat this site already holds --------------------------------
+   ae-fable-api carries no environment yet (Sep 19 2026: KV and DEEPSEEK unset, every hub door
+   answers 401). Until it does, the department runs on the DEEPSEEK_API_KEY this site has held
+   since the label reader — same model, same honesty line, same PII gate as Fable's. The day
+   Fable is configured, the call above succeeds and this path is never taken. */
+const DS_KEY = process.env.DEEPSEEK_API_KEY || '';
+const DS_BASE = process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com';
+const DS_MODEL = process.env.DEEPSEEK_MODEL || 'deepseek-chat';
+const HONESTY = ' Ground every answer in the real data you are given. NEVER invent facts — names, dates, numbers, prices, quotes. If you don\'t know or weren\'t given it, say so or say \'verify\'. Be warm, concise, and useful.';
+const EMAIL = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/;
+const PHONE = /(?:\+?\d[\s().+-]{0,2}){10,}/;
+const STREET = /\b\d{1,6}\s+(?:[NSEW]\.?\s+)?[A-Za-z0-9][A-Za-z0-9.'-]*(?:\s+[A-Za-z0-9][A-Za-z0-9.'-]*)*\s+(?:St|Street|Ave|Avenue|Rd|Road|Dr|Drive|Ln|Lane|Blvd|Boulevard|Way|Ct|Court|Pl|Place|Ter|Terrace|Cir|Circle|Hwy|Highway)\b\.?/i;
+function sensitive(t) { t = String(t || ''); return EMAIL.test(t) ? 'email address' : PHONE.test(t) ? 'phone number' : STREET.test(t) ? 'street address' : ''; }
+async function direct(persona, prompt, context) {
+  if (!DS_KEY) return null;
+  const user = (context ? 'Context (the real data):\n' + context + '\n\n' : '') + prompt;
+  const flagged = sensitive(user);
+  if (flagged) return { ok: false, error: 'PII', message: 'That carries a ' + flagged + ' — the department does not send a reader\'s details to an outside model. Take it out and send it again.' };
+  try {
+    const r = await fetch(DS_BASE.replace(/\/+$/, '') + '/chat/completions', {
+      method: 'POST',
+      headers: { authorization: 'Bearer ' + DS_KEY, 'content-type': 'application/json' },
+      body: JSON.stringify({ model: DS_MODEL, temperature: 0.6, max_tokens: 1400,
+        messages: [{ role: 'system', content: persona + HONESTY }, { role: 'user', content: user }] })
+    });
+    const j = await r.json();
+    const text = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
+    if (!text) return { ok: false, error: 'MODEL', message: 'No answer came back — try again.' };
+    return { ok: true, text: String(text).slice(0, 6000), via: 'site' };
+  } catch (e) { return { ok: false, error: 'MODEL', message: 'The model hit a snag — try again.' }; }
 }
 function parseLens(text) {
   const s = String(text || '');
@@ -155,7 +195,7 @@ async function read(lens, q, ctx) {
   const L = LENS[lens];
   const r = await fable(lens, L.persona, LENS_ASK + 'WHAT SHE BROUGHT:\n' + q, ctx, 'quality');
   if (!r.ok) return { name: L.name, side: L.side, ok: false, error: r.error, message: r.message };
-  return Object.assign({ name: L.name, side: L.side, ok: true }, parseLens(r.text));
+  return Object.assign({ name: L.name, side: L.side, ok: true, via: r.via }, parseLens(r.text));
 }
 
 /* ---- the Pacemaker — code. It gates; it never writes prose. ------------------------------- */
@@ -215,7 +255,7 @@ export default async function handler(req, res) {
     if (req.method === 'GET') {
       if (url.searchParams.get('probe') === '1') {
         const r = await fable('a', LENS.a.persona, 'Reply with the single word: ready.', '', 'probe');
-        return send(res, 200, { ok: true, fable: r.ok ? { ok: true, said: clean(r.text, 80) } : r });
+        return send(res, 200, { ok: true, fable: r.ok ? { ok: true, via: r.via, said: clean(r.text, 80) } : r });
       }
       const raws = (await hub('LRANGE', LOG, '0', '39')) || [];
       const log = raws.map((r) => { try { return JSON.parse(r); } catch (e) { return null; } }).filter(Boolean);
@@ -258,7 +298,7 @@ export default async function handler(req, res) {
       };
       await hub('LPUSH', LOG, JSON.stringify(ruling));
       await hub('LTRIM', LOG, '0', '199');
-      return send(res, 200, { ok: true, gate, head: h.ok ? { ok: true, name: HEAD.name, text: head } : { ok: false, name: HEAD.name, error: h.error, message: h.message }, ruling });
+      return send(res, 200, { ok: true, gate, head: h.ok ? { ok: true, name: HEAD.name, text: head, via: h.via } : { ok: false, name: HEAD.name, error: h.error, message: h.message }, ruling });
     }
 
     return send(res, 400, { ok: false, error: 'NEED_ACTION' });
