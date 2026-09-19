@@ -1,6 +1,6 @@
 /* ============================================================================
    STAY@HOME OS — SHOWROOM ENGINE
-   Non-Medical Home Care Agency OS · Powered by Accelerated Experiences LLC
+   Non-Medical Home Care Agency OS · AETRIAD Powered · Accelerated Experiences LLC
 
    BROWSER-ONLY. No backend for the business data — everything lives in this
    browser's localStorage. Faithful to AEHub canon: DH -> AE -> Event Bus ->
@@ -1840,7 +1840,7 @@
       '<a href="javascript:void(0)" id="resetFloor">Start with a clean slate</a></div>');
   }
   function footer(){
-    return el('<div class="ae-credit">Powered by <b>Accelerated Experiences LLC</b> · Stay@Home OS is a white-label build. ' +
+    return el('<div class="ae-credit"><a href="https://www.aexperiences.com/" class="ae-triad" aria-label="AETRIAD Powered - Accelerated Experiences LLC"><img src="/marks/aetriad-powered.png" alt="AETRIAD Powered" style="height:30px;width:auto;vertical-align:middle"></a><br>Stay@Home OS is a white-label build. ' +
       'Sample data is a fictional agency. Benchmark figures are sourced or shown blank — never invented. ' +
       'Nothing here is legal, tax or clinical advice.</div>');
   }

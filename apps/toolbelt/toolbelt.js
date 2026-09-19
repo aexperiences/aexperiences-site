@@ -1,6 +1,6 @@
 /* ============================================================================
    TOOLBELT OS — SHOWROOM ENGINE
-   Field Service / Trades OS · Powered by Accelerated Experiences LLC
+   Field Service / Trades OS · AETRIAD Powered · Accelerated Experiences LLC
 
    BROWSER-ONLY. Business data lives in this browser's localStorage.
 
@@ -2019,7 +2019,7 @@
     ' — this is the real operating system, not a slideshow. Type anywhere; it saves in your browser. '+
     'The shop, techs and customers below are a realistic sample book. '+
     '<a href="javascript:void(0)" id="resetFloor">Start with a clean slate</a></div>'); }
-  function footer(){ return el('<div class="ae-credit">Powered by <b>Accelerated Experiences LLC</b> · Toolbelt OS is a '+
+  function footer(){ return el('<div class="ae-credit"><a href="https://www.aexperiences.com/" class="ae-triad" aria-label="AETRIAD Powered - Accelerated Experiences LLC"><img src="/marks/aetriad-powered.png" alt="AETRIAD Powered" style="height:30px;width:auto;vertical-align:middle"></a><br>Toolbelt OS is a '+
     'white-label build. Sample data is a fictional shop. Benchmarks are sourced or shown blank — never invented. '+
     'Nothing here is legal, tax or code-compliance advice.</div>'); }
   function toast(m,k){ var w=document.getElementById("toast-wrap"); if(!w) return;

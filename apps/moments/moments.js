@@ -556,7 +556,7 @@
       'The studio, clients and jobs below are a realistic sample book. '+
       '<button class="linkbtn" id="goLiveBtn">Start with a clean slate</button></div>');
   }
-  function footer(){ return el('<div class="ae-credit">Powered by <b>Accelerated Experiences LLC</b> · Moments OS is a '+
+  function footer(){ return el('<div class="ae-credit"><a href="https://www.aexperiences.com/" class="ae-triad" aria-label="AETRIAD Powered - Accelerated Experiences LLC"><img src="/marks/aetriad-powered.png" alt="AETRIAD Powered" style="height:30px;width:auto;vertical-align:middle"></a><br>Moments OS is a '+
     'white-label product — your studio name and colours replace ours.</div>'); }
   function toast(m){ var w=document.getElementById("toast-wrap"); if(!w) return;
     var t=el('<div class="toast">'+esc(m)+'</div>'); w.appendChild(t);
