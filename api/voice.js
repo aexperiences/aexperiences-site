@@ -69,12 +69,16 @@ module.exports = async (req, res) => {
     const voice = VOICES[String(voiceIn).toLowerCase()] || 'brian';
     const tune = TUNING[voice] || { exaggeration: 0.5, cfg: 0.5 };
 
-    // Single-threaded machine: if another take is running, stay silent rather than queue.
+    // If a take is already running, stay silent rather than queue behind it.
+    // The engine scales to zero, so a cold /health simply does not answer in time. That is
+    // NOT the engine being down — treating it as down is what made a sleeping engine look
+    // dead on Sep 19 2026. Only an explicit busy:true stops us; anything else, we go ask
+    // /speak, which carries a timeout long enough to cover the cold start.
     try {
-      const h = await fetch(base + '/health', { headers: auth, signal: AbortSignal.timeout(6000) });
+      const h = await fetch(base + '/health', { headers: auth, signal: AbortSignal.timeout(8000) });
       const hj = h.ok ? await h.json().catch(() => ({})) : {};
-      if (hj && hj.busy) return json(res, 200, { ok: false, reason: 'busy' });
-    } catch (e) { return json(res, 200, { ok: false, reason: 'engine_down' }); }
+      if (hj && hj.busy === true) return json(res, 200, { ok: false, reason: 'busy' });
+    } catch (e) { /* asleep or slow — fall through and let /speak wake it */ }
 
     const up = await fetch(base + '/speak', {
       method: 'POST',
