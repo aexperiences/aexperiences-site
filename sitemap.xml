@@ -82,6 +82,9 @@
 <url><loc>https://www.aexperiences.com/blog/the-rabbit-hole.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 <url><loc>https://www.aexperiences.com/blog/what-we-build.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 <url><loc>https://www.aexperiences.com/apps/revolver/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.aexperiences.com/nd/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+<url><loc>https://www.aexperiences.com/nd/blog/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.aexperiences.com/apps/nd/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://www.aexperiences.com/apps/thread/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://www.aexperiences.com/apps/espostogie/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://www.aexperiences.com/apps/espowhiskey/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
