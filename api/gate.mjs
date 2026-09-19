@@ -29,7 +29,10 @@ const APPS = new Set([
   'espofunkmaster', 'revolver', 'espovocab', 'espohystory',
   'espovineyard', 'espostogie', 'espowhiskey', 'espobarista',
   // apps on their own domains, gated across origin
-  'espo-genius', 'the-narcs',
+  'espo-genius', 'the-narcs', 'espo-drama',
+  // Xpense OS: the door ships now and opens itself freely until Oct 1 2026 (data-from on
+  // its tag), because its page promises free use through September 30.
+  'xpense',
   // internal: the production registry. No subscription sells it, so only a comp
   // code opens it - which is exactly the intent.
   'ops'

@@ -31,7 +31,37 @@
   var D = function (k, d) { return (S && S.getAttribute('data-' + k)) || d || ''; };
 
   var APP    = D('app');
+
+  /* RECEIVER MODE (Sep 18 2026). A buyer comes back from Stripe to the product's home page
+     (espogenius.com/, /narcs/open, /apps/nd/), which is a menu or a pitch and carries no door.
+     <script src=".../ae-gate.js" data-receive="espo-genius" data-api="..."> on that page trades
+     the receipt (?unlocked=cs_...) for the subscription, files it in the slot every app on this
+     site reads, and sends the buyer back to the app they bought from. No receipt, no effect. */
+  var RECEIVE = D('receive');
+  if (!APP && RECEIVE) {
+    try {
+      var ru = new URL(location.href), cs = ru.searchParams.get('unlocked') || ru.searchParams.get('ae_session');
+      if (!cs || !/^cs_/.test(cs)) return;
+      ru.searchParams.delete('unlocked'); ru.searchParams.delete('ae_session');
+      history.replaceState(null, '', ru.pathname + ru.search + ru.hash);
+      fetch(D('api', '/api/gate') + '?app=' + encodeURIComponent(RECEIVE) + '&session=' + encodeURIComponent(cs), { cache: 'no-store' })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          if (!j || !j.ok || !j.code) return;
+          try { localStorage.setItem('ae.gate.shared', j.code); localStorage.setItem('ae.gate.' + RECEIVE, j.code); } catch (e) {}
+          var back = null; try { back = JSON.parse(localStorage.getItem('ae.gate.back') || 'null'); localStorage.removeItem('ae.gate.back'); } catch (e) {}
+          if (back && back.to && Date.now() - back.t < 3600e3 && back.to.indexOf(location.origin + '/') === 0) location.replace(back.to);
+        }).catch(function () {});
+    } catch (e) {}
+    return;
+  }
   if (!APP) return;
+
+  /* data-from="2026-10-01": the door exists but opens freely until that day. For a product
+     whose page publicly promises free use until a date (Xpense OS: free through Sep 30 2026),
+     the gate ships now and switches itself on when the promise ends - nobody has to remember. */
+  var FROM = Date.parse(D('from'));
+  if (FROM && Date.now() < FROM) return;
   var NAME   = D('name', APP);
   var TAG    = D('tag');
   var PRICE  = D('price');
@@ -163,7 +193,7 @@
           '<div class="ae-g-row"><input id="ae-g-code" placeholder="Paste your code" autocomplete="off" spellcheck="false">' +
           '<button id="ae-g-go">Unlock</button></div>' +
           '<p class="ae-g-note" id="ae-g-note" hidden></p></div>' +
-        '<div class="ae-g-foot">Your trial starts today and nothing is charged until it ends. ' +
+        '<div class="ae-g-foot">' + (TRIAL ? 'Your trial starts today and nothing is charged until it ends. ' : '') +
           'Cancel any time from the receipt in your email.<br>' +
           '<a href="https://www.aexperiences.com/shop.html">Accelerated Experiences LLC</a></div>' +
       '</div></div>';
