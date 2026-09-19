@@ -296,8 +296,8 @@ export default async function handler(req, res) {
         verdict: gate.verdict, head: clean(head, 1200),
         a: { take: clean(a.take, 500), confidence: a.confidence }, b: { take: clean(bb.take, 500), confidence: bb.confidence }
       };
-      await hub('LPUSH', LOG, JSON.stringify(ruling));
-      await hub('LTRIM', LOG, '0', '199');
+      // a run where nobody answered is an outage, not a ruling — it does not go on the record
+      if (a.ok || bb.ok) { await hub('LPUSH', LOG, JSON.stringify(ruling)); await hub('LTRIM', LOG, '0', '199'); }
       return send(res, 200, { ok: true, gate, head: h.ok ? { ok: true, name: HEAD.name, text: head, via: h.via } : { ok: false, name: HEAD.name, error: h.error, message: h.message }, ruling });
     }
 
