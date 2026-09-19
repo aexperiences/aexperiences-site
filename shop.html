@@ -1122,11 +1122,14 @@ if(a.state==='live'){ (function(){
     var v=(inp.value||'').trim();
     if(!v){ msg.textContent='Type your code first.'; return; }
     msg.textContent='Checking...';
-    fetch('/api/gate?code='+encodeURIComponent(v),{cache:'no-store'})
+    fetch('/api/gate?code='+encodeURIComponent(v)+'&app='+encodeURIComponent(a.id),{cache:'no-store'})
       .then(function(r){ return r.json(); })
       .catch(function(){ return {ok:false,error:'OFFLINE'}; })
       .then(function(j){
         if(!j||!j.ok){ msg.textContent=(j&&j.error==='OFFLINE')?'Could not reach us just now. Try again in a moment.':'That code did not work.'; return; }
+        /* ungated means this app has no door at all, and the endpoint answers the same way
+           for an app id it has never heard of. Either way there is nothing here to unlock. */
+        if(j.via!=='comp'||!j.code){ msg.textContent='This one is already open. No code needed - just open it above.'; return; }
         try{ localStorage.setItem('ae.gate.shared', j.code); }catch(e){}
         var u=a.url||'';
         if(u) u+=(u.indexOf('?')>-1?'&':'?')+'code='+encodeURIComponent(j.code);
