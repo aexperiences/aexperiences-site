@@ -1,0 +1,281 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<script>try{document.documentElement.setAttribute("data-os-theme",localStorage.getItem("nd:os:theme")||"dark")}catch(e){document.documentElement.setAttribute("data-os-theme","dark")}</script><meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Books">
+<title>ND OS &middot; Books</title>
+<link rel="icon" href="/logo-nd.png"><link rel="apple-touch-icon" href="/nd/os/icon-maskable-512.png">
+<link rel="manifest" href="/nd/os/manifest.webmanifest">
+<meta name="theme-color" content="#F3EEE5">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Karla:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/nd/nd-theme.css">
+<link rel="stylesheet" href="/nd/os/nd-os.css">
+<style>
+  .hello{padding:22px 0 2px}
+<style>
+  .hello{padding:22px 0 2px}
+  .hello .day{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--nd-terra)}
+  .hello h1{font-size:clamp(25px,6.2vw,33px);margin:8px 0 5px}
+  .hello p{color:var(--nd-ink-2);font-size:15px;margin:0}
+  .gate{max-width:420px;margin:8vh auto 0}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+  .stat{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:14px;padding:12px 12px 10px;box-shadow:var(--nd-shadow);text-align:left;font:inherit;color:inherit}
+  .stat b{display:block;font:600 22px/1 var(--nd-serif);white-space:nowrap}
+  .stat span{display:block;margin-top:6px;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--nd-ink-2)}
+  .tabs{display:flex;gap:6px;margin-top:18px;background:var(--nd-paper-2);border-radius:13px;padding:4px}
+  .tabs button{flex:1;border:0;border-radius:10px;padding:11px 8px;font:700 14px var(--nd-sans);background:none;color:var(--nd-ink-2);cursor:pointer;min-height:44px}
+  .tabs button.on{background:var(--nd-card);color:var(--nd-ink);box-shadow:var(--nd-shadow)}
+  h2.sec{font-size:17px;margin:22px 0 0}
+  .items{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .it{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:15px;box-shadow:var(--nd-shadow);overflow:hidden}
+  .it .top{display:flex;gap:12px;align-items:center;padding:12px 14px;cursor:pointer;width:100%;background:none;border:0;font:inherit;color:inherit;text-align:left;min-height:64px}
+  .it .who{flex:1;min-width:0}
+  .it .nm{font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .it .em{font-size:13.5px;color:var(--nd-ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .it .amt{flex:none;font:600 18px/1 var(--nd-serif);white-space:nowrap}
+  .tag{font-size:11px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:99px;background:var(--nd-paper-2);color:var(--nd-ink-2);display:inline-block;margin-top:5px}
+  .tag.won,.tag.paid{background:var(--nd-sage);color:var(--nd-on-sage)}
+  .tag.sent,.tag.invoiced{background:var(--nd-tan);color:var(--nd-on-tan)}
+  .edit{display:none;padding:4px 14px 16px;border-top:1px dashed var(--nd-rule)}
+  .it.open .edit{display:block}
+  .edit label{display:block;margin:12px 0 6px}
+  .edit textarea{min-height:70px;resize:vertical}
+  .seg{display:flex;gap:4px;background:var(--nd-paper-2);border-radius:11px;padding:3px;margin-top:6px}
+  .seg button{flex:1;border:0;border-radius:9px;padding:10px 6px;font:700 13px var(--nd-sans);background:none;color:var(--nd-ink-2);min-height:42px;cursor:pointer}
+  .seg button.on{background:var(--nd-card);color:var(--nd-ink);box-shadow:var(--nd-shadow)}
+  .line{display:flex;gap:6px;margin-top:6px;align-items:center}
+  .line input:first-child{flex:1 1 60%}
+  .line input.a{flex:1 1 30%;text-align:right}
+  .line .x{flex:none;width:40px;height:44px;border:1px solid var(--nd-rule);background:none;border-radius:10px;color:var(--nd-ink-2);font-size:20px;cursor:pointer}
+  .addl{margin-top:8px;width:100%;border:1.5px dashed var(--nd-terra);background:none;color:var(--nd-terra-d);border-radius:11px;padding:10px;font:700 14px var(--nd-sans);min-height:44px;cursor:pointer}
+  .sum{margin-top:16px;background:var(--nd-ink);color:var(--nd-paper);border-radius:15px;padding:14px 16px}
+  [data-os-theme=dark] .sum{background:var(--nd-paper-2);color:var(--nd-ink)}
+  .sum .lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.75}
+  .sum .big{font:600 32px/1.1 var(--nd-serif);margin:4px 0 8px}
+  .sum .grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:13.5px;border-top:1px solid rgba(128,128,128,.3);padding-top:10px}
+  .sum .grid b{float:right}
+  .row2{display:flex;gap:8px;margin-top:14px}
+  .row2 .btn{flex:1;min-height:46px}
+  .fine{font-size:12.5px;color:var(--nd-ink-2);margin-top:10px;line-height:1.45}
+  .empty{padding:28px 6px;color:var(--nd-ink-2);font-size:15px}
+  .gpmrow{display:flex;gap:10px;align-items:center}
+  .gpmrow input{width:110px}
+</style>
+</head><body>
+
+<header class="mast"><div class="wrap">
+  <img src="/logo-nd.png" alt="">
+  <div><div class="wordmark">The Neuro<em>~</em>Divulge</div><div class="subword">ND OS &middot; Books</div></div>
+  <a class="back" href="/nd/os/">Desk &rarr;</a>
+</div></header>
+
+<main class="wrap" id="main">
+  <section class="gate card" id="gate" hidden>
+    <h1 style="font-size:25px;margin-bottom:8px">Your books</h1>
+    <p class="muted" style="font-size:15px">Your word opens it.</p>
+    <div style="margin:18px 0 6px"><label for="key">Your word</label>
+      <input id="key" type="password" autocomplete="current-password" enterkeyhint="go"></div>
+    <button class="btn solid" id="unlock" style="width:100%">Open</button>
+  </section>
+
+  <div id="desk" hidden>
+    <section class="hello">
+      <div class="day" id="day">&nbsp;</div>
+      <h1>Your books.</h1>
+      <p>Price a job the way the house does, and write down what you spend. It all lands in the company books, flagged Neuro-Divulge.</p>
+    </section>
+
+    <div class="stats">
+      <div class="stat"><b id="sQuoted">$0</b><span>Quoted, open</span></div>
+      <div class="stat"><b id="sWon">$0</b><span>Won this year</span></div>
+      <div class="stat"><b id="sSpent">$0</b><span>Spent this month</span></div>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button type="button" class="on" data-t="est">Estimates</button>
+      <button type="button" data-t="exp">Expenses</button>
+    </div>
+
+    <div id="pane-est">
+      <div class="items" id="estList"></div>
+      <p class="fine">The math is the house math: what it costs you plus your time, marked up to a gross profit margin (67% is the house default), plus pass-throughs at cost. An <b>internal</b> job is a cost tally with no markup.</p>
+    </div>
+    <div id="pane-exp" hidden>
+      <div class="items" id="expList"></div>
+      <p class="fine">Anything you paid for the business. Tie it to a job if it belongs to one, so the job's real margin shows up in the company books.</p>
+    </div>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <a class="aemark" href="/nd/os/">
+    <img src="/marks/ae-mark-gradient.png" alt="Accelerated Experiences, LLC">
+    <span><b>ND OS &middot; built by Accelerated Experiences, LLC</b>Runs on the AE Triad</span>
+  </a>
+</div></footer>
+
+<script src="/nd/os/nd-os.js"></script>
+<script>
+(function(){
+  var API='/api/nd-books';
+  var gate=document.getElementById('gate'), desk=document.getElementById('desk');
+  var EL=document.getElementById('estList'), XL=document.getElementById('expList');
+  var EST=[], EXP=[], TAB='est', OPEN=null, XOPEN=null;
+  var fmt=new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+  var fmt2=new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'});
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function num(v){var n=parseFloat(v);return isNaN(n)?0:n;}
+  document.getElementById('day').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+
+  document.getElementById('unlock').addEventListener('click',function(){
+    var k=document.getElementById('key').value.trim(); if(!k) return;
+    NDOS.auth.set(k); load().then(function(ok){ if(!ok){ NDOS.say('That did not work.',true); NDOS.auth.clear(); } });
+  });
+  NDOS.bus.on('auth:out',function(){ gate.hidden=false; desk.hidden=true; });
+
+  function load(){
+    if(!NDOS.auth.has()){ gate.hidden=false; desk.hidden=true; return Promise.resolve(false); }
+    return NDOS.net(API).then(function(j){
+      if(!j.ok){ if(j.__status===401){ gate.hidden=false; desk.hidden=true; return false; } NDOS.say(NDOS.why(j),true); return true; }
+      gate.hidden=true; desk.hidden=false; EST=j.estimates||[]; EXP=j.expenses||[]; draw(); return true;
+    });
+  }
+
+  /* the house math, same as the hub's estimate machine */
+  function quote(e){
+    var cw=0;(e.costs||[]).forEach(function(c){cw+=num(c.a);});
+    var pass=0;(e.pass||[]).forEach(function(c){pass+=num(c.a);});
+    var pay=num(e.salary), cb=cw+pay, gpm=num(e.gpm), ext=e.type!=='internal';
+    var price=(ext&&gpm<100)?cb/(1-gpm/100):0;
+    return {costs:cw,salary:pay,costBase:cb,pass:pass,gpm:gpm,price:price,total:ext?price+pass:cb+pass,profit:ext?price-cb:0};
+  }
+
+  function stats(){
+    var y=new Date().getFullYear(), m=new Date().toISOString().slice(0,7);
+    var open=0,won=0,spent=0;
+    EST.forEach(function(e){ var q=quote(e);
+      if(e.status==='estimate'||e.status==='sent') open+=q.total;
+      if((e.status==='won'||e.status==='invoiced'||e.status==='paid')&&new Date(e.createdAt).getFullYear()===y) won+=q.total; });
+    EXP.forEach(function(x){ if(String(x.on||'').slice(0,7)===m) spent+=num(x.amount); });
+    document.getElementById('sQuoted').textContent=fmt.format(open);
+    document.getElementById('sWon').textContent=fmt.format(won);
+    document.getElementById('sSpent').textContent=fmt.format(spent);
+  }
+
+  function draw(){
+    stats();
+    document.getElementById('pane-est').hidden=TAB!=='est';
+    document.getElementById('pane-exp').hidden=TAB!=='exp';
+    EL.innerHTML=''; XL.innerHTML='';
+    if(OPEN==='new') EL.appendChild(estCard({id:'',type:'external',title:'',client:'',gpm:67,salary:'',costs:[{d:'',a:''}],pass:[],status:'estimate',notes:'',_new:true}));
+    if(!EST.length&&OPEN!=='new') EL.innerHTML='<p class="empty">No estimates yet. Tap the button below to price your first job.</p>';
+    EST.forEach(function(e){ EL.appendChild(estCard(e)); });
+    if(XOPEN==='new') XL.appendChild(expCard({id:'',what:'',amount:'',on:new Date().toISOString().slice(0,10),kind:'Supplies',job:'',notes:'',_new:true}));
+    if(!EXP.length&&XOPEN!=='new') XL.innerHTML='<p class="empty">Nothing spent yet. Tap the button below the first time you buy something for the business.</p>';
+    EXP.forEach(function(x){ XL.appendChild(expCard(x)); });
+  }
+
+  var LABEL={estimate:'Estimate',sent:'Sent',won:'Won',lost:'Lost',invoiced:'Invoiced',paid:'Paid'};
+  function lineRows(arr,cls,ph){ return arr.map(function(r){ return '<div class="line '+cls+'"><input value="'+esc(r.d)+'" placeholder="'+ph+'"><input class="a" type="number" inputmode="decimal" step="0.01" value="'+esc(r.a===''?'':r.a)+'" placeholder="$"><button type="button" class="x">&times;</button></div>'; }).join(''); }
+
+  function estCard(e){
+    var el=document.createElement('div'); el.className='it'+((OPEN===e.id||e._new)?' open':'');
+    var q=quote(e);
+    el.innerHTML=
+      (e._new?'':'<button class="top" type="button"><span class="who"><span class="nm">'+esc(e.title)+'</span><span class="em">'+esc(e.client||(e.type==='internal'?'Internal':''))+' &middot; '+esc(e.estNo||'')+'</span><span class="tag '+esc(e.status)+'">'+(LABEL[e.status]||e.status)+'</span></span><span class="amt">'+fmt.format(q.total)+'</span></button>')+
+      '<div class="edit">'+(e._new?'<h2 style="font-size:19px;margin:14px 0 2px">Price a job</h2>':'')+
+      '<label>Who is it for</label><div class="seg f-type"><button type="button" data-v="external"'+(e.type!=='internal'?' class="on"':'')+'>A client</button><button type="button" data-v="internal"'+(e.type==='internal'?' class="on"':'')+'>Internal</button></div>'+
+      '<label>Job</label><input class="f-title" value="'+esc(e.title)+'" placeholder="e.g. Visual routine chart, custom">'+
+      '<label>Client</label><input class="f-client" value="'+esc(e.client)+'" placeholder="Their name">'+
+      '<label>What it costs you</label><div class="f-costs">'+lineRows(e.costs||[],'c','e.g. Printing')+'</div><button type="button" class="addl f-addc">+ Add a cost</button>'+
+      '<label>Your time (what you pay yourself)</label><input class="f-salary" type="number" inputmode="decimal" step="0.01" value="'+esc(e.salary===''?'':e.salary)+'" placeholder="$">'+
+      '<label>Pass-throughs (billed at cost)</label><div class="f-pass">'+lineRows(e.pass||[],'p','e.g. Postage')+'</div><button type="button" class="addl f-addp">+ Add a pass-through</button>'+
+      '<div class="f-gpmwrap"><label>Gross profit margin</label><div class="gpmrow"><input class="f-gpm" type="number" inputmode="decimal" min="0" max="99" value="'+esc(e.gpm==null?67:e.gpm)+'"><span>% GPM</span></div></div>'+
+      '<div class="sum"><div class="lbl f-sumlbl">Price to the client</div><div class="big f-total">$0</div><div class="grid">'+
+        '<div>Costs <b class="f-c">$0</b></div><div>Your time <b class="f-s">$0</b></div><div>Profit <b class="f-pr">$0</b></div><div>Pass-throughs <b class="f-p">$0</b></div></div></div>'+
+      '<label>Where it stands</label><select class="f-status">'+Object.keys(LABEL).map(function(k){return '<option value="'+k+'"'+(e.status===k?' selected':'')+'>'+LABEL[k]+'</option>';}).join('')+'</select>'+
+      '<label>Notes</label><textarea class="f-notes">'+esc(e.notes)+'</textarea>'+
+      '<div class="row2"><button class="btn solid f-save" type="button">Save</button>'+(e._new?'<button class="btn quiet f-cancel" type="button">Cancel</button>':'<button class="btn quiet f-del" type="button">Remove</button>')+'</div>'+
+      '</div>';
+    var top=el.querySelector('.top'); if(top) top.addEventListener('click',function(){ OPEN=(OPEN===e.id?null:e.id); draw(); });
+    var type=e.type==='internal'?'internal':'external';
+    function gather(){ var g=function(sel){ return [].map.call(el.querySelectorAll(sel+' .line'),function(r){ var i=r.querySelectorAll('input'); return {d:i[0].value,a:i[1].value}; }); };
+      return {id:e.id||'',type:type,title:el.querySelector('.f-title').value,client:el.querySelector('.f-client').value,costs:g('.f-costs'),pass:g('.f-pass'),salary:el.querySelector('.f-salary').value,gpm:el.querySelector('.f-gpm').value,status:el.querySelector('.f-status').value,notes:el.querySelector('.f-notes').value}; }
+    function recalc(){ var q=quote(gather()); var ext=type!=='internal';
+      el.querySelector('.f-gpmwrap').style.display=ext?'':'none';
+      el.querySelector('.f-sumlbl').textContent=ext?'Price to the client':'Total project cost';
+      el.querySelector('.f-total').textContent=fmt2.format(q.total);
+      el.querySelector('.f-c').textContent=fmt2.format(q.costs); el.querySelector('.f-s').textContent=fmt2.format(q.salary);
+      el.querySelector('.f-pr').textContent=ext?fmt2.format(q.profit):'—'; el.querySelector('.f-p').textContent=fmt2.format(q.pass); }
+    el.querySelector('.edit').addEventListener('input',recalc);
+    el.querySelector('.edit').addEventListener('click',function(ev){
+      var t=ev.target;
+      if(t.classList.contains('x')){ t.parentNode.remove(); recalc(); }
+      if(t.classList.contains('f-addc')){ t.previousElementSibling.insertAdjacentHTML('beforeend',lineRows([{d:'',a:''}],'c','e.g. Printing')); }
+      if(t.classList.contains('f-addp')){ t.previousElementSibling.insertAdjacentHTML('beforeend',lineRows([{d:'',a:''}],'p','e.g. Postage')); }
+      if(t.parentNode&&t.parentNode.classList.contains('f-type')){ type=t.dataset.v; [].forEach.call(t.parentNode.children,function(b){b.classList.toggle('on',b===t);}); recalc(); }
+    });
+    recalc();
+    el.querySelector('.f-save').addEventListener('click',function(){
+      var s=gather(); if(!s.title.trim()){ NDOS.say('Give the job a name.',true); return; }
+      NDOS.net(API,{method:'POST',json:{save:s}}).then(function(j){
+        if(!j.ok){ NDOS.say(NDOS.why(j),true); return; }
+        EST=EST.filter(function(x){return x.id!==j.estimate.id;}); EST.unshift(j.estimate);
+        OPEN=null; draw(); NDOS.say('Saved. '+j.estimate.estNo+' is in the books.'); NDOS.bus.emit('books:changed',{id:j.estimate.id});
+      });
+    });
+    var c=el.querySelector('.f-cancel'); if(c) c.addEventListener('click',function(){ OPEN=null; draw(); });
+    var d=el.querySelector('.f-del'); if(d) arm(d,'Remove',function(){ return NDOS.net(API,{method:'POST',json:{remove:e.id}}).then(function(j){ if(j.ok){ EST=EST.filter(function(x){return x.id!==e.id;}); OPEN=null; draw(); NDOS.say('Removed.'); NDOS.bus.emit('books:changed',{}); } else NDOS.say(NDOS.why(j),true); return j.ok; }); });
+    return el;
+  }
+
+  var KINDS=['Supplies','Printing','Software','Ads','Travel','Fees','Other'];
+  function expCard(x){
+    var el=document.createElement('div'); el.className='it'+((XOPEN===x.id||x._new)?' open':'');
+    var jobs=EST.map(function(e){return '<option value="'+esc(e.id)+'"'+(x.job===e.id?' selected':'')+'>'+esc(e.title)+'</option>';}).join('');
+    el.innerHTML=
+      (x._new?'':'<button class="top" type="button"><span class="who"><span class="nm">'+esc(x.what)+'</span><span class="em">'+esc(x.on)+' &middot; '+esc(x.kind)+(x.job?' &middot; '+esc((EST.filter(function(e){return e.id===x.job;})[0]||{}).title||''):'')+'</span></span><span class="amt">'+fmt2.format(num(x.amount))+'</span></button>')+
+      '<div class="edit">'+(x._new?'<h2 style="font-size:19px;margin:14px 0 2px">Write down an expense</h2>':'')+
+      '<label>What</label><input class="f-what" value="'+esc(x.what)+'" placeholder="e.g. Laminating sheets">'+
+      '<label>How much</label><input class="f-amt" type="number" inputmode="decimal" step="0.01" value="'+esc(x.amount===''?'':x.amount)+'" placeholder="$">'+
+      '<label>When</label><input class="f-on" type="date" value="'+esc(x.on)+'">'+
+      '<label>Kind</label><select class="f-kind">'+KINDS.map(function(k){return '<option'+(x.kind===k?' selected':'')+'>'+k+'</option>';}).join('')+'</select>'+
+      '<label>For which job</label><select class="f-job"><option value="">Not tied to a job</option>'+jobs+'</select>'+
+      '<label>Notes</label><textarea class="f-notes">'+esc(x.notes)+'</textarea>'+
+      '<div class="row2"><button class="btn solid f-save" type="button">Save</button>'+(x._new?'<button class="btn quiet f-cancel" type="button">Cancel</button>':'<button class="btn quiet f-del" type="button">Remove</button>')+'</div></div>';
+    var top=el.querySelector('.top'); if(top) top.addEventListener('click',function(){ XOPEN=(XOPEN===x.id?null:x.id); draw(); });
+    el.querySelector('.f-save').addEventListener('click',function(){
+      var s={id:x.id||'',what:el.querySelector('.f-what').value,amount:el.querySelector('.f-amt').value,on:el.querySelector('.f-on').value,kind:el.querySelector('.f-kind').value,job:el.querySelector('.f-job').value,notes:el.querySelector('.f-notes').value};
+      if(!s.what.trim()){ NDOS.say('Say what it was.',true); return; }
+      NDOS.net(API,{method:'POST',json:{expense:s}}).then(function(j){
+        if(!j.ok){ NDOS.say(NDOS.why(j),true); return; }
+        EXP=EXP.filter(function(y){return y.id!==j.expense.id;}); EXP.unshift(j.expense);
+        XOPEN=null; draw(); NDOS.say('Saved.'); NDOS.bus.emit('books:changed',{id:j.expense.id});
+      });
+    });
+    var c=el.querySelector('.f-cancel'); if(c) c.addEventListener('click',function(){ XOPEN=null; draw(); });
+    var d=el.querySelector('.f-del'); if(d) arm(d,'Remove',function(){ return NDOS.net(API,{method:'POST',json:{removeExpense:x.id}}).then(function(j){ if(j.ok){ EXP=EXP.filter(function(y){return y.id!==x.id;}); XOPEN=null; draw(); NDOS.say('Removed.'); } else NDOS.say(NDOS.why(j),true); return j.ok; }); });
+    return el;
+  }
+  function arm(btn,label,go){ var armed=false,tm=null; btn.addEventListener('click',function(){
+    if(!armed){ armed=true; btn.textContent='Sure?'; tm=setTimeout(function(){armed=false;btn.textContent=label;},4000); return; }
+    clearTimeout(tm); btn.textContent='…'; go().then(function(ok){ if(!ok){ btn.textContent=label; armed=false; } }); }); }
+
+  [].forEach.call(document.querySelectorAll('.tabs button'),function(b){ b.addEventListener('click',function(){
+    TAB=b.dataset.t; [].forEach.call(document.querySelectorAll('.tabs button'),function(x){x.classList.toggle('on',x===b);}); draw(); mountFor(); }); });
+
+  var MOUNTED=null;
+  function mountFor(){
+    NDOS.mount({ active:'books', primary:{ label:TAB==='est'?'Price a job':'Write down an expense', icon:'up', onTap:function(){
+      if(desk.hidden) return;
+      if(TAB==='est'){ OPEN='new'; draw(); var f=EL.querySelector('.f-title'); if(f){ f.focus(); f.scrollIntoView({behavior:'smooth',block:'center'}); } }
+      else { XOPEN='new'; draw(); var g=XL.querySelector('.f-what'); if(g){ g.focus(); g.scrollIntoView({behavior:'smooth',block:'center'}); } }
+    } } });
+  }
+  mountFor();
+  load();
+})();
+</script>
+</body></html>
