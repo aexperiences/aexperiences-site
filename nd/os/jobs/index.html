@@ -210,7 +210,7 @@
         (chips?'<div class="chips">'+chips+'</div>':'')+'</button>')+
       '<div class="edit">'+(j._new?'<h2 style="font-size:19px;margin:14px 0 2px">Add a job</h2>':'')+
       '<label>What is the job</label><input class="f-title" value="'+esc(j.title)+'" placeholder="e.g. October routine-chart launch">'+
-      '<label>What kind of work &mdash; tick all that belong together</label><div class="kinds">'+
+      '<label>Neuro~Divulge Media Network &mdash; tick every channel this job is</label><div class="kinds">'+
         KINDS.map(function(K){ return '<button type="button" data-k="'+esc(K.id)+'"'+((j.kinds||[]).indexOf(K.id)>=0?' class="on"':'')+'>'+esc(K.label)+(K.soon?' <small>soon</small>':'')+'</button>'; }).join('')+'</div>'+
       '<div class="otherwrap'+((j.kinds||[]).indexOf('other')>=0?' on':'')+'"><label>Other &mdash; what?</label><input class="f-other" value="'+esc(j.other)+'" placeholder="Say what it is"></div>'+
       '<label>When is it due</label><input class="f-at" type="datetime-local" value="'+esc(j.at?j.at.slice(0,16):'')+'">'+
