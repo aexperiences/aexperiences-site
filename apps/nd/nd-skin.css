@@ -1,0 +1,128 @@
+/* ============================================================
+   THE NEURO~DIVULGE — ONE SKIN FOR THE WHOLE LINE
+   Accelerated Experiences LLC · Sep 19 2026
+   One file, loaded LAST by every ND app. It only repaints:
+   it changes no layout, no behavior, no storage key, no URL.
+   House: cream page, espresso ink, Lora headings, Inter body.
+   Clay #a85f38 belongs to The Neuro~Divulge frame and to no app.
+   Each app keeps its own accent: Thread mustard · Tendency rose ·
+   Regulator burgundy · Focus olive.
+   To use: <html data-nd="thread|tendency|regulator|focus"> and
+   <link rel="stylesheet" href="/apps/nd/nd-skin.css"> as the last
+   thing in <head>.
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&display=swap');
+
+html[data-nd]{
+  --nd-cream:#f8f2e6; --nd-cream2:#f1e8d6; --nd-card:#fffdf7; --nd-field:#fffefa;
+  --nd-ink:#2b1a12; --nd-ink2:#4a362b; --nd-mut:#6d5647;
+  --nd-line:rgba(43,26,18,.14); --nd-line2:rgba(43,26,18,.22);
+  --nd-clay:#a85f38;
+  --nd-serif:Lora,Georgia,"Times New Roman",serif;
+  --nd-sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --nd-shadow:0 2px 4px rgba(43,26,18,.04),0 14px 34px -24px rgba(43,26,18,.28);
+}
+html[data-nd="thread"]   {--nd-acc:#8a6c22; --nd-acc2:#9A7A2C; --nd-accd:#735a1b; --nd-soft:#f3e9c9;}
+html[data-nd="tendency"] {--nd-acc:#C23359; --nd-acc2:#d4587a; --nd-accd:#a42a4a; --nd-soft:#f9e1e7;}
+html[data-nd="regulator"]{--nd-acc:#A32226; --nd-acc2:#bf4a4d; --nd-accd:#861b1f; --nd-soft:#f6dedd;}
+html[data-nd="focus"]    {--nd-acc:#66771c; --nd-acc2:#93A82F; --nd-accd:#556416; --nd-soft:#ecf1d3;}
+
+/* ── ND TENDENCY + ND REGULATOR (same bones) ─────────────── */
+html[data-nd="tendency"],html[data-nd="regulator"]{
+  --bg:var(--nd-cream); --bg2:var(--nd-cream2); --card:var(--nd-card);
+  --ink:var(--nd-ink); --ink2:var(--nd-mut);
+  --acc:var(--nd-acc); --accbtn:var(--nd-acc);
+  --line:var(--nd-line); --serif:var(--nd-serif); --sans:var(--nd-sans);
+}
+html[data-nd="tendency"]{--terra:var(--nd-clay);}
+html[data-nd="tendency"] header,html[data-nd="regulator"] header{
+  background:linear-gradient(180deg,var(--nd-soft) 0%,var(--nd-cream) 100%);
+}
+html[data-nd="tendency"] header::before,html[data-nd="regulator"] header::before{
+  background:radial-gradient(circle,color-mix(in srgb,var(--nd-acc) 22%,transparent),transparent 65%);
+}
+html[data-nd="tendency"] header::after,html[data-nd="regulator"] header::after{
+  background:radial-gradient(circle,rgba(168,95,56,.16),transparent 65%);
+}
+html[data-nd="tendency"] .mast .t b,html[data-nd="regulator"] .mast .t b{color:var(--nd-acc);}
+html[data-nd="tendency"] .mast .tag,html[data-nd="regulator"] .mast .tag{color:var(--nd-mut);}
+html[data-nd="tendency"] .streak{
+  color:var(--nd-acc); border-color:color-mix(in srgb,var(--nd-acc) 40%,transparent);
+  background:rgba(255,253,247,.6);
+}
+html[data-nd="tendency"] .card,html[data-nd="regulator"] .card{box-shadow:var(--nd-shadow);}
+html[data-nd="tendency"] .moods button,html[data-nd="tendency"] .acts button{background:var(--nd-card);}
+html[data-nd="tendency"] .moods button.on{
+  background:var(--nd-soft); animation:none;
+  box-shadow:0 0 0 5px color-mix(in srgb,var(--nd-acc) 16%,transparent),0 0 22px 4px color-mix(in srgb,var(--nd-acc) 18%,transparent);
+}
+html[data-nd="tendency"] .acts button.done{background:var(--nd-cream2);}
+html[data-nd="tendency"] button.b1,html[data-nd="regulator"] .b1{
+  color:#fff; box-shadow:0 6px 16px -9px color-mix(in srgb,var(--nd-acc) 60%,transparent);
+}
+html[data-nd="tendency"] button.b1:hover,html[data-nd="regulator"] .b1:hover{background:var(--nd-accd);}
+html[data-nd="tendency"] textarea,html[data-nd="tendency"] input[type=text],
+html[data-nd="regulator"] textarea,html[data-nd="regulator"] input[type=text]{background:var(--nd-field);}
+html[data-nd="tendency"] ::placeholder,html[data-nd="regulator"] ::placeholder{color:#a8937f;}
+html[data-nd="tendency"] .bars .b{background:linear-gradient(180deg,var(--nd-acc2),var(--nd-acc));}
+html[data-nd="tendency"] nav:not(.ndn-strip),html[data-nd="regulator"] nav:not(.ndn-strip){background:rgba(255,253,247,.94);}
+html[data-nd="tendency"] nav:not(.ndn-strip) button.on{color:var(--nd-acc);}
+html[data-nd="tendency"] .toast,html[data-nd="regulator"] .toast{color:#fff;}
+
+/* ── ND FOCUS ────────────────────────────────────────────── */
+html[data-nd="focus"]{
+  --ink:var(--nd-ink); --ink2:var(--nd-ink2); --mut:var(--nd-mut);
+  --line:var(--nd-line); --line2:var(--nd-line2);
+  --bg:var(--nd-cream); --card:var(--nd-card); --soft:var(--nd-soft);
+  --indigo:var(--nd-acc); --indigo-d:var(--nd-accd);
+  --teal:#7c8f25; --teal-d:var(--nd-acc); --good:#7c8f25;
+  --serif:var(--nd-serif); --sans:var(--nd-sans);
+  --shadow:0 10px 30px rgba(43,26,18,.08); --shadow2:0 16px 44px rgba(43,26,18,.14);
+}
+html[data-nd="focus"] body{background:var(--nd-cream);}
+html[data-nd="focus"] .top{background:rgba(248,242,230,.88);}
+/* the header wears the real ND Focus mark, never a stand-in glyph */
+html[data-nd="focus"] .brand .mk{background:#241a14 url(/apps/espofocus/icon.svg) center/cover no-repeat;}
+html[data-nd="focus"] .brand .mk svg{display:none;}
+html[data-nd="focus"] .btn{box-shadow:0 8px 20px color-mix(in srgb,var(--nd-acc) 28%,transparent);}
+html[data-nd="focus"] .btn.g{box-shadow:0 8px 20px rgba(124,143,37,.28);}
+html[data-nd="focus"] .btn.ghost,html[data-nd="focus"] .qb:not(.sel),html[data-nd="focus"] .opt:not(.sel),
+html[data-nd="focus"] .field,html[data-nd="focus"] .rolebtn:not(.sel),html[data-nd="focus"] .raterbtn:not(.sel),
+html[data-nd="focus"] .mrow,html[data-nd="focus"] .seg-tog .seg.on{background:var(--nd-card);}
+html[data-nd="focus"] .hero{background:linear-gradient(135deg,#2b1a12,#3a2716 55%,#46511a); color:#fff;}
+html[data-nd="focus"] .hero::before{
+  background:radial-gradient(38% 38% at 18% 22%,rgba(147,168,47,.42),transparent 62%),
+             radial-gradient(34% 34% at 86% 78%,rgba(168,95,56,.38),transparent 64%);
+}
+html[data-nd="focus"] .hero::after{background:radial-gradient(circle,rgba(147,168,47,.32),transparent 70%);}
+html[data-nd="focus"] .hero .k{color:#d5e08f;}
+html[data-nd="focus"] .hero p{color:#eadfce;}
+html[data-nd="focus"] .posnote{background:var(--nd-soft); color:var(--nd-accd);}
+html[data-nd="focus"] .scrim{background:rgba(43,26,18,.5);}
+html[data-nd="focus"] .tabbar{background:rgba(255,253,247,.95);}
+html[data-nd="focus"] .tabb.log .ic{box-shadow:0 6px 16px color-mix(in srgb,var(--nd-acc) 36%,transparent);}
+html[data-nd="focus"] .day.today .dd{animation:none; box-shadow:0 0 0 2px var(--nd-acc),0 6px 14px color-mix(in srgb,var(--nd-acc) 24%,transparent);}
+html[data-nd="focus"] .day .dd.filled{box-shadow:0 4px 12px rgba(43,26,18,.18);}
+
+/* ── ND THREAD — light ("Classroom") ─────────────────────── */
+html[data-nd="thread"]:not([data-skin="dark"]){
+  --mint:var(--nd-acc); --mint2:var(--nd-acc2); --mint3:#b8983f;
+  --band:#e3d3a0; --wash:var(--nd-soft);
+  --bg:var(--nd-cream); --card:var(--nd-card); --card2:#fffaf0;
+  --line:#e6d9bf; --line2:#efe6d2;
+  --ink:var(--nd-ink); --ink2:#5a4636; --dim:#8a7564;
+  --grid:rgba(154,122,44,.06);
+  --shadow:0 2px 10px rgba(43,26,18,.06); --shadow2:0 10px 30px rgba(43,26,18,.14);
+}
+/* ── ND THREAD — dark ("Chalkboard"), warmed to the house ── */
+html[data-nd="thread"][data-skin="dark"]{
+  --mint:#DCBB63; --mint2:#e6cc85; --mint3:#c3a24d;
+  --band:#5a4a22; --wash:#2a2416;
+  --bg:#17120e; --card:#211a14; --card2:#271f18;
+  --line:#3d3126; --line2:#33291f;
+  --ink:#f4eadb; --ink2:#d6c5b0; --dim:#a8937c;
+  --grid:rgba(220,187,99,.05);
+}
+html[data-nd="thread"] body{font-family:var(--nd-sans);}
+html[data-nd="thread"] h1,html[data-nd="thread"] .big,html[data-nd="thread"] .h2{font-family:var(--nd-serif);}
+html[data-nd="thread"] dialog::backdrop{background:rgba(43,26,18,.62);}
