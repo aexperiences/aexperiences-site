@@ -77,9 +77,9 @@ export default async function handler(req, res) {
       if (!bytes.length) return send(res, 400, { ok: false, error: 'EMPTY' });
       const pathname = 'nd/' + BRAND + '/files/' + new Date().toISOString().slice(0, 10) + '/' + name;
       const r = await fetch('https://blob.vercel-storage.com/' + pathname, { method: 'PUT',
-        headers: { authorization: 'Bearer ' + BLOB, 'x-api-version': '7', 'x-content-type': type, 'x-add-random-suffix': '1', 'x-access': 'public' }, body: bytes });
+        headers: { authorization: 'Bearer ' + BLOB, 'x-api-version': '7', 'x-content-type': type, 'x-add-random-suffix': '1' }, body: bytes });
       const text = await r.text();
-      if (!r.ok) return send(res, 502, { ok: false, error: 'STORE_SAID_NO', status: r.status, message: text.slice(0, 200) });
+      if (!r.ok) { console.error('nd-files store PUT', r.status, text.slice(0, 300)); return send(res, 502, { ok: false, error: 'STORE_SAID_NO', status: r.status, message: text.slice(0, 200) }); }
       let put = {}; try { put = JSON.parse(text); } catch (e) { return send(res, 502, { ok: false, error: 'STORE_SAID_NO', message: 'unreadable reply' }); }
       const f = { id: mint(), name, type, size: bytes.length, url: put.url, pathname: put.pathname || pathname,
         office: BRAND, by: who.name || 'ND OS', createdAt: new Date().toISOString() };
