@@ -215,15 +215,19 @@
      spreading the words evenly across the take, which is what the pre-rendered path avoids
      needing. The GET is cached hard at the edge, so the second reader of a story pays
      nothing and waits for nothing. */
+  /* The player is pointed at the address itself, NOT at a blob we built from it. Fetching the
+     take first only warms the cache — the browser and the edge then hand the same bytes to the
+     media element with no second trip. Handing a media element a blob: URL instead is what left
+     ESPOhystory sitting at readyState 0 with the flag saying it was playing. */
+  function voiceUrl(text) { return "/api/voice?voice=roz&say=" + encodeURIComponent(text); }
+
   function ask(text) {
-    var url = "/api/voice?voice=roz&say=" + encodeURIComponent(text);
+    var url = voiceUrl(text);
     return fetch(url).then(function (r) {
       var ct = r.headers.get("content-type") || "";
-      if (!r.ok || ct.indexOf("audio") === -1) {
-        return r.json().then(function (j) { return { ok: false, reason: (j && j.reason) || "upstream" }; })
-                       .catch(function () { return { ok: false, reason: "upstream" }; });
-      }
-      return r.blob().then(function (b) { return { ok: true, src: URL.createObjectURL(b) }; });
+      if (r.ok && ct.indexOf("audio") > -1) return { ok: true, src: url };
+      return r.json().then(function (j) { return { ok: false, reason: (j && j.reason) || "upstream" }; })
+                     .catch(function () { return { ok: false, reason: "upstream" }; });
     }).catch(function () { return { ok: false, reason: "upstream" }; });
   }
 
