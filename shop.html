@@ -1098,7 +1098,45 @@ footer .fwrap{display:flex;flex-direction:column;gap:8px}
         +'<input id="nEmail" type="email" name="email" required placeholder="you@email.com" autocomplete="email" inputmode="email">'
         +'<button class="btn btn-primary btn-block" type="submit">Tell me when it opens</button></form>';
     }
-    sheet.hidden=false;
+    /* THE CODE DOOR ON THE CARD - Sep 19 2026.
+   Anthony caught this one himself: a comp code could be typed on the app, but never from
+   the shop, and the card is where most people meet an app. The door belongs here too.
+   The card only carries the answer. /api/gate and the server still decide. The code is
+   saved in the same slot every app on this origin reads, and it is also hung on the Open
+   link so an app living on its own domain gets it as well. */
+if(a.state==='live'){ (function(){
+  var w=document.createElement('div');
+  w.className='cardcode';
+  w.setAttribute('style','margin-top:14px');
+  w.innerHTML='<div style="height:1px;background:currentColor;opacity:.18;margin:0 0 12px"></div>'
+   +'<p style="margin:0 0 8px;font-size:14px;opacity:.85">Have a code? Enter it here.</p>'
+   +'<div style="display:flex;gap:8px;align-items:center">'
+   +'<label class="sr" for="ccIn">Your code</label>'
+   +'<input id="ccIn" type="text" autocomplete="off" spellcheck="false" placeholder="Your code" style="flex:1;min-width:0;padding:10px 12px;border:1px solid;border-radius:10px;background:transparent;color:inherit;font:inherit">'
+   +'<button type="button" class="btn" id="ccGo">Unlock</button></div>'
+   +'<p id="ccMsg" role="status" style="margin:8px 0 0;font-size:13px;opacity:.85"></p>';
+  foot.appendChild(w);
+  var inp=w.querySelector('#ccIn'), msg=w.querySelector('#ccMsg');
+  try{ var had=localStorage.getItem('ae.gate.shared')||''; if(had){ inp.value=had; msg.textContent='This code is already saved on this device.'; } }catch(e){}
+  function go(){
+    var v=(inp.value||'').trim();
+    if(!v){ msg.textContent='Type your code first.'; return; }
+    msg.textContent='Checking...';
+    fetch('/api/gate?code='+encodeURIComponent(v),{cache:'no-store'})
+      .then(function(r){ return r.json(); })
+      .catch(function(){ return {ok:false,error:'OFFLINE'}; })
+      .then(function(j){
+        if(!j||!j.ok){ msg.textContent=(j&&j.error==='OFFLINE')?'Could not reach us just now. Try again in a moment.':'That code did not work.'; return; }
+        try{ localStorage.setItem('ae.gate.shared', j.code); }catch(e){}
+        var u=a.url||'';
+        if(u) u+=(u.indexOf('?')>-1?'&':'?')+'code='+encodeURIComponent(j.code);
+        msg.innerHTML='Unlocked. <a href="'+esc(u)+'" target="_blank" rel="noopener">Open '+esc(a.name)+' &rarr;</a>';
+      });
+  }
+  w.querySelector('#ccGo').addEventListener('click',go);
+  inp.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); go(); } });
+})(); }
+sheet.hidden=false;
     requestAnimationFrame(function(){ sheet.classList.add('on'); scrim.classList.add('on'); });
     document.body.style.overflow='hidden';
     document.getElementById('shX').focus();
