@@ -135,7 +135,9 @@
     NDOS.net(API,{method:'POST',json:{ticket:{name:file.name,type:file.type,size:file.size}}}).then(function(j){
       if(!j.ok){ fail(j.error==='TOO_BIG'?'too big (500 MB is the limit)':j.error==='NO_FILE_STORE'?'the file store is not connected yet':NDOS.why(j)); return; }
       var x=new XMLHttpRequest(); x.open('PUT',j.put,true);
-      x.setRequestHeader('authorization','Bearer '+j.token); x.setRequestHeader('x-api-version','7');
+      x.setRequestHeader('authorization','Bearer '+j.token); x.setRequestHeader('x-api-version','12');
+      x.setRequestHeader('x-vercel-blob-store-id',j.storeId||''); x.setRequestHeader('x-vercel-blob-access','public');
+      x.setRequestHeader('x-api-blob-request-id',(j.storeId||'')+':'+Date.now()+':'+Math.random().toString(16).slice(2)); x.setRequestHeader('x-api-blob-request-attempt','0');
       x.setRequestHeader('x-content-type',file.type||'application/octet-stream'); x.setRequestHeader('x-add-random-suffix','1');
       x.upload.onprogress=function(e){ if(e.lengthComputable) bar.style.width=Math.round(e.loaded/e.total*100)+'%'; };
       x.onerror=function(){ fail('the upload did not go through'); };

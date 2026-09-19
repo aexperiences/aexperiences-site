@@ -73,7 +73,10 @@ export default async function handler(req, res) {
         const name = safeName(b.ticket.name), type = clean(b.ticket.type, 100), size = Number(b.ticket.size) || 0;
         if (size > MAX) return send(res, 413, { ok: false, error: 'TOO_BIG' });
         const pathname = 'nd/' + BRAND + '/files/' + new Date().toISOString().slice(0, 10) + '/' + name;
-        return send(res, 200, { ok: true, pathname, token: ticket(pathname, type), put: 'https://blob.vercel-storage.com/' + pathname });
+        // The browser PUTs to the blob API the way @vercel/blob's client does today (v12):
+        // vercel.com/api/blob/?pathname=..., store id and access as headers.
+        return send(res, 200, { ok: true, pathname, token: ticket(pathname, type), storeId: BLOB.split('_')[3] || '',
+          put: 'https://vercel.com/api/blob/?pathname=' + encodeURIComponent(pathname) });
       }
 
       if (b.done) {
