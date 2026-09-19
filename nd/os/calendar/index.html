@@ -117,6 +117,16 @@
       </div>
     </div>
 
+    <div class="card" style="margin-top:18px;padding:16px">
+      <h2 style="font-size:17px;margin:0 0 4px">On your phone's own calendar</h2>
+      <p class="muted" style="font-size:14px;margin:0 0 12px;line-height:1.5">Subscribe once and this whole calendar &mdash; your days, what is due, and every post Blastpack is going to send &mdash; stays on your phone by itself.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a class="btn solid" id="subscribe" href="#" style="flex:1;min-height:46px">Subscribe on this phone</a>
+        <button class="btn quiet" id="copyfeed" type="button" style="flex:1;min-height:46px">Copy the address</button>
+      </div>
+      <p class="muted" id="feednote" style="font-size:12.5px;margin:10px 0 0;line-height:1.5">iPhone: tap it, then <b>Subscribe</b>. Google Calendar: copy the address, then Other calendars &rarr; From URL.</p>
+    </div>
+
     <p class="muted" style="font-size:12.5px;margin-top:20px;line-height:1.55">
       Everything with a time is already here &mdash; what the list says is due, what the queue is waiting
       to post, and the day a note went live. You did not have to enter any of it twice.
@@ -184,10 +194,27 @@
 
       MARKS={};
       EVENTS.forEach(function(e){ (MARKS[e.k]=MARKS[e.k]||{})[e.kind]=true; });
-      month(); day();
+      month(); day(); feed();
       return true;
     });
   }
+
+  /* ---- the subscription: one address, hers, replaceable --------------- */
+  var FEEDURL='';
+  function feed(){
+    if(FEEDURL) return;
+    NDOS.net('/api/nd-ics',{method:'POST',json:{feed:true}}).then(function(j){
+      if(!j.ok) return; FEEDURL=j.url;
+      document.getElementById('subscribe').href=j.webcal;
+    });
+  }
+  document.getElementById('subscribe').addEventListener('click',function(e){ if(!FEEDURL){ e.preventDefault(); NDOS.say('One moment — getting your address.'); feed(); } });
+  document.getElementById('copyfeed').addEventListener('click',function(){
+    if(!FEEDURL){ NDOS.say('One moment — getting your address.'); feed(); return; }
+    var done=function(){ NDOS.say('Copied. Paste it where your calendar asks for a URL.'); };
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(FEEDURL).then(done,function(){ prompt('Your calendar address',FEEDURL); });
+    else prompt('Your calendar address',FEEDURL);
+  });
 
   /* ---- the month ------------------------------------------------------ */
   function month(){

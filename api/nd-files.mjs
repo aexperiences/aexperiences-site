@@ -1,0 +1,103 @@
+// /api/nd-files — upload anything, keep it, link to it.
+// Accelerated Experiences LLC · Sep 19 2026
+//
+// Anthony's ND OS list: "She needs a way to upload files of any kind." And the blog item:
+// "post a story, upload a video to it or a picture." A video does not fit through a
+// serverless function (4.5 MB body cap), so the phone talks to the file store DIRECTLY:
+// this endpoint signs a one-shot upload ticket for one file, the browser PUTs the bytes
+// to the store, then tells this endpoint what landed. The file store is the one the site
+// already has (BLOB_READ_WRITE_TOKEN, Art. XVII) and the token never leaves the server.
+//
+//   GET                              signed in -> her files, newest first
+//   POST { ticket:{name,type,size} } signed in -> { token, pathname, url } a 30-second ticket
+//   POST { done:{pathname,url,name,type,size} }  -> keeps the record
+//   POST { remove:id }               deletes the file and the record
+import { randomBytes, createHmac } from 'node:crypto';
+import { ndWho, BRAND } from './_nd-auth.mjs';
+
+const BLOB = process.env.BLOB_READ_WRITE_TOKEN || '';
+const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || '';
+const KV_TOK = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || '';
+const MAX = 500 * 1024 * 1024;                      // half a gigabyte a file — a phone video fits
+const K = (id) => 'nd:files:' + id;
+const INDEX = 'nd:files:all';
+
+async function redis(...cmd) {
+  const r = await fetch(KV_URL, { method: 'POST', headers: { authorization: 'Bearer ' + KV_TOK, 'content-type': 'application/json' }, body: JSON.stringify(cmd) });
+  if (!r.ok) throw new Error('store_' + r.status);
+  const j = await r.json(); if (j.error) throw new Error('store: ' + j.error); return j.result;
+}
+const getJSON = async (k) => { const v = await redis('GET', k); try { return v ? JSON.parse(v) : null; } catch (e) { return null; } };
+function send(res, code, obj) { res.statusCode = code; res.setHeader('content-type', 'application/json; charset=utf-8'); res.setHeader('cache-control', 'no-store'); res.end(JSON.stringify(obj)); }
+async function body(req) {
+  if (req.body && typeof req.body === 'object') return req.body;
+  const chunks = []; for await (const c of req) chunks.push(c);
+  try { return JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}'); } catch (e) { return null; }
+}
+const clean = (s, n) => String(s == null ? '' : s).replace(/[<>]/g, '').trim().slice(0, n);
+const mint = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const safeName = (n) => clean(n, 120).replace(/[^\w.\- ]+/g, '_').replace(/\s+/g, ' ') || 'file';
+
+// A client upload ticket, the way @vercel/blob mints one (no SDK — api/ carries no deps):
+// payload = base64(JSON{pathname, ...limits, validUntil}); key = hex HMAC-SHA256(payload, token);
+// ticket = vercel_blob_client_<storeId>_base64(key.payload)
+function ticket(pathname, type) {
+  const storeId = BLOB.split('_')[3] || '';
+  const payload = Buffer.from(JSON.stringify({
+    pathname, addRandomSuffix: true, maximumSizeInBytes: MAX,
+    allowedContentTypes: type ? [type] : undefined,
+    validUntil: Date.now() + 5 * 60 * 1000
+  })).toString('base64');
+  const key = createHmac('sha256', BLOB).update(payload).digest('hex');
+  return 'vercel_blob_client_' + storeId + '_' + Buffer.from(key + '.' + payload).toString('base64');
+}
+
+export default async function handler(req, res) {
+  try {
+    if (!KV_URL || !KV_TOK) return send(res, 503, { ok: false, error: 'NO_STORE' });
+    const url = new URL(req.url, 'https://www.aexperiences.com');
+    const who = await ndWho(req, url);
+    if (!who) return send(res, 401, { ok: false, error: 'NEED_KEY' });
+
+    if (req.method === 'GET') {
+      const ids = (await redis('LRANGE', INDEX, '0', '999')) || [];
+      const files = []; for (const id of ids) { const f = await getJSON(K(id)); if (f) files.push(f); }
+      return send(res, 200, { ok: true, files });
+    }
+
+    if (req.method === 'POST') {
+      const b = await body(req); if (!b) return send(res, 400, { ok: false, error: 'BAD_JSON' });
+
+      if (b.ticket) {
+        if (!BLOB) return send(res, 503, { ok: false, error: 'NO_FILE_STORE' });
+        const name = safeName(b.ticket.name), type = clean(b.ticket.type, 100), size = Number(b.ticket.size) || 0;
+        if (size > MAX) return send(res, 413, { ok: false, error: 'TOO_BIG' });
+        const pathname = 'nd/' + BRAND + '/files/' + new Date().toISOString().slice(0, 10) + '/' + name;
+        return send(res, 200, { ok: true, pathname, token: ticket(pathname, type), put: 'https://blob.vercel-storage.com/' + pathname });
+      }
+
+      if (b.done) {
+        const d = b.done;
+        const u = clean(d.url, 500);
+        if (!/^https:\/\/[a-z0-9.-]+\.public\.blob\.vercel-storage\.com\//i.test(u)) return send(res, 400, { ok: false, error: 'BAD_URL' });
+        const f = { id: mint(), name: safeName(d.name), type: clean(d.type, 100), size: Number(d.size) || 0,
+          url: u, pathname: clean(d.pathname, 300), office: BRAND, by: who.name || 'ND OS', createdAt: new Date().toISOString() };
+        await redis('SET', K(f.id), JSON.stringify(f));
+        await redis('LPUSH', INDEX, f.id); await redis('LTRIM', INDEX, '0', '1999');
+        return send(res, 200, { ok: true, file: f });
+      }
+
+      if (b.remove) {
+        const id = clean(b.remove, 40); const f = await getJSON(K(id));
+        if (!f) return send(res, 404, { ok: false, error: 'NOT_FOUND' });
+        if (BLOB) await fetch('https://blob.vercel-storage.com/delete', { method: 'POST',
+          headers: { authorization: 'Bearer ' + BLOB, 'content-type': 'application/json', 'x-api-version': '7' },
+          body: JSON.stringify({ urls: [f.url] }) }).catch(() => {});
+        await redis('DEL', K(id)); await redis('LREM', INDEX, '0', id);
+        return send(res, 200, { ok: true, removed: id });
+      }
+      return send(res, 400, { ok: false, error: 'UNKNOWN' });
+    }
+    res.setHeader('allow', 'GET, POST'); return send(res, 405, { ok: false, error: 'METHOD' });
+  } catch (e) { return send(res, 500, { ok: false, error: 'SERVER', message: String((e && e.message) || e) }); }
+}

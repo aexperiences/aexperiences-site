@@ -1,0 +1,165 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<script>try{document.documentElement.setAttribute("data-os-theme",localStorage.getItem("nd:os:theme")||"dark")}catch(e){document.documentElement.setAttribute("data-os-theme","dark")}</script><meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Files">
+<title>ND OS &middot; Files</title>
+<link rel="icon" href="/logo-nd.png"><link rel="apple-touch-icon" href="/nd/os/icon-maskable-512.png">
+<link rel="manifest" href="/nd/os/manifest.webmanifest">
+<meta name="theme-color" content="#F3EEE5">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Karla:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/nd/nd-theme.css">
+<link rel="stylesheet" href="/nd/os/nd-os.css">
+<style>
+  .hello{padding:22px 0 2px}
+<style>
+  .hello{padding:22px 0 2px}
+  .hello .day{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--nd-terra)}
+  .hello h1{font-size:clamp(25px,6.2vw,33px);margin:8px 0 5px}
+  .hello p{color:var(--nd-ink-2);font-size:15px;margin:0}
+  .gate{max-width:420px;margin:8vh auto 0}
+  .drop{margin-top:16px;border:2px dashed var(--nd-terra);border-radius:17px;padding:22px 16px;text-align:center;background:var(--nd-card);cursor:pointer}
+  .drop b{display:block;font-size:17px}
+  .drop span{display:block;color:var(--nd-ink-2);font-size:13.5px;margin-top:4px}
+  .drop.on{background:var(--nd-paper-2)}
+  .ups{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+  .up{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:12px;padding:10px 12px;font-size:14px}
+  .up .bar{height:6px;border-radius:3px;background:var(--nd-paper-2);margin-top:8px;overflow:hidden}
+  .up .bar i{display:block;height:100%;width:0;background:var(--nd-terra);transition:width .2s}
+  .files{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:16px}
+  .f{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:15px;box-shadow:var(--nd-shadow);overflow:hidden;display:flex;flex-direction:column}
+  .f .th{aspect-ratio:4/3;background:var(--nd-paper-2);display:grid;place-items:center;overflow:hidden;font:700 12px var(--nd-sans);letter-spacing:.1em;color:var(--nd-ink-2);text-transform:uppercase}
+  .f .th img,.f .th video{width:100%;height:100%;object-fit:cover;display:block}
+  .f .nm{padding:9px 10px 0;font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .f .sz{padding:2px 10px 8px;font-size:12px;color:var(--nd-ink-2)}
+  .f .acts{display:flex;border-top:1px solid var(--nd-rule);margin-top:auto}
+  .f .acts button,.f .acts a{flex:1;border:0;background:none;padding:10px 4px;font:700 12px var(--nd-sans);color:var(--nd-terra-d);cursor:pointer;text-align:center;text-decoration:none;min-height:40px}
+  .f .acts button+button,.f .acts a+button{border-left:1px solid var(--nd-rule)}
+  .fine{font-size:12.5px;color:var(--nd-ink-2);margin-top:14px;line-height:1.45}
+  .empty{padding:28px 6px;color:var(--nd-ink-2);font-size:15px}
+</style>
+</head><body>
+
+<header class="mast"><div class="wrap">
+  <img src="/logo-nd.png" alt="">
+  <div><div class="wordmark">The Neuro<em>~</em>Divulge</div><div class="subword">ND OS &middot; Files</div></div>
+  <a class="back" href="/nd/os/">Desk &rarr;</a>
+</div></header>
+
+<main class="wrap" id="main">
+  <section class="gate card" id="gate" hidden>
+    <h1 style="font-size:25px;margin-bottom:8px">Your files</h1>
+    <p class="muted" style="font-size:15px">Your word opens it.</p>
+    <div style="margin:18px 0 6px"><label for="key">Your word</label>
+      <input id="key" type="password" autocomplete="current-password" enterkeyhint="go"></div>
+    <button class="btn solid" id="unlock" style="width:100%">Open</button>
+  </section>
+
+  <div id="desk" hidden>
+    <section class="hello">
+      <div class="day" id="day">&nbsp;</div>
+      <h1>Your files.</h1>
+      <p>Photos, videos, PDFs, anything. Upload it here once, then use the link in a note or anywhere else.</p>
+    </section>
+    <input id="pick" type="file" multiple hidden>
+    <div class="drop" id="drop"><b>Tap to add files</b><span>or drop them here &middot; up to 500 MB each</span></div>
+    <div class="ups" id="ups"></div>
+    <div class="files" id="list"></div>
+    <p class="fine">A link to a file works anywhere &mdash; paste it into a note in Write and the picture or video shows up in the post.</p>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <a class="aemark" href="/nd/os/">
+    <img src="/marks/ae-mark-gradient.png" alt="Accelerated Experiences, LLC">
+    <span><b>ND OS &middot; built by Accelerated Experiences, LLC</b>Runs on the AE Triad</span>
+  </a>
+</div></footer>
+
+<script src="/nd/os/nd-os.js"></script>
+<script>
+(function(){
+  var API='/api/nd-files';
+  var gate=document.getElementById('gate'), desk=document.getElementById('desk');
+  var LIST=document.getElementById('list'), UPS=document.getElementById('ups'), PICK=document.getElementById('pick'), DROP=document.getElementById('drop');
+  var FILES=[];
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function size(n){ n=Number(n)||0; return n<1024?n+' B':n<1048576?(n/1024).toFixed(0)+' KB':n<1073741824?(n/1048576).toFixed(1)+' MB':(n/1073741824).toFixed(2)+' GB'; }
+  document.getElementById('day').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+
+  document.getElementById('unlock').addEventListener('click',function(){
+    var k=document.getElementById('key').value.trim(); if(!k) return;
+    NDOS.auth.set(k); load().then(function(ok){ if(!ok){ NDOS.say('That did not work.',true); NDOS.auth.clear(); } });
+  });
+  NDOS.bus.on('auth:out',function(){ gate.hidden=false; desk.hidden=true; });
+
+  function load(){
+    if(!NDOS.auth.has()){ gate.hidden=false; desk.hidden=true; return Promise.resolve(false); }
+    return NDOS.net(API).then(function(j){
+      if(!j.ok){ if(j.__status===401){ gate.hidden=false; desk.hidden=true; return false; } NDOS.say(NDOS.why(j),true); return true; }
+      gate.hidden=true; desk.hidden=false; FILES=j.files||[]; draw(); return true;
+    });
+  }
+
+  function kind(f){ var t=f.type||''; return t.indexOf('image/')===0?'image':t.indexOf('video/')===0?'video':t.indexOf('audio/')===0?'audio':t==='application/pdf'?'pdf':'file'; }
+  function draw(){
+    LIST.innerHTML='';
+    if(!FILES.length){ LIST.innerHTML='<p class="empty">Nothing here yet. Tap the box above and pick a photo, a video, a PDF — anything.</p>'; return; }
+    FILES.forEach(function(f){
+      var k=kind(f), el=document.createElement('div'); el.className='f';
+      el.innerHTML='<div class="th">'+(k==='image'?'<img src="'+esc(f.url)+'" alt="" loading="lazy">':k==='video'?'<video src="'+esc(f.url)+'#t=0.5" muted playsinline preload="metadata"></video>':esc(k))+'</div>'+
+        '<div class="nm">'+esc(f.name)+'</div><div class="sz">'+size(f.size)+' &middot; '+esc(String(f.createdAt||'').slice(0,10))+'</div>'+
+        '<div class="acts"><a href="'+esc(f.url)+'" target="_blank" rel="noopener">Open</a><button type="button" class="cp">Copy link</button><button type="button" class="rm">Remove</button></div>';
+      el.querySelector('.cp').addEventListener('click',function(){
+        var done=function(){ NDOS.say('Link copied.'); };
+        if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(f.url).then(done,function(){ prompt('The link',f.url); }); else prompt('The link',f.url);
+      });
+      var rm=el.querySelector('.rm'), armed=false, tm=null;
+      rm.addEventListener('click',function(){
+        if(!armed){ armed=true; rm.textContent='Sure?'; tm=setTimeout(function(){armed=false;rm.textContent='Remove';},4000); return; }
+        clearTimeout(tm); rm.textContent='…';
+        NDOS.net(API,{method:'POST',json:{remove:f.id}}).then(function(j){ if(j.ok){ FILES=FILES.filter(function(x){return x.id!==f.id;}); draw(); NDOS.say('Removed.'); } else { NDOS.say(NDOS.why(j),true); rm.textContent='Remove'; armed=false; } });
+      });
+      LIST.appendChild(el);
+    });
+  }
+
+  /* the phone talks to the file store directly; the server only signs the ticket */
+  function upload(file){
+    var row=document.createElement('div'); row.className='up';
+    row.innerHTML='<div>'+esc(file.name)+' <span class="muted">'+size(file.size)+'</span></div><div class="bar"><i></i></div>';
+    UPS.appendChild(row); var bar=row.querySelector('i');
+    var fail=function(msg){ row.innerHTML='<div style="color:var(--nd-terra-d)">'+esc(file.name)+' — '+esc(msg)+'</div>'; setTimeout(function(){row.remove();},6000); };
+    NDOS.net(API,{method:'POST',json:{ticket:{name:file.name,type:file.type,size:file.size}}}).then(function(j){
+      if(!j.ok){ fail(j.error==='TOO_BIG'?'too big (500 MB is the limit)':j.error==='NO_FILE_STORE'?'the file store is not connected yet':NDOS.why(j)); return; }
+      var x=new XMLHttpRequest(); x.open('PUT',j.put,true);
+      x.setRequestHeader('authorization','Bearer '+j.token); x.setRequestHeader('x-api-version','7');
+      x.setRequestHeader('x-content-type',file.type||'application/octet-stream'); x.setRequestHeader('x-add-random-suffix','1');
+      x.upload.onprogress=function(e){ if(e.lengthComputable) bar.style.width=Math.round(e.loaded/e.total*100)+'%'; };
+      x.onerror=function(){ fail('the upload did not go through'); };
+      x.onload=function(){
+        if(x.status<200||x.status>=300){ fail('the store said no ('+x.status+')'); return; }
+        var r={}; try{ r=JSON.parse(x.responseText); }catch(e){}
+        if(!r.url){ fail('no address came back'); return; }
+        NDOS.net(API,{method:'POST',json:{done:{pathname:r.pathname||j.pathname,url:r.url,name:file.name,type:file.type,size:file.size}}}).then(function(k){
+          if(!k.ok){ fail(NDOS.why(k)); return; }
+          row.remove(); FILES.unshift(k.file); draw(); NDOS.say('Uploaded.'); NDOS.bus.emit('file:added',{file:k.file});
+        });
+      };
+      x.send(file);
+    });
+  }
+  function take(list){ if(!list||!list.length) return; if(desk.hidden) return; [].forEach.call(list,upload); }
+  PICK.addEventListener('change',function(){ take(PICK.files); PICK.value=''; });
+  DROP.addEventListener('click',function(){ PICK.click(); });
+  DROP.addEventListener('dragover',function(e){ e.preventDefault(); DROP.classList.add('on'); });
+  DROP.addEventListener('dragleave',function(){ DROP.classList.remove('on'); });
+  DROP.addEventListener('drop',function(e){ e.preventDefault(); DROP.classList.remove('on'); take(e.dataTransfer.files); });
+
+  NDOS.mount({ active:'files', primary:{ label:'Add a file', icon:'up', onTap:function(){ if(!desk.hidden) PICK.click(); } } });
+  load();
+})();
+</script>
+</body></html>

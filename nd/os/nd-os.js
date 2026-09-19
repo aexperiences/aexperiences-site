@@ -114,7 +114,8 @@
     { id:'docs',    label:'Docs',     href:'/nd/os/docs/',     icon:'docs',    live:true,  blurb:'Write a real document. It saves itself.' },
     { id:'records', label:'Records',  href:'/nd/os/records/',  icon:'records', live:true,  blurb:'What was decided, and when it went out.' },
     { id:'people',  label:'People',   href:'/nd/os/people/',   icon:'people',  live:true,  blurb:'Everyone who gave you their email.' },
-    { id:'books',   label:'Books',    href:'/nd/os/books/',    icon:'books',   live:true,  blurb:'Price a job. Write down what you spent.' }
+    { id:'books',   label:'Books',    href:'/nd/os/books/',    icon:'books',   live:true,  blurb:'Price a job. Write down what you spent.' },
+    { id:'files',   label:'Files',    href:'/nd/os/files/',    icon:'files',   live:true,  blurb:'Photos, video, PDFs. Upload once, link anywhere.' }
   ];
   function room(id) { for (var i=0;i<ROOMS.length;i++) if (ROOMS[i].id===id) return ROOMS[i]; return null; }
 
