@@ -1,0 +1,307 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<script>try{document.documentElement.setAttribute("data-os-theme",localStorage.getItem("nd:os:theme")||"dark")}catch(e){document.documentElement.setAttribute("data-os-theme","dark")}</script><meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Quality">
+<title>ND OS &middot; Quality</title>
+<link rel="icon" href="/logo-nd.png"><link rel="apple-touch-icon" href="/nd/os/icon-maskable-512.png">
+<link rel="manifest" href="/nd/os/manifest.webmanifest">
+<meta name="theme-color" content="#F3EEE5">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Karla:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/nd/nd-theme.css">
+<link rel="stylesheet" href="/nd/os/nd-os.css">
+<style>
+  .hello{padding:22px 0 2px}
+  .hello .day{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--nd-terra)}
+  .hello h1{font-size:clamp(25px,6.2vw,33px);margin:8px 0 5px}
+  .hello p{color:var(--nd-ink-2);font-size:15px;margin:0}
+  .gate{max-width:420px;margin:8vh auto 0}
+
+  /* the desk she brings it to */
+  .bring{margin-top:16px;padding:16px 16px 14px}
+  .bring label{display:block;margin:0 0 6px}
+  .bring textarea{min-height:132px;resize:vertical;line-height:1.5}
+  .bring .note{margin-top:10px}
+  .bring .note input{min-height:44px}
+  .bring .row{display:flex;gap:8px;margin-top:12px;align-items:center}
+  .bring .row .btn{flex:1;min-height:48px}
+  .bring .row .btn.quiet{flex:0 0 auto;padding:10px 14px}
+  .bring .fine{font-size:12.5px;color:var(--nd-ink-2);margin:10px 0 0;line-height:1.45}
+
+  /* the chamber: what happens after she sends it in */
+  .chamber{display:none;margin-top:14px}
+  .chamber.on{display:block}
+  .step{display:flex;gap:10px;align-items:center;padding:10px 2px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--nd-ink-2)}
+  .step .dot{width:9px;height:9px;border-radius:50%;background:var(--nd-rule);flex:none}
+  .step.live .dot{background:var(--nd-terra);animation:pulse 1.1s ease-in-out infinite}
+  .step.done .dot{background:var(--nd-sage-d)}
+  @keyframes pulse{0%,100%{transform:scale(.8);opacity:.6}50%{transform:scale(1.25);opacity:1}}
+
+  .head{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:18px;box-shadow:var(--nd-shadow);padding:18px 18px 16px;position:relative;overflow:hidden}
+  .head:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--nd-sage-d)}
+  .head.held:before{background:var(--nd-terra)}
+  .head .who{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .head .av{width:38px;height:38px;border-radius:50%;background:var(--nd-tan);color:var(--nd-on-tan);display:grid;place-items:center;font:700 15px/1 var(--nd-serif)}
+  .head .nm{font-weight:700;font-size:15px}
+  .head .rl{font-size:12px;color:var(--nd-ink-2);font-weight:600;letter-spacing:.04em}
+  .head .verdict{font:600 20px/1.3 var(--nd-serif);margin:2px 0 10px}
+  .head .text{font-size:15.5px;line-height:1.55;white-space:pre-wrap}
+  .head .text p{margin:0 0 10px}
+  .head .wait{margin:10px 0 0;padding:10px 12px;border-radius:12px;background:var(--nd-paper-2);font-size:14px;line-height:1.45}
+  .head .wait b{display:block;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--nd-ink-2);margin-bottom:4px}
+  .head .skel{height:14px;border-radius:7px;background:var(--nd-paper-2);margin:8px 0;animation:sk 1.2s ease-in-out infinite}
+  .head .skel.w2{width:72%}.head .skel.w3{width:88%}
+  @keyframes sk{0%,100%{opacity:.5}50%{opacity:1}}
+
+  /* the Pacemaker bar */
+  .pace{display:flex;align-items:center;gap:12px;margin:12px 0 0;padding:12px 14px;border-radius:14px;background:var(--nd-card);border:1px solid var(--nd-rule)}
+  .pace .lbl{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--nd-ink-2);flex:none;width:86px}
+  .pace .track{flex:1;height:10px;border-radius:99px;background:var(--nd-paper-2);position:relative;overflow:visible}
+  .pace .fill{height:100%;border-radius:99px;background:var(--nd-terra);width:0;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+  .pace.ok .fill{background:var(--nd-sage-d)}
+  .pace .bar{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--nd-ink);opacity:.55}
+  .pace .n{font:600 15px/1 var(--nd-serif);flex:none;width:44px;text-align:right}
+
+  /* the two schools */
+  .lenses{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
+  @media (min-width:760px){.lenses{grid-template-columns:1fr 1fr}}
+  .lens{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:16px;padding:14px 15px 12px;box-shadow:var(--nd-shadow)}
+  .lens .top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+  .lens .nm{font:700 17px/1.2 var(--nd-serif)}
+  .lens .side{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--nd-ink-2);margin-top:2px}
+  .lens .conf{font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--nd-paper-2);color:var(--nd-ink-2);white-space:nowrap}
+  .lens .conf.ok{background:var(--nd-sage);color:var(--nd-on-sage)}
+  .lens .conf.flag{background:var(--nd-terra);color:var(--nd-on-terra)}
+  .lens .take{font-size:14.5px;line-height:1.5;margin:10px 0 0}
+  .lens ul{margin:10px 0 0;padding-left:18px;font-size:14px;line-height:1.45}
+  .lens ul li{margin:3px 0}
+  .lens .h{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--nd-ink-2);margin-top:10px}
+  .lens.a{background:var(--nd-ruling-a)}.lens.b{background:var(--nd-ruling-b)}
+  .lens .skel{height:12px;border-radius:6px;background:rgba(0,0,0,.07);margin:9px 0;animation:sk 1.2s ease-in-out infinite}
+  .lens .no{font-size:14px;color:var(--nd-terra-d);margin-top:10px}
+
+  .fold{margin-top:14px}
+  .fold summary{cursor:pointer;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--nd-ink-2);padding:8px 2px;list-style:none;display:flex;gap:8px;align-items:center}
+  .fold summary::-webkit-details-marker{display:none}
+  .fold summary:after{content:"";width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .2s;margin-left:2px}
+  .fold[open] summary:after{transform:rotate(45deg)}
+
+  /* past rulings */
+  .past{margin-top:22px}
+  .past h2{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--nd-ink-2);margin:0 0 8px}
+  .rul{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:14px;box-shadow:var(--nd-shadow);margin-bottom:8px;overflow:hidden}
+  .rul .top{display:flex;gap:10px;align-items:center;padding:11px 14px;width:100%;background:none;border:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
+  .rul .pill{flex:none;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border-radius:99px;background:var(--nd-sage);color:var(--nd-on-sage)}
+  .rul .pill.held{background:var(--nd-terra);color:var(--nd-on-terra)}
+  .rul .q{flex:1;min-width:0;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rul .when{flex:none;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--nd-ink-2)}
+  .rul .body{display:none;padding:2px 14px 14px;border-top:1px dashed var(--nd-rule);font-size:14.5px;line-height:1.5;white-space:pre-wrap}
+  .rul.open .body{display:block}
+  .rul .body .q2{font-style:italic;color:var(--nd-ink-2);margin:10px 0 8px;white-space:normal}
+  .rul .body .del{margin-top:10px;font-size:13px;padding:8px 12px;min-height:0;width:auto}
+  .empty{padding:18px 6px;color:var(--nd-ink-2);font-size:14.5px}
+</style>
+</head><body>
+
+<header class="mast"><div class="wrap">
+  <img src="/logo-nd.png" alt="">
+  <div><div class="wordmark">The Neuro<em>~</em>Divulge</div><div class="subword">ND OS &middot; Quality</div></div>
+  <a class="back" href="/nd/os/">Desk &rarr;</a>
+</div></header>
+
+<main class="wrap" id="main">
+
+  <section class="gate card" id="gate" hidden>
+    <h1 style="font-size:25px;margin-bottom:8px">Your department</h1>
+    <p class="muted" style="font-size:15px">Your word opens it.</p>
+    <div style="margin:18px 0 6px"><label for="key">Your word</label>
+      <input id="key" type="password" autocomplete="current-password" enterkeyhint="go"></div>
+    <button class="btn solid" id="unlock" style="width:100%">Open</button>
+  </section>
+
+  <div id="desk" hidden>
+    <section class="hello">
+      <div class="day" id="day">&nbsp;</div>
+      <h1>Your quality department.</h1>
+      <p>Bring it a draft, a question, a product idea. Two schools read it — they never confer — and the Head tells you what to do.</p>
+    </section>
+
+    <section class="card bring">
+      <label for="q">What are you bringing in?</label>
+      <textarea id="q" placeholder="Paste a draft post, ask a question, or describe an idea. Leave names, emails and phone numbers out — the department does not take them." maxlength="1100"></textarea>
+      <div class="note"><label for="ctx">Anything the department should know? <span style="font-weight:500;text-transform:none;letter-spacing:0;opacity:.75">(optional)</span></label>
+        <input id="ctx" placeholder="Who it is for, where it is going, what you are unsure about" maxlength="300"></div>
+      <div class="row"><button class="btn solid" id="go" type="button">Send it in</button><button class="btn quiet" id="clear" type="button">Clear</button></div>
+      <p class="fine">Clinic holds the clinical and behavioral school. Affirm holds the neurodiversity-affirming school. The Pacemaker releases a ruling only when both have read it and both cleared the bar; otherwise it says what it is waiting on. Nothing here diagnoses anyone or replaces a professional.</p>
+    </section>
+
+    <section class="chamber" id="chamber">
+      <div class="step" id="s1"><span class="dot"></span><span>Two lenses reading</span></div>
+      <div class="lenses">
+        <div class="lens a" id="lensA"></div>
+        <div class="lens b" id="lensB"></div>
+      </div>
+      <div class="step" id="s2"><span class="dot"></span><span>Pacemaker</span></div>
+      <div class="pace" id="pace"><span class="lbl">Confidence</span><div class="track"><div class="fill" id="fill"></div><div class="bar" id="barMark"></div></div><span class="n" id="confN">&ndash;</span></div>
+      <div class="step" id="s3"><span class="dot"></span><span>The Head</span></div>
+      <div class="head" id="head"></div>
+    </section>
+
+    <section class="past">
+      <h2>Rulings</h2>
+      <div id="log"></div>
+    </section>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <a class="aemark" href="/nd/os/">
+    <img src="/marks/ae-mark-gradient.png" alt="Accelerated Experiences, LLC">
+    <span><b>ND OS &middot; built by Accelerated Experiences, LLC</b>Runs on the AETRIAD</span>
+  </a>
+</div></footer>
+
+<script src="/nd/os/nd-os.js"></script>
+<script>
+(function(){
+  var API='/api/nd-dept';
+  var gate=document.getElementById('gate'), desk=document.getElementById('desk');
+  var Q=document.getElementById('q'), CTX=document.getElementById('ctx'), GO=document.getElementById('go');
+  var CH=document.getElementById('chamber'), LA=document.getElementById('lensA'), LB=document.getElementById('lensB');
+  var HEAD=document.getElementById('head'), LOGEL=document.getElementById('log');
+  var BAR=55, LOG=[], OPEN=null, RUNNING=false;
+
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function paras(t){ return String(t||'').split(/\n\s*\n/).map(function(p){return '<p>'+esc(p.trim())+'</p>';}).join(''); }
+  document.getElementById('day').textContent =
+    new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+
+  /* draft survives a reload */
+  try{ Q.value=localStorage.getItem('nd:quality:q')||''; CTX.value=localStorage.getItem('nd:quality:ctx')||''; }catch(e){}
+  Q.addEventListener('input',function(){ try{localStorage.setItem('nd:quality:q',Q.value);}catch(e){} });
+  CTX.addEventListener('input',function(){ try{localStorage.setItem('nd:quality:ctx',CTX.value);}catch(e){} });
+  document.getElementById('clear').addEventListener('click',function(){ Q.value=''; CTX.value=''; try{localStorage.removeItem('nd:quality:q');localStorage.removeItem('nd:quality:ctx');}catch(e){} Q.focus(); });
+
+  /* ---- gate (dressed as the AE OS sign-in by nd-os.js) ---- */
+  document.getElementById('unlock').addEventListener('click',function(){
+    var k=document.getElementById('key').value.trim(); if(!k) return;
+    NDOS.auth.set(k); load().then(function(ok){ if(!ok){ NDOS.say('That did not work.',true); NDOS.auth.clear(); } });
+  });
+  NDOS.bus.on('auth:out',function(){ gate.hidden=false; desk.hidden=true; });
+
+  function load(){
+    if(!NDOS.auth.has()){ gate.hidden=false; desk.hidden=true; return Promise.resolve(false); }
+    return NDOS.net(API).then(function(j){
+      if(!j.ok){ if(j.__status===401){ gate.hidden=false; desk.hidden=true; return false; }
+        NDOS.say(NDOS.why(j),true); return true; }
+      gate.hidden=true; desk.hidden=false; LOG=j.log||[]; BAR=j.bar||55; drawLog(); return true;
+    });
+  }
+
+  /* ---- the chamber ---- */
+  function step(id,state){ var el=document.getElementById(id); el.className='step'+(state?' '+state:''); }
+  function lensSkeleton(name,side){
+    return '<div class="top"><div><div class="nm">'+name+'</div><div class="side">'+side+'</div></div><span class="conf">reading&hellip;</span></div>'+
+      '<div class="skel"></div><div class="skel" style="width:80%"></div><div class="skel" style="width:60%"></div>';
+  }
+  function lensCard(L){
+    if(!L||!L.ok){
+      return '<div class="top"><div><div class="nm">'+esc(L&&L.name||'')+'</div><div class="side">'+esc(L&&L.side||'')+'</div></div><span class="conf flag">no answer</span></div>'+
+        '<p class="no">'+esc((L&&L.message)||'This lens did not answer. Try once more.')+'</p>';
+    }
+    var cls=L.safety?'flag':(L.confidence>=BAR?'ok':'');
+    var conf=L.safety?'safety flag':L.confidence+'% sure';
+    return '<div class="top"><div><div class="nm">'+esc(L.name)+'</div><div class="side">'+esc(L.side)+'</div></div><span class="conf '+cls+'">'+esc(conf)+'</span></div>'+
+      '<p class="take">'+esc(L.take)+'</p>'+
+      (L.points&&L.points.length?'<div class="h">What matters</div><ul>'+L.points.map(function(p){return '<li>'+esc(p)+'</li>';}).join('')+'</ul>':'')+
+      (L.fix&&L.fix.length?'<div class="h">Would change</div><ul>'+L.fix.map(function(p){return '<li>'+esc(p)+'</li>';}).join('')+'</ul>':'')+
+      (L.needs&&L.needs.length?'<div class="h">Wants to know</div><ul>'+L.needs.map(function(p){return '<li>'+esc(p)+'</li>';}).join('')+'</ul>':'');
+  }
+  function paint(gate){
+    var p=document.getElementById('pace'), f=document.getElementById('fill');
+    document.getElementById('barMark').style.left=BAR+'%';
+    if(!gate){ p.className='pace'; f.style.width='0%'; document.getElementById('confN').textContent='–'; return; }
+    p.className='pace'+(gate.released?' ok':'');
+    f.style.width=Math.max(2,gate.confidence)+'%';
+    document.getElementById('confN').textContent=gate.confidence+'%';
+  }
+  function headSkeleton(){
+    return '<div class="who"><span class="av">Q</span><div><div class="nm">The Head</div><div class="rl">your department head</div></div></div>'+
+      '<div class="skel"></div><div class="skel w3"></div><div class="skel w2"></div>';
+  }
+  function headCard(j){
+    var g=j.gate||{}, h=j.head||{};
+    HEAD.className='head'+(g.released?'':' held');
+    var out='<div class="who"><span class="av">Q</span><div><div class="nm">The Head</div><div class="rl">your department head</div></div></div>'+
+      '<div class="verdict">'+esc(g.verdict||'')+'</div>';
+    if(h.ok) out+='<div class="text">'+paras(h.text)+'</div>';
+    else out+='<div class="text"><p>'+esc(h.message||'The Head did not answer. Try once more.')+'</p></div>';
+    if(!g.released && g.waiting && g.waiting.length)
+      out+='<div class="wait"><b>Waiting on</b>'+g.waiting.map(function(w){return esc(w);}).join('<br>')+'</div>';
+    return out;
+  }
+
+  function run(){
+    if(RUNNING) return;
+    var q=Q.value.trim(), ctx=CTX.value.trim();
+    if(q.length<12){ NDOS.say('Give the department a little more than that.',true); Q.focus(); return; }
+    RUNNING=true; GO.disabled=true; GO.textContent='In the department…';
+    CH.classList.add('on'); paint(null);
+    step('s1','live'); step('s2',''); step('s3','');
+    LA.innerHTML=lensSkeleton('Clinic','clinical / behavioral'); LB.innerHTML=lensSkeleton('Affirm','neurodiversity-affirming');
+    HEAD.className='head'; HEAD.innerHTML=headSkeleton();
+    CH.scrollIntoView({behavior:'smooth',block:'start'});
+
+    NDOS.net(API,{method:'POST',json:{read:{q:q,ctx:ctx}}}).then(function(j){
+      if(!j.ok){ fail(j.error==='NEED_MORE'?'Give the department a little more than that.':NDOS.why(j)); return; }
+      LA.innerHTML=lensCard(j.a); LB.innerHTML=lensCard(j.b);
+      step('s1','done'); step('s2','live'); paint(j.gate);
+      return NDOS.net(API,{method:'POST',json:{rule:{q:q,ctx:ctx,a:j.a,b:j.b}}}).then(function(r){
+        if(!r.ok){ fail(NDOS.why(r)); return; }
+        step('s2','done'); step('s3','done'); paint(r.gate);
+        HEAD.innerHTML=headCard(r);
+        if(r.ruling){ LOG.unshift(r.ruling); drawLog(); }
+        NDOS.bus.emit('quality:ruled',{id:r.ruling&&r.ruling.id,released:r.gate&&r.gate.released});
+        done();
+      });
+    }).catch(function(){ fail('No connection. Nothing was lost — your draft is still here.'); });
+  }
+  function fail(msg){ NDOS.say(msg,true); HEAD.className='head held'; HEAD.innerHTML='<div class="who"><span class="av">Q</span><div><div class="nm">The Head</div><div class="rl">your department head</div></div></div><div class="text"><p>'+esc(msg)+'</p></div>'; step('s1',''); step('s2',''); step('s3',''); done(); }
+  function done(){ RUNNING=false; GO.disabled=false; GO.textContent='Send it in'; }
+  GO.addEventListener('click',run);
+
+  /* ---- past rulings ---- */
+  function when(iso){ var d=new Date(iso); if(isNaN(d)) return ''; var days=Math.floor((Date.now()-d)/864e5);
+    return days<1?'today':days<2?'yesterday':days<7?days+' days ago':d.toLocaleDateString(undefined,{month:'short',day:'numeric'}); }
+  function drawLog(){
+    LOGEL.innerHTML='';
+    if(!LOG.length){ LOGEL.innerHTML='<p class="empty">No rulings yet. The first thing you send in lands here, so you can find it again.</p>'; return; }
+    LOG.forEach(function(r){
+      var el=document.createElement('div'); el.className='rul'+(OPEN===r.id?' open':'');
+      el.innerHTML='<button class="top" type="button"><span class="pill'+(r.released?'':' held')+'">'+(r.released?'Released':'Held')+'</span>'+
+        '<span class="q">'+esc(r.q)+'</span><span class="when">'+esc(when(r.at))+'</span></button>'+
+        '<div class="body"><div class="q2">'+esc(r.q)+'</div>'+
+          (r.head?paras(r.head):'<p>'+esc(r.verdict||'')+'</p>')+
+          '<button class="btn quiet del" type="button">Forget this</button></div>';
+      el.querySelector('.top').addEventListener('click',function(){ OPEN=(OPEN===r.id?null:r.id); drawLog(); });
+      var d=el.querySelector('.del'), armed=false, tm=null;
+      d.addEventListener('click',function(){
+        if(!armed){ armed=true; d.textContent='Sure?'; tm=setTimeout(function(){armed=false;d.textContent='Forget this';},4000); return; }
+        clearTimeout(tm);
+        NDOS.net(API,{method:'POST',json:{remove:r.id}}).then(function(j){
+          if(j.ok){ LOG=LOG.filter(function(x){return x.id!==r.id;}); OPEN=null; drawLog(); NDOS.say('Forgotten.'); }
+          else NDOS.say(NDOS.why(j),true);
+        });
+      });
+      LOGEL.appendChild(el);
+    });
+  }
+
+  NDOS.mount({ active:'quality', primary:{ label:'Send it in', icon:'check', onTap:function(){ if(desk.hidden) return; run(); } } });
+  load();
+})();
+</script>
+</body></html>
