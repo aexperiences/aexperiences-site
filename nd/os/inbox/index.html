@@ -1,0 +1,254 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<script>try{document.documentElement.setAttribute("data-os-theme",localStorage.getItem("nd:os:theme")||"dark")}catch(e){document.documentElement.setAttribute("data-os-theme","dark")}</script><meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Inbox">
+<title>ND OS &middot; Inbox</title>
+<link rel="icon" href="/logo-nd.png"><link rel="apple-touch-icon" href="/nd/os/icon-maskable-512.png">
+<link rel="manifest" href="/nd/os/manifest.webmanifest">
+<meta name="theme-color" content="#F3EEE5">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Karla:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/nd/nd-theme.css">
+<link rel="stylesheet" href="/nd/os/nd-os.css">
+<style>
+/* ND OS - Inbox and Outbox. Accelerated Experiences LLC, Sep 19 2026.
+   Her line to the house: messages both ways, and production requests to Anthony. */
+.hello{padding:22px 0 2px}
+.hello .day{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--nd-terra)}
+.hello h1{font-size:clamp(25px,6.2vw,33px);margin:8px 0 5px}
+.hello p{color:var(--nd-ink-2);font-size:15px;margin:0}
+.gate{max-width:420px;margin:8vh auto 0}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.stat{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:14px;padding:12px 12px 10px;box-shadow:var(--nd-shadow);text-align:left;cursor:pointer;font:inherit;color:inherit}
+.stat b{display:block;font:600 26px/1 var(--nd-serif)}
+.stat span{display:block;margin-top:6px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--nd-ink-2)}
+.stat.on{border-color:var(--nd-terra);box-shadow:0 0 0 2px var(--nd-terra) inset}
+.tools{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.tools .btn{flex:1 1 180px;min-height:46px;padding:10px 14px;font-size:14.5px}
+.compose{background:var(--nd-card);border:1px solid var(--nd-rule);border-top:3px solid var(--nd-terra);border-radius:15px;box-shadow:var(--nd-shadow);padding:14px 14px 16px;margin-top:14px}
+.compose input,.compose select,.compose textarea,.edit textarea{width:100%;box-sizing:border-box}
+.compose textarea{min-height:130px;resize:vertical}
+.kinds,.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--nd-rule);background:transparent;color:inherit;border-radius:99px;padding:8px 13px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;min-height:38px}
+.chip.on{background:var(--nd-terra);border-color:var(--nd-terra);color:#fff}
+.lbl{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--nd-ink-2);margin:14px 0 6px}
+.to{font-weight:700;font-size:16px}
+.people{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.mm{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:15px;box-shadow:var(--nd-shadow);overflow:hidden}
+.mm.unread{border-left:4px solid var(--nd-terra)}
+.mm.unread .nm{font-weight:800}
+.mm .top{display:flex;gap:12px;align-items:center;padding:12px 14px;cursor:pointer;width:100%;background:none;border:0;font:inherit;color:inherit;text-align:left;min-height:64px}
+.av{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font:700 16px/1 var(--nd-serif);background:var(--nd-tan);color:var(--nd-on-tan)}
+.mm .who{flex:1;min-width:0}
+.mm .nm{display:block;font-weight:600;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mm .em{display:block;font-size:13.5px;color:var(--nd-ink-2)}
+.mm .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.tag{font-size:11px;font-weight:700;letter-spacing:.05em;padding:3px 8px;border-radius:99px;background:var(--nd-paper-2);color:var(--nd-ink-2)}
+.tag.req{background:var(--nd-terra);color:#fff}
+.tag.st-done,.tag.seen{background:var(--nd-sage);color:var(--nd-on-sage)}
+.tag.st-doing,.tag.st-accepted{background:var(--nd-tan);color:var(--nd-on-tan)}
+.mm .when{flex:none;font-size:11.5px;font-weight:700;letter-spacing:.06em;color:var(--nd-ink-2);text-transform:uppercase}
+.edit{display:none;padding:4px 14px 16px;border-top:1px dashed var(--nd-rule)}
+.mm.open .edit{display:block}
+.bodytext{font-size:15.5px;line-height:1.55;padding:14px 0 2px;overflow-wrap:anywhere}
+.edit textarea{min-height:84px;resize:vertical}
+.thread{display:flex;flex-direction:column;gap:6px}
+.say{padding:9px 12px;border-radius:12px;font-size:14.5px;line-height:1.45;max-width:92%;overflow-wrap:anywhere;border:1px solid var(--nd-rule)}
+.say.me{align-self:flex-end;background:var(--nd-paper-2)}
+.say i{font-style:normal;font-size:11.5px;opacity:.65}
+.proofs{display:flex;flex-direction:column;gap:6px}
+.proof{display:flex;gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--nd-rule);border-radius:12px;text-decoration:none;color:inherit}
+.proof img{width:64px;height:64px;object-fit:cover;border-radius:8px;flex:none}
+.pico{flex:none;width:64px;height:44px;border-radius:8px;display:grid;place-items:center;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:var(--nd-paper-2)}
+.pn{font-weight:600;font-size:14.5px;overflow-wrap:anywhere}.pn small{display:block;font-weight:500;font-size:12px;opacity:.7}
+.addp{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.addp input[type=text]{flex:1 1 180px;min-width:0}.addp .btn{flex:none;min-height:42px;display:inline-flex;align-items:center;cursor:pointer;text-decoration:none}
+.chip:disabled{opacity:.4;cursor:default}.chip.go:not(:disabled){border-color:var(--nd-terra);font-weight:800}
+.row2{display:flex;gap:8px;margin-top:14px}
+.row2 .btn{flex:1;min-height:46px}
+.fine{font-size:12.5px;color:var(--nd-ink-2);margin-top:14px;line-height:1.45}
+.empty{padding:28px 6px;color:var(--nd-ink-2);font-size:15px}
+</style>
+</head><body>
+
+<header class="mast"><div class="wrap">
+<img src="/logo-nd.png" alt="">
+<div><div class="wordmark">The Neuro<em>~</em>Divulge</div><div class="subword">ND OS &middot; Inbox</div></div>
+<a class="back" href="/nd/os/">Desk &rarr;</a>
+</div></header>
+
+<main class="wrap" id="main">
+
+<section class="gate card" id="gate" hidden>
+<h1 style="font-size:25px;margin-bottom:8px">Your inbox</h1>
+<p class="muted" style="font-size:15px">Your word opens it.</p>
+<div style="margin:18px 0 6px"><label for="key">Your word</label>
+<input id="key" type="password" autocomplete="current-password" enterkeyhint="go"></div>
+<button class="btn solid" id="unlock" style="width:100%">Open</button>
+</section>
+
+<div id="desk" hidden>
+<section class="hello">
+<div class="day" id="day">&nbsp;</div>
+<h1>Inbox and Outbox.</h1>
+<p>Your line to the house. Write back and forth, and send a production request when you need something made.</p>
+</section>
+<div class="stats">
+<button class="stat on" data-t="inbox" type="button"><b id="nIn">0</b><span>Inbox &middot; new</span></button>
+<button class="stat" data-t="outbox" type="button"><b id="nOut">0</b><span>Outbox &middot; sent</span></button>
+<button class="stat" data-t="req" type="button"><b id="nReq">0</b><span>Work rooms open</span></button>
+</div>
+
+<div class="tools">
+<button class="btn solid" id="bReq" type="button">New production request</button>
+<button class="btn quiet" id="bWrite" type="button">Write a message</button>
+</div>
+
+<section class="compose" id="write" hidden>
+<div class="kinds"><button type="button" class="chip on" id="kNote">Message</button><button type="button" class="chip" id="kReq">Production request</button></div>
+<div class="lbl">To</div><div class="to" id="otherName">&nbsp;</div>
+<div id="reqOnly" hidden>
+<div class="lbl">What kind of work</div><select id="cWork"></select>
+<div class="lbl">Needed by (optional)</div><input id="cDue" type="date">
+</div>
+<div class="lbl">Subject</div><input id="cSubject" type="text" maxlength="200" autocomplete="off">
+<div class="lbl">Message</div><textarea id="cBody" maxlength="6000"></textarea>
+<div class="row2"><button class="btn solid" id="cSend" type="button">Send</button><button class="btn quiet" id="cCancel" type="button">Cancel</button></div>
+</section>
+
+<div class="people" id="list"></div>
+<p class="fine">This is a private line between the two offices. Every production request opens a work room: the conversation, the work to look at, and where it stands. When Jessica approves, the files land in her Files in ND OS. It is not email and nothing here leaves the system. Tucking a message away only hides it from your own list; it is never deleted.</p>
+</div>
+</main>
+
+<footer><div class="wrap">
+<a class="aemark" href="/nd/os/">
+<img src="/marks/ae-mark-gradient.png" alt="Accelerated Experiences, LLC">
+<span><b>ND OS &middot; built by Accelerated Experiences, LLC</b>Runs on the AETRIAD</span>
+</a>
+</div></footer>
+
+<script src="/nd/os/nd-os.js"></script>
+<script>
+(function(){
+var API='/api/nd-inbox', OTHER='Anthony';
+var gate=document.getElementById('gate'), desk=document.getElementById('desk');
+function CALL(json){ return NDOS.net(API,{method:'POST',json:json}); }
+function SAY(t,bad){ NDOS.say(t,bad); }
+function UPLOAD(id,file){ return fetch(API+'?proof='+encodeURIComponent(id)+'&name='+encodeURIComponent(file.name)+'&type='+encodeURIComponent(file.type||''),{method:'POST',headers:{'x-nd-key':NDOS.auth.get(),'content-type':'application/octet-stream'},body:file}).then(function(r){return r.json();}).catch(function(){return {ok:false};}); }
+/* ---- the room. Same logic in ND OS and AE OS; only CALL, SAY and OTHER differ. ---- */
+var DATA={inbox:[],outbox:[],work:[],me:''}, TAB='inbox', OPEN=null, KIND='note';
+var $=function(id){return document.getElementById(id);};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function when(iso){var d=new Date(iso); if(isNaN(d)) return ''; var days=Math.floor((Date.now()-d)/864e5);
+  var t=d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+  return days<1?t:days<2?'yesterday':days<7?days+' days ago':d.toLocaleDateString(undefined,{month:'short',day:'numeric'});}
+var STAT={'new':'New','accepted':'Accepted','doing':'In production','review':'Ready for review','changes':'Changes asked','approved':'Approved','declined':'Not now'};
+var SIDE='nd';
+function threadOf(m){ var id=m.id; return DATA.inbox.concat(DATA.outbox).filter(function(x){return x.thread===id;}).sort(function(a,b){return a.at-b.at;}); }
+function name(p){return p==='anthony'?'Anthony':'Jessica';}
+
+function draw(){
+  $('nIn').textContent=DATA.inbox.filter(function(m){return !m.readAt;}).length;
+  $('nOut').textContent=DATA.outbox.length;
+  var all=DATA.inbox.concat(DATA.outbox);
+  $('nReq').textContent=all.filter(function(m){return m.kind==='request'&&m.status!=='approved'&&m.status!=='declined';}).length;
+  [].forEach.call(document.querySelectorAll('.stat'),function(x){x.classList.toggle('on',x.dataset.t===TAB);});
+  var show=TAB==='inbox'?DATA.inbox.filter(function(m){return !m.thread;}).concat(DATA.inbox.filter(function(m){return m.thread&&!m.readAt;})).sort(function(a,b){return b.at-a.at;}):TAB==='outbox'?DATA.outbox.filter(function(m){return !m.thread;}):all.filter(function(m){return m.kind==='request';}).sort(function(a,b){return b.at-a.at;});
+  var L=$('list'); L.innerHTML='';
+  if(!show.length){ L.innerHTML='<p class="empty">'+(TAB==='inbox'?'Nothing in yet. When '+OTHER+' writes to you, it lands here.':TAB==='outbox'?'You have not sent anything yet. Use Write below.':'No work rooms yet. Every production request opens one.')+'</p>'; return; }
+  show.forEach(function(m){ L.appendChild(card(m)); });
+}
+function card(m){
+  var mineIn=m.to===DATA.me, el=document.createElement('div');
+  el.className='mm'+(OPEN===m.id?' open':'')+(mineIn&&!m.readAt?' unread':'');
+  var chips=(m.kind==='request'?'<span class="tag req">Production request</span><span class="tag st-'+esc(m.status)+'">'+esc(STAT[m.status]||m.status)+'</span>'+(m.work?'<span class="tag">'+esc(m.work)+'</span>':'')+(m.due?'<span class="tag">Needed by '+esc(new Date(m.due+'T12:00').toLocaleDateString(undefined,{month:'short',day:'numeric'}))+'</span>':''):'')
+    +(!mineIn?(m.readAt?'<span class="tag seen">Seen '+esc(when(m.readAt))+'</span>':'<span class="tag">Not opened yet</span>'):'');
+  var html='<button class="top" type="button"><span class="av">'+esc(name(mineIn?m.from:m.to).charAt(0))+'</span>'
+    +'<span class="who"><span class="nm">'+esc(m.subject)+'</span><span class="em">'+(mineIn?'From ':'To ')+esc(name(mineIn?m.from:m.to))+'</span><span class="meta">'+chips+'</span></span>'
+    +'<span class="when">'+esc(when(m.createdAt))+'</span></button>'
+    +'<div class="edit"><div class="bodytext">'+esc(m.body).replace(/\n/g,'<br>')+'</div>';
+  if(m.kind==='request'){
+    var th=threadOf(m); if(th.length){ html+='<div class="lbl">The conversation</div><div class="thread">'; th.forEach(function(x){ html+='<div class="say '+(x.from===DATA.me?'me':'them')+'"><b>'+esc(name(x.from))+'</b> <i>'+esc(when(x.createdAt))+'</i><br>'+esc(x.body).replace(/\n/g,'<br>')+'</div>'; }); html+='</div>'; }
+    html+='<div class="lbl">The work</div><div class="proofs">';
+    (m.proofs||[]).forEach(function(p){ var u=p.kind==='file'?(p.fileLink||p.link):p.url; var img=p.kind==='file'&&/^image\//.test(p.type||'');
+      html+='<a class="proof" target="_blank" rel="noopener" href="'+esc(u)+'">'+(img?'<img src="'+esc(u)+'" alt="">':'<span class="pico">'+(p.kind==='file'?'File':'Link')+'</span>')+'<span class="pn">'+esc(p.name)+'<small>'+esc(name(p.by))+' &middot; '+esc(when(p.at))+(p.fileId?' &middot; in your Files':'')+'</small></span></a>'; });
+    if(!(m.proofs||[]).length) html+='<p class="empty" style="padding:6px 0">Nothing to look at yet. The work shows up here.</p>';
+    html+='</div>';
+    if(m.status!=='approved'){ html+='<div class="addp"><input class="p-name" type="text" placeholder="Name it (optional)"><input class="p-url" type="text" inputmode="url" placeholder="Paste a link to the work, https://…"><button type="button" class="btn quiet p-link">Add link</button>'
+      +(SIDE==='nd'?'<label class="btn quiet p-file">Add a file<input type="file" hidden></label>':'<a class="btn quiet" target="_blank" rel="noopener" href="https://www.aexperiences.com/nd/os/inbox/?open='+esc(m.id)+'">Add a file (opens her office)</a>')+'</div>'; }
+    html+='<div class="lbl">Where it stands</div><div class="chips">';
+    var can=DATA.me==='jessica'?['changes','approved']:['accepted','doing','review','declined'];
+    ['new','accepted','doing','review','changes','approved','declined'].forEach(function(s){ var ok=can.indexOf(s)>-1&&m.status!=='approved'; html+='<button type="button" class="chip'+(m.status===s?' on':'')+(s==='approved'?' go':'')+'" data-s="'+s+'"'+(ok?'':' disabled')+'>'+(s==='approved'&&DATA.me==='jessica'&&m.status!=='approved'?'Approve it':s==='changes'&&DATA.me==='jessica'?'Ask for changes':STAT[s])+'</button>'; }); html+='</div>';
+    if(m.status==='approved') html+='<p class="fine">Approved'+(m.approvedAt?' '+esc(when(m.approvedAt)):'')+'. '+((m.landed&&m.landed.length)?m.landed.length+' file'+(m.landed.length>1?'s are':' is')+' now in Files in ND OS.':'The links above are the finished work.')+'</p>';
+  }
+  html+='<div class="lbl">Reply</div><textarea class="f-reply" placeholder="Write back…"></textarea>'
+    +'<div class="row2"><button class="btn solid f-send" type="button">Send reply</button><button class="btn quiet f-tuck" type="button">Tuck away</button></div></div>';
+  el.innerHTML=html;
+  el.querySelector('.top').addEventListener('click',function(){
+    OPEN=(OPEN===m.id?null:m.id);
+    if(OPEN&&mineIn&&!m.readAt){ m.readAt=new Date().toISOString(); CALL({read:m.id}); }
+    draw(); });
+  [].forEach.call(el.querySelectorAll('.chip'),function(c){ c.addEventListener('click',function(){
+    var s=c.dataset.s; if(s==='changes'&&!el.querySelector('.f-reply').value.trim()){ SAY('Say what to change in the reply box first, then tap Ask for changes.',true); el.querySelector('.f-reply').focus(); return; }
+    CALL({status:{id:m.id,status:s}}).then(function(j){
+      if(j&&j.ok){ swap(j.message); if(s==='changes'){ el.querySelector('.f-send').click(); } else draw(); SAY(s==='approved'?'Approved. It is yours now.':'Marked: '+STAT[s]+'.'); }
+      else SAY(j&&j.error==='APPROVE_IN_ND_OS'?'Approve it from ND OS, so the files land in your Files.':j&&j.error==='HERS_TO_SAY'?'Only Jessica can approve or ask for changes.':'That did not save. Try again.',true); }); }); });
+  var pl=el.querySelector('.p-link'); if(pl) pl.addEventListener('click',function(){
+    var u=el.querySelector('.p-url').value.trim(); if(!/^https:\/\//i.test(u)){ SAY('Paste a full link that starts with https://',true); return; }
+    CALL({proof:{id:m.id,url:u,name:el.querySelector('.p-name').value}}).then(function(j){ if(j&&j.ok){ swap(j.message); draw(); SAY('Added to the work.'); } else SAY('That link did not save.',true); }); });
+  var pf=el.querySelector('.p-file input'); if(pf) pf.addEventListener('change',function(){
+    var file=pf.files&&pf.files[0]; if(!file) return;
+    if(file.size>4.4*1024*1024){ SAY('That file is over four megabytes. Put it in Files and paste its link here instead.',true); pf.value=''; return; }
+    SAY('Sending the file…'); UPLOAD(m.id,file).then(function(j){ if(j&&j.ok){ swap(j.message); draw(); SAY('Added to the work.'); } else SAY('The file did not go through. Try again.',true); }); });
+  el.querySelector('.f-send').addEventListener('click',function(){
+    var t=el.querySelector('.f-reply').value.trim(); if(!t){ SAY('Write something first.',true); return; }
+    CALL({send:{kind:'note',subject:'Re: '+m.subject.replace(/^Re: /,''),body:t,thread:m.thread||m.id}}).then(function(j){
+      if(j&&j.ok){ DATA.outbox.unshift(j.message); OPEN=null; draw(); SAY('Sent to '+OTHER+'.'); } else SAY('That did not send. Nothing was lost — try again.',true); }); });
+  var armed=false; el.querySelector('.f-tuck').addEventListener('click',function(){
+    var b=this; if(!armed){ armed=true; b.textContent='Sure?'; setTimeout(function(){armed=false;b.textContent='Tuck away';},4000); return; }
+    CALL({tuck:m.id}).then(function(j){ if(j&&j.ok){ DATA.inbox=DATA.inbox.filter(function(x){return x.id!==m.id;}); DATA.outbox=DATA.outbox.filter(function(x){return x.id!==m.id;}); OPEN=null; draw(); SAY('Tucked away. It is kept, just out of your list.'); } }); });
+  return el;
+}
+function swap(n){ ['inbox','outbox'].forEach(function(k){ DATA[k]=DATA[k].map(function(x){return x.id===n.id?n:x;}); }); }
+function setKind(k){ KIND=k; $('kNote').classList.toggle('on',k==='note'); $('kReq').classList.toggle('on',k==='request'); $('reqOnly').hidden=(k!=='request');
+  $('cBody').placeholder=k==='request'?'What do you need made? Say what it is for, where it will be used, and anything it must include.':'Write your message…'; }
+function openWrite(k){ $('write').hidden=false; setKind(k||'note'); $('cSubject').focus(); $('write').scrollIntoView({behavior:'smooth',block:'center'}); }
+function wire(){
+  [].forEach.call(document.querySelectorAll('.stat'),function(b){ b.addEventListener('click',function(){ TAB=b.dataset.t; OPEN=null; draw(); }); });
+  $('kNote').addEventListener('click',function(){setKind('note');}); $('kReq').addEventListener('click',function(){setKind('request');});
+  $('bWrite').addEventListener('click',function(){openWrite('note');}); $('bReq').addEventListener('click',function(){openWrite('request');});
+  $('cCancel').addEventListener('click',function(){ $('write').hidden=true; });
+  $('cSend').addEventListener('click',function(){
+    var s={kind:KIND,subject:$('cSubject').value,body:$('cBody').value,work:$('cWork').value,due:$('cDue').value};
+    if(!s.subject.trim()&&!s.body.trim()){ SAY('It needs a few words first.',true); return; }
+    $('cSend').disabled=true;
+    CALL({send:s}).then(function(j){ $('cSend').disabled=false;
+      if(j&&j.ok){ DATA.outbox.unshift(j.message); $('cSubject').value='';$('cBody').value='';$('cDue').value=''; $('write').hidden=true; TAB='outbox'; draw(); SAY((KIND==='request'?'Request sent to ':'Sent to ')+OTHER+'.'); }
+      else SAY('That did not send. Nothing was lost — try again.',true); }); });
+}
+function fill(j){ DATA=j; OTHER=name(j.me==='anthony'?'jessica':'anthony'); $('otherName').textContent=OTHER;
+  $('cWork').innerHTML=(j.work||[]).map(function(w){return '<option>'+esc(w)+'</option>';}).join(''); draw(); }
+
+document.getElementById('day').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+document.getElementById('unlock').addEventListener('click',function(){
+  var k=document.getElementById('key').value.trim(); if(!k) return;
+  NDOS.auth.set(k); load().then(function(ok){ if(!ok){ NDOS.say('That did not work.',true); NDOS.auth.clear(); } });
+});
+NDOS.bus.on('auth:out',function(){ gate.hidden=false; desk.hidden=true; });
+function load(quiet){
+  if(!NDOS.auth.has()){ gate.hidden=false; desk.hidden=true; return Promise.resolve(false); }
+  return NDOS.net(API).then(function(j){
+    if(!j.ok){ if(j.__status===401){ gate.hidden=false; desk.hidden=true; return false; } if(!quiet) NDOS.say(NDOS.why(j),true); return true; }
+    gate.hidden=true; desk.hidden=false; if(!(quiet&&(OPEN||!$('write').hidden))){ fill(j); var q=/[?&]open=([a-z0-9]+)/.exec(location.search); if(q&&!load.did){ load.did=1; TAB='req'; OPEN=q[1]; draw(); } } return true;
+  });
+}
+wire();
+NDOS.mount({ active:'inbox', primary:{ label:'New production request', icon:'up', onTap:function(){ if(!desk.hidden) openWrite('request'); } } });
+load();
+setInterval(function(){ if(!document.hidden) load(true); }, 60000);
+})();
+</script>
+</body></html>
