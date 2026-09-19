@@ -10,6 +10,9 @@
 // Anthony signed into ND OS still writes as Anthony.
 import { createHmac } from 'node:crypto';
 import { hub, ndWho, BRAND } from './_nd-auth.mjs';
+import { pushTo, OWN_KEY, publicKey } from './_nd-push.mjs';
+
+const ROOM_URL = 'https://www.aexperiences.com/nd/os/inbox/';
 
 const ANTHONY = new Set(['ae', 'anthonye', 'anthony']);
 
@@ -87,7 +90,9 @@ async function run(req, res, store, me, byName, onApprove) {
     }
     const mine = all.filter((m) => !(m.tucked && m.tucked[me]));
     const inbox = mine.filter((m) => m.to === me), outbox = mine.filter((m) => m.from === me);
-    return send(res, 200, { ok: true, me, work: WORK, inbox, outbox, unread: inbox.filter((m) => !m.readAt).length,
+    const ownRaw = await store('GET', OWN_KEY(me));
+    let ownPhones = 0; try { ownPhones = (ownRaw ? JSON.parse(ownRaw) : []).length; } catch (e) { ownPhones = 0; }
+    return send(res, 200, { ok: true, me, work: WORK, pushKey: await publicKey(store), phones: ownPhones, inbox, outbox, unread: inbox.filter((m) => !m.readAt).length,
       open: all.filter((m) => m.kind === 'request' && m.status !== 'approved' && m.status !== 'declined').length });
   }
   if (req.method === 'POST') {
@@ -107,7 +112,11 @@ async function run(req, res, store, me, byName, onApprove) {
       if (kind === 'request') rec.status = 'new';
       await store('SET', M(rec.id), JSON.stringify(rec));
       await store('ZADD', IDS, String(rec.at), rec.id);
-      return send(res, 200, { ok: true, message: rec });
+      // Tell their phone. A failed push never fails a send — the message is already saved.
+      const note = await pushTo(store, rec.to, {
+        title: (rec.byName || (me === 'anthony' ? 'Anthony' : 'Jessica')) + (kind === 'request' ? ' needs something made' : ' sent you a message'),
+        body: rec.subject, url: ROOM_URL, tag: 'ndinbox-' + rec.id });
+      return send(res, 200, { ok: true, message: rec, push: note });
     }
     if (b.read) {
       const m = await getJSON(store, M(clean(b.read, 40)));
@@ -137,6 +146,44 @@ async function run(req, res, store, me, byName, onApprove) {
       m.proofs.push({ pid: mint(), kind: 'link', name: clean(b.proof.name, 160) || u, url: u, by: me, at: now });
       await store('SET', M(m.id), JSON.stringify(m));
       return send(res, 200, { ok: true, message: m });
+    }
+    if (b.pushOn) {
+      const s = b.pushOn;
+      if (!s || !s.endpoint || typeof s.endpoint !== 'string') return send(res, 400, { ok: false, error: 'NO_SUB' });
+      const key = OWN_KEY(me);
+      const raw = await store('GET', key);
+      let subs = []; try { subs = raw ? JSON.parse(raw) : []; } catch (e) { subs = []; }
+      subs = subs.filter((x) => x && x.endpoint !== s.endpoint).slice(0, 19);
+      subs.push({ endpoint: s.endpoint, keys: s.keys || null, added: now, label: clean(b.label, 60) });
+      await store('SET', key, JSON.stringify(subs));
+      return send(res, 200, { ok: true, phones: subs.length });
+    }
+    if (b.pushOff) {
+      const key = OWN_KEY(me);
+      const raw = await store('GET', key);
+      let subs = []; try { subs = raw ? JSON.parse(raw) : []; } catch (e) { subs = []; }
+      subs = subs.filter((x) => x && x.endpoint !== b.pushOff);
+      await store('SET', key, JSON.stringify(subs));
+      return send(res, 200, { ok: true, phones: subs.length });
+    }
+    if (b.unsend) {
+      const m = await getJSON(store, M(clean(b.unsend, 40)));
+      if (!m) return send(res, 404, { ok: false, error: 'GONE' });
+      if (m.from !== me) return send(res, 403, { ok: false, error: 'NOT_YOURS' });
+      if (m.readAt) return send(res, 409, { ok: false, error: 'ALREADY_SEEN' });
+      // Take back the message and, if it opened a work room, the unread notes you added under it.
+      // This is the ONE thing that leaves: a message the other person never opened was never said.
+      const ids = (await store('ZREVRANGE', IDS, '0', '499')) || [];
+      const mine = [m.id];
+      if (!m.thread && ids.length) {
+        const raws = await store('MGET', ...ids.map(M));
+        for (const raw of raws) {
+          let c = null; try { c = raw ? JSON.parse(raw) : null; } catch (e) { c = null; }
+          if (c && c.thread === m.id && c.from === me && !c.readAt) mine.push(c.id);
+        }
+      }
+      for (const id of mine) { await store('DEL', M(id)); await store('ZREM', IDS, id); }
+      return send(res, 200, { ok: true, unsent: mine });
     }
     if (b.tuck) {
       const m = await getJSON(store, M(clean(b.tuck, 40)));
