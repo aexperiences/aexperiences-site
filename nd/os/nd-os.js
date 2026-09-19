@@ -107,6 +107,8 @@
 
   var ROOMS = [
     { id:'desk',    label:'Desk',     href:'/nd/os/',          icon:'desk',    live:true,  blurb:'Who came, from where, what sold.' },
+    // Her line to the house (Anthony, Sep 19 2026): messages both ways, and a work room per production request.
+    { id:'inbox',   label:'Inbox',    href:'/nd/os/inbox/',    icon:'blast',   live:true,  blurb:'Ask Anthony for something. Watch it get made.' },
     { id:'write',   label:'Write',    href:'/nd/write/',       icon:'write',   live:true,  blurb:'Write a note and publish it.' },
     { id:'notes',   label:'Notes',    href:'/nd/blog/?in=os',        icon:'notes',   live:true,  blurb:'The posts, as everyone sees them.' },
     { id:'blast',   label:'Blastpack', href:'/nd/os/blast/',   icon:'blast',   live:true,  blurb:'The Media Network. Queue a post; Blastpack sends it.' },
