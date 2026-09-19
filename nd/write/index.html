@@ -32,6 +32,21 @@
   #body:focus{box-shadow:none}
   .count{font-size:12px;color:var(--nd-ink-2);text-align:right;padding-top:6px;
     font-variant-numeric:tabular-nums}
+  /* a picture or a video, from her Files or straight from the phone */
+  .mediarow{display:flex;gap:8px;align-items:center;margin-top:2px}
+  .mediarow .ghost{padding:9px 0}
+  .mediarow .say{flex:1;font-size:12.5px;color:var(--nd-ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .picker{display:none;margin-top:8px;padding:12px;border:1px solid var(--nd-rule);border-radius:14px;background:var(--nd-card);box-shadow:var(--nd-shadow)}
+  .picker.on{display:block}
+  .picker .h{font:700 11px/1 var(--nd-sans);letter-spacing:.12em;text-transform:uppercase;color:var(--nd-ink-2);margin:0 0 8px}
+  .picker .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px;max-height:260px;overflow:auto}
+  .picker .it{border:1.5px solid var(--nd-rule);border-radius:11px;overflow:hidden;background:var(--nd-paper-2);cursor:pointer;padding:0;text-align:left;font:inherit;color:inherit}
+  .picker .it .th{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:var(--nd-paper-2)}
+  .picker .it .vd{display:grid;place-items:center;width:100%;aspect-ratio:1;font:700 12px var(--nd-sans);letter-spacing:.1em;color:var(--nd-ink-2)}
+  .picker .it b{display:block;font-size:11px;padding:6px 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+  .picker .row{display:flex;gap:8px;margin-top:10px}
+  .picker .row .btn{flex:1;min-height:42px;font-size:14px;padding:8px 12px}
+  .picker .none{font-size:13.5px;color:var(--nd-ink-2);padding:6px 2px}
 
   /* the ruling drawer — comes up when she taps publish */
   .ruling{margin-top:16px;padding:18px;border-radius:18px;border:1px solid var(--nd-rule);
@@ -99,6 +114,13 @@
     <input id="title" placeholder="Title" enterkeyhint="next" aria-label="Title">
     <input id="dek" placeholder="One line under it &mdash; optional" aria-label="One line under the title">
     <textarea id="body" placeholder="Write it the way you would say it." aria-label="The post"></textarea>
+    <div class="mediarow"><button class="ghost" id="mediaBtn" type="button">+ Picture or video</button><span class="say" id="mediaSay"></span></div>
+    <div class="picker" id="picker">
+      <div class="h">From your Files</div>
+      <div class="grid" id="mediaGrid"></div>
+      <div class="row"><input id="mediaPick" type="file" accept="image/*,video/*" hidden><button class="btn quiet" id="mediaUp" type="button">Upload from this phone</button><button class="btn quiet" id="mediaClose" type="button">Close</button></div>
+      <p class="none" style="margin:8px 0 0">Photos up to about 4 MB upload here. A long video goes in through the Files room first, then pick it from this list.</p>
+    </div>
     <div class="count" id="count">0 words</div>
 
     <div class="ruling" id="ruling">
@@ -128,6 +150,61 @@
 
 <script src="/nd/os/nd-os.js"></script>
 <script src="/nd/os/nd-triad.js"></script>
+<script>
+/* ---- a picture or a video in the post (Anthony, Sep 18 2026) ----------------------------
+   The post is markdown. A picture is ![name](link); a video is !video[name](link). The blog's
+   renderer knows both. Links are her Files links — permanent, signed, served by the site. */
+(function(){
+  var FILES='/api/nd-files', body=document.getElementById('body'), P=document.getElementById('picker');
+  var SAY=document.getElementById('mediaSay'), GRID=document.getElementById('mediaGrid'), PICK=document.getElementById('mediaPick');
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function isVideo(f){ return String(f.type||'').indexOf('video/')===0 || /\.(mp4|mov|m4v|webm)$/i.test(f.name||''); }
+  function isImage(f){ return String(f.type||'').indexOf('image/')===0; }
+  function insert(f){
+    var name=String(f.name||'').replace(/\.[a-z0-9]+$/i,'').replace(/[\[\]()]/g,'');
+    var line=(isVideo(f)?'!video[':'![')+name+']('+f.link+')';
+    var v=body.value, a=(typeof body.selectionStart==='number')?body.selectionStart:v.length, b=(typeof body.selectionEnd==='number')?body.selectionEnd:a;
+    var before=v.slice(0,a), after=v.slice(b);
+    var pad1=before&&!/\n\n$/.test(before)?(/\n$/.test(before)?'\n':'\n\n'):'';
+    var pad2=after&&!/^\n\n/.test(after)?(/^\n/.test(after)?'\n':'\n\n'):'';
+    body.value=before+pad1+line+pad2+after;
+    var at=(before+pad1+line).length; body.setSelectionRange(at,at); body.focus();
+    body.dispatchEvent(new Event('input',{bubbles:true}));
+    P.classList.remove('on'); SAY.textContent=(isVideo(f)?'Video':'Picture')+' added: '+f.name;
+  }
+  function fill(){
+    GRID.innerHTML='<p class="none">Looking…</p>';
+    NDOS.net(FILES).then(function(j){
+      var files=(j.ok&&j.files||[]).filter(function(f){ return isImage(f)||isVideo(f); });
+      if(!files.length){ GRID.innerHTML='<p class="none">No pictures or videos in Files yet. Upload one below, or put it in the Files room.</p>'; return; }
+      GRID.innerHTML='';
+      files.forEach(function(f){
+        var b=document.createElement('button'); b.type='button'; b.className='it';
+        b.innerHTML=(isImage(f)?'<img class="th" src="'+esc(f.link)+'" alt="" loading="lazy">':'<span class="vd">VIDEO</span>')+'<b>'+esc(f.name)+'</b>';
+        b.addEventListener('click',function(){ insert(f); });
+        GRID.appendChild(b);
+      });
+    });
+  }
+  document.getElementById('mediaBtn').addEventListener('click',function(){ var on=P.classList.toggle('on'); if(on) fill(); });
+  document.getElementById('mediaClose').addEventListener('click',function(){ P.classList.remove('on'); });
+  document.getElementById('mediaUp').addEventListener('click',function(){ PICK.click(); });
+  PICK.addEventListener('change',function(){
+    var file=PICK.files&&PICK.files[0]; PICK.value=''; if(!file) return;
+    if(file.size>4.3*1024*1024){ SAY.textContent='Too big to upload here ('+(file.size/1048576).toFixed(1)+' MB). Put it in the Files room, then pick it from the list.'; return; }
+    SAY.textContent='Uploading '+file.name+'…';
+    var y=new XMLHttpRequest();
+    y.open('POST',FILES+'?up=1&name='+encodeURIComponent(file.name)+'&type='+encodeURIComponent(file.type||'application/octet-stream'),true);
+    y.setRequestHeader('x-nd-key',NDOS.auth.get()); y.setRequestHeader('content-type','application/octet-stream');
+    y.upload.onprogress=function(e){ if(e.lengthComputable) SAY.textContent='Uploading '+file.name+' — '+Math.round(e.loaded/e.total*100)+'%'; };
+    y.onerror=function(){ SAY.textContent='The upload did not go through.'; };
+    y.onload=function(){ var k={}; try{ k=JSON.parse(y.responseText); }catch(e){}
+      if(!k.ok||!k.file){ SAY.textContent='Could not upload: '+(k.message||k.error||'no'); return; }
+      insert(k.file); };
+    y.send(file);
+  });
+})();
+</script>
 <script>
 (function(){
   var API='/api/nd-blog', WIP='nd:write:wip';

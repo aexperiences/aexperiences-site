@@ -41,6 +41,9 @@
     color:var(--nd-ink-2);font-family:var(--nd-serif);font-style:italic}
   .body hr{border:0;border-top:1px solid var(--nd-rule);margin:28px 0}
   .empty{text-align:center;padding:50px 10px;color:var(--nd-ink-2)}
+  .media{margin:18px 0}
+  .media img,.media video{display:block;width:100%;height:auto;max-height:78vh;object-fit:contain;border-radius:14px;background:var(--nd-paper-2)}
+  .media figcaption{font-size:13px;color:var(--nd-ink-2);margin-top:8px;text-align:center}
 </style>
 </head><body>
 <header class="mast"><div class="wrap">
@@ -88,6 +91,11 @@
       if((m=l.match(/^(#{2,3})\s+(.*)$/))){ closeList();
         out.push('<h'+m[1].length+'>'+inline(m[2])+'</h'+m[1].length+'>'); continue; }
       if((m=l.match(/^>\s?(.*)$/))){ closeList(); out.push('<blockquote>'+inline(m[1])+'</blockquote>'); continue; }
+      /* a picture: ![name](link) — a video: !video[name](link). Links are her Files links or https. */
+      if((m=l.trim().match(/^!(video)?\[([^\]]*)\]\((https?:\/\/[^\s)]+|\/api\/nd-files\?[^\s)]+)\)$/))){ closeList();
+        if(m[1]) out.push('<figure class="media"><video controls playsinline preload="metadata" src="'+esc(m[3])+'"></video>'+(m[2]?'<figcaption>'+esc(m[2])+'</figcaption>':'')+'</figure>');
+        else out.push('<figure class="media"><img src="'+esc(m[3])+'" alt="'+esc(m[2])+'" loading="lazy">'+(m[2]?'<figcaption>'+esc(m[2])+'</figcaption>':'')+'</figure>');
+        continue; }
       if((m=l.match(/^[-*]\s+(.*)$/))){ if(list!=='ul'){closeList();out.push('<ul>');list='ul';}
         out.push('<li>'+inline(m[1])+'</li>'); continue; }
       if((m=l.match(/^\d+[.)]\s+(.*)$/))){ if(list!=='ol'){closeList();out.push('<ol>');list='ol';}

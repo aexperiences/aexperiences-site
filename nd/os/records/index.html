@@ -33,8 +33,16 @@
   .fb i{font-style:normal;opacity:.7;font-size:11px}
   .fb.new{border-style:dashed;color:var(--nd-terra-d);border-color:var(--nd-terra)}
   .frow{display:flex;gap:8px;margin-top:10px;align-items:center}
-  .frow select{flex:1}
-  .frow .att{flex:none;width:auto;min-height:46px;padding:10px 14px;font-size:14px}
+  .frow select{flex:1 1 0;min-width:0;min-height:46px}
+  .addbox .frow .att{flex:none;width:auto;margin-top:0;min-height:46px;padding:10px 14px;font-size:14px;white-space:nowrap}
+  .fb.newin{padding:4px 4px 4px 12px;gap:6px;border-style:dashed;border-color:var(--nd-terra)}
+  .fb.newin input{width:150px;min-height:32px;padding:6px 8px;font-size:14px;border-radius:8px}
+  .fb.newin button{min-height:32px;padding:0 12px;border:0;border-radius:8px;background:var(--nd-terra);color:var(--nd-on-terra);font:700 12px var(--nd-sans);cursor:pointer}
+  .rec .mvrow{display:none;gap:8px;align-items:center;margin-top:8px}
+  .rec .mvrow.on{display:flex}
+  .rec .mvrow select{flex:1 1 0;min-width:0;min-height:40px;padding:8px 10px;font-size:14px}
+  .rec .mvrow button{min-height:40px;padding:0 12px;border-radius:9px;border:1px solid var(--nd-rule);background:var(--nd-card);color:var(--nd-ink);font:700 12.5px var(--nd-sans);cursor:pointer}
+  .rec .mvrow button.go{background:var(--nd-terra);border-color:var(--nd-terra);color:var(--nd-on-terra)}
   .attd{display:none;margin-top:8px;font-size:13px;color:var(--nd-ink-2);background:var(--nd-paper-2);border-radius:10px;padding:8px 12px}
   .attd.on{display:block}
   .rec .fold{font:700 10px/1 var(--nd-sans);letter-spacing:.12em;text-transform:uppercase;color:var(--nd-ink-2);background:var(--nd-paper-2);padding:4px 8px;border-radius:99px}
@@ -235,8 +243,13 @@
         el.appendChild(fc);
       }
       if(r.cls==='written'){
-        el.querySelector('.mv').addEventListener('click',function(){
-          var to=prompt('Move to which folder?\n'+FOLDERS.join(' · '), r.folder||'General'); if(!to) return;
+        var mvrow=document.createElement('div'); mvrow.className='mvrow';
+        mvrow.innerHTML='<select aria-label="Move to folder">'+FOLDERS.map(function(f){return '<option'+(f===(r.folder||'General')?' selected':'')+'>'+esc(f)+'</option>';}).join('')+'</select><button type="button" class="go">Move</button><button type="button" class="no">Cancel</button>';
+        el.appendChild(mvrow);
+        el.querySelector('.mv').addEventListener('click',function(){ mvrow.classList.toggle('on'); });
+        mvrow.querySelector('.no').addEventListener('click',function(){ mvrow.classList.remove('on'); });
+        mvrow.querySelector('.go').addEventListener('click',function(){
+          var to=mvrow.querySelector('select').value; if(!to||to===(r.folder||'General')){ mvrow.classList.remove('on'); return; }
           NDOS.net(API,{method:'POST',json:{save:{id:r.id,folder:to}}}).then(function(j){ if(j.ok){ NDOS.say('Moved to '+j.record.folder+'.'); load(); } else NDOS.say(NDOS.why(j),true); });
         });
       }
@@ -261,12 +274,20 @@
     var F=document.getElementById('folders');
     F.innerHTML='<button type="button" class="fb'+(FOLDER==='all'?' on':'')+'" data-f="all">Everything</button>'+
       FOLDERS.map(function(f){ var n=ROWS.filter(function(r){return r.cls==='written'&&(r.folder||'General')===f;}).length; return '<button type="button" class="fb'+(FOLDER===f?' on':'')+'" data-f="'+esc(f)+'">'+esc(f)+(n?'<i>'+n+'</i>':'')+'</button>'; }).join('')+
-      '<button type="button" class="fb new" data-f="__new">+ New folder</button>';
+      (NEWING?'<span class="fb newin"><input id="nfName" placeholder="Folder name" maxlength="40" enterkeyhint="done" aria-label="Folder name"><button type="button" id="nfGo">Make</button></span>'
+             :'<button type="button" class="fb new" data-f="__new">+ New folder</button>');
+    if(NEWING){ var inp=document.getElementById('nfName'); inp.focus();
+      var make=function(){ var name=inp.value.trim(); if(!name){ NEWING=false; paintFolders(); return; }
+        NDOS.net(API,{method:'POST',json:{folder:{name:name}}}).then(function(j){ if(j.ok){ NEWING=false; FOLDER=j.folder; NDOS.say('Folder made.'); load(); } else NDOS.say(NDOS.why(j),true); }); };
+      document.getElementById('nfGo').addEventListener('click',make);
+      inp.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); make(); } if(e.key==='Escape'){ NEWING=false; paintFolders(); } });
+    }
   }
+  var NEWING=false;
   document.getElementById('folders').addEventListener('click',function(e){
     var b=e.target.closest('.fb'); if(!b) return;
-    if(b.dataset.f==='__new'){ var name=prompt('Name the folder'); if(!name||!name.trim()) return;
-      NDOS.net(API,{method:'POST',json:{folder:{name:name.trim()}}}).then(function(j){ if(j.ok){ FOLDER=j.folder; NDOS.say('Folder made.'); load(); } else NDOS.say(NDOS.why(j),true); }); return; }
+    if(b.classList.contains('newin')) return;
+    if(b.dataset.f==='__new'){ NEWING=true; paintFolders(); return; }
     FOLDER=b.dataset.f; paintFolders(); draw();
     var sel=document.getElementById('fsel'); if(FOLDER!=='all') sel.value=FOLDER;
   });
