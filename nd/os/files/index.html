@@ -152,7 +152,10 @@
       x.setRequestHeader('authorization','Bearer '+j.token); x.setRequestHeader('x-api-version','12');
       x.setRequestHeader('x-vercel-blob-store-id',j.storeId||''); x.setRequestHeader('x-vercel-blob-access','private');
       x.setRequestHeader('x-api-blob-request-id',(j.storeId||'')+':'+Date.now()+':'+Math.random().toString(16).slice(2)); x.setRequestHeader('x-api-blob-request-attempt','0');
-      x.setRequestHeader('x-content-type',file.type||'application/octet-stream'); x.setRequestHeader('x-add-random-suffix','1');
+      x.setRequestHeader('x-content-type',file.type||'application/octet-stream');
+      /* NO x-add-random-suffix header here. The ticket already carries addRandomSuffix; sending the header too makes the
+         store answer 503 with no CORS headers, which the browser reports as a dead connection. That one header is why
+         every file over four megabytes failed from a browser until Sep 19 2026. Measured: without it 200, with it a throw. */
       x.upload.onprogress=function(e){ if(e.lengthComputable) bar.style.width=Math.round(e.loaded/e.total*100)+'%'; };
       x.onerror=function(){ viaServer(); };
       x.onload=function(){
