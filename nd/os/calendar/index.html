@@ -39,7 +39,7 @@
   .dots{display:flex;gap:2.5px;height:5px}
   .dots i{width:5px;height:5px;border-radius:99px;display:block}
   .dots i.due{background:var(--nd-terra)} .dots i.post{background:var(--nd-sage-d)}
-  .dots i.note{background:var(--nd-tan)} .dots i.ev{background:#8A7CA8}
+  .dots i.note{background:var(--nd-tan)} .dots i.ev{background:#8A7CA8} .dots i.job{background:#C99A2E}
   .d.on .dots i{background:rgba(250,247,240,.9)}
 
   .key{display:flex;flex-wrap:wrap;gap:13px;margin-top:13px;font-size:11.5px;color:var(--nd-ink-2)}
@@ -102,6 +102,7 @@
         <span><s style="background:var(--nd-sage-d)"></s>posting</span>
         <span><s style="background:var(--nd-tan)"></s>a note went out</span>
         <span><s style="background:#8A7CA8"></s>on the calendar</span>
+        <span><s style="background:#C99A2E"></s>job due</span>
       </div>
     </div>
 
@@ -171,9 +172,10 @@
       NDOS.net(CAL),
       NDOS.net('/api/nd-store?c=list'),
       NDOS.net('/api/nd-queue'),
-      NDOS.net('/api/nd-blog?all=1')
+      NDOS.net('/api/nd-blog?all=1'),
+      NDOS.net('/api/nd-jobs')
     ]).then(function(r){
-      var cal=r[0], list=r[1], q=r[2], blog=r[3];
+      var cal=r[0], list=r[1], q=r[2], blog=r[3], jobs=r[4];
       if(!cal.ok){
         if(cal.__status===401){ gate.hidden=false; desk.hidden=true; return false; }
         NDOS.say(NDOS.why(cal),true); return true;
@@ -192,6 +194,8 @@
         if(p.status==='published'&&p.createdAt) EVENTS.push({k:dayOf(p.createdAt),at:p.createdAt,kind:'note',
           text:p.title||'',href:'/nd/blog/?p='+encodeURIComponent(p.slug)}); });
 
+      if(jobs.ok) (jobs.jobs||[]).forEach(function(j){
+        if(j.at && j.status!=='done') EVENTS.push({k:dayOf(j.at),at:j.at,kind:'job',text:j.title||'',href:'/nd/os/jobs/'}); });
       MARKS={};
       EVENTS.forEach(function(e){ (MARKS[e.k]=MARKS[e.k]||{})[e.kind]=true; });
       month(); day(); feed();
@@ -247,8 +251,8 @@
     view=new Date(view.getFullYear(),view.getMonth()+1,1); month(); });
 
   /* ---- the chosen day ------------------------------------------------- */
-  var COLOR={due:'var(--nd-terra)',post:'var(--nd-sage-d)',note:'var(--nd-tan)',ev:'#8A7CA8'};
-  var WORD={due:'due',post:'posting',note:'went live',ev:''};
+  var COLOR={due:'var(--nd-terra)',post:'var(--nd-sage-d)',note:'var(--nd-tan)',ev:'#8A7CA8',job:'#C99A2E'};
+  var WORD={due:'due',post:'posting',note:'went live',ev:'',job:'job due'};
   function day(){
     var k=key(sel);
     document.getElementById('dayName').textContent=

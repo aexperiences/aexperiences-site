@@ -13,7 +13,7 @@
 // The token is the only key. It is long, it opens nothing but this read-only feed, and
 // it can be replaced from the room in one tap. Same store as the rooms (Art. XVII).
 import { randomBytes, createHash } from 'node:crypto';
-import { ndWho } from './_nd-auth.mjs';
+import { ndWho, hub, BRAND } from './_nd-auth.mjs';
 
 const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || '';
 const KV_TOK = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || '';
@@ -67,7 +67,11 @@ export default async function handler(req, res) {
         listOf('nd:list:all', (id) => 'nd:list:' + id),
         listOf('nd:queue', (id) => 'nd:q:' + id)
       ]);
+      let jobs = [];
+      try { const ids = (await hub('ZREVRANGE', 'jobs:' + BRAND + ':ids', '0', '999')) || [];
+        if (ids.length) jobs = ((await hub('MGET', ...ids.map((id) => 'jobs:' + BRAND + ':j:' + id))) || []).map((r) => { try { return r ? JSON.parse(r) : null; } catch (e) { return null; } }).filter(Boolean); } catch (e) {}
       const ev = [];
+      jobs.forEach((j) => { if (j.at && j.status !== 'done') ev.push(vevent('job-' + j.id, j.at, 'Job due: ' + (j.title || ''), (j.kinds || []).join(', ') + (j.notes ? '\n' + j.notes : ''), SITE + '/nd/os/jobs/', 30)); });
       cal.forEach((i) => { if (i.at) ev.push(vevent('cal-' + i.id, i.at, i.text || 'On the calendar', '', SITE + '/nd/os/calendar/', 30)); });
       list.forEach((i) => { if (i.at && !i.done) ev.push(vevent('due-' + i.id, i.at, 'Due: ' + (i.text || ''), 'From your list', SITE + '/nd/os/list/', 30)); });
       queue.forEach((i) => { if (i.at && i.status !== 'failed') ev.push(vevent('post-' + i.id, i.at,

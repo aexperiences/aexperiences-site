@@ -77,7 +77,12 @@ export default async function handler(req, res) {
     if (!who) return send(res, 401, { ok: false, error: 'NEED_KEY' });
 
     if (req.method === 'GET') {
-      const [estimates, expenses] = await Promise.all([all(EIDS, E), all(XIDS, X)]);
+      // Sep 18 2026: a JOB is the estimate (api/nd-jobs). Books shows the jobs' quotes as her
+      // estimates and keeps the expenses. The older books:nd:est list is read too, so nothing
+      // that was ever saved there disappears.
+      const [old, expenses, jobs] = await Promise.all([all(EIDS, E), all(XIDS, X), all('jobs:' + BRAND + ':ids', (id) => 'jobs:' + BRAND + ':j:' + id)]);
+      const estimates = jobs.map((j) => ({ id: j.id, estNo: j.estNo, title: j.title, client: j.client, type: j.type === 'internal' ? 'internal' : 'external',
+        status: j.status === 'done' ? 'done' : 'estimate', lane: j.status, kinds: j.kinds, at: j.at, quote: j.quote, createdAt: j.createdAt, job: true })).concat(old);
       return send(res, 200, { ok: true, office: BRAND, estimates, expenses });
     }
 

@@ -100,7 +100,7 @@
 
     <div id="pane-est">
       <div class="items" id="estList"></div>
-      <p class="fine">The math is the house math: what it costs you plus your time, marked up to a gross profit margin (67% is the house default), plus pass-throughs at cost. An <b>internal</b> job is a cost tally with no markup.</p>
+      <p class="fine">Every job on your board is an estimate. The math is the house math: what it costs you plus your time, marked up to a gross profit margin (67% is the house default, and the price is yours to change), plus pass-throughs at cost. Tap a job to price it.</p>
     </div>
     <div id="pane-exp" hidden>
       <div class="items" id="expList"></div>
@@ -169,15 +169,22 @@
     document.getElementById('pane-est').hidden=TAB!=='est';
     document.getElementById('pane-exp').hidden=TAB!=='exp';
     EL.innerHTML=''; XL.innerHTML='';
-    if(OPEN==='new') EL.appendChild(estCard({id:'',type:'external',title:'',client:'',gpm:67,salary:'',costs:[{d:'',a:''}],pass:[],status:'estimate',notes:'',_new:true}));
-    if(!EST.length&&OPEN!=='new') EL.innerHTML='<p class="empty">No estimates yet. Tap the button below to price your first job.</p>';
-    EST.forEach(function(e){ EL.appendChild(estCard(e)); });
+    if(!EST.length) EL.innerHTML='<p class="empty">No jobs priced yet. Every job on your board is an estimate — tap the button below to add one.</p>';
+    EST.forEach(function(e){ EL.appendChild(e.job?jobCard(e):estCard(e)); });
     if(XOPEN==='new') XL.appendChild(expCard({id:'',what:'',amount:'',on:new Date().toISOString().slice(0,10),kind:'Supplies',job:'',notes:'',_new:true}));
     if(!EXP.length&&XOPEN!=='new') XL.innerHTML='<p class="empty">Nothing spent yet. Tap the button below the first time you buy something for the business.</p>';
     EXP.forEach(function(x){ XL.appendChild(expCard(x)); });
   }
 
   var LABEL={estimate:'Estimate',sent:'Sent',won:'Won',lost:'Lost',invoiced:'Invoiced',paid:'Paid'};
+  var LANE={next:'Up next',doing:'Working on',done:'Done'};
+  /* a job from the board, shown here as the estimate it is; it is priced and edited in Jobs */
+  function jobCard(e){
+    var el=document.createElement('a'); el.className='it'; el.href='/nd/os/jobs/'; el.style.textDecoration='none'; el.style.color='inherit';
+    var q=e.quote||{};
+    el.innerHTML='<div class="top"><span class="who"><span class="nm">'+esc(e.title)+'</span><span class="em">'+esc(e.client||(e.type==='internal'?'Internal':''))+' &middot; '+esc(e.estNo||'')+(e.type!=='internal'&&q.gpm!=null?' &middot; '+Math.round(q.gpm)+'% GPM':'')+'</span><span class="tag '+(e.lane==='done'?'won':e.lane==='doing'?'sent':'')+'">'+(LANE[e.lane]||'On the board')+'</span></span><span class="amt">'+fmt.format(q.total||0)+'</span></div>';
+    return el;
+  }
   function lineRows(arr,cls,ph){ return arr.map(function(r){ return '<div class="line '+cls+'"><input value="'+esc(r.d)+'" placeholder="'+ph+'"><input class="a" type="number" inputmode="decimal" step="0.01" value="'+esc(r.a===''?'':r.a)+'" placeholder="$"><button type="button" class="x">&times;</button></div>'; }).join(''); }
 
   function estCard(e){
@@ -270,7 +277,7 @@
   function mountFor(){
     NDOS.mount({ active:'books', primary:{ label:TAB==='est'?'Price a job':'Write down an expense', icon:'up', onTap:function(){
       if(desk.hidden) return;
-      if(TAB==='est'){ OPEN='new'; draw(); var f=EL.querySelector('.f-title'); if(f){ f.focus(); f.scrollIntoView({behavior:'smooth',block:'center'}); } }
+      if(TAB==='est'){ location.href='/nd/os/jobs/'; return; }
       else { XOPEN='new'; draw(); var g=XL.querySelector('.f-what'); if(g){ g.focus(); g.scrollIntoView({behavior:'smooth',block:'center'}); } }
     } } });
   }

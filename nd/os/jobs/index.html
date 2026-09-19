@@ -1,0 +1,307 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<script>try{document.documentElement.setAttribute("data-os-theme",localStorage.getItem("nd:os:theme")||"dark")}catch(e){document.documentElement.setAttribute("data-os-theme","dark")}</script><meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Jobs">
+<title>ND OS &middot; Jobs</title>
+<link rel="icon" href="/logo-nd.png"><link rel="apple-touch-icon" href="/nd/os/icon-maskable-512.png">
+<link rel="manifest" href="/nd/os/manifest.webmanifest">
+<meta name="theme-color" content="#F3EEE5">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Karla:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/nd/nd-theme.css">
+<link rel="stylesheet" href="/nd/os/nd-os.css">
+<style>
+  .hello{padding:22px 0 2px}
+<style>
+  .hello{padding:22px 0 2px}
+  .hello .day{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--nd-terra)}
+  .hello h1{font-size:clamp(25px,6.2vw,33px);margin:8px 0 5px}
+  .hello p{color:var(--nd-ink-2);font-size:15px;margin:0}
+  .gate{max-width:420px;margin:8vh auto 0}
+
+  /* the board: three lanes as a segmented control on a phone, three columns on a wide screen */
+  .lanes{display:flex;gap:6px;margin-top:16px;background:var(--nd-paper-2);border-radius:14px;padding:4px}
+  .lanes button{flex:1;border:0;border-radius:11px;padding:10px 6px;font:700 13.5px var(--nd-sans);background:none;color:var(--nd-ink-2);cursor:pointer;min-height:46px;display:flex;flex-direction:column;align-items:center;gap:2px}
+  .lanes button b{font:600 18px/1 var(--nd-serif);color:var(--nd-ink)}
+  .lanes button.on{background:var(--nd-card);box-shadow:var(--nd-shadow);color:var(--nd-ink)}
+  .cols{margin-top:12px}
+  @media(min-width:900px){
+    .lanes{display:none}
+    .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start}
+    .col{display:block!important}
+    .col h2{display:flex!important}
+  }
+  .col h2{display:none;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--nd-ink-2);margin:0 0 10px;align-items:baseline;gap:8px}
+  .col h2 b{font:600 20px/1 var(--nd-serif);color:var(--nd-ink)}
+  .col{display:none} .col.on{display:block}
+  .items{display:flex;flex-direction:column;gap:8px}
+
+  .job{background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:16px;box-shadow:var(--nd-shadow);overflow:hidden}
+  .job .top{display:block;width:100%;padding:13px 14px 12px;cursor:pointer;background:none;border:0;font:inherit;color:inherit;text-align:left}
+  .job .ttl{font-weight:700;font-size:16.5px;line-height:1.3}
+  .job .when{font-size:12.5px;color:var(--nd-ink-2);margin-top:4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .job .when .late{color:var(--nd-terra-d);font-weight:700}
+  .chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+  .chip{font-size:11px;font-weight:700;letter-spacing:.05em;padding:4px 9px;border-radius:99px;background:var(--nd-paper-2);color:var(--nd-ink-2);display:inline-flex;align-items:center;gap:5px}
+  .chip i{width:7px;height:7px;border-radius:99px;display:inline-block;background:currentColor;opacity:.75}
+  .chip.tiktok{color:#2b2b2b;background:#e8e2f5} .chip.facebook{color:#1d4f9a;background:#dfe8f8} .chip.instagram{color:#a63d6b;background:#f6dfe9}
+  .chip.youtube{color:#a33;background:#f7dede} .chip.x{color:#333;background:#e6e6e6} .chip.blog{color:#6a4a1e;background:#f2e5cf}
+  .chip.email{color:#2f6f5e;background:#dbeee7} .chip.blast{color:#8a4a1e;background:#f7e2d2} .chip.research{color:#2c5a7a;background:#dbe9f2}
+  .chip.coord{color:#5a4a8a;background:#e6e0f5} .chip.other{color:var(--nd-ink-2)}
+  [data-os-theme=dark] .chip{filter:saturate(.85) brightness(.92)}
+  .money{font:600 14px var(--nd-serif);color:var(--nd-ink)}
+  .edit{display:none;padding:2px 14px 16px;border-top:1px dashed var(--nd-rule)}
+  .job.open .edit{display:block}
+  .edit label{display:block;margin:12px 0 6px}
+  .edit textarea{min-height:76px;resize:vertical}
+  .kinds{display:flex;flex-wrap:wrap;gap:7px;margin-top:2px}
+  .kinds button{border:1.5px solid var(--nd-rule);background:var(--nd-field);color:var(--nd-ink-2);border-radius:99px;padding:9px 13px;font:700 13px var(--nd-sans);cursor:pointer;min-height:40px;display:inline-flex;align-items:center;gap:6px}
+  .kinds button.on{border-color:var(--nd-terra);background:var(--nd-terra);color:var(--nd-on-terra)}
+  .kinds button small{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.8}
+  .otherwrap{display:none} .otherwrap.on{display:block}
+  .row2{display:flex;gap:8px;margin-top:14px}
+  .row2 .btn{flex:1;min-height:46px}
+  .moves{display:flex;gap:6px;margin-top:12px}
+  .moves .btn{flex:1;min-height:44px;font-size:14px;padding:8px 6px}
+  .exp{margin-top:14px;border-top:1px solid var(--nd-rule);padding-top:12px}
+  .exp h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--nd-ink-2);margin:0 0 8px;display:flex;justify-content:space-between}
+  .exp .ln{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:6px 0;border-bottom:1px dashed var(--nd-rule)}
+  .exp .ln span:last-child{font-family:var(--nd-serif);font-weight:600;white-space:nowrap}
+  .addx{display:flex;gap:6px;margin-top:10px;align-items:center}
+  .addx input:first-child{flex:1 1 60%} .addx input.a{flex:1 1 28%;text-align:right} .addx .btn{flex:none;width:auto;min-height:44px;padding:8px 14px;font-size:14px}
+  .seg{display:flex;gap:4px;background:var(--nd-paper-2);border-radius:11px;padding:3px;margin-top:6px}
+  .seg button{flex:1;border:0;border-radius:9px;padding:10px 6px;font:700 13px var(--nd-sans);background:none;color:var(--nd-ink-2);min-height:42px;cursor:pointer}
+  .seg button.on{background:var(--nd-card);color:var(--nd-ink);box-shadow:var(--nd-shadow)}
+  .line{display:flex;gap:6px;margin-top:6px;align-items:center}
+  .line input:first-child{flex:1 1 60%} .line input.a{flex:1 1 30%;text-align:right}
+  .line .x{flex:none;width:40px;height:44px;border:1px solid var(--nd-rule);background:none;border-radius:10px;color:var(--nd-ink-2);font-size:20px;cursor:pointer}
+  .addl{margin-top:8px;width:100%;border:1.5px dashed var(--nd-terra);background:none;color:var(--nd-terra-d);border-radius:11px;padding:10px;font:700 14px var(--nd-sans);min-height:44px;cursor:pointer}
+  .price{margin-top:16px;background:var(--nd-paper-2);border-radius:15px;padding:14px}
+  .price .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .price .two label{margin:0 0 6px}
+  .price .two input{font:600 22px var(--nd-serif);min-height:52px;text-align:right}
+  .price .two input.f-price{color:var(--nd-terra-d)}
+  .price .arrows{text-align:center;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--nd-ink-2);margin:8px 0 2px}
+  .price .grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:13.5px;border-top:1px solid var(--nd-rule);padding-top:10px;margin-top:10px}
+  .price .grid b{float:right;font-family:var(--nd-serif)}
+  .price .tot{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;font-size:14px}
+  .price .tot b{font:600 24px var(--nd-serif)}
+  .fine{font-size:12.5px;color:var(--nd-ink-2);margin-top:14px;line-height:1.45}
+  .empty{padding:24px 6px;color:var(--nd-ink-2);font-size:14.5px}
+</style>
+</head><body>
+
+<header class="mast"><div class="wrap">
+  <img src="/logo-nd.png" alt="">
+  <div><div class="wordmark">The Neuro<em>~</em>Divulge</div><div class="subword">ND OS &middot; Jobs</div></div>
+  <a class="back" href="/nd/os/">Desk &rarr;</a>
+</div></header>
+
+<main class="wrap" id="main">
+  <section class="gate card" id="gate" hidden>
+    <h1 style="font-size:25px;margin-bottom:8px">Your jobs</h1>
+    <p class="muted" style="font-size:15px">Your word opens it.</p>
+    <div style="margin:18px 0 6px"><label for="key">Your word</label>
+      <input id="key" type="password" autocomplete="current-password" enterkeyhint="go"></div>
+    <button class="btn solid" id="unlock" style="width:100%">Open</button>
+  </section>
+
+  <div id="desk" hidden>
+    <section class="hello">
+      <div class="day" id="day">&nbsp;</div>
+      <h1>Your jobs.</h1>
+      <p>Everything you are making, in three lanes. Give a job a day and it shows up on your calendar by itself.</p>
+    </section>
+
+    <div class="lanes" role="tablist">
+      <button type="button" class="on" data-l="next"><b id="nNext">0</b>Up next</button>
+      <button type="button" data-l="doing"><b id="nDoing">0</b>Working on</button>
+      <button type="button" data-l="done"><b id="nDone">0</b>Done</button>
+    </div>
+
+    <div class="cols">
+      <section class="col on" data-l="next"><h2>Up next <b id="cNext">0</b></h2><div class="items" id="laneNext"></div></section>
+      <section class="col" data-l="doing"><h2>Working on <b id="cDoing">0</b></h2><div class="items" id="laneDoing"></div></section>
+      <section class="col" data-l="done"><h2>Done <b id="cDone">0</b></h2><div class="items" id="laneDone"></div></section>
+    </div>
+    <p class="fine">A job can be more than one thing at once &mdash; tick TikTok and Instagram and Email on the same job when they belong together. What you spend on a job lands in your Books too, tied to it.</p>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <a class="aemark" href="/nd/os/">
+    <img src="/marks/ae-mark-gradient.png" alt="Accelerated Experiences, LLC">
+    <span><b>ND OS &middot; built by Accelerated Experiences, LLC</b>Runs on the AE Triad</span>
+  </a>
+</div></footer>
+
+<script src="/nd/os/nd-os.js"></script>
+<script>
+(function(){
+  var API='/api/nd-jobs', BOOKS='/api/nd-books';
+  var gate=document.getElementById('gate'), desk=document.getElementById('desk');
+  var JOBS=[], KINDS=[], EXP=[], LANE='next', OPEN=null;
+  var fmt=new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'});
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function num(v){var n=parseFloat(v);return isNaN(n)?0:n;}
+  document.getElementById('day').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+
+  document.getElementById('unlock').addEventListener('click',function(){
+    var k=document.getElementById('key').value.trim(); if(!k) return;
+    NDOS.auth.set(k); load().then(function(ok){ if(!ok){ NDOS.say('That did not work.',true); NDOS.auth.clear(); } });
+  });
+  NDOS.bus.on('auth:out',function(){ gate.hidden=false; desk.hidden=true; });
+
+  function load(){
+    if(!NDOS.auth.has()){ gate.hidden=false; desk.hidden=true; return Promise.resolve(false); }
+    return Promise.all([NDOS.net(API), NDOS.net(BOOKS)]).then(function(r){
+      var j=r[0], b=r[1];
+      if(!j.ok){ if(j.__status===401){ gate.hidden=false; desk.hidden=true; return false; } NDOS.say(NDOS.why(j),true); return true; }
+      gate.hidden=true; desk.hidden=false; JOBS=j.jobs||[]; KINDS=j.kinds||[]; EXP=(b.ok&&b.expenses)||[]; draw(); return true;
+    });
+  }
+  NDOS.bus.on('books:changed',function(){ NDOS.net(BOOKS).then(function(b){ if(b.ok){ EXP=b.expenses||[]; draw(); } }); });
+
+  function kindOf(id){ for(var i=0;i<KINDS.length;i++) if(KINDS[i].id===id) return KINDS[i]; return {id:id,label:id}; }
+  function spent(job){ return EXP.filter(function(x){return x.job===job.id;}).reduce(function(t,x){return t+num(x.amount);},0); }
+  function when(job){
+    if(!job.at) return '';
+    var d=new Date(job.at), now=new Date(), day=Math.floor((new Date(d.getFullYear(),d.getMonth(),d.getDate())-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/864e5);
+    var t=d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
+    var w=day===0?'Today':day===1?'Tomorrow':day===-1?'Yesterday':d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+    return (day<0&&job.status!=='done'?'<span class="late">'+w+'</span>':w)+(job.at.length>10?' &middot; '+t:'');
+  }
+  function sortJobs(a,b){ if(a.at&&b.at) return a.at<b.at?-1:1; if(a.at) return -1; if(b.at) return 1; return (b.createdAt||0)-(a.createdAt||0); }
+
+  function draw(){
+    var lanes={next:[],doing:[],done:[]};
+    JOBS.forEach(function(j){ (lanes[j.status]||lanes.next).push(j); });
+    lanes.next.sort(sortJobs); lanes.doing.sort(sortJobs); lanes.done.sort(function(a,b){ return (b.doneAt||'')<(a.doneAt||'')?-1:1; });
+    ['Next','Doing','Done'].forEach(function(n){ var k=n.toLowerCase(); document.getElementById('n'+n).textContent=lanes[k].length; document.getElementById('c'+n).textContent=lanes[k].length; });
+    [].forEach.call(document.querySelectorAll('.lanes button'),function(b){ b.classList.toggle('on',b.dataset.l===LANE); });
+    [].forEach.call(document.querySelectorAll('.col'),function(c){ c.classList.toggle('on',c.dataset.l===LANE); });
+    ['next','doing','done'].forEach(function(k){
+      var el=document.getElementById('lane'+k.charAt(0).toUpperCase()+k.slice(1)); el.innerHTML='';
+      if(k==='next'&&OPEN==='new') el.appendChild(card({id:'',title:'',kinds:[],other:'',at:'',status:'next',notes:'',_new:true}));
+      if(!lanes[k].length&&!(k==='next'&&OPEN==='new')) el.innerHTML='<p class="empty">'+(k==='next'?'Nothing up next. Tap the button below to add a job.':k==='doing'?'Nothing in progress. Tap a job and press Start.':'Nothing finished yet.')+'</p>';
+      lanes[k].forEach(function(j){ el.appendChild(card(j)); });
+    });
+  }
+
+  function lineRows(arr,ph){ return arr.map(function(r){ return '<div class="line"><input value="'+esc(r.d)+'" placeholder="'+ph+'"><input class="a" type="number" inputmode="decimal" step="0.01" value="'+esc(r.a===''||r.a==null?'':r.a)+'" placeholder="$"><button type="button" class="x">&times;</button></div>'; }).join(''); }
+  function quote(e){
+    var cw=0;(e.costs||[]).forEach(function(c){cw+=num(c.a);}); var pass=0;(e.pass||[]).forEach(function(c){pass+=num(c.a);});
+    var pay=num(e.salary), cb=cw+pay, ext=e.type!=='internal', gpm=num(e.gpm);
+    var set=(e.priceSet!==''&&e.priceSet!=null&&num(e.priceSet)>0)?num(e.priceSet):null;
+    var price=!ext?0:(set!=null?set:(gpm<100?cb/(1-gpm/100):0));
+    var g=(ext&&price>0)?(price-cb)/price*100:gpm;
+    return {costs:cw,salary:pay,costBase:cb,pass:pass,gpm:g,price:price,total:ext?price+pass:cb+pass,profit:ext?price-cb:0};
+  }
+  function card(j){
+    var el=document.createElement('div'); el.className='job'+((OPEN===j.id||j._new)?' open':'');
+    var chips=(j.kinds||[]).map(function(k){ var K=kindOf(k); return '<span class="chip '+esc(k)+'"><i></i>'+esc(k==='other'&&j.other?j.other:K.label)+'</span>'; }).join('');
+    var tot=spent(j);
+    var mine=EXP.filter(function(x){return x.job===j.id;});
+    el.innerHTML=
+      (j._new?'':'<button class="top" type="button"><div class="ttl">'+esc(j.title)+'</div>'+
+        '<div class="when">'+when(j)+(j.quote&&j.quote.total?'<span class="money">'+fmt.format(j.quote.total)+(j.type==='internal'?' cost':' quoted')+'</span>':'')+(tot?'<span class="money">'+fmt.format(tot)+' spent</span>':'')+'</div>'+
+        (chips?'<div class="chips">'+chips+'</div>':'')+'</button>')+
+      '<div class="edit">'+(j._new?'<h2 style="font-size:19px;margin:14px 0 2px">Add a job</h2>':'')+
+      '<label>What is the job</label><input class="f-title" value="'+esc(j.title)+'" placeholder="e.g. October routine-chart launch">'+
+      '<label>What kind of work &mdash; tick all that belong together</label><div class="kinds">'+
+        KINDS.map(function(K){ return '<button type="button" data-k="'+esc(K.id)+'"'+((j.kinds||[]).indexOf(K.id)>=0?' class="on"':'')+'>'+esc(K.label)+(K.soon?' <small>soon</small>':'')+'</button>'; }).join('')+'</div>'+
+      '<div class="otherwrap'+((j.kinds||[]).indexOf('other')>=0?' on':'')+'"><label>Other &mdash; what?</label><input class="f-other" value="'+esc(j.other)+'" placeholder="Say what it is"></div>'+
+      '<label>When is it due</label><input class="f-at" type="datetime-local" value="'+esc(j.at?j.at.slice(0,16):'')+'">'+
+      '<label>Notes</label><textarea class="f-notes">'+esc(j.notes)+'</textarea>'+
+      '<label>Who is it for</label><div class="seg f-type"><button type="button" data-v="client"'+(j.type!=='internal'?' class="on"':'')+'>A client</button><button type="button" data-v="internal"'+(j.type==='internal'?' class="on"':'')+'>Internal</button></div>'+
+      '<div class="f-clientwrap"><label>Client</label><input class="f-client" value="'+esc(j.client)+'" placeholder="Their name"></div>'+
+      '<label>What it costs you</label><div class="f-costs">'+lineRows(j.costs||[],'e.g. Printing')+'</div><button type="button" class="addl f-addc">+ Add a cost</button>'+
+      '<label>Your time (what you pay yourself)</label><input class="f-salary" type="number" inputmode="decimal" step="0.01" value="'+esc(j.salary?j.salary:'')+'" placeholder="$">'+
+      '<label>Pass-throughs (billed at cost)</label><div class="f-pass">'+lineRows(j.pass||[],'e.g. Postage')+'</div><button type="button" class="addl f-addp">+ Add a pass-through</button>'+
+      '<div class="price"><div class="two f-two"><div><label>Margin (GPM)</label><input class="f-gpm" type="number" inputmode="decimal" min="0" max="99" step="1" value="'+esc(j.quote&&j.quote.gpm!=null?Math.round(j.quote.gpm*10)/10:(j.gpm==null?67:j.gpm))+'"></div>'+
+        '<div><label>Price to the client</label><input class="f-price" type="number" inputmode="decimal" step="1" value="'+esc(j.quote&&j.quote.price?Math.round(j.quote.price*100)/100:'')+'" placeholder="$"></div></div>'+
+        '<div class="arrows f-arrows">change either one &mdash; the other follows</div>'+
+        '<div class="grid"><div>Costs <b class="f-c">$0</b></div><div>Your time <b class="f-s">$0</b></div><div>Profit <b class="f-pr">$0</b></div><div>Pass-throughs <b class="f-p">$0</b></div></div>'+
+        '<div class="tot"><span class="f-totlbl">Total to the client</span><b class="f-total">$0</b></div></div>'+
+      (j._new?'':'<div class="moves">'+
+        (j.status!=='next'?'<button type="button" class="btn quiet f-mv" data-s="next">&larr; Up next</button>':'')+
+        (j.status!=='doing'?'<button type="button" class="btn quiet f-mv" data-s="doing">'+(j.status==='next'?'Start &rarr;':'&larr; Working on')+'</button>':'')+
+        (j.status!=='done'?'<button type="button" class="btn solid f-mv" data-s="done">Done &#10003;</button>':'')+'</div>')+
+      (j._new?'':'<div class="exp"><h3><span>What you spent on it</span><span>'+fmt.format(tot)+'</span></h3>'+
+        mine.map(function(x){ return '<div class="ln"><span>'+esc(x.what)+' <span class="muted" style="font-size:12px">'+esc(x.on)+'</span></span><span>'+fmt.format(num(x.amount))+'</span></div>'; }).join('')+
+        '<div class="addx"><input class="x-what" placeholder="e.g. Boosted post"><input class="x-amt a" type="number" inputmode="decimal" step="0.01" placeholder="$"><button type="button" class="btn quiet x-add">Add</button></div>'+
+        '<p class="fine" style="margin-top:8px">Lands in your Books the moment you add it.</p></div>')+
+      '<div class="row2"><button class="btn solid f-save" type="button">Save</button>'+(j._new?'<button class="btn quiet f-cancel" type="button">Cancel</button>':'<button class="btn quiet f-del" type="button">Remove</button>')+'</div>'+
+      '</div>';
+    var top=el.querySelector('.top'); if(top) top.addEventListener('click',function(){ OPEN=(OPEN===j.id?null:j.id); draw(); });
+    el.querySelector('.kinds').addEventListener('click',function(ev){
+      var b=ev.target.closest('button'); if(!b) return; b.classList.toggle('on');
+      el.querySelector('.otherwrap').classList.toggle('on', !!el.querySelector('.kinds button[data-k=other].on'));
+    });
+    var type=j.type==='internal'?'internal':'client', priceSet=(j.priceSet!=null&&j.priceSet>0)?j.priceSet:null;
+    function rows(sel){ return [].map.call(el.querySelectorAll(sel+' .line'),function(r){ var i=r.querySelectorAll('input'); return {d:i[0].value,a:i[1].value}; }); }
+    function gather(){ return { id:j.id||'', title:el.querySelector('.f-title').value, kinds:[].map.call(el.querySelectorAll('.kinds button.on'),function(b){return b.dataset.k;}),
+      other:el.querySelector('.f-other').value, at:el.querySelector('.f-at').value, notes:el.querySelector('.f-notes').value, status:j.status||'next',
+      type:type, client:el.querySelector('.f-client').value, costs:rows('.f-costs'), pass:rows('.f-pass'), salary:el.querySelector('.f-salary').value,
+      gpm:el.querySelector('.f-gpm').value, priceSet:priceSet }; }
+    var GPM=el.querySelector('.f-gpm'), PRICE=el.querySelector('.f-price');
+    function paint(q){ var ext=type!=='internal';
+      el.querySelector('.f-two').style.display=ext?'':'none'; el.querySelector('.f-arrows').style.display=ext?'':'none'; el.querySelector('.f-clientwrap').style.display=ext?'':'none';
+      el.querySelector('.f-c').textContent=fmt.format(q.costs); el.querySelector('.f-s').textContent=fmt.format(q.salary);
+      el.querySelector('.f-pr').textContent=ext?fmt.format(q.profit):'—'; el.querySelector('.f-p').textContent=fmt.format(q.pass);
+      el.querySelector('.f-totlbl').textContent=ext?'Total to the client':'Total project cost'; el.querySelector('.f-total').textContent=fmt.format(q.total); }
+    function recalc(from){ var g=gather();
+      if(from==='price'){ priceSet=num(PRICE.value)>0?num(PRICE.value):null; g.priceSet=priceSet; var q=quote(g); if(priceSet!=null) GPM.value=Math.round(q.gpm*10)/10; paint(q); return; }
+      if(from==='gpm'){ priceSet=null; g.priceSet=null; }
+      var q2=quote(g); if(type!=='internal'&&document.activeElement!==PRICE) PRICE.value=q2.price?Math.round(q2.price*100)/100:''; paint(q2); }
+    GPM.addEventListener('input',function(){ recalc('gpm'); });
+    PRICE.addEventListener('input',function(){ recalc('price'); });
+    el.querySelector('.edit').addEventListener('input',function(ev){ if(ev.target===GPM||ev.target===PRICE) return; recalc(priceSet!=null?'keep':''); });
+    el.querySelector('.edit').addEventListener('click',function(ev){
+      var t=ev.target;
+      if(t.classList.contains('x')){ t.parentNode.remove(); recalc(''); }
+      if(t.classList.contains('f-addc')){ t.previousElementSibling.insertAdjacentHTML('beforeend',lineRows([{d:'',a:''}],'e.g. Printing')); }
+      if(t.classList.contains('f-addp')){ t.previousElementSibling.insertAdjacentHTML('beforeend',lineRows([{d:'',a:''}],'e.g. Postage')); }
+      if(t.parentNode&&t.parentNode.classList.contains('f-type')){ type=t.dataset.v; [].forEach.call(t.parentNode.children,function(b){b.classList.toggle('on',b===t);}); recalc(''); }
+    });
+    recalc(priceSet!=null?'keep':'');
+    function save(extra){
+      var s=gather(); if(extra) for(var k in extra) s[k]=extra[k];
+      if(!s.title.trim()){ NDOS.say('Give the job a name.',true); return Promise.resolve(false); }
+      return NDOS.net(API,{method:'POST',json:{save:s}}).then(function(r){
+        if(!r.ok){ NDOS.say(NDOS.why(r),true); return false; }
+        JOBS=JOBS.filter(function(x){return x.id!==r.job.id;}); JOBS.unshift(r.job);
+        NDOS.bus.emit('jobs:changed',{id:r.job.id}); return r.job;
+      });
+    }
+    el.querySelector('.f-save').addEventListener('click',function(){ save().then(function(ok){ if(ok){ OPEN=null; draw(); NDOS.say('Saved.'); } }); });
+    [].forEach.call(el.querySelectorAll('.f-mv'),function(b){ b.addEventListener('click',function(){
+      var to=b.dataset.s; save({status:to}).then(function(ok){ if(ok){ LANE=to; OPEN=null; draw(); NDOS.say(to==='done'?'Done. Nice.':to==='doing'?'Started.':'Moved back.'); } }); }); });
+    var c=el.querySelector('.f-cancel'); if(c) c.addEventListener('click',function(){ OPEN=null; draw(); });
+    var d=el.querySelector('.f-del'); if(d){ var armed=false,tm=null; d.addEventListener('click',function(){
+      if(!armed){ armed=true; d.textContent='Sure?'; tm=setTimeout(function(){armed=false;d.textContent='Remove';},4000); return; }
+      clearTimeout(tm); d.textContent='…';
+      NDOS.net(API,{method:'POST',json:{remove:j.id}}).then(function(r){ if(r.ok){ JOBS=JOBS.filter(function(x){return x.id!==j.id;}); OPEN=null; draw(); NDOS.say('Removed.'); NDOS.bus.emit('jobs:changed',{}); } else { NDOS.say(NDOS.why(r),true); d.textContent='Remove'; armed=false; } });
+    }); }
+    var xa=el.querySelector('.x-add'); if(xa) xa.addEventListener('click',function(){
+      var what=el.querySelector('.x-what').value.trim(), amt=el.querySelector('.x-amt').value;
+      if(!what){ NDOS.say('Say what it was.',true); return; }
+      NDOS.net(BOOKS,{method:'POST',json:{expense:{what:what,amount:amt,job:j.id,kind:'Other'}}}).then(function(r){
+        if(!r.ok){ NDOS.say(NDOS.why(r),true); return; }
+        EXP.unshift(r.expense); draw(); NDOS.say('In your Books.'); NDOS.bus.emit('books:changed',{id:r.expense.id});
+      });
+    });
+    return el;
+  }
+
+  [].forEach.call(document.querySelectorAll('.lanes button'),function(b){ b.addEventListener('click',function(){ LANE=b.dataset.l; draw(); }); });
+  NDOS.mount({ active:'jobs', primary:{ label:'Add a job', icon:'up', onTap:function(){
+    if(desk.hidden) return; LANE='next'; OPEN='new'; draw();
+    var f=document.querySelector('#laneNext .f-title'); if(f){ f.focus(); f.scrollIntoView({behavior:'smooth',block:'center'}); }
+  } } });
+  load();
+})();
+</script>
+</body></html>

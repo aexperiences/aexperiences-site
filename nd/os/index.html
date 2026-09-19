@@ -145,6 +145,13 @@
       <div class="tile"><span class="n skel">00</span><span class="l">Paid</span><span class="s">&nbsp;</span></div>
     </section>
 
+    <section class="tiles" id="money" style="margin-top:11px">
+      <a class="tile" href="/nd/os/jobs/" style="text-decoration:none;color:inherit"><span class="n skel">00</span><span class="l">Quoted, open</span><span class="s">&nbsp;</span></a>
+      <a class="tile" href="/nd/os/books/" style="text-decoration:none;color:inherit"><span class="n skel">00</span><span class="l">Spent this month</span><span class="s">&nbsp;</span></a>
+      <a class="tile" href="/nd/os/jobs/" style="text-decoration:none;color:inherit"><span class="n skel">00</span><span class="l">Jobs up next</span><span class="s">&nbsp;</span></a>
+      <a class="tile" href="/nd/os/books/" style="text-decoration:none;color:inherit"><span class="n skel">00</span><span class="l">Won this year</span><span class="s">&nbsp;</span></a>
+    </section>
+
     <div class="tile wide" style="margin-top:11px" id="sparkWrap" hidden>
       <span class="l">Last 14 days</span>
       <div class="spark" id="spark"></div>
@@ -211,7 +218,7 @@
         if(j.__status===401){ gate.hidden=false; desk.hidden=true; return false; }
         gate.hidden=true; desk.hidden=false; DATA=null; paintEmpty(NDOS.why(j)); return true;
       }
-      gate.hidden=true; desk.hidden=false; DATA=j; paint(j); return true;
+      gate.hidden=true; desk.hidden=false; DATA=j; paint(j); moneyStrip(); return true;
     });
   }
 
@@ -286,6 +293,26 @@
     rooms();
   }
 
+  /* her money, on her command center (Anthony, Sep 18 2026: "She needs to see her expenses in
+     her command center"). Jobs are her estimates; expenses are her Books. */
+  function moneyStrip(){
+    Promise.all([NDOS.net('/api/nd-jobs'), NDOS.net('/api/nd-books')]).then(function(r){
+      var jobs=(r[0].ok&&r[0].jobs)||[], exp=(r[1].ok&&r[1].expenses)||[];
+      var m=new Date().toISOString().slice(0,7), y=new Date().getFullYear();
+      var open=0, won=0, next=0, spent=0, spentN=0, latest='';
+      jobs.forEach(function(j){ var t=(j.quote&&j.quote.total)||0;
+        if(j.status!=='done') open+=t; if(j.status==='next') next++;
+        if(j.status==='done'&&j.type!=='internal'&&new Date(j.doneAt||j.updatedAt||0).getFullYear()===y) won+=t; });
+      exp.forEach(function(x){ if(String(x.on||'').slice(0,7)===m){ spent+=Number(x.amount)||0; spentN++; if(!latest) latest=x.what||''; } });
+      var $$=function(v){ return '$'+Math.round(v).toLocaleString(); };
+      var T=document.getElementById('money').children;
+      var put=function(i,n,sub){ T[i].innerHTML='<span class="n">'+esc(n)+'</span><span class="l">'+T[i].querySelector('.l').textContent+'</span><span class="s">'+esc(sub)+'</span>'; };
+      put(0,$$(open), jobs.filter(function(j){return j.status!=='done';}).length+' open job'+(jobs.filter(function(j){return j.status!=='done';}).length===1?'':'s'));
+      put(1,$$(spent), spentN?spentN+' expense'+(spentN===1?'':'s')+(latest?' · last: '+latest:''):'nothing spent yet');
+      put(2,String(next), next?'tap to see the board':'the board is clear');
+      put(3,$$(won), won?'client jobs marked done':'no client job won yet');
+    });
+  }
   function tile(i,n,label,sub){
     var el=document.getElementById('tiles').children[i];
     el.innerHTML='<span class="n">'+esc(n)+'</span><span class="l">'+esc(label)+'</span><span class="s">'+esc(sub)+'</span>';

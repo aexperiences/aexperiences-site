@@ -114,7 +114,8 @@
     { id:'docs',    label:'Docs',     href:'/nd/os/docs/',     icon:'docs',    live:true,  blurb:'Write a real document. It saves itself.' },
     { id:'records', label:'Records',  href:'/nd/os/records/',  icon:'records', live:true,  blurb:'What was decided, and when it went out.' },
     { id:'people',  label:'People',   href:'/nd/os/people/',   icon:'people',  live:true,  blurb:'Everyone who gave you their email.' },
-    { id:'books',   label:'Books',    href:'/nd/os/books/',    icon:'books',   live:true,  blurb:'Price a job. Write down what you spent.' },
+    { id:'jobs',    label:'Jobs',     href:'/nd/os/jobs/',     icon:'jobs',    live:true,  blurb:'The board. Every job is priced like the house does.' },
+    { id:'books',   label:'Books',    href:'/nd/os/books/',    icon:'books',   live:true,  blurb:'Your estimates and what you spent.' },
     { id:'files',   label:'Files',    href:'/nd/os/files/',    icon:'files',   live:true,  blurb:'Photos, video, PDFs. Upload once, link anywhere.' },
     // Her one door into AE OS (Anthony, Sep 18 2026): the time clock, and nothing past it.
     // live flips to true the day /timeclock.html lands on the hub.
