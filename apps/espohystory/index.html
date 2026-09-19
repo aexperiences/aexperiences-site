@@ -133,7 +133,7 @@ footer{max-width:720px;margin:26px auto 0;padding:0 18px calc(8px + env(safe-are
         <option value="0.95" selected>📖 Storytime</option>
         <option value="1.1">🐇 Zippy</option>
       </select>
-      <select id="selVoice" title="Voice"></select>
+      <select id="selVoice" title="Voice" hidden style="display:none"></select>
       <button class="bsm" id="bEasy" title="Bigger spaces between letters and words">Easy-read: off</button>
     </div>
     <div class="stext" id="sText"></div>
@@ -545,17 +545,10 @@ document.getElementById("bBack").onclick=function(){
 /* ================= SPEECH ENGINE ================= */
 var P={pi:0,wi:0,playing:false,est:null,boundarySeen:false,utter:null};
 var voices=[],voiceSel=document.getElementById("selVoice");
-function loadVoices(){
-  voices=window.speechSynthesis?speechSynthesis.getVoices().filter(function(v){return v.lang&&v.lang.indexOf("en")===0}):[];
-  var pref=["Samantha","Google US English","Microsoft Aria","Microsoft Jenny","Karen","Victoria","Moira"];
-  voices.sort(function(a,b){
-    function r(v){for(var i=0;i<pref.length;i++)if(v.name.indexOf(pref[i])>-1)return i;return 99}
-    return r(a)-r(b);
-  });
-  voiceSel.innerHTML=voices.map(function(v,i){return '<option value="'+i+'">'+esc(v.name.replace(/Microsoft |Google /,""))+"</option>"}).join("")||"<option>Default voice</option>";
-  if(S.voice){for(var i=0;i<voices.length;i++)if(voices[i].name===S.voice){voiceSel.value=i;break}}
-}
-if(window.speechSynthesis){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+/* Roz reads these stories. There is no voice to choose, so there is no list to build —
+   roz-narration.js hides the control and does the reading. */
+function loadVoices(){ if(voiceSel){ voiceSel.innerHTML=""; voiceSel.style.display="none"; } }
+loadVoices();
 voiceSel.onchange=function(){
   if(voices[voiceSel.value]){S.voice=voices[voiceSel.value].name;save()}
   if(P.playing){pauseSpeech();playFromCurrent()}
@@ -579,12 +572,10 @@ function setPlayBtn(on){
 function stopEst(){if(P.est){clearTimeout(P.est);P.est=null}}
 function stopSpeech(){
   P.playing=false;stopEst();
-  if(window.speechSynthesis)speechSynthesis.cancel();
   clearHl();setPlayBtn(false);
 }
 function pauseSpeech(){
   P.playing=false;stopEst();
-  if(window.speechSynthesis)speechSynthesis.cancel();
   setPlayBtn(false);
 }
 function estimateStep(list,idx,offsetWi){
@@ -598,43 +589,11 @@ function estimateStep(list,idx,offsetWi){
   P.est=setTimeout(function(){estimateStep(list,idx+1,offsetWi)},ms);
 }
 function playFromCurrent(){
-  if(!window.speechSynthesis){toast("This browser can't read aloud — but you can still read together!");return}
-  if(!cur)return;
-  if(cur.locked||!cur.paras)return;
-  var list=paraTokens[P.pi];
-  if(!list){finishStory();return}
-  var startTok=list[P.wi]||list[0];
-  var text=cur.paras[P.pi].slice(startTok.start);
-  var offset=startTok.start;
-  var u=new SpeechSynthesisUtterance(text);
-  u.rate=parseFloat(S.rate)||0.95;
-  u.pitch=1.05;
-  if(voices[voiceSel.value])u.voice=voices[voiceSel.value];
-  P.boundarySeen=false;P.utter=u;
-  u.onboundary=function(e){
-    if(e.charIndex==null)return;
-    P.boundarySeen=true;stopEst();
-    var ci=e.charIndex+offset;
-    for(var i=0;i<list.length;i++){
-      if(ci>=list[i].start&&ci<=list[i].end){P.wi=i;hl(P.pi,i);break}
-    }
-  };
-  u.onend=function(){
-    if(!P.playing)return;
-    stopEst();
-    P.pi++;P.wi=0;
-    if(P.pi<paraTokens.length){playFromCurrent()}
-    else finishStory();
-  };
-  u.onerror=function(){stopEst()};
-  P.playing=true;setPlayBtn(true);
-  speechSynthesis.speak(u);
-  // if no boundary events after 900ms, estimate
-  setTimeout(function(){
-    if(P.playing&&!P.boundarySeen&&P.utter===u){
-      var idx=P.wi;estimateStep(list,idx,idx);
-    }
-  },900);
+  /* roz-narration.js replaces this the moment it loads, and it is what actually reads.
+     The device synthesizer that used to live here is gone: a robot voice reading a story
+     to a kid in place of Roz is the thing we are getting rid of (SSOT A5.3.1). */
+  P.playing=false;setPlayBtn(false);
+  toast("Roz is warming up — give her a moment and tap Read to me again.");
 }
 function finishStory(){
   P.playing=false;setPlayBtn(false);clearHl();
@@ -647,16 +606,9 @@ function finishStory(){
   document.getElementById("sDone").scrollIntoView({block:"center",behavior:"smooth"});
 }
 function sayWord(word,el){
-  if(!window.speechSynthesis)return;
-  var wasPlaying=P.playing;
-  pauseSpeech();
-  clearHl();el.classList.add("hl");
-  var u=new SpeechSynthesisUtterance(word.replace(/[^A-Za-z0-9''-]/g,""));
-  u.rate=0.8;u.pitch=1.05;
-  if(voices[voiceSel.value])u.voice=voices[voiceSel.value];
-  speechSynthesis.speak(u);
-  P.pi=+el.dataset.pi;P.wi=+el.dataset.wi;
-  if(wasPlaying)u.onend=function(){P.playing=true;setPlayBtn(true);playFromCurrent()};
+  /* also replaced by roz-narration.js; never a device voice */
+  clearHl(); el.classList.add("hl");
+  P.pi=+el.dataset.pi; P.wi=+el.dataset.wi;
 }
 
 /* ================= CONTROLS ================= */

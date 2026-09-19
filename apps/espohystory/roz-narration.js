@@ -8,9 +8,11 @@
  * Three paths, best first:
  *   1. PRE-RENDERED  /apps/espohystory/audio/<id>.mp3 + .json  — free, instant, works offline,
  *      and the .json carries real per-word timings so the karaoke highlight tracks Roz exactly.
- *   2. LIVE          /api/roz — ElevenLabs on demand, for any story added later that has no
- *      rendered audio yet. Chunked on sentence boundaries so nothing is ever cut off.
- *   3. DEVICE VOICE  the app's original Web Speech path, untouched, if neither is available.
+ *   2. LIVE          /api/voice — the HOUSE AE Voice Engine, voice roz, for any story added
+ *      later that has no rendered audio yet. Chunked on sentence boundaries so nothing is cut
+ *      off, and each chunk is cached at the edge so a re-read costs nothing.
+ *   3. SILENCE       if neither can answer. There is no device-voice path any more: Roz reads
+ *      these stories or nobody does (SSOT A5.3.1), and ElevenLabs is out of the house (Art. 0.10).
  *
  * A timing file is only trusted when its word count matches the story's exactly; a mismatch
  * would highlight the wrong words, so it drops to path 2 instead. No Roz option ever appears
@@ -24,9 +26,9 @@
 (function () {
   "use strict";
 
-  var VER = "2";
+  var VER = "3";
   var AUDIO_DIR = "/apps/espohystory/audio/";
-  var MAX_CHARS = 900;   // live path only; ElevenLabs stops around 2000 per request
+  var MAX_CHARS = 880;   // live path only; the house door takes 900 characters a take
 
   if (typeof window.playFromCurrent !== "function" || typeof window.paraTokens === "undefined") return;
 
@@ -40,7 +42,7 @@
 
   var R = {
     ready: false,   // Roz can speak (rendered audio and/or a live key)
-    live: false,    // /api/roz answered ok
+    live: false,    // the house voice door can answer
     on: false,      // Roz is the selected voice
     mode: null,     // "file" | "api"
     gen: 0,
@@ -191,7 +193,7 @@
     } else go();
   }
 
-  // ================= PATH 2 — live /api/roz ======================================================
+  // ================= PATH 2 — live /api/voice, the house engine ======================================================
   // Pieces tile the paragraph EXACTLY — no character is ever dropped out of a story.
   function split(text) {
     var out = [], rest = text;
@@ -207,21 +209,21 @@
     return out;
   }
 
+  /* One chunk of a story, spoken live by the house engine in Roz. The take comes back as
+     audio, not JSON, and it carries no per-word timings — mapPiece already handles that by
+     spreading the words evenly across the take, which is what the pre-rendered path avoids
+     needing. The GET is cached hard at the edge, so the second reader of a story pays
+     nothing and waits for nothing. */
   function ask(text) {
-    var url = "/api/roz?v=" + VER + "&t=" + encodeURIComponent(text);
-    if (!window.caches) return fetch(url).then(function (r) { return r.json(); });
-    return caches.open("roz-v" + VER).then(function (c) {
-      return c.match(url).then(function (hit) {
-        if (hit) return hit.json();
-        return fetch(url).then(function (r) {
-          var clone = r.clone();
-          return r.json().then(function (j) {
-            if (j && j.ok) { try { c.put(url, clone); } catch (e) {} }
-            return j;
-          });
-        });
-      });
-    }).catch(function () { return fetch(url).then(function (r) { return r.json(); }); });
+    var url = "/api/voice?voice=roz&say=" + encodeURIComponent(text);
+    return fetch(url).then(function (r) {
+      var ct = r.headers.get("content-type") || "";
+      if (!r.ok || ct.indexOf("audio") === -1) {
+        return r.json().then(function (j) { return { ok: false, reason: (j && j.reason) || "upstream" }; })
+                       .catch(function () { return { ok: false, reason: "upstream" }; });
+      }
+      return r.blob().then(function (b) { return { ok: true, src: URL.createObjectURL(b) }; });
+    }).catch(function () { return { ok: false, reason: "upstream" }; });
   }
 
   function buildQueue(startPi, startWi) {
@@ -269,7 +271,7 @@
 
     p.req.then(function (data) {
       if (gen !== R.gen) return;
-      if (!data || !data.ok || !data.audio) {
+      if (!data || !data.ok || !data.src) {
         if (data && (data.reason === "no_key" || data.reason === "upstream")) { standDown(); return; }
         Q.i++; playApi(gen);            // one bad piece skips forward; the story keeps reading
         return;
@@ -279,7 +281,7 @@
       EL.onended = function () { if (gen !== R.gen) return; Q.i++; playApi(gen); };
       EL.onerror = function () { if (gen !== R.gen) return; Q.i++; playApi(gen); };
       EL.onloadedmetadata = function () { mapPiece(p, data, EL.duration || 0); };
-      EL.src = "data:audio/mpeg;base64," + data.audio;
+      EL.src = data.src;
       EL.playbackRate = rate();
       mapPiece(p, data, 0);
       var pr = EL.play();
@@ -293,18 +295,16 @@
     });
   }
 
-  // ================= PATH 3 — hand back to the device voice ======================================
+  // ================= PATH 3 — say so, and stay quiet =============================================
+  /* This used to hand the story back to the device's own synthesizer. It does not any more:
+     a strange robot voice taking over mid-story is exactly what Anthony could hear, and it is
+     forbidden. If Roz cannot speak we stop cleanly and say why, and the words stay on screen
+     to be read together — which is what the app is for. */
   function standDown() {
-    R.ready = false; R.on = false; R.mode = null;
+    R.mode = null;
     stopTick(); try { EL.pause(); } catch (e) {}
-    window.playFromCurrent = orig.playFromCurrent;
-    window.pauseSpeech = orig.pauseSpeech;
-    window.stopSpeech = orig.stopSpeech;
-    window.sayWord = orig.sayWord;
-    if (orig.loadVoices) window.loadVoices = orig.loadVoices;
-    var sel = document.getElementById("selVoice");
-    if (sel) { var o = sel.querySelector('option[value="roz"]'); if (o) o.remove(); sel.selectedIndex = 0; }
-    try { if (window.P && window.P.playing) window.playFromCurrent(); } catch (e) {}
+    try { window.P.playing = false; window.setPlayBtn(false); } catch (e) {}
+    try { window.toast("Roz is waking up — give her a moment and tap Read to me again."); } catch (e) {}
   }
 
   // ================= overrides ===================================================================
@@ -405,62 +405,31 @@
   };
 
   // ---- the voice picker: Roz is only ever offered once she can actually speak --------------------
-  function addRozOption() {
+  /* There is no voice to pick any more. Roz reads these stories, so the picker is hidden
+     rather than offering a choice between her and a robot. */
+  function hidePicker() {
     var sel = document.getElementById("selVoice");
-    if (!sel || !R.ready) return;
-    if (!sel.querySelector('option[value="roz"]')) {
-      var o = document.createElement("option");
-      o.value = "roz";
-      o.textContent = "Roz - read by a real voice";
-      sel.insertBefore(o, sel.firstChild);
-    }
-    var saved = window.S && window.S.voice;
-    if (!saved || saved === "roz") { sel.value = "roz"; R.on = true; } else { R.on = false; }
+    if (sel) { sel.innerHTML = ""; sel.style.display = "none"; }
+    R.on = true;
+    try { window.S.voice = "roz"; window.save(); } catch (e) {}
   }
 
-  window.loadVoices = function () {
-    if (orig.loadVoices) { try { orig.loadVoices.apply(this, arguments); } catch (e) {} }
-    addRozOption();
-  };
-
-  function wirePicker() {
-    var sel = document.getElementById("selVoice");
-    if (!sel) return;
-    sel.onchange = function () {
-      var wasPlaying = window.P && window.P.playing;
-      if (wasPlaying) window.pauseSpeech();
-      if (sel.value === "roz") {
-        if (window.speechSynthesis) speechSynthesis.cancel();
-        R.on = true; window.S.voice = "roz";
-      } else {
-        try { EL.pause(); } catch (e) {}
-        stopTick(); R.on = false; R.mode = null;
-        if (window.voices && window.voices[sel.value]) window.S.voice = window.voices[sel.value].name;
-      }
-      try { window.save(); } catch (e) {}
-      R.atPi = -1; R.atWi = -1;
-      if (wasPlaying) window.playFromCurrent();
-    };
-  }
+  window.loadVoices = function () { hidePicker(); };
 
   // ---- boot ---------------------------------------------------------------------------------------
   // Rendered audio alone is enough for Roz to read every story that ships today; the live key is
   // what covers any story added later. Either one makes her available.
-  Promise.all([
-    fetch(AUDIO_DIR + "thanksgiving.json", { method: "HEAD" }).then(function (r) { return r.ok; }).catch(function () { return false; }),
-    fetch("/api/roz?ping=1").then(function (r) { return r.json(); }).then(function (j) { return !!(j && j.ok); }).catch(function () { return false; })
-  ]).then(function (res) {
-    R.live = res[1];
-    if (!res[0] && !res[1]) return;   // Roz cannot speak — app untouched, device voice as before
-    R.ready = true;
-    addRozOption();
-    wirePicker();
-    if (R.on && window.P && window.P.playing) {
-      if (window.speechSynthesis) speechSynthesis.cancel();
-      R.atPi = -1; R.atWi = -1;
-      window.playFromCurrent();
-    }
-  });
+  /* The rendered audio covers every story that ships today. The house voice door covers any
+     story added later, and it lives on this same site, so it is always the fallback — no ping
+     needed and no reason to ever fall back to a robot. */
+  R.live = true;
+  R.ready = true;
+  R.on = true;
+  hidePicker();
+  if (window.P && window.P.playing) {
+    R.atPi = -1; R.atWi = -1;
+    try { window.playFromCurrent(); } catch (e) {}
+  }
 
   window.__rozNarration = {
     v: VER,
