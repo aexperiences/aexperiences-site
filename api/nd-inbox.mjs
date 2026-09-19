@@ -88,7 +88,11 @@ async function run(req, res, store, me, byName, onApprove) {
       const raws = await store('MGET', ...ids.map(M));
       all = raws.map((r) => { try { return r ? JSON.parse(r) : null; } catch (e) { return null; } }).filter(Boolean);
     }
-    const mine = all.filter((m) => !(m.tucked && m.tucked[me]));
+    // A message you sent that they have never opened is still in flight, so tucking it away cannot
+    // hide it from you — you can still take it back, and you cannot take back what you cannot see.
+    // Anything else you tucked stays tucked. (Found Sep 19 2026: a tucked, unopened message became
+    // unreachable — sitting in her list with no way for the sender to reach it.)
+    const mine = all.filter((m) => !(m.tucked && m.tucked[me]) || (m.from === me && !m.readAt));
     const inbox = mine.filter((m) => m.to === me), outbox = mine.filter((m) => m.from === me);
     const ownRaw = await store('GET', OWN_KEY(me));
     let ownPhones = 0; try { ownPhones = (ownRaw ? JSON.parse(ownRaw) : []).length; } catch (e) { ownPhones = 0; }
