@@ -104,6 +104,7 @@
 <div class="tools">
 <button class="btn solid" id="bReq" type="button">New production request</button>
 <button class="btn quiet" id="bWrite" type="button">Write a message</button>
+<button class="btn quiet" id="bAlerts" type="button" hidden>Alerts on this phone</button>
 </div>
 
 <section class="compose" id="write" hidden>
@@ -139,6 +140,7 @@ function CALL(json){ return NDOS.net(API,{method:'POST',json:json}); }
 function SAY(t,bad){ NDOS.say(t,bad); }
 function UPLOAD(id,file){ return fetch(API+'?proof='+encodeURIComponent(id)+'&name='+encodeURIComponent(file.name)+'&type='+encodeURIComponent(file.type||''),{method:'POST',headers:{'x-nd-key':NDOS.auth.get(),'content-type':'application/octet-stream'},body:file}).then(function(r){return r.json();}).catch(function(){return {ok:false};}); }
 /* ---- the room. Same logic in ND OS and AE OS; only CALL, SAY and OTHER differ. ---- */
+var SWPATH='/nd/os/sw.js';
 var DATA={inbox:[],outbox:[],work:[],me:''}, TAB='inbox', OPEN=null, KIND='note';
 var $=function(id){return document.getElementById(id);};
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -184,8 +186,13 @@ function card(m){
     ['new','accepted','doing','review','changes','approved','declined'].forEach(function(s){ var ok=can.indexOf(s)>-1&&m.status!=='approved'; html+='<button type="button" class="chip'+(m.status===s?' on':'')+(s==='approved'?' go':'')+'" data-s="'+s+'"'+(ok?'':' disabled')+'>'+(s==='approved'&&DATA.me==='jessica'&&m.status!=='approved'?'Approve it':s==='changes'&&DATA.me==='jessica'?'Ask for changes':STAT[s])+'</button>'; }); html+='</div>';
     if(m.status==='approved') html+='<p class="fine">Approved'+(m.approvedAt?' '+esc(when(m.approvedAt)):'')+'. '+((m.landed&&m.landed.length)?m.landed.length+' file'+(m.landed.length>1?'s are':' is')+' now in Files in ND OS.':'The links above are the finished work.')+'</p>';
   }
+  var canUnsend = !mineIn && !m.readAt;
   html+='<div class="lbl">Reply</div><textarea class="f-reply" placeholder="Write back…"></textarea>'
-    +'<div class="row2"><button class="btn solid f-send" type="button">Send reply</button><button class="btn quiet f-tuck" type="button">Tuck away</button></div></div>';
+    +'<div class="row2"><button class="btn solid f-send" type="button">Send reply</button>'
+    +(canUnsend?'<button class="btn quiet f-unsend" type="button">Unsend</button>':'')
+    +'<button class="btn quiet f-tuck" type="button">Tuck away</button></div>'
+    +(canUnsend?'<p class="fine" style="margin-top:8px">'+esc(OTHER)+' has not opened this yet, so you can still take it back. Once it is opened, it stays.</p>':'')
+    +'</div>';
   el.innerHTML=html;
   el.querySelector('.top').addEventListener('click',function(){
     OPEN=(OPEN===m.id?null:m.id);
@@ -207,6 +214,16 @@ function card(m){
     var t=el.querySelector('.f-reply').value.trim(); if(!t){ SAY('Write something first.',true); return; }
     CALL({send:{kind:'note',subject:'Re: '+m.subject.replace(/^Re: /,''),body:t,thread:m.thread||m.id}}).then(function(j){
       if(j&&j.ok){ DATA.outbox.unshift(j.message); OPEN=null; draw(); SAY('Sent to '+OTHER+'.'); } else SAY('That did not send. Nothing was lost — try again.',true); }); });
+  var un=el.querySelector('.f-unsend'); var unarmed=false;
+  if(un) un.addEventListener('click',function(){
+    var b=this; if(!unarmed){ unarmed=true; b.textContent='Take it back?'; setTimeout(function(){unarmed=false;b.textContent='Unsend';},4000); return; }
+    b.textContent='…';
+    CALL({unsend:m.id}).then(function(j){
+      if(j&&j.ok){ DATA.outbox=DATA.outbox.filter(function(x){return j.unsent.indexOf(x.id)<0;}); DATA.inbox=DATA.inbox.filter(function(x){return j.unsent.indexOf(x.id)<0;}); OPEN=null; draw(); SAY('Taken back. '+esc(OTHER)+' never saw it.'); }
+      else { b.textContent='Unsend'; unarmed=false;
+        SAY(j&&j.error==='ALREADY_SEEN'?esc(OTHER)+' just opened it, so it stays.':j&&j.error==='NOT_YOURS'?'Only the person who sent it can take it back.':'That did not work. Try again.',true);
+        if(j&&j.error==='ALREADY_SEEN'){ m.readAt=new Date().toISOString(); draw(); } }
+    }); });
   var armed=false; el.querySelector('.f-tuck').addEventListener('click',function(){
     var b=this; if(!armed){ armed=true; b.textContent='Sure?'; setTimeout(function(){armed=false;b.textContent='Tuck away';},4000); return; }
     CALL({tuck:m.id}).then(function(j){ if(j&&j.ok){ DATA.inbox=DATA.inbox.filter(function(x){return x.id!==m.id;}); DATA.outbox=DATA.outbox.filter(function(x){return x.id!==m.id;}); OPEN=null; draw(); SAY('Tucked away. It is kept, just out of your list.'); } }); });
@@ -216,10 +233,31 @@ function swap(n){ ['inbox','outbox'].forEach(function(k){ DATA[k]=DATA[k].map(fu
 function setKind(k){ KIND=k; $('kNote').classList.toggle('on',k==='note'); $('kReq').classList.toggle('on',k==='request'); $('reqOnly').hidden=(k!=='request');
   $('cBody').placeholder=k==='request'?'What do you need made? Say what it is for, where it will be used, and anything it must include.':'Write your message…'; }
 function openWrite(k){ $('write').hidden=false; setKind(k||'note'); $('cSubject').focus(); $('write').scrollIntoView({behavior:'smooth',block:'center'}); }
+var PUSHKEY='', PHONES=0;
+function b64toU8(s){ var p='='.repeat((4-s.length%4)%4); var b=atob((s+p).replace(/-/g,'+').replace(/_/g,'/')); var o=new Uint8Array(b.length); for(var i=0;i<b.length;i++)o[i]=b.charCodeAt(i); return o; }
+function alertsPaint(){ var b=$('bAlerts'); if(!b) return;
+  var can=('serviceWorker' in navigator)&&('PushManager' in window)&&!!PUSHKEY;
+  b.hidden=!can; b.textContent=PHONES?'Alerts are on':'Turn on alerts';
+  b.title=PHONES?'This phone gets a notification when something lands here.':'Get a notification on this phone when something lands here.'; }
+function alertsTap(){
+  if(Notification.permission==='denied'){ SAY('This phone has notifications blocked for this site. Turn them back on in its settings, then tap again.',true); return; }
+  SAY('Setting up…');
+  Notification.requestPermission().then(function(p){
+    if(p!=='granted'){ SAY('Not turned on — the phone said no.',true); return; }
+    return navigator.serviceWorker.register(SWPATH).then(function(){ return navigator.serviceWorker.ready; }).then(function(reg){
+      return reg.pushManager.getSubscription().then(function(s){ return s||reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64toU8(PUSHKEY)}); });
+    }).then(function(sub){
+      var j=sub.toJSON();
+      return CALL({pushOn:{endpoint:j.endpoint,keys:j.keys},label:navigator.platform||''}).then(function(k){
+        if(k&&k.ok){ PHONES=k.phones; alertsPaint(); SAY('Alerts are on for this phone.'); } else SAY('That did not save. Try again.',true); });
+    });
+  }).catch(function(e){ SAY('This phone would not turn them on. '+String(e&&e.message||e).slice(0,80),true); });
+}
 function wire(){
   [].forEach.call(document.querySelectorAll('.stat'),function(b){ b.addEventListener('click',function(){ TAB=b.dataset.t; OPEN=null; draw(); }); });
   $('kNote').addEventListener('click',function(){setKind('note');}); $('kReq').addEventListener('click',function(){setKind('request');});
-  $('bWrite').addEventListener('click',function(){openWrite('note');}); $('bReq').addEventListener('click',function(){openWrite('request');});
+  $('bWrite').addEventListener('click',function(){openWrite('note');});
+  $('bAlerts').addEventListener('click',alertsTap); $('bReq').addEventListener('click',function(){openWrite('request');});
   $('cCancel').addEventListener('click',function(){ $('write').hidden=true; });
   $('cSend').addEventListener('click',function(){
     var s={kind:KIND,subject:$('cSubject').value,body:$('cBody').value,work:$('cWork').value,due:$('cDue').value};
@@ -229,7 +267,7 @@ function wire(){
       if(j&&j.ok){ DATA.outbox.unshift(j.message); $('cSubject').value='';$('cBody').value='';$('cDue').value=''; $('write').hidden=true; TAB='outbox'; draw(); SAY((KIND==='request'?'Request sent to ':'Sent to ')+OTHER+'.'); }
       else SAY('That did not send. Nothing was lost — try again.',true); }); });
 }
-function fill(j){ DATA=j; OTHER=name(j.me==='anthony'?'jessica':'anthony'); $('otherName').textContent=OTHER;
+function fill(j){ DATA=j; PUSHKEY=j.pushKey||''; PHONES=j.phones||0; alertsPaint(); OTHER=name(j.me==='anthony'?'jessica':'anthony'); $('otherName').textContent=OTHER;
   $('cWork').innerHTML=(j.work||[]).map(function(w){return '<option>'+esc(w)+'</option>';}).join(''); draw(); }
 
 document.getElementById('day').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
