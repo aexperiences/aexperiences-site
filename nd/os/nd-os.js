@@ -112,7 +112,7 @@
     { id:'list',    label:'List',     href:'/nd/os/list/',     icon:'list',    live:true,  blurb:'One list, not four places.' },
     { id:'cal',     label:'Calendar', href:'/nd/os/calendar/', icon:'cal',     live:true,  blurb:'Everything with a time, in one month.' },
     { id:'docs',    label:'Docs',     href:'/nd/os/docs/',     icon:'docs',    live:true,  blurb:'Write a real document. It saves itself.' },
-    { id:'records', label:'Records',  href:'/nd/os/records/',  icon:'records', live:true,  blurb:'What was decided, and when it went out.' },
+    { id:'records', label:'Records',  href:'/nd/os/records/',  icon:'records', live:true,  blurb:'Folders, files, and what was decided.' },
     { id:'people',  label:'People',   href:'/nd/os/people/',   icon:'people',  live:true,  blurb:'Everyone who gave you their email.' },
     { id:'jobs',    label:'Jobs',     href:'/nd/os/jobs/',     icon:'jobs',    live:true,  blurb:'The board. Every job is priced like the house does.' },
     { id:'books',   label:'Books',    href:'/nd/os/books/',    icon:'books',   live:true,  blurb:'Your estimates and what you spent.' },

@@ -26,6 +26,24 @@
     transition:transform .16s cubic-bezier(.2,.7,.3,1),background .2s,color .2s,border-color .2s}
   .kb:active{transform:scale(.94)}
   .kb.on{background:var(--nd-terra);border-color:var(--nd-terra);color:var(--nd-on-terra)}
+  .folders{display:flex;gap:7px;overflow-x:auto;margin:14px -16px 0;padding:2px 16px 8px;-webkit-overflow-scrolling:touch}
+  .fb{flex:none;border:1.5px solid var(--nd-rule);background:var(--nd-card);border-radius:99px;padding:9px 14px;min-height:40px;cursor:pointer;font:700 12.5px/1 var(--nd-sans);color:var(--nd-ink-2);display:inline-flex;align-items:center;gap:7px}
+  .fb.on{background:var(--nd-ink);border-color:var(--nd-ink);color:var(--nd-paper)}
+  [data-os-theme=dark] .fb.on{background:var(--nd-paper-2);border-color:var(--nd-paper-2);color:var(--nd-ink)}
+  .fb i{font-style:normal;opacity:.7;font-size:11px}
+  .fb.new{border-style:dashed;color:var(--nd-terra-d);border-color:var(--nd-terra)}
+  .frow{display:flex;gap:8px;margin-top:10px;align-items:center}
+  .frow select{flex:1}
+  .frow .att{flex:none;width:auto;min-height:46px;padding:10px 14px;font-size:14px}
+  .attd{display:none;margin-top:8px;font-size:13px;color:var(--nd-ink-2);background:var(--nd-paper-2);border-radius:10px;padding:8px 12px}
+  .attd.on{display:block}
+  .rec .fold{font:700 10px/1 var(--nd-sans);letter-spacing:.12em;text-transform:uppercase;color:var(--nd-ink-2);background:var(--nd-paper-2);padding:4px 8px;border-radius:99px}
+  .rec .fcard{display:flex;gap:10px;align-items:center;margin-top:8px;background:var(--nd-card);border:1px solid var(--nd-rule);border-radius:12px;padding:9px 12px;text-decoration:none;color:inherit}
+  .rec .fcard .th{flex:none;width:44px;height:44px;border-radius:9px;background:var(--nd-paper-2);display:grid;place-items:center;overflow:hidden;font:700 10px var(--nd-sans);color:var(--nd-ink-2);text-transform:uppercase}
+  .rec .fcard .th img{width:100%;height:100%;object-fit:cover}
+  .rec .fcard b{display:block;font-size:14px}
+  .rec .fcard span{font-size:12px;color:var(--nd-ink-2)}
+  .rec .mv{font:700 11px var(--nd-sans);letter-spacing:.06em;color:var(--nd-ink-2);background:none;border:0;cursor:pointer;padding:5px 3px;min-height:36px}
   .addbox textarea{min-height:82px;resize:vertical}
   .addbox .btn{width:100%;margin-top:11px}
 
@@ -84,16 +102,19 @@
     <section class="hello">
       <div class="day" id="day">&nbsp;</div>
       <h1>The hall of records.</h1>
-      <p>What was decided, what it cost, what went out and when. It fills itself as you work,
-         and you write down the things only you know.</p>
+      <p>What was decided, what it cost, what went out and when &mdash; in folders, with the files.
+         It fills itself as you work, and you keep the things only you know.</p>
     </section>
 
     <div class="addbox">
       <div class="kinds" id="kinds"></div>
       <textarea id="what" placeholder="Write the record. One thing, plainly." aria-label="The record"></textarea>
-      <button class="btn solid" id="add" type="button">Enter it in the record</button>
+      <div class="frow"><select id="fsel" aria-label="Folder"></select><input id="pick" type="file" hidden><button class="btn quiet att" id="attach" type="button">Attach a file</button></div>
+      <div class="attd" id="attd"></div>
+      <button class="btn solid" id="add" type="button" style="margin-top:10px">Enter it in the record</button>
     </div>
 
+    <div class="folders" id="folders"></div>
     <div class="tools"><input id="find" type="search" placeholder="Search the record" aria-label="Search"></div>
     <div class="filters" id="filters"></div>
 
@@ -116,10 +137,10 @@
 <script src="/nd/os/nd-os.js"></script>
 <script>
 (function(){
-  var API='/api/nd-store?c=records';
+  var API='/api/nd-records', FILES='/api/nd-files';
   var gate=document.getElementById('gate'), desk=document.getElementById('desk');
-  var KINDS=['Decision','Fact','Number','Person','Note'];
-  var kind='Decision', filter='all', ROWS=[];
+  var KINDS=['Decision','Money','Sent','Received','Client','Idea','Note','File'];
+  var kind='Decision', filter='all', ROWS=[], FOLDERS=['General'], FOLDER='all', ATT=null;
 
   function esc(s){return String(s).replace(/[&<>"']/g,function(c){
     return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -162,8 +183,10 @@
       gate.hidden=true; desk.hidden=false;
 
       ROWS=[];
-      (rec.items||[]).forEach(function(i){
-        ROWS.push({at:i.createdAt,cls:'written',kind:i.kind||'Note',auto:false,text:i.text||'',id:i.id}); });
+      FOLDERS=rec.folders||['General']; paintFolders(); fillFolderSelect();
+      if(rec.carried) NDOS.say(rec.carried+' older record'+(rec.carried===1?'':'s')+' moved into the General folder.');
+      (rec.records||[]).forEach(function(i){
+        ROWS.push({at:new Date(i.createdAt).toISOString(),cls:'written',kind:i.kind||'Note',auto:false,text:i.text||'',id:i.id,folder:i.folder||'General',file:i.file||null}); });
       if(blog.ok) (blog.posts||[]).forEach(function(p){
         ROWS.push({at:p.createdAt,cls:'note',kind:p.status==='published'?'Note published':'Note drafted',auto:true,
           text:p.title||'', href:p.status==='published'?'/nd/blog/?p='+encodeURIComponent(p.slug):'/nd/write/'}); });
@@ -183,6 +206,7 @@
     var rows=ROWS.filter(function(r){
       if(filter==='written' && r.cls!=='written') return false;
       if(filter!=='all' && filter!=='written' && r.cls!==filter) return false;
+      if(FOLDER!=='all' && (r.cls!=='written' || (r.folder||'General')!==FOLDER)) return false;
       if(q && (r.text+' '+r.kind).toLowerCase().indexOf(q)===-1) return false;
       return true;
     });
@@ -200,17 +224,29 @@
         d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'}):'';
       el.innerHTML='<div class="head"><span class="when">'+esc(when)+'</span>'+
         '<span class="kind'+(r.auto?' auto':'')+'">'+esc(r.kind)+'</span>'+
-        (r.cls==='written'?'<button class="x">Del</button>':'')+'</div><p></p>';
+        (r.cls==='written'?'<span class="fold">'+esc(r.folder||'General')+'</span><button class="mv" title="Move to another folder">Move</button><button class="x">Del</button>':'')+'</div><p></p>';
       var p=el.querySelector('p');
       if(r.href){ var a=document.createElement('a'); a.href=r.href; a.textContent=r.text; p.appendChild(a); }
       else p.textContent=r.text;
+      if(r.file&&r.file.link){
+        var f=r.file, isImg=(f.type||'').indexOf('image/')===0;
+        var fc=document.createElement('a'); fc.className='fcard'; fc.href=f.link; fc.target='_blank'; fc.rel='noopener';
+        fc.innerHTML='<span class="th">'+(isImg?'<img src="'+esc(f.link)+'" alt="">':esc((f.type||'file').split('/').pop().slice(0,4)))+'</span><span><b>'+esc(f.name)+'</b><span>'+esc(sizeOf(f.size))+' &middot; open</span></span>';
+        el.appendChild(fc);
+      }
+      if(r.cls==='written'){
+        el.querySelector('.mv').addEventListener('click',function(){
+          var to=prompt('Move to which folder?\n'+FOLDERS.join(' · '), r.folder||'General'); if(!to) return;
+          NDOS.net(API,{method:'POST',json:{save:{id:r.id,folder:to}}}).then(function(j){ if(j.ok){ NDOS.say('Moved to '+j.record.folder+'.'); load(); } else NDOS.say(NDOS.why(j),true); });
+        });
+      }
       if(r.cls==='written'){
         var x=el.querySelector('.x'), armed=false, tm=null;
         x.addEventListener('click',function(){
           if(!armed){ armed=true; x.textContent='Sure?'; x.classList.add('arm');
             tm=setTimeout(function(){ armed=false; x.textContent='Del'; x.classList.remove('arm'); },4000); return; }
           clearTimeout(tm); x.textContent='…';
-          NDOS.net(API,{method:'POST',json:{id:r.id,delete:true}}).then(function(j){
+          NDOS.net(API,{method:'POST',json:{remove:r.id}}).then(function(j){
             if(j.ok){ NDOS.say('Struck from the record.'); load(); }
             else { NDOS.say(NDOS.why(j),true); x.textContent='Del'; armed=false; x.classList.remove('arm'); }
           });
@@ -220,12 +256,48 @@
     });
   }
 
+  function sizeOf(n){ n=Number(n)||0; return n<1048576?(n/1024).toFixed(0)+' KB':(n/1048576).toFixed(1)+' MB'; }
+  function paintFolders(){
+    var F=document.getElementById('folders');
+    F.innerHTML='<button type="button" class="fb'+(FOLDER==='all'?' on':'')+'" data-f="all">Everything</button>'+
+      FOLDERS.map(function(f){ var n=ROWS.filter(function(r){return r.cls==='written'&&(r.folder||'General')===f;}).length; return '<button type="button" class="fb'+(FOLDER===f?' on':'')+'" data-f="'+esc(f)+'">'+esc(f)+(n?'<i>'+n+'</i>':'')+'</button>'; }).join('')+
+      '<button type="button" class="fb new" data-f="__new">+ New folder</button>';
+  }
+  document.getElementById('folders').addEventListener('click',function(e){
+    var b=e.target.closest('.fb'); if(!b) return;
+    if(b.dataset.f==='__new'){ var name=prompt('Name the folder'); if(!name||!name.trim()) return;
+      NDOS.net(API,{method:'POST',json:{folder:{name:name.trim()}}}).then(function(j){ if(j.ok){ FOLDER=j.folder; NDOS.say('Folder made.'); load(); } else NDOS.say(NDOS.why(j),true); }); return; }
+    FOLDER=b.dataset.f; paintFolders(); draw();
+    var sel=document.getElementById('fsel'); if(FOLDER!=='all') sel.value=FOLDER;
+  });
+  function fillFolderSelect(){ var sel=document.getElementById('fsel'), cur=sel.value; sel.innerHTML=FOLDERS.map(function(f){return '<option'+(f===(cur||FOLDER)?' selected':'')+'>'+esc(f)+'</option>';}).join(''); }
+
+  /* attach a file: the short road through the site (photos, PDFs), same as the Files room */
+  var PICK=document.getElementById('pick'), ATTD=document.getElementById('attd');
+  document.getElementById('attach').addEventListener('click',function(){ PICK.click(); });
+  PICK.addEventListener('change',function(){
+    var file=PICK.files&&PICK.files[0]; PICK.value=''; if(!file) return;
+    if(file.size>4.3*1024*1024){ NDOS.say('That file is too big to attach here ('+sizeOf(file.size)+'). Put it in Files and paste its link.',true); return; }
+    ATTD.classList.add('on'); ATTD.textContent='Uploading '+file.name+'…';
+    var y=new XMLHttpRequest();
+    y.open('POST',FILES+'?up=1&name='+encodeURIComponent(file.name)+'&type='+encodeURIComponent(file.type||'application/octet-stream'),true);
+    y.setRequestHeader('x-nd-key',NDOS.auth.get()); y.setRequestHeader('content-type','application/octet-stream');
+    y.upload.onprogress=function(e){ if(e.lengthComputable) ATTD.textContent='Uploading '+file.name+' — '+Math.round(e.loaded/e.total*100)+'%'; };
+    y.onerror=function(){ ATTD.textContent='The upload did not go through.'; ATT=null; };
+    y.onload=function(){ var k={}; try{ k=JSON.parse(y.responseText); }catch(e){}
+      if(!k.ok){ ATTD.textContent='Could not attach: '+(k.message||k.error||'no'); ATT=null; return; }
+      ATT={id:k.file.id,name:k.file.name,type:k.file.type,size:k.file.size,link:k.file.link};
+      ATTD.textContent='Attached: '+k.file.name+' ('+sizeOf(k.file.size)+')'; if(kind!=='File'){ kind='File'; [].forEach.call(document.querySelectorAll('.kb'),function(x){x.classList.toggle('on',x.dataset.k==='File');}); } };
+    y.send(file);
+  });
+
   function add(){
     var v=document.getElementById('what').value.trim();
-    if(!v){ document.getElementById('what').focus(); return; }
-    NDOS.net(API,{method:'POST',json:{text:v,kind:kind}}).then(function(j){
+    if(!v&&!ATT){ document.getElementById('what').focus(); return; }
+    var folder=document.getElementById('fsel').value||'General';
+    NDOS.net(API,{method:'POST',json:{save:{text:v,kind:kind,folder:folder,file:ATT}}}).then(function(j){
       if(!j.ok){ NDOS.say(NDOS.why(j),true); return; }
-      document.getElementById('what').value='';
+      document.getElementById('what').value=''; ATT=null; ATTD.classList.remove('on'); ATTD.textContent='';
       NDOS.say('Entered in the record.'); load();
     });
   }
