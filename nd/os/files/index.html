@@ -132,6 +132,20 @@
     row.innerHTML='<div>'+esc(file.name)+' <span class="muted">'+size(file.size)+'</span></div><div class="bar"><i></i></div>';
     UPS.appendChild(row); var bar=row.querySelector('i');
     var fail=function(msg){ row.innerHTML='<div style="color:var(--nd-terra-d)">'+esc(file.name)+' — '+esc(msg)+'</div>'; setTimeout(function(){row.remove();},6000); };
+    /* the short road: through the site's own server, which fits a photo or a PDF, not a long video */
+    var viaServer=function(){
+      if(file.size>4.3*1024*1024){ fail('that one is too big to go the short way ('+size(file.size)+'). Photos and PDFs work; a long video needs the direct road, which this browser would not allow.'); return; }
+      bar.style.width='0';
+      var y=new XMLHttpRequest();
+      y.open('POST',API+'?up=1&name='+encodeURIComponent(file.name)+'&type='+encodeURIComponent(file.type||'application/octet-stream'),true);
+      y.setRequestHeader('x-nd-key',NDOS.auth.get()); y.setRequestHeader('content-type','application/octet-stream');
+      y.upload.onprogress=function(e){ if(e.lengthComputable) bar.style.width=Math.round(e.loaded/e.total*100)+'%'; };
+      y.onerror=function(){ fail('the upload did not go through'); };
+      y.onload=function(){ var k={}; try{ k=JSON.parse(y.responseText); }catch(e){}
+        if(!k.ok){ fail(k.error==='TOO_BIG_HERE'?'too big for the short road':(k.message||k.error||'no')); return; }
+        row.remove(); FILES.unshift(k.file); draw(); NDOS.say('Uploaded.'); NDOS.bus.emit('file:added',{file:k.file}); };
+      y.send(file);
+    };
     NDOS.net(API,{method:'POST',json:{ticket:{name:file.name,type:file.type,size:file.size}}}).then(function(j){
       if(!j.ok){ fail(j.error==='TOO_BIG'?'too big (500 MB is the limit)':j.error==='NO_FILE_STORE'?'the file store is not connected yet':NDOS.why(j)); return; }
       var x=new XMLHttpRequest(); x.open('PUT',j.put,true);
@@ -140,7 +154,7 @@
       x.setRequestHeader('x-api-blob-request-id',(j.storeId||'')+':'+Date.now()+':'+Math.random().toString(16).slice(2)); x.setRequestHeader('x-api-blob-request-attempt','0');
       x.setRequestHeader('x-content-type',file.type||'application/octet-stream'); x.setRequestHeader('x-add-random-suffix','1');
       x.upload.onprogress=function(e){ if(e.lengthComputable) bar.style.width=Math.round(e.loaded/e.total*100)+'%'; };
-      x.onerror=function(){ fail('the upload did not go through'); };
+      x.onerror=function(){ viaServer(); };
       x.onload=function(){
         if(x.status<200||x.status>=300){ fail('the store said no ('+x.status+')'); return; }
         var r={}; try{ r=JSON.parse(x.responseText); }catch(e){}

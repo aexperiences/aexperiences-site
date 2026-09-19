@@ -65,6 +65,29 @@ export default async function handler(req, res) {
       return send(res, 200, { ok: true, files });
     }
 
+    // The short road, for a photo or a PDF: the bytes come through here (Vercel caps a body
+    // near 4.5 MB) and this server puts them in the store. The room tries the direct road first
+    // and falls back to this one when a browser will not let it talk to the store itself.
+    if (req.method === 'POST' && url.searchParams.get('up') === '1') {
+      if (!BLOB) return send(res, 503, { ok: false, error: 'NO_FILE_STORE' });
+      const name = safeName(url.searchParams.get('name')), type = clean(url.searchParams.get('type'), 100) || 'application/octet-stream';
+      const chunks = []; let size = 0;
+      for await (const c of req) { size += c.length; if (size > 4.4 * 1024 * 1024) return send(res, 413, { ok: false, error: 'TOO_BIG_HERE' }); chunks.push(c); }
+      const bytes = Buffer.concat(chunks);
+      if (!bytes.length) return send(res, 400, { ok: false, error: 'EMPTY' });
+      const pathname = 'nd/' + BRAND + '/files/' + new Date().toISOString().slice(0, 10) + '/' + name;
+      const r = await fetch('https://blob.vercel-storage.com/' + pathname, { method: 'PUT',
+        headers: { authorization: 'Bearer ' + BLOB, 'x-api-version': '7', 'x-content-type': type, 'x-add-random-suffix': '1', 'x-access': 'public' }, body: bytes });
+      const text = await r.text();
+      if (!r.ok) return send(res, 502, { ok: false, error: 'STORE_SAID_NO', status: r.status, message: text.slice(0, 200) });
+      let put = {}; try { put = JSON.parse(text); } catch (e) { return send(res, 502, { ok: false, error: 'STORE_SAID_NO', message: 'unreadable reply' }); }
+      const f = { id: mint(), name, type, size: bytes.length, url: put.url, pathname: put.pathname || pathname,
+        office: BRAND, by: who.name || 'ND OS', createdAt: new Date().toISOString() };
+      await redis('SET', K(f.id), JSON.stringify(f));
+      await redis('LPUSH', INDEX, f.id); await redis('LTRIM', INDEX, '0', '1999');
+      return send(res, 200, { ok: true, file: f, via: 'server' });
+    }
+
     if (req.method === 'POST') {
       const b = await body(req); if (!b) return send(res, 400, { ok: false, error: 'BAD_JSON' });
 
