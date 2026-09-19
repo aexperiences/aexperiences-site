@@ -155,7 +155,8 @@
   function stats(){
     var y=new Date().getFullYear(), m=new Date().toISOString().slice(0,7);
     var open=0,won=0,spent=0;
-    EST.forEach(function(e){ var q=quote(e);
+    EST.forEach(function(e){ var q=e.quote||quote(e);
+      if(e.job){ if(e.lane!=='done') open+=q.total; else if(e.type!=='internal'&&new Date(e.doneAt||e.updatedAt||e.createdAt).getFullYear()===y) won+=q.total; return; }
       if(e.status==='estimate'||e.status==='sent') open+=q.total;
       if((e.status==='won'||e.status==='invoiced'||e.status==='paid')&&new Date(e.createdAt).getFullYear()===y) won+=q.total; });
     EXP.forEach(function(x){ if(String(x.on||'').slice(0,7)===m) spent+=num(x.amount); });

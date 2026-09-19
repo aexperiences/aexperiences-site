@@ -82,7 +82,7 @@ export default async function handler(req, res) {
       // that was ever saved there disappears.
       const [old, expenses, jobs] = await Promise.all([all(EIDS, E), all(XIDS, X), all('jobs:' + BRAND + ':ids', (id) => 'jobs:' + BRAND + ':j:' + id)]);
       const estimates = jobs.map((j) => ({ id: j.id, estNo: j.estNo, title: j.title, client: j.client, type: j.type === 'internal' ? 'internal' : 'external',
-        status: j.status === 'done' ? 'done' : 'estimate', lane: j.status, kinds: j.kinds, at: j.at, quote: j.quote, createdAt: j.createdAt, job: true })).concat(old);
+        status: j.status === 'done' ? 'done' : 'estimate', lane: j.status, kinds: j.kinds, at: j.at, quote: j.quote, createdAt: j.createdAt, doneAt: j.doneAt, updatedAt: j.updatedAt, job: true })).concat(old);
       return send(res, 200, { ok: true, office: BRAND, estimates, expenses });
     }
 
