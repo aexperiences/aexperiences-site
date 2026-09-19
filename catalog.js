@@ -259,7 +259,7 @@
     { id:'thread', name:'ND Thread', tag:'Your master list — and the thing you were doing', genre:'mind', state:'live',
       acc:'#9A7A2C', mark:'/apps/thread/icon.png', family:'The Neuro-Divulge', url:'/apps/thread/',
       plans:[ ['Monthly',1.99,'month','3-day free trial · cancel any time'], ['Yearly',19.99,'year','3-day free trial · billed once a year'] ], trial:3,
-      blurb:'A master list that works the way a busy head does: write it down in any order, number it afterwards, notes under every task — and finished work turns yellow and STAYS on the list so you can see the day you had. Sort by number, group by mode, drag to reorder. Plus the thread card that tells you what you were doing after the doorway wipes it, tap-through quests for the kids (no fail states, no timers), and homes for the things you can never find. Mint classroom look with a dark skin.',
+      blurb:'A master list that works the way a busy head does: write it down in any order, number it afterwards, notes under every task — and finished work turns yellow and STAYS on the list so you can see the day you had. Sort by number, group by mode, drag to reorder. Plus the thread card that tells you what you were doing after the doorway wipes it, tap-through quests for the kids (no fail states, no timers), and homes for the things you can never find. Warm cream classroom look with a dark chalkboard skin.',
       price:'$1.99/mo', priceNote:'Or $19.99 a year, billed once \u00b7 3-day free trial' },
 
     { id:'tucasa', name:'Tu Casa OS', tag:'The home operating system', genre:'family', state:'dev',
