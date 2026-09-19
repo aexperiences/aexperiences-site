@@ -349,7 +349,8 @@
     }
     rs += '</div>' + (KEY ? '<button class="out" id="ndOut" type="button" style="background:none;border:0;font:inherit;cursor:pointer">'
         + (WHO ? 'Signed in as ' + WHO.replace(/[<>&"]/g,'') + ' &middot; ' : '') + 'Sign out</button>' : '')
-        + '<a class="out" href="/nd/">Back to the site</a>';
+        + '<a class="out" href="/nd/">Back to the site</a>'
+        + '<a class="out" href="https://www.aexperiences.com/" title="AETRIAD Powered" style="display:block;text-align:center;padding-top:4px;line-height:0"><img src="/marks/aetriad-powered.png" alt="AETRIAD Powered" style="height:26px;width:auto;display:inline-block;opacity:.9"></a>';
     sheet.innerHTML = rs;
     document.body.appendChild(scrim); document.body.appendChild(sheet);
 
