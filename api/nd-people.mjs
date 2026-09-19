@@ -4,8 +4,12 @@
 // Anthony: "i want her to have her own database that it just goes to and looks like a crm...
 // she is collecting emails from people that put theirs in... it should share the database."
 //
-// Where it lives: the SHARED hub store (HUB_KV_* = aehub's KV_*), one key per person, so AE OS
-// can read every office's people and ND OS only ever asks for its own brand.
+// Anthony, later the same day: "Her people should go into my CRM and be flagged as her people
+// (like a ND Flag), which feeds her CRM." So there is ONE CRM — AE OS Contacts on the hub — and
+// this room is what the ND flag feeds. A person whose flag is on lives here, one key per person
+// in the SHARED hub store (HUB_KV_* = aehub's KV_*); AE OS lists, edits, flags and unflags them
+// through its own /api/contacts, and she sees exactly the flagged set and nothing else. Someone
+// who signs up on her site is born flagged. Nothing is copied: one record, two doors.
 //
 //   crm:<brand>:p:<id>        one person, JSON
 //   crm:<brand>:ids           sorted set, newest last (score = when they first came in)
@@ -90,7 +94,7 @@ export default async function handler(req, res) {
           if (source && (p.sources || []).indexOf(source) < 0) p.sources = (p.sources || []).concat(source).slice(-8);
         } else {
           p = { id: Date.now().toString(36) + randomBytes(3).toString('hex'), name: clean(j.name, 80), email,
-            phone: '', tags: tagsOf(j.tags), notes: '', source, sources: [source], consent: false,
+            phone: '', tags: tagsOf(j.tags), notes: '', source, sources: [source], consent: false, stage: 'new',
             asks: 1, createdAt: Date.now(), firstSeen: now, lastSeen: now, updatedAt: now, by: 'site' };
         }
         await put(p);
@@ -117,7 +121,7 @@ export default async function handler(req, res) {
         if (!p && email) { const known = await hub('GET', EM(email)); if (known) p = await getPerson(known); }
         if (p && p.email && email !== p.email) await hub('DEL', EM(p.email));
         p = Object.assign(p || { id: Date.now().toString(36) + randomBytes(3).toString('hex'), createdAt: Date.now(),
-          firstSeen: now, source: 'Added by hand', sources: ['Added by hand'], asks: 0, by: who.name || 'ND OS' }, {
+          firstSeen: now, source: 'Added by hand', sources: ['Added by hand'], asks: 0, stage: 'new', by: who.name || 'ND OS' }, {
           name: clean(s.name, 80), email, phone: clean(s.phone, 40), tags: tagsOf(s.tags),
           notes: clean(s.notes, 4000), consent: !!s.consent, updatedAt: now });
         await put(p);
