@@ -380,6 +380,10 @@
        navigation that disappears is a navigation you cannot find, and the
        page already leaves room for it. It stays put. */
 
+    /* the Owner's Manual rides along into every room (Anthony, Sep 19 2026: "her system should have a
+       manual written into it"). One file, /nd/os/nd-manual.js; it injects its own ? button. */
+    if (!document.getElementById('ndManualJs')) { var mj = document.createElement('script'); mj.id = 'ndManualJs'; mj.src = '/nd/os/nd-manual.js'; mj.defer = true; document.head.appendChild(mj); }
+
     bus.emit('room:ready', { id: activeId }, true);
     return { place: place, sheet: openSheet, prime: setPrime };
   }
