@@ -215,7 +215,7 @@ No ads. No trackers. Not therapy — practice.</footer>
 <div class="toast" id="toast"></div>
 
 <script>
-/* ─── the ladder: 3 tracks × 6 lessons (L1 free forever; L2-3 arrive with Plus) ─── */
+/* ─── the ladder: 3 tracks × 6 lessons (L1 now; L2-3 arrive with Plus) ─── */
 var COURSE=[
 {track:"Anger — cool the fire",lessons:[
  {t:"The 90-second wave",s:"Feelings crest and pass",steps:[
@@ -325,7 +325,7 @@ function drawCourse(){
       var d=S.done[lid(ti,li)];
       return '<div class="les'+(d?' done':'')+'" data-t="'+ti+'" data-l="'+li+'"><div class="n">'+(d?'✓':(li+1))+'</div><div class="m"><b>'+le.t+'</b><span>'+le.s+'</span></div></div>';
     }).join("");
-  }).join("")+'<p class="hint">Levels 2 and 3 — deeper practice on every track — arrive with Plus. Level 1 and every SOS tool stay free forever.</p>';
+  }).join("")+'<p class="hint">Levels 2 and 3 — deeper practice on every track — arrive with Plus.</p>';
   el.querySelectorAll(".les").forEach(function(x){
     x.onclick=function(){openLesson(+x.dataset.t,+x.dataset.l)};
   });
