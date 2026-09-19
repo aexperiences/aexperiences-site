@@ -109,12 +109,12 @@
     if(!FILES.length){ LIST.innerHTML='<p class="empty">Nothing here yet. Tap the box above and pick a photo, a video, a PDF — anything.</p>'; return; }
     FILES.forEach(function(f){
       var k=kind(f), el=document.createElement('div'); el.className='f';
-      el.innerHTML='<div class="th">'+(k==='image'?'<img src="'+esc(f.url)+'" alt="" loading="lazy">':k==='video'?'<video src="'+esc(f.url)+'#t=0.5" muted playsinline preload="metadata"></video>':esc(k))+'</div>'+
+      el.innerHTML='<div class="th">'+(k==='image'?'<img src="'+esc(f.link)+'" alt="" loading="lazy">':k==='video'?'<video src="'+esc(f.link)+'#t=0.5" muted playsinline preload="metadata"></video>':esc(k))+'</div>'+
         '<div class="nm">'+esc(f.name)+'</div><div class="sz">'+size(f.size)+' &middot; '+esc(String(f.createdAt||'').slice(0,10))+'</div>'+
-        '<div class="acts"><a href="'+esc(f.url)+'" target="_blank" rel="noopener">Open</a><button type="button" class="cp">Copy link</button><button type="button" class="rm">Remove</button></div>';
+        '<div class="acts"><a href="'+esc(f.link)+'" target="_blank" rel="noopener">Open</a><button type="button" class="cp">Copy link</button><button type="button" class="rm">Remove</button></div>';
       el.querySelector('.cp').addEventListener('click',function(){
         var done=function(){ NDOS.say('Link copied.'); };
-        if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(f.url).then(done,function(){ prompt('The link',f.url); }); else prompt('The link',f.url);
+        if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(f.link).then(done,function(){ prompt('The link',f.link); }); else prompt('The link',f.link);
       });
       var rm=el.querySelector('.rm'), armed=false, tm=null;
       rm.addEventListener('click',function(){
