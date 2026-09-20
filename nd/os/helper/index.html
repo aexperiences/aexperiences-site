@@ -34,9 +34,10 @@
   @keyframes sk{0%,100%{opacity:.5}50%{opacity:1}}
 
   .starters{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .starters[hidden]{display:none}
   .starters button{font:600 14px/1.3 inherit;padding:10px 13px;border-radius:14px;border:1px solid var(--nd-rule);background:var(--nd-card);color:var(--nd-ink);cursor:pointer;text-align:left}
 
-  .ask{margin-top:16px;padding:14px 14px 12px;position:sticky;bottom:calc(86px + env(safe-area-inset-bottom));z-index:3}
+  .ask{margin-top:16px;padding:14px 14px 12px}
   .ask textarea{min-height:76px;resize:vertical;line-height:1.5;font-size:16px}
   .ask .row{display:flex;gap:8px;margin-top:10px;align-items:center}
   .ask .row .btn{flex:1;min-height:48px}
