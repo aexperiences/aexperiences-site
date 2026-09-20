@@ -230,6 +230,11 @@ export default async function handler(req, res) {
         const r = await ask('doer', DOER, 'Reply with the single word: ready.', '');
         return send(res, 200, r.ok ? { ok: true, via: r.via, said: clean(r.text, 80), constitution: lawTag } : Object.assign(r, { constitution: lawTag }));
       }
+      const wq = url.searchParams.get('websearch');
+      if (wq) {                                   // a signed-in check of the web door itself
+        try { const w = await webSearch(wq); return send(res, 200, { ok: true, source: w.source, results: w.results }); }
+        catch (e) { return send(res, 200, { ok: false, error: 'WEB', message: clean(e && e.message, 300) }); }
+      }
       return send(res, 200, { ok: true, constitution: lawTag });
     }
     if (req.method !== 'POST') { res.setHeader('allow', 'GET, POST'); return send(res, 405, { ok: false, error: 'METHOD' }); }
@@ -274,7 +279,7 @@ export default async function handler(req, res) {
       const asks = o.web.slice(0, 3);
       const got = await Promise.all(asks.map(async (w) => {
         try {
-          if (w && w.search) { const s = await webSearch(w.search); trips.push({ kind: 'search', q: clean(w.search, 200), ok: true });
+          if (w && w.search) { const s = await webSearch(w.search); trips.push({ kind: 'search', q: clean(w.search, 200), ok: true, source: s.source, n: s.results.length });
             return 'SEARCH "' + clean(w.search, 200) + '":\n' + s.results.map((x) => '- ' + x.title + ' — ' + x.url + (x.snippet ? ' — ' + x.snippet : '')).join('\n'); }
           if (w && w.read) { const p = await webFetch(w.read); trips.push({ kind: 'read', url: p.url, ok: true });
             return 'PAGE ' + p.url + (p.title ? ' (' + p.title + ')' : '') + ':\n' + p.text; }
