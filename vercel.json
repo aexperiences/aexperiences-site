@@ -44,72 +44,72 @@
     },
     {
       "source": "/hubs/real-estate.html",
-      "destination": "/shop.html",
+      "destination": "/shop.html#abode",
       "permanent": true
     },
     {
       "source": "/hubs/architecture.html",
-      "destination": "/shop.html",
+      "destination": "/shop.html#buttress",
       "permanent": true
     },
     {
       "source": "/hubs/engineering.html",
-      "destination": "/shop.html",
+      "destination": "/shop.html#truss",
       "permanent": true
     },
     {
       "source": "/hubs/theater.html",
-      "destination": "/shop.html",
+      "destination": "/shop.html#musical",
       "permanent": true
     },
     {
       "source": "/hubs/cinema.html",
-      "destination": "/shop.html",
+      "destination": "/shop.html#8mm",
       "permanent": true
     },
     {
       "source": "/hubs/concerts.html",
-      "destination": "/shop.html",
+      "destination": "/shop.html#amphitheater",
       "permanent": true
     },
     {
       "source": "/hubs/kids-gym.html",
-      "destination": "/shop.html",
+      "destination": "/shop.html#lilninja",
       "permanent": true
     },
     {
       "source": "/hubs/showroom.html",
-      "destination": "/shop.html",
+      "destination": "/shop.html#4barrel",
       "permanent": true
     },
     {
       "source": "/hubs/targeted.html",
-      "destination": "/shop.html",
+      "destination": "/shop.html#targeted",
       "permanent": true
     },
     {
       "source": "/hubs/home-care.html",
-      "destination": "/shop.html",
+      "destination": "/shop.html#stayathome",
       "permanent": true
     },
     {
       "source": "/hubs/field-service.html",
-      "destination": "/shop.html",
+      "destination": "/shop.html#toolbelt",
       "permanent": true
     },
     {
       "source": "/hubs/tattoo.html",
-      "destination": "/shop.html",
+      "destination": "/shop.html#sleeves",
       "permanent": true
     },
     {
       "source": "/hubs/dental.html",
-      "destination": "/shop.html",
+      "destination": "/shop.html#smiley",
       "permanent": true
     },
     {
       "source": "/hubs/photo-video.html",
-      "destination": "/shop.html",
+      "destination": "/shop.html#moments",
       "permanent": true
     },
     {
