@@ -87,6 +87,7 @@
     records: 'M12 2.4c4.5 0 8 1.3 8 3v2.2c0 1.7-3.5 3-8 3s-8-1.3-8-3V5.4c0-1.7 3.5-3 8-3Z@M20 10.6v2.8c0 1.7-3.5 3-8 3s-8-1.3-8-3v-2.8c1.7 1.2 4.7 1.8 8 1.8s6.3-.6 8-1.8Zm0 5.4v2.6c0 1.7-3.5 3-8 3s-8-1.3-8-3V16c1.7 1.2 4.7 1.8 8 1.8s6.3-.6 8-1.8Z',
     people:  'M9 11.3a3.9 3.9 0 1 0 0-7.8 3.9 3.9 0 0 0 0 7.8Zm-7 8.6c0-3.7 3.1-6.2 7-6.2s7 2.5 7 6.2a.9.9 0 0 1-.9.9H2.9a.9.9 0 0 1-.9-.9Z@M16.7 11.1a3.1 3.1 0 1 0 0-6.2 3.1 3.1 0 0 0 0 6.2Zm1 2.1c2.5.4 4.3 2.4 4.3 4.9a.8.8 0 0 1-.8.8h-3.4c0-2.3-1-4.3-2.6-5.5.8-.2 1.6-.3 2.5-.2Z',
     quality: 'M12 1.9l2.3 2 3-.4 1.1 2.8 2.8 1.1-.4 3 2 2.3-2 2.3.4 3-2.8 1.1-1.1 2.8-3-.4-2.3 2-2.3-2-3 .4-1.1-2.8-2.8-1.1.4-3-2-2.3 2-2.3-.4-3 2.8-1.1L6.7 3.5l3 .4 2.3-2Z@M16.4 8.6a1.1 1.1 0 0 1 0 1.56l-4.7 4.7a1.1 1.1 0 0 1-1.56 0l-2.3-2.3a1.1 1.1 0 1 1 1.56-1.56l1.52 1.52 3.92-3.92a1.1 1.1 0 0 1 1.56 0Z',
+    helper:  'M4.4 3h15.2A2.4 2.4 0 0 1 22 5.4v10.2a2.4 2.4 0 0 1-2.4 2.4h-8.3l-4.9 3.7a.9.9 0 0 1-1.44-.72V18H4.4A2.4 2.4 0 0 1 2 15.6V5.4A2.4 2.4 0 0 1 4.4 3Z@M7.6 9.2a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8Zm4.4 0a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8Zm4.4 0a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8Z',
     more:    'M5 10a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm7 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm7 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z',
     up:      'M12 2.6a1.2 1.2 0 0 1 .87.37l6.4 6.4a1.2 1.2 0 0 1-1.74 1.66L13.2 6.7V20.2a1.2 1.2 0 0 1-2.4 0V6.7l-4.33 4.33a1.2 1.2 0 1 1-1.74-1.66l6.4-6.4A1.2 1.2 0 0 1 12 2.6Z',
     save:    'M5 3.4h11.2L20.6 7.8V19a1.8 1.8 0 0 1-1.8 1.8H5A1.8 1.8 0 0 1 3.2 19V5.2A1.8 1.8 0 0 1 5 3.4Zm2.8 0v5h7.6v-5H7.8Z@M7.4 12.6h9.2v8.2H7.4z',
@@ -122,6 +123,8 @@
     { id:'files',   label:'Files',    href:'/nd/os/files/',    icon:'files',   live:true,  blurb:'Photos, video, PDFs. Upload once, link anywhere.' },
     // Her quality department (Anthony, Sep 18 2026): two schools that differ greatly, a Pacemaker, and a Head she talks to.
     { id:'quality', label:'Quality',  href:'/nd/os/quality/',  icon:'quality', live:true,  blurb:'Two schools read it. The Head tells you what to do.' },
+    // Her own helper (promised in her video brief, Sep 19 2026): ask it anything, typed or spoken.
+    { id:'helper',  label:'Helper',   href:'/nd/os/helper/',   icon:'helper',  live:true,  noArt:true,  blurb:'Just ask. Type it or say it.' },
     // Her one door into AE OS (Anthony, Sep 18 2026): the time clock, and nothing past it.
     // live flips to true the day /timeclock.html lands on the hub.
     { id:'clock',   label:'Clock',    href:'https://aexperiences.studio/timeclock.html', icon:'clock', live:false, blurb:'Clock in and out on the AE OS time clock.' }
@@ -344,7 +347,7 @@
       var q = ROOMS[k];
       rs += '<a href="' + q.href + '" class="' + (q.live ? '' : 'soon') + '"'
           + (q.id === activeId ? ' aria-current="page"' : '') + '>'
-          + '<img class="art" src="' + art(q.id) + '" alt="" loading="lazy">'
+          + (q.noArt ? '<span class="art" style="display:grid;place-items:center">' + icon(q.icon) + '</span>' : '<img class="art" src="' + art(q.id) + '" alt="" loading="lazy">')
           + '<span>' + q.label + '</span></a>';
     }
     rs += '</div>' + (KEY ? '<button class="out" id="ndOut" type="button" style="background:none;border:0;font:inherit;cursor:pointer">'

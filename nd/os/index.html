@@ -330,7 +330,7 @@
     document.getElementById('rooms').innerHTML = NDOS.rooms.filter(function(r){ return r.id!=='desk'; })
       .map(function(r){
         return '<a class="rm'+(r.live?'':' soon')+'" href="'+r.href+'">'+
-          '<img class="art" src="'+NDOS.art(r.id)+'" alt="" loading="lazy">'+
+          (r.noArt?'<span class="art" style="display:grid;place-items:center">'+NDOS.icon(r.icon)+'</span>':'<img class="art" src="'+NDOS.art(r.id)+'" alt="" loading="lazy">')+
           '<b>'+esc(r.label)+'</b><span>'+esc(r.blurb)+'</span></a>';
       }).join('');
   }
