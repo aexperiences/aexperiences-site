@@ -172,7 +172,7 @@
       if(m.who==='helper' && (m.web&&m.web.length || m.law)){
         var mt=document.createElement('div'); mt.className='meta';
         var bits=[]; if(m.law) bits.push('Read your constitution first');
-        (m.web||[]).forEach(function(w){ bits.push((w.kind==='search'?'Searched the web: ':'Read: ')+(w.q||w.url||'')+(w.ok?'':' (did not load)')); });
+        (m.web||[]).forEach(function(w){ bits.push((w.kind==='search'?'Searched the web: ':'Read: ')+(w.q||w.url||'')+(w.ok?'':' (did not load'+(w.why?': '+w.why:'')+')')); });
         mt.textContent=bits.join(' \u00b7 '); TH.appendChild(mt);
       }
       if(m.acts&&m.acts.length) TH.appendChild(drawActs(m));
