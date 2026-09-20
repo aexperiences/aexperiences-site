@@ -170,3 +170,10 @@ html[data-os-theme="dark"] .btn:hover{color:#1C1412}
 html[data-os-theme="dark"] .d.on{color:#1C1412}
 /* the illustrated art is bright on a dark sheet; take the edge off it */
 html[data-os-theme="dark"] .nd-sheet .art{filter:brightness(.94) saturate(.92)}
+
+/* A room with no illustrated art yet (Helper, Sep 19 2026) shows its bold glyph on a tan tile,
+   so it reads on both skins until Anthony and Claude draw its art. */
+span.art{background:var(--nd-tan);color:var(--nd-on-tan)}
+span.art svg{width:58%;height:58%}
+span.art svg .a{fill:var(--nd-on-tan)}
+span.art svg .b{fill:var(--nd-on-tan);opacity:.55}
