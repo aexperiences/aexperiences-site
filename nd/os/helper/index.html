@@ -1,0 +1,271 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<script>try{document.documentElement.setAttribute("data-os-theme",localStorage.getItem("nd:os:theme")||"dark")}catch(e){document.documentElement.setAttribute("data-os-theme","dark")}</script><meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Helper">
+<title>ND OS &middot; Helper</title>
+<link rel="icon" href="/logo-nd.png"><link rel="apple-touch-icon" href="/nd/os/icon-maskable-512.png">
+<link rel="manifest" href="/nd/os/manifest.webmanifest">
+<meta name="theme-color" content="#F3EEE5">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Karla:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/nd/nd-theme.css">
+<link rel="stylesheet" href="/nd/os/nd-os.css">
+<style>
+  /* Accelerated Experiences LLC · Sep 19 2026 · her own helper, promised in her video brief */
+  .hello{padding:22px 0 2px}
+  .hello .day{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--nd-terra)}
+  .hello h1{font-size:clamp(25px,6.2vw,33px);margin:8px 0 5px}
+  .hello p{color:var(--nd-ink-2);font-size:15px;margin:0}
+  .gate{max-width:420px;margin:8vh auto 0}
+
+  .thread{margin-top:16px;display:flex;flex-direction:column;gap:10px}
+  .msg{max-width:88%;padding:12px 14px;border-radius:18px;font-size:15.5px;line-height:1.55;white-space:pre-wrap;word-wrap:break-word}
+  .msg p{margin:0 0 9px}.msg p:last-child{margin:0}
+  .msg.me{align-self:flex-end;background:var(--nd-tan);color:var(--nd-on-tan);border-bottom-right-radius:6px}
+  .msg.helper{align-self:flex-start;background:var(--nd-card);border:1px solid var(--nd-rule);box-shadow:var(--nd-shadow);border-bottom-left-radius:6px}
+  .msg.helper.bad{border-color:var(--nd-terra)}
+  .msg .tools{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .msg .tools button{font:700 12px/1 var(--nd-sans,inherit);letter-spacing:.06em;text-transform:uppercase;padding:8px 11px;border-radius:99px;border:1px solid var(--nd-rule);background:var(--nd-paper-2);color:var(--nd-ink);cursor:pointer;min-height:34px}
+  .msg .tools button[disabled]{opacity:.55;cursor:default}
+  .msg .skel{height:12px;border-radius:6px;background:var(--nd-paper-2);margin:7px 0;width:210px;max-width:60vw;animation:sk 1.2s ease-in-out infinite}
+  .msg .skel.w2{width:150px}
+  @keyframes sk{0%,100%{opacity:.5}50%{opacity:1}}
+
+  .starters{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .starters button{font:600 14px/1.3 inherit;padding:10px 13px;border-radius:14px;border:1px solid var(--nd-rule);background:var(--nd-card);color:var(--nd-ink);cursor:pointer;text-align:left}
+
+  .ask{margin-top:16px;padding:14px 14px 12px;position:sticky;bottom:calc(86px + env(safe-area-inset-bottom));z-index:3}
+  .ask textarea{min-height:76px;resize:vertical;line-height:1.5;font-size:16px}
+  .ask .row{display:flex;gap:8px;margin-top:10px;align-items:center}
+  .ask .row .btn{flex:1;min-height:48px}
+  .ask .mic{flex:0 0 auto;width:52px;min-height:48px;border-radius:14px;border:1px solid var(--nd-rule);background:var(--nd-paper-2);color:var(--nd-ink);display:grid;place-items:center;cursor:pointer}
+  .ask .mic svg{width:22px;height:22px;fill:currentColor}
+  .ask .mic.on{background:var(--nd-terra);color:var(--nd-on-terra);border-color:var(--nd-terra);animation:pulse 1.1s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+  .ask .fine{font-size:12.5px;color:var(--nd-ink-2);margin:9px 0 0;line-height:1.45}
+  .ask .quiet{flex:0 0 auto;padding:10px 14px}
+</style>
+</head><body>
+
+<header class="mast"><div class="wrap">
+  <img src="/logo-nd.png" alt="">
+  <div><div class="wordmark">The Neuro<em>~</em>Divulge</div><div class="subword">ND OS &middot; Helper</div></div>
+  <a class="back" href="/nd/os/">Desk &rarr;</a>
+</div></header>
+
+<main class="wrap" id="main">
+
+  <section class="gate card" id="gate" hidden>
+    <h1 style="font-size:25px;margin-bottom:8px">Your helper</h1>
+    <p class="muted" style="font-size:15px">Your word opens it.</p>
+    <div style="margin:18px 0 6px"><label for="key">Your word</label>
+      <input id="key" type="password" autocomplete="current-password" enterkeyhint="go"></div>
+    <button class="btn solid" id="unlock" style="width:100%">Open</button>
+  </section>
+
+  <div id="desk" hidden>
+    <section class="hello">
+      <div class="day" id="day">&nbsp;</div>
+      <h1>Just ask.</h1>
+      <p>Your own helper. Ask it anything: help with a post, a question about a kid, or how something in your office works. Type it, or tap the microphone and say it.</p>
+    </section>
+
+    <div class="starters" id="starters">
+      <button type="button">Help me start a post about sensory overload at the grocery store.</button>
+      <button type="button">How do I send Anthony a request?</button>
+      <button type="button">Make this sound more like me.</button>
+      <button type="button">Where do my files go when I approve a work room?</button>
+    </div>
+
+    <section class="thread" id="thread" aria-live="polite"></section>
+
+    <section class="card ask">
+      <label for="q" class="sr" style="position:absolute;left:-9999px">Ask your helper</label>
+      <textarea id="q" placeholder="Ask your helper. Leave readers' emails, phone numbers and addresses out." maxlength="2000"></textarea>
+      <div class="row">
+        <button class="mic" id="mic" type="button" aria-label="Talk to your helper" title="Talk to your helper"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a3.5 3.5 0 0 1 3.5 3.5v6a3.5 3.5 0 0 1-7 0V6A3.5 3.5 0 0 1 12 2.5Z"/><path d="M5.9 11a1 1 0 0 1 1 1 5.1 5.1 0 0 0 10.2 0 1 1 0 1 1 2 0 7.1 7.1 0 0 1-6.1 7v1.9a1 1 0 1 1-2 0V19a7.1 7.1 0 0 1-6.1-7 1 1 0 0 1 1-1Z"/></svg></button>
+        <button class="btn solid" id="go" type="button">Ask</button>
+        <button class="btn quiet" id="fresh" type="button">New talk</button>
+      </div>
+      <p class="fine" id="fine">Your conversation stays on this device. For a call between the two schools of thought, your Quality room reads it both ways.</p>
+    </section>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <a class="aemark" href="/nd/os/">
+    <img src="/marks/ae-mark-gradient.png" alt="Accelerated Experiences, LLC">
+    <span><b>ND OS &middot; built by Accelerated Experiences, LLC</b>Runs on the AETRIAD</span>
+  </a>
+</div></footer>
+
+<script src="/nd/os/nd-os.js"></script>
+<script>
+(function(){
+  var API='/api/nd-helper', STORE='nd:helper:talk', DRAFT='nd:helper:q';
+  var gate=document.getElementById('gate'), desk=document.getElementById('desk');
+  var Q=document.getElementById('q'), GO=document.getElementById('go'), TH=document.getElementById('thread');
+  var MIC=document.getElementById('mic'), ST=document.getElementById('starters');
+  var TALK=[], BUSY=false, MANUAL=null;
+  var FROM=(function(){ try{ var r=document.referrer&&new URL(document.referrer); if(r&&r.host===location.host){ var m=r.pathname.match(/\/nd\/os\/([a-z]+)\//); return m?m[1]:(r.pathname.indexOf('/nd/write')===0?'write':''); } }catch(e){} return ''; })();
+
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function paras(t){ return String(t||'').replace(/\*\*(.+?)\*\*/g,'$1').split(/\n\s*\n/).map(function(p){return '<p>'+esc(p.trim())+'</p>';}).join(''); }
+  document.getElementById('day').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+
+  try{ TALK=JSON.parse(localStorage.getItem(STORE)||'[]')||[]; }catch(e){ TALK=[]; }
+  try{ Q.value=localStorage.getItem(DRAFT)||''; }catch(e){}
+  Q.addEventListener('input',function(){ try{localStorage.setItem(DRAFT,Q.value);}catch(e){} });
+  function keep(){ try{ localStorage.setItem(STORE,JSON.stringify(TALK.slice(-40))); }catch(e){} }
+
+  /* ---- the manual, read from the office's own file so the helper knows the rooms as they really are ---- */
+  function loadManual(){
+    if(MANUAL) return Promise.resolve(MANUAL);
+    return fetch('/nd/os/nd-manual.js').then(function(r){return r.text();}).then(function(src){
+      var out=[], re=/\{c:'([a-z]+)',t:'((?:[^'\\]|\\.)*)',g:'((?:[^'\\]|\\.)*)',b:'((?:[^'\\]|\\.)*)'\}/g, m;
+      while((m=re.exec(src))){ out.push({c:m[1],t:m[2].replace(/\\'/g,"'"),g:m[3],b:m[4].replace(/\\'/g,"'")}); }
+      MANUAL=out; return out;
+    }).catch(function(){ MANUAL=[]; return []; });
+  }
+  function pick(q){
+    var words=String(q).toLowerCase().match(/[a-z]{3,}/g)||[];
+    var stop={the:1,and:1,for:1,you:1,how:1,what:1,does:1,this:1,that:1,with:1,can:1,are:1,its:1,about:1,from:1,have:1,into:1,your:1,when:1,where:1,why:1,who:1,will:1,make:1,more:1,like:1,help:1};
+    return (MANUAL||[]).map(function(d){
+      var hay=(d.t+' '+d.g+' '+d.b).toLowerCase(), s=0;
+      words.forEach(function(w){ if(!stop[w] && hay.indexOf(w)>-1) s+= (d.g.indexOf(w)>-1?3:1); });
+      return {d:d,s:s};
+    }).filter(function(x){return x.s>=2;}).sort(function(a,b){return b.s-a.s;}).slice(0,4).map(function(x){return {t:x.d.t,b:x.d.b};});
+  }
+
+  /* ---- the thread ---- */
+  function draw(){
+    TH.innerHTML='';
+    ST.hidden=TALK.length>0;
+    TALK.forEach(function(m,i){
+      var el=document.createElement('div');
+      el.className='msg '+(m.who==='me'?'me':'helper')+(m.bad?' bad':'');
+      el.innerHTML=paras(m.t);
+      if(m.who==='helper' && !m.bad){
+        var tools=document.createElement('div'); tools.className='tools';
+        tools.innerHTML='<button type="button" data-a="hear">Hear it</button><button type="button" data-a="copy">Copy</button>';
+        tools.querySelector('[data-a=hear]').addEventListener('click',function(e){ hear(m.t,e.currentTarget); });
+        tools.querySelector('[data-a=copy]').addEventListener('click',function(){ copy(m.t); });
+        el.appendChild(tools);
+      }
+      TH.appendChild(el);
+    });
+  }
+  function thinking(on){
+    var old=document.getElementById('think'); if(old) old.remove();
+    if(!on) return;
+    var el=document.createElement('div'); el.id='think'; el.className='msg helper';
+    el.innerHTML='<div class="skel"></div><div class="skel w2"></div>';
+    TH.appendChild(el); el.scrollIntoView({behavior:'smooth',block:'end'});
+  }
+
+  function send(text){
+    text=String(text||Q.value||'').trim();
+    if(!text || BUSY) return;
+    stopMic();
+    BUSY=true; GO.disabled=true;
+    var history=TALK.filter(function(m){return !m.bad;}).slice(-8).map(function(m){return {who:m.who,t:m.t};});
+    TALK.push({who:'me',t:text}); keep(); draw();
+    Q.value=''; try{localStorage.removeItem(DRAFT);}catch(e){}
+    thinking(true);
+    loadManual().then(function(){
+      return NDOS.net(API,{method:'POST',json:{q:text,history:history,manual:pick(text),room:FROM}});
+    }).then(function(j){
+      thinking(false);
+      if(j.ok){ TALK.push({who:'helper',t:j.text}); }
+      else if(j.__status===401){ TALK.pop(); Q.value=text; }
+      else { TALK.push({who:'helper',bad:true,t:j.message||NDOS.why(j)}); }
+      keep(); draw();
+      var last=TH.lastElementChild; if(last) last.scrollIntoView({behavior:'smooth',block:'start'});
+    }).then(function(){ BUSY=false; GO.disabled=false; });
+  }
+  GO.addEventListener('click',function(){ send(); });
+  Q.addEventListener('keydown',function(e){ if(e.key==='Enter' && (e.metaKey||e.ctrlKey)){ e.preventDefault(); send(); } });
+  [].forEach.call(ST.querySelectorAll('button'),function(b){ b.addEventListener('click',function(){
+    if(/^Make this sound/.test(b.textContent)){ Q.value='Make this sound more like me:\n\n'; Q.focus(); return; }
+    send(b.textContent); }); });
+  var armed=false, tm=null, FR=document.getElementById('fresh');
+  FR.addEventListener('click',function(){
+    if(!TALK.length) return;
+    if(!armed){ armed=true; FR.textContent='Sure?'; tm=setTimeout(function(){armed=false;FR.textContent='New talk';},4000); return; }
+    clearTimeout(tm); armed=false; FR.textContent='New talk';
+    TALK=[]; keep(); draw(); Q.focus();
+  });
+
+  /* ---- hear it: the house voice only (Roz). If the engine is asleep or busy, it says so. Never the phone's robot voice. ---- */
+  var AUDIO=null;
+  function speakable(t){
+    t=String(t||'').replace(/\*\*/g,'').replace(/[#>*_`]/g,'').replace(/\s+/g,' ').trim();
+    if(t.length<=880) return t;
+    var cut=t.slice(0,880), k=Math.max(cut.lastIndexOf('. '),cut.lastIndexOf('? '),cut.lastIndexOf('! '));
+    return k>200?cut.slice(0,k+1):cut;
+  }
+  function hear(t,btn){
+    if(AUDIO){ AUDIO.pause(); AUDIO=null; }
+    btn.disabled=true; var was=btn.textContent; btn.textContent='Warming up…';
+    fetch('/api/voice',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:speakable(t),voice:'roz'})})
+      .then(function(r){
+        var ct=r.headers.get('content-type')||'';
+        if(r.ok && ct.indexOf('audio')===0) return r.blob();
+        return r.json().catch(function(){return {};}).then(function(j){ throw new Error(j.reason||'no_voice'); });
+      })
+      .then(function(b){
+        AUDIO=new Audio(URL.createObjectURL(b)); btn.textContent='Playing';
+        AUDIO.onended=function(){ btn.textContent=was; btn.disabled=false; };
+        return AUDIO.play();
+      })
+      .catch(function(e){
+        btn.textContent=was; btn.disabled=false;
+        NDOS.say(/busy/.test(String(e&&e.message))?'The voice is busy with another take. Try again in a minute.':'The voice could not be reached just now. Try again in a minute.',true);
+      });
+  }
+  function copy(t){
+    var done=function(){ NDOS.say('Copied.'); };
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done,function(){ fallback(); });
+    else fallback();
+    function fallback(){ var a=document.createElement('textarea'); a.value=t; document.body.appendChild(a); a.select(); try{document.execCommand('copy'); done();}catch(e){} a.remove(); }
+  }
+
+  /* ---- talk to it: the phone's own listening. Words only go in the box; she sees them before they are sent. ---- */
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition, rec=null, LISTEN=false, base='';
+  function stopMic(){ if(rec&&LISTEN){ try{rec.stop();}catch(e){} } }
+  if(!SR){
+    MIC.addEventListener('click',function(){ NDOS.say('This browser cannot listen here. Tap the box, then the microphone on your keyboard.'); Q.focus(); });
+  } else {
+    MIC.addEventListener('click',function(){
+      if(LISTEN){ stopMic(); return; }
+      rec=new SR(); rec.lang='en-US'; rec.interimResults=true; rec.continuous=true;
+      base=Q.value?Q.value.replace(/\s*$/,' '):'';
+      rec.onresult=function(e){ var fin='',tmp=''; for(var i=0;i<e.results.length;i++){ (e.results[i].isFinal?(fin+=e.results[i][0].transcript):(tmp+=e.results[i][0].transcript)); } Q.value=base+fin+tmp; };
+      rec.onstart=function(){ LISTEN=true; MIC.classList.add('on'); MIC.setAttribute('aria-label','Stop listening'); };
+      rec.onend=function(){ LISTEN=false; MIC.classList.remove('on'); MIC.setAttribute('aria-label','Talk to your helper'); try{localStorage.setItem(DRAFT,Q.value);}catch(e){} };
+      rec.onerror=function(e){ if(e.error==='not-allowed'||e.error==='service-not-allowed') NDOS.say('The microphone is blocked for this page. You can still use the microphone on your keyboard.',true); };
+      try{ rec.start(); }catch(e){}
+    });
+  }
+
+  /* ---- gate ---- */
+  document.getElementById('unlock').addEventListener('click',function(){
+    var k=document.getElementById('key').value.trim(); if(!k) return;
+    NDOS.auth.set(k); load().then(function(ok){ if(!ok){ NDOS.say('That did not work.',true); NDOS.auth.clear(); } });
+  });
+  NDOS.bus.on('auth:out',function(){ gate.hidden=false; desk.hidden=true; });
+  function load(){
+    if(!NDOS.auth.has()){ gate.hidden=false; desk.hidden=true; return Promise.resolve(false); }
+    return NDOS.net(API).then(function(j){
+      if(!j.ok && j.__status===401){ gate.hidden=false; desk.hidden=true; return false; }
+      gate.hidden=true; desk.hidden=false; draw(); loadManual(); return true;
+    });
+  }
+
+  NDOS.mount({ active:'helper', primary:{ label:'Ask', icon:'up', onTap:function(){ if(desk.hidden) return; if(Q.value.trim()) send(); else Q.focus(); } } });
+  load();
+})();
+</script>
+</body></html>
