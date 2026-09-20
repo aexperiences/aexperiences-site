@@ -5,7 +5,7 @@
 // Public http(s) only: no private addresses, no internal hosts, no credentials in the URL.
 import { lookup } from 'node:dns/promises';
 
-const UA = { 'user-agent': 'Mozilla/5.0 (ND-OS-helper; +https://www.aexperiences.com/nd/)' };
+const UA = { 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36', 'accept': 'text/html,application/xhtml+xml', 'accept-language': 'en-US,en;q=0.9' };
 
 function privateIP(ip) {
   if (!ip) return true;
@@ -54,17 +54,36 @@ export async function webSearch(query) {
       }
     } catch (e) {}
   }
-  const r = await withTimeout(fetch('https://html.duckduckgo.com/html/?q=' + encodeURIComponent(q), { headers: UA }), 8000);
-  const html = await r.text();
-  const results = [];
-  const re = /<a[^>]+class="result__a"[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>[\s\S]*?(?:class="result__snippet"[^>]*>([\s\S]*?)<\/a>)?/gi;
-  let m;
-  while ((m = re.exec(html)) && results.length < 6) {
-    let href = m[1]; const um = href.match(/[?&]uddg=([^&]+)/); if (um) href = decodeURIComponent(um[1]);
-    const strip = (s) => String(s || '').replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&#x27;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/\s+/g, ' ').trim();
-    const title = strip(m[2]);
-    if (title && /^https?:/i.test(href)) results.push({ title, url: href, snippet: strip(m[3]).slice(0, 300) });
+  // Free sources, in order. Datacenter addresses get challenged by some of them some of the time,
+  // so the helper walks the chain and reports which one answered.
+  const strip = (x) => String(x || '').replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&#x27;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+  const tried = [];
+  const sources = [
+    ['duckduckgo', 'https://html.duckduckgo.com/html/?q=' + encodeURIComponent(q), (html) => {
+      const out = []; const re = /<a[^>]+class="result__a"[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi; let m;
+      while ((m = re.exec(html)) && out.length < 6) { let h = m[1]; const um = h.match(/[?&]uddg=([^&]+)/); if (um) h = decodeURIComponent(um[1]); if (/^https?:/i.test(h)) out.push({ title: strip(m[2]), url: h, snippet: '' }); }
+      return out; }],
+    ['duckduckgo-lite', 'https://lite.duckduckgo.com/lite/?q=' + encodeURIComponent(q), (html) => {
+      const out = []; const re = /<a[^>]+href="([^"]+)"[^>]*class=['"]result-link['"][^>]*>([\s\S]*?)<\/a>/gi; let m;
+      while ((m = re.exec(html)) && out.length < 6) { let h = m[1]; const um = h.match(/[?&]uddg=([^&]+)/); if (um) h = decodeURIComponent(um[1]); if (/^https?:/i.test(h)) out.push({ title: strip(m[2]), url: h, snippet: '' }); }
+      return out; }],
+    ['bing', 'https://www.bing.com/search?q=' + encodeURIComponent(q) + '&setlang=en-US', (html) => {
+      const out = []; const re = /<li class="b_algo"[\s\S]*?<h2[^>]*><a[^>]+href="(https?:[^"]+)"[^>]*>([\s\S]*?)<\/a>[\s\S]*?(?:<p[^>]*>([\s\S]*?)<\/p>)?/gi; let m;
+      while ((m = re.exec(html)) && out.length < 6) out.push({ title: strip(m[2]), url: m[1].replace(/&amp;/g, '&'), snippet: strip(m[3]).slice(0, 300) });
+      return out; }],
+    ['mojeek', 'https://www.mojeek.com/search?q=' + encodeURIComponent(q), (html) => {
+      const out = []; const re = /<a[^>]+class="ob"[^>]+href="(https?:[^"]+)"[^>]*>([\s\S]*?)<\/a>[\s\S]*?(?:<p class="s">([\s\S]*?)<\/p>)?/gi; let m;
+      while ((m = re.exec(html)) && out.length < 6) out.push({ title: strip(m[2]) || m[1], url: m[1], snippet: strip(m[3]).slice(0, 300) });
+      return out; }]
+  ];
+  for (const [name, u, parse] of sources) {
+    try {
+      const r = await withTimeout(fetch(u, { headers: UA, redirect: 'follow' }), 6000);
+      if (!r.ok) { tried.push(name + ' ' + r.status); continue; }
+      const results = parse(await r.text()).filter((x) => x.title && x.url);
+      if (results.length) return { results, source: name };
+      tried.push(name + ' empty');
+    } catch (e) { tried.push(name + ' ' + (e && e.message || 'error')); }
   }
-  if (results.length) return { results, source: 'duckduckgo' };
-  throw new Error('search came back empty');
+  throw new Error('no search source answered (' + tried.join(', ') + ')');
 }

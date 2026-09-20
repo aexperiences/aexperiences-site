@@ -278,7 +278,7 @@ export default async function handler(req, res) {
             return 'SEARCH "' + clean(w.search, 200) + '":\n' + s.results.map((x) => '- ' + x.title + ' — ' + x.url + (x.snippet ? ' — ' + x.snippet : '')).join('\n'); }
           if (w && w.read) { const p = await webFetch(w.read); trips.push({ kind: 'read', url: p.url, ok: true });
             return 'PAGE ' + p.url + (p.title ? ' (' + p.title + ')' : '') + ':\n' + p.text; }
-        } catch (e) { trips.push({ kind: w && w.search ? 'search' : 'read', q: clean(w && (w.search || w.read), 200), ok: false }); return 'WEB REQUEST FAILED: ' + clean(w && (w.search || w.read), 200) + ' (' + clean(e && e.message, 100) + ')'; }
+        } catch (e) { trips.push({ kind: w && w.search ? 'search' : 'read', q: clean(w && (w.search || w.read), 200), ok: false, why: clean(e && e.message, 160) }); return 'WEB REQUEST FAILED: ' + clean(w && (w.search || w.read), 200) + ' (' + clean(e && e.message, 100) + ')'; }
         return '';
       }));
       r = await ask('doer', DOER, ROOMS_ASK + '\nYou have now read the web below. Do not ask for the web again.\n\nJESSICA ASKS: ' + q,
@@ -292,7 +292,7 @@ export default async function handler(req, res) {
     let actions = (Array.isArray(o.actions) ? o.actions : []).slice(0, 6).map((a) => shapeAction(a, listIds)).filter(Boolean);
     if (actions.length) actions = await guard(actions, law.text, today, q);
 
-    return send(res, 200, { ok: true, text: clean(o.reply, 9000) || 'Here is what I would do. Tap the ones you want.', actions, web: trips, constitution: lawTag, via: r.via });
+    return send(res, 200, { ok: true, text: clean(o.reply, 9000) || (actions.length ? 'Here is what I would do. Tap the ones you want.' : (trips.length && trips.every((t) => !t.ok) ? 'I tried the web and could not get through just now, so I have nothing sourced to tell you. Ask me again in a minute.' : 'I do not have a good answer for that yet. Try asking it another way.')), actions, web: trips, constitution: lawTag, via: r.via });
   } catch (e) {
     return send(res, 500, { ok: false, error: 'SERVER' });
   }
