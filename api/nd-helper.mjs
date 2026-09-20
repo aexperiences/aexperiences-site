@@ -120,7 +120,7 @@ async function direct(persona, prompt, context) {
     });
     const j = await r.json();
     const text = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
-    if (!text) return { ok: false, error: 'MODEL', message: 'No answer came back. Try again.' };
+    if (!text) return { ok: false, error: 'MODEL', message: 'No answer came back. Try again.', why: clean((j && j.error && (j.error.message || j.error.type)) || ('HTTP ' + r.status), 160) };
     return { ok: true, text: String(text).slice(0, 9000), via: 'site' };
   } catch (e) { return { ok: false, error: 'MODEL', message: 'The helper hit a snag. Try again.' }; }
 }
