@@ -195,11 +195,11 @@ function shapeAction(a, listIds) {
 }
 
 /* ---- 2 · the Guard, sealed, argues against every action --------------------------------- */
-async function guard(actions, law, today) {
+async function guard(actions, law, today, asked) {
   const ask1 = 'Here are the proposed actions, numbered from 0. For EACH, decide hold or clear against the ' +
     'constitution and your rules. Reply with ONLY JSON: {"verdicts":[{"i":0,"hold":true|false,"why":"<one plain sentence>"}]}\n\n' +
     actions.map((a, i) => i + ': ' + JSON.stringify(a)).join('\n');
-  const r = await ask('guard', GUARD, ask1, 'TODAY: ' + today + '\n\nHER CONSTITUTION:\n' + law);
+  const r = await ask('guard', GUARD, ask1, 'TODAY: ' + today + '\n\nWHAT JESSICA ASKED, IN HER OWN WORDS (an action she plainly asked for, with the date or amount she gave, is hers to have; you judge whether it breaks the constitution, not whether it is useful):\n' + asked + '\n\nHER CONSTITUTION:\n' + law);
   const o = r.ok ? jsonOf(r.text) : null;
   const v = new Map();
   for (const x of (o && Array.isArray(o.verdicts) ? o.verdicts : [])) if (x && Number.isInteger(x.i)) v.set(x.i, x);
@@ -290,7 +290,7 @@ export default async function handler(req, res) {
 
     // 2 + 3 · the Guard argues, the Pacemaker releases
     let actions = (Array.isArray(o.actions) ? o.actions : []).slice(0, 6).map((a) => shapeAction(a, listIds)).filter(Boolean);
-    if (actions.length) actions = await guard(actions, law.text, today);
+    if (actions.length) actions = await guard(actions, law.text, today, q);
 
     return send(res, 200, { ok: true, text: clean(o.reply, 9000) || 'Here is what I would do. Tap the ones you want.', actions, web: trips, constitution: lawTag, via: r.via });
   } catch (e) {
