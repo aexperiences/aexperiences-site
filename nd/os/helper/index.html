@@ -33,6 +33,19 @@
   .msg .skel.w2{width:150px}
   @keyframes sk{0%,100%{opacity:.5}50%{opacity:1}}
 
+  /* the agent: every action is a card, released or held by the Triad, run only on her tap */
+  .acts{display:flex;flex-direction:column;gap:8px;align-self:flex-start;max-width:88%;width:100%}
+  .act{background:var(--nd-card);border:1px solid var(--nd-rule);border-left:5px solid var(--nd-sage-d);border-radius:14px;padding:11px 13px;box-shadow:var(--nd-shadow)}
+  .act.held{border-left-color:var(--nd-terra);opacity:.92}
+  .act .k{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--nd-ink-2)}
+  .act .w{font-size:15px;line-height:1.45;margin:4px 0 0;white-space:pre-wrap;max-height:9.5em;overflow:auto}
+  .act .why{font-size:13px;color:var(--nd-ink-2);margin:6px 0 0;line-height:1.4}
+  .act .row{display:flex;gap:8px;margin-top:9px}
+  .act .row button{font:700 13px/1 inherit;padding:10px 14px;border-radius:12px;border:1px solid var(--nd-rule);background:var(--nd-paper-2);color:var(--nd-ink);cursor:pointer;min-height:40px}
+  .act .row button.go{background:var(--nd-sage-d);color:#fff;border-color:var(--nd-sage-d)}
+  .act .done{font-size:13px;font-weight:700;color:var(--nd-sage-d);margin-top:8px}
+  .act .done a{color:inherit}
+  .meta{align-self:flex-start;font-size:11.5px;color:var(--nd-ink-2);letter-spacing:.03em;margin:-4px 0 0 4px;max-width:88%}
   .starters{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
   .starters[hidden]{display:none}
   .starters button{font:600 14px/1.3 inherit;padding:10px 13px;border-radius:14px;border:1px solid var(--nd-rule);background:var(--nd-card);color:var(--nd-ink);cursor:pointer;text-align:left}
@@ -70,14 +83,14 @@
     <section class="hello">
       <div class="day" id="day">&nbsp;</div>
       <h1>Just ask.</h1>
-      <p>Your own helper. Ask it anything: help with a post, a question about a kid, or how something in your office works. Type it, or tap the microphone and say it.</p>
+      <p>Your own helper. Ask it anything, or ask it to do something: put it on your list or calendar, start a doc, draft a post, queue it for Blastpack, log an expense, or send Anthony a note. It can look things up on the web. It always shows you first, and nothing happens until you tap Do it.</p>
     </section>
 
     <div class="starters" id="starters">
       <button type="button">Help me start a post about sensory overload at the grocery store.</button>
       <button type="button">How do I send Anthony a request?</button>
       <button type="button">Make this sound more like me.</button>
-      <button type="button">Where do my files go when I approve a work room?</button>
+      <button type="button">Put “call the OT about next week” on my list for Monday.</button>
     </div>
 
     <section class="thread" id="thread" aria-live="polite"></section>
@@ -90,7 +103,7 @@
         <button class="btn solid" id="go" type="button">Ask</button>
         <button class="btn quiet" id="fresh" type="button">New talk</button>
       </div>
-      <p class="fine" id="fine">Your conversation stays on this device. For a call between the two schools of thought, your Quality room reads it both ways.</p>
+      <p class="fine" id="fine">It reads your constitution first, every time. Every action goes through the AETRIAD and waits for your tap. Your conversation stays on this device.</p>
     </section>
   </div>
 </main>
@@ -156,6 +169,93 @@
         el.appendChild(tools);
       }
       TH.appendChild(el);
+      if(m.who==='helper' && (m.web&&m.web.length || m.law)){
+        var mt=document.createElement('div'); mt.className='meta';
+        var bits=[]; if(m.law) bits.push('Read your constitution first');
+        (m.web||[]).forEach(function(w){ bits.push((w.kind==='search'?'Searched the web: ':'Read: ')+(w.q||w.url||'')+(w.ok?'':' (did not load)')); });
+        mt.textContent=bits.join(' \u00b7 '); TH.appendChild(mt);
+      }
+      if(m.acts&&m.acts.length) TH.appendChild(drawActs(m));
+    });
+  }
+
+  /* ---- the actions: the Triad has ruled; her tap runs it through the room's own door ---- */
+  var LABEL={list_add:'Add to your list',list_done:'Check off your list',cal_add:'Put on your calendar',doc_add:'Start a doc',record_add:'File in your Hall of Records',
+    job_add:'Add a job',expense_add:'Log an expense',queue_post:'Queue for Blastpack',draft_post:'Save a draft post',note_anthony:'Send Anthony a note',request_anthony:'Ask Anthony to make something'};
+  var ROOM={list_add:'/nd/os/list/',list_done:'/nd/os/list/',cal_add:'/nd/os/calendar/',doc_add:'/nd/os/docs/',record_add:'/nd/os/records/',job_add:'/nd/os/jobs/',
+    expense_add:'/nd/os/books/',queue_post:'/nd/os/blast/',draft_post:'/nd/write/',note_anthony:'/nd/os/inbox/',request_anthony:'/nd/os/inbox/'};
+  function when(d,t){ if(!d) return ''; try{ return new Date(d+'T'+(t||'09:00')).toLocaleString(undefined,t?{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}:{weekday:'short',month:'short',day:'numeric'}); }catch(e){ return d; } }
+  function say(a){
+    switch(a.type){
+      case 'list_add': return a.text+(a.date?'\nBy '+when(a.date):'');
+      case 'list_done': var it=(OFFICE.list||[]).filter(function(x){return x.id===a.id;})[0]; return it?it.text:'An item on your list';
+      case 'cal_add': return a.text+'\n'+when(a.date,a.time);
+      case 'doc_add': return a.title+'\n\n'+a.body;
+      case 'record_add': return a.folder+' \u00b7 '+a.kind+'\n'+a.text;
+      case 'job_add': return a.title+(a.date?'\n'+when(a.date):'')+(a.notes?'\n'+a.notes:'');
+      case 'expense_add': return a.what+' \u2014 $'+Number(a.amount).toFixed(2)+(a.date?' on '+when(a.date):'');
+      case 'queue_post': return a.platforms.join(', ')+' \u00b7 '+when(a.date,a.time)+'\n'+a.text;
+      case 'draft_post': return a.title+(a.dek?'\n'+a.dek:'')+'\n\n'+a.body;
+      default: return a.subject+(a.body?'\n\n'+a.body:'')+(a.due?'\nNeeded by '+when(a.due):'');
+    }
+  }
+  function slugify(t){ return String(t).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60)+'-'+Date.now().toString(36).slice(-4); }
+  function iso(d,t){ return d?new Date(d+'T'+(t||'09:00')).toISOString():''; }
+  function run(a){
+    switch(a.type){
+      case 'list_add': return NDOS.net('/api/nd-store?c=list',{method:'POST',json:{text:a.text,at:iso(a.date),done:false}}).then(ok('list:changed'));
+      case 'list_done': var it=(OFFICE.list||[]).filter(function(x){return x.id===a.id;})[0]; if(!it) return Promise.resolve({ok:false});
+        return NDOS.net('/api/nd-store?c=list',{method:'POST',json:{id:it.id,text:it.text,at:it.at||'',done:true}}).then(ok('list:changed'));
+      case 'cal_add': return NDOS.net('/api/nd-store?c=cal',{method:'POST',json:{text:a.text,at:iso(a.date,a.time)}}).then(ok('cal:changed'));
+      case 'doc_add': return NDOS.net('/api/nd-store?c=docs',{method:'POST',json:{title:a.title,body:a.body}}).then(ok('docs:changed'));
+      case 'record_add': return NDOS.net('/api/nd-records',{method:'POST',json:{save:{folder:a.folder,kind:a.kind,text:a.text}}}).then(ok('records:changed'));
+      case 'job_add': return NDOS.net('/api/nd-jobs',{method:'POST',json:{save:{title:a.title,kinds:a.kinds,at:iso(a.date),notes:a.notes,type:a.internal?'internal':'client',status:'next'}}}).then(ok('jobs:changed'));
+      case 'expense_add': return NDOS.net('/api/nd-books',{method:'POST',json:{expense:{what:a.what,amount:a.amount,on:a.date||'',kind:a.kind,notes:a.notes}}}).then(ok('books:changed'));
+      case 'queue_post': return NDOS.net('/api/nd-queue',{method:'POST',json:{text:a.text,platforms:a.platforms,at:iso(a.date,a.time)}}).then(ok('queue:added'));
+      case 'draft_post': return NDOS.net('/api/nd-blog',{method:'POST',json:{slug:slugify(a.title),title:a.title,dek:a.dek,body:a.body,status:'draft'}}).then(ok('post:saved'));
+      case 'note_anthony': case 'request_anthony':
+        return NDOS.net('/api/nd-inbox',{method:'POST',json:{send:{kind:a.type==='request_anthony'?'request':'note',subject:a.subject,body:a.body,due:a.due||''}}}).then(ok('inbox:sent'));
+    }
+    return Promise.resolve({ok:false});
+    function ok(topic){ return function(j){ if(j.ok) NDOS.bus.emit(topic,{by:'helper'}); return j; }; }
+  }
+  function drawActs(m){
+    var box=document.createElement('div'); box.className='acts';
+    m.acts.forEach(function(a){
+      var tr=a.triad||{released:false,why:'Not ruled on.'};
+      var c=document.createElement('div'); c.className='act'+(tr.released?'':' held');
+      c.innerHTML='<div class="k">'+esc(LABEL[a.type]||a.type)+(tr.released?'':' \u00b7 held by the Guard')+'</div><div class="w">'+esc(say(a))+'</div>'+(tr.why?'<div class="why">'+(tr.released?'Guard: ':'Why: ')+esc(tr.why)+'</div>':'');
+      if(a.state==='done'){ c.insertAdjacentHTML('beforeend','<div class="done">Done. <a href="'+ROOM[a.type]+'">Open it</a></div>'); }
+      else if(a.state==='skip'){ c.insertAdjacentHTML('beforeend','<div class="why">Skipped.</div>'); }
+      else if(tr.released){
+        var row=document.createElement('div'); row.className='row';
+        row.innerHTML='<button type="button" class="go">Do it</button><button type="button">Skip</button>';
+        var go=row.children[0], sk=row.children[1];
+        go.addEventListener('click',function(){ go.disabled=true; go.textContent='Working\u2026';
+          run(a).then(function(j){ if(j&&j.ok){ a.state='done'; keep(); draw(); NDOS.say('Done.'); } else { go.disabled=false; go.textContent='Do it'; NDOS.say((j&&(j.message||NDOS.why(j)))||'That did not go through.',true); } }); });
+        sk.addEventListener('click',function(){ a.state='skip'; keep(); draw(); });
+        c.appendChild(row);
+      }
+      box.appendChild(c);
+    });
+    return box;
+  }
+
+  /* ---- her office, as her rooms see it, read fresh before every question ---- */
+  var OFFICE={};
+  function readOffice(){
+    var now=Date.now(), soon=now+1000*60*60*24*60;
+    return Promise.all([
+      NDOS.net('/api/nd-store?c=list'), NDOS.net('/api/nd-store?c=cal'), NDOS.net('/api/nd-store?c=docs'), NDOS.net('/api/nd-jobs')
+    ]).then(function(r){
+      OFFICE={
+        list:((r[0].items)||[]).filter(function(x){return !x.done;}).slice(0,60).map(function(x){return {id:x.id,text:x.text,at:x.at||''};}),
+        cal:((r[1].items)||[]).filter(function(x){ var t=Date.parse(x.at); return t>=now-864e5 && t<=soon; }).sort(function(a,b){return Date.parse(a.at)-Date.parse(b.at);}).slice(0,60)
+          .map(function(x){ return {text:x.text, at:new Date(x.at).toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}; }),
+        docs:((r[2].items)||[]).slice(0,40).map(function(x){return {title:x.title||'Untitled'};}),
+        jobs:((r[3].jobs)||[]).slice(0,40).map(function(x){return {title:x.title,status:x.status};})
+      };
+      return OFFICE;
     });
   }
   function thinking(on){
@@ -171,15 +271,18 @@
     if(!text || BUSY) return;
     stopMic();
     BUSY=true; GO.disabled=true;
-    var history=TALK.filter(function(m){return !m.bad;}).slice(-8).map(function(m){return {who:m.who,t:m.t};});
+    var history=TALK.filter(function(m){return !m.bad;}).slice(-8).map(function(m){return {who:m.who,t:m.t+((m.acts||[]).length?' [proposed: '+m.acts.map(function(a){return (LABEL[a.type]||a.type)+(a.state==='done'?' (done)':a.state==='skip'?' (skipped)':'');}).join('; ')+']':'')};});
     TALK.push({who:'me',t:text}); keep(); draw();
     Q.value=''; try{localStorage.removeItem(DRAFT);}catch(e){}
     thinking(true);
-    loadManual().then(function(){
-      return NDOS.net(API,{method:'POST',json:{q:text,history:history,manual:pick(text),room:FROM}});
+    Promise.all([loadManual(), readOffice().catch(function(){ return OFFICE; })]).then(function(){
+      var now=new Date(), tz=-now.getTimezoneOffset(), pad=function(n){return String(Math.abs(n)).padStart(2,'0');};
+      var local=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+' '+pad(now.getHours())+':'+pad(now.getMinutes())+' ('+now.toLocaleDateString(undefined,{weekday:'long'})+', UTC'+(tz>=0?'+':'-')+pad(Math.floor(Math.abs(tz)/60))+':'+pad(Math.abs(tz)%60)+')';
+      return NDOS.net(API,{method:'POST',json:{q:text,history:history,manual:pick(text),room:FROM,now:local,office:OFFICE}});
     }).then(function(j){
       thinking(false);
-      if(j.ok){ TALK.push({who:'helper',t:j.text}); }
+      if(j.ok){ TALK.push({who:'helper',t:j.text,acts:j.actions||[],web:j.web||[],law:!!j.constitution});
+        NDOS.bus.emit('triad:'+((j.actions||[]).some(function(a){return a.triad&&!a.triad.released;})?'held':'released'),{dept:'helper',actions:(j.actions||[]).length},false); }
       else if(j.__status===401){ TALK.pop(); Q.value=text; }
       else { TALK.push({who:'helper',bad:true,t:j.message||NDOS.why(j)}); }
       keep(); draw();
