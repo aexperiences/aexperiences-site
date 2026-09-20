@@ -67,14 +67,14 @@ export async function webSearch(query) {
       const out = []; const re = /<a[^>]+href="([^"]+)"[^>]*class=['"]result-link['"][^>]*>([\s\S]*?)<\/a>/gi; let m;
       while ((m = re.exec(html)) && out.length < 6) { let h = m[1]; const um = h.match(/[?&]uddg=([^&]+)/); if (um) h = decodeURIComponent(um[1]); if (/^https?:/i.test(h)) out.push({ title: strip(m[2]), url: h, snippet: '' }); }
       return out; }],
-    ['bing', 'https://www.bing.com/search?q=' + encodeURIComponent(q) + '&setlang=en-US', (html) => {
-      const out = []; const re = /<li class="b_algo"[\s\S]*?<h2[^>]*><a[^>]+href="(https?:[^"]+)"[^>]*>([\s\S]*?)<\/a>[\s\S]*?(?:<p[^>]*>([\s\S]*?)<\/p>)?/gi; let m;
-      while ((m = re.exec(html)) && out.length < 6) out.push({ title: strip(m[2]), url: m[1].replace(/&amp;/g, '&'), snippet: strip(m[3]).slice(0, 300) });
-      return out; }],
     ['mojeek', 'https://www.mojeek.com/search?q=' + encodeURIComponent(q), (html) => {
       const out = []; const re = /<a[^>]+class="ob"[^>]+href="(https?:[^"]+)"[^>]*>([\s\S]*?)<\/a>[\s\S]*?(?:<p class="s">([\s\S]*?)<\/p>)?/gi; let m;
       while ((m = re.exec(html)) && out.length < 6) out.push({ title: strip(m[2]) || m[1], url: m[1], snippet: strip(m[3]).slice(0, 300) });
       return out; }]
+    ['bing', 'https://www.bing.com/search?q=' + encodeURIComponent(q) + '&setlang=en-US', (html) => {
+      const out = []; const re = /<li class="b_algo"[\s\S]*?<h2[^>]*><a[^>]+href="(https?:[^"]+)"[^>]*>([\s\S]*?)<\/a>[\s\S]*?(?:<p[^>]*>([\s\S]*?)<\/p>)?/gi; let m;
+      while ((m = re.exec(html)) && out.length < 6) { let h = m[1].replace(/&amp;/g, '&'); const um = h.match(/[?&]u=a1([^&]+)/); if (um) { try { h = Buffer.from(um[1].replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf8'); } catch (e) {} } if (/^https?:/i.test(h) && !/bing\.com\//.test(h)) out.push({ title: strip(m[2]), url: h, snippet: strip(m[3]).slice(0, 300) }); }
+      return out; }],
   ];
   for (const [name, u, parse] of sources) {
     try {
